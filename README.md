@@ -7,9 +7,14 @@ and how to run it.
 
 It is a reconstruction: the ZEUS filesystems published on pofo.de (see below), written
 into the on‑disk layout the ZEUS Administrator's Manual documents for the System 8000
-SMD system disk, and packaged as a CHD whose geometry the MAME SMD controller accepts.
-Booting it in MAME (CPU‑A, Monitor / BIOS v3.0) brings the kernel all the way up through
-its own initialization (memory sizing, scheduler, etc.); see **Status** below.
+SMD system disk, given a valid **block‑0 boot record** so it auto‑boots, and packaged as
+a CHD whose geometry the MAME SMD controller accepts. In MAME (CPU‑A, Monitor / BIOS
+v3.0) it auto‑boots ZEUS 3.21 and the kernel runs its **entire** startup — bootstrap,
+memory sizing, scheduler — reaching the idle loop with the real‑time clock ticking.
+
+Two things are required beyond a stock build, both described below: the CPU‑A must run in
+**segmented‑OS** mode, and MAME needs a **one‑line interrupt fix** (without it the kernel
+panics early). See **Status** for exactly how far it currently gets.
 
 ## Credits & sources
 
@@ -63,7 +68,7 @@ are copied in — i.e. `s8000_usr.tar.gz` is unpacked into the `/usr` filesystem
 `sh`/`rsh`, `od`/`hd`, etc. are restored during the copy, which lets the root tree fit
 the authentic 6000‑block partition.)
 
-### 3. Wrap the raw image in a CHD reproducing the physical drive
+### 3. Determine the disk geometry (for the CHD)
 
 The System 8000 SMD controller (SMDC) in MAME expects a hard disk whose CHS geometry
 matches the real drive, because ZEUS's disk driver and the controller both translate
@@ -89,6 +94,34 @@ bytes/sec =  512
 ------------------------------------
 589 × 7 × 32 = 131936 blocks = 67,551,232 bytes  (~67.5 MB)
 ```
+
+### 4. Write the block‑0 boot record (so it auto‑boots)
+
+The secondary bootstrapper reads a configuration record from **physical block 0** of the
+drive (which coincides with the reserved boot block of the `/usr` filesystem at offset
+0). Its layout is `sys/block0.h`; the magic is `BLK0MAGIC = 0xDEADBABE`. Disassembling
+`/usr/boot` shows the default (hands‑off) boot only needs three big‑endian fields:
+
+```
+offset 0x00  b0_MAGIC  = 0xDEADBABE
+offset 0x12  b0_rdrv   = 0            (root drive unit)
+offset 0x14  b0_roff   = 15200        (root filesystem block offset)
+```
+
+With those in place the monitor auto‑constructs `smd(0,15200)zeus` and boots the kernel
+with no console input. (A real system's block 0 also carries the root/swap/pipe device
+numbers and the full virtual‑disk table; those are written by the stand‑alone `wbz`
+utility and are not required just to load the kernel.)
+
+### 5. Create the `/dev` device nodes
+
+The pofo.de archives contain **no** device nodes, so the root filesystem's `/dev` must be
+repopulated with `mknod`. Device majors are from the Administrator's Manual §4.2.2:
+**SMD disks = major 8**, so root = `(8,2)`, swap = `(8,1)` (minor = virtual‑disk number:
+root is vd 2 at offset 15200, swap is vd 1). The char‑device majors (console, tty, mem,
+null) are not yet pinned down — see **Status**.
+
+### 6. Convert the raw image to a CHD
 
 The raw 131936‑block image is converted to a MAME CHD with `chdman`:
 
@@ -143,6 +176,26 @@ must be set to **Yes**. MAME has no command‑line switch for a board jumper, so
 With the jumper still at the default **No**, ZEUS will not boot — the kernel runs into
 the wrong MMU‑routing path and crashes shortly after enabling the MMU.
 
+### Apply the interrupt fix (required)
+
+With a stock build the kernel panics (`ID = 0 -- panic: Unexpected interrupt`) moments
+after the scheduler starts: when the SMD disk interrupt is acknowledged, the ZBI bus
+does not refresh the CPU's vectored‑interrupt line, so the Z8001 then takes a phantom
+interrupt that no device owns. One line in `src/devices/bus/zbi/zbi.cpp`,
+`zbi_bus_device::viack_r()`, fixes it — re‑evaluate the line after the acknowledge:
+
+```cpp
+uint16_t zbi_bus_device::viack_r()
+{
+    device_z80daisy_interface *intf = daisy_get_irq_device();
+    uint16_t vec = intf ? intf->z80daisy_irq_ack() : 0;
+    vi_w(CLEAR_LINE);   // <-- add: the ack changed the device's daisy state (INT -> IEO)
+    return vec;
+}
+```
+
+Rebuild the `s8000` target after applying it.
+
 ### Launch and boot
 
 Attach the CHD to the first SMD drive and start the machine (the console is on the
@@ -152,31 +205,37 @@ CPU‑A's second serial channel):
 mame s8000 -hard1 s8000_smd.chd
 ```
 
-At the console, do a manual boot (Model 31 / SMD): the primary bootstrapper loads the
-secondary bootstrapper from the first filesystem, which in turn loads the kernel from
-the root filesystem at block 15200:
+Because block 0 now holds a valid boot record, this **auto‑boots** — press the front‑panel
+**START** (numeric‑keypad `+`) and the monitor loads the kernel by itself, no typing:
 
 ```
 S8000 Monitor 3.0 - Press START to Load System
-Z S                     <- boot from Storage-Module Disk
-boot                    <- load secondary bootstrapper from the first filesystem
-smd(0,15200)zeus        <- load the kernel /zeus from the root filesystem @ offset 15200
+> stand/boot
+Boot
+: smd(0,15200)zeus        <- constructed automatically from block 0
 ```
+
+(A manual boot also works if block 0 is absent — type `Z S`, then `boot`, then
+`smd(0,15200)zeus` at the console.)
 
 ## Status
 
-With segmented mode enabled, the kernel loads and initializes:
+With segmented mode enabled and the interrupt fix applied, the kernel auto‑boots and
+runs its full startup:
 
 ```
 Zilog Zeus Kernel -- Release 3.21 -- Generated 03/21/86 00:23:11
 System:SYS 8000   Node:ZEUS   Release:3.21   Version:SYS III
 number of users = 16 ... kernel memory size = 238848 bytes
 user memory size = 809728 bytes ... type of memory = parity ... default boot device = smd
-...
-ID = 0 -- panic: Unexpected interrupt
 ```
 
-It currently panics on an *Unexpected interrupt* during scheduler start‑up — an open
-gap in the emulator's vectored‑interrupt handling (the MAME `s8000` driver is marked
-`MACHINE_NOT_WORKING`). The disk image itself is sound: the kernel loads byte‑perfect
-from it and runs its entire startup sequence off it.
+After the banner the kernel mounts root and settles into its **idle loop with the
+real‑time clock ticking** — i.e. it is up and scheduling, but no login prompt appears
+yet. The remaining gap is `/dev`: the console/tty **char‑device major numbers** used to
+rebuild `/dev/console` are not yet confirmed (the block‑device majors are), so `init`
+has no working console to run a shell on. Pinning those down (from the ZEUS `cdevsw`
+table) is the next step toward a `ZEUS login:` prompt.
+
+The MAME `s8000` driver is still marked `MACHINE_NOT_WORKING`; the disk image itself is
+sound — the kernel loads byte‑perfect from it and runs its entire startup off it.
