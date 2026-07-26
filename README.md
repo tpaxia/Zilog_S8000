@@ -14,12 +14,15 @@ Administrator's Manual. It is not a dump of an untouched physical disk.
 The fixes required to run this image are **not in official
 [mamedev/mame](https://github.com/mamedev/mame) yet**. Use the System 8000 work
 in the [tpaxia MAME fork](https://github.com/tpaxia/mame), branch
-[`olivetti_m40`](https://github.com/tpaxia/mame/tree/olivetti_m40).
+[`s8000`](https://github.com/tpaxia/mame/tree/s8000). This branch is based on
+the CPU-only [`z8000_fixes`](https://github.com/tpaxia/mame/tree/z8000_fixes)
+branch and does not include the separate Olivetti M40 driver or its diagnostic
+instrumentation.
 
 The tested fork contains two relevant commits:
 
-- `369e14db153` — Z8000 EPU trapping, indexed `LDA`, and `DAB` fixes.
-- `f2e0fbbca7b` — System 8000 clock, console, Z8010 MMU, interrupt, and SMD
+- `e4ee708355b` — tip of the CPU-only Z8000 fixes used by this branch.
+- `ce73a233b7a` — System 8000 clock, console, Z8010 MMU, interrupt, and SMD
   device handling.
 
 In particular, ZEUS requires behavior that stock MAME currently lacks:
@@ -115,7 +118,7 @@ remain available for compatibility.
 
 ## Running
 
-Build the `olivetti_m40` branch of
+Build the `s8000` branch of
 [tpaxia/mame](https://github.com/tpaxia/mame), install the System 8000 ROMs,
 and enable the CPU-A **Support Segmented OS** configuration jumper. The
 included `s8000.cfg` sets this jumper.
