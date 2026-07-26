@@ -1,0 +1,13 @@
+tape_location,description,source,source_reference
+0,"Primary bootstrap, 512 bytes",03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+1,Secondary bootstrap,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+2,Disk formatting information,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+3,Standalone mkfs(M),03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+4,Standalone restor(M),03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+5,Level 0 dump: common root filesystem,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+6,Level 1 dump: Model 21 special root files,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+7,Level 1 dump: Model 11 special root files,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+8,Level 1 dump: Model 31 special root files,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+9,Level 0 dump: common /usr filesystem,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+10,Level 1 dump: Model 21 and Model 31 special /usr files,03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)
+>10,tar(1) software packages restored with package(M),03-3246-04_ZeusAdmin_Oct83.pdf,3-2 (PDF 31)

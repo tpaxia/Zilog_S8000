@@ -1,0 +1,40 @@
+# ZEUS /dev device spec for the S8000 (SMD-based) machine.
+# Format (mkdev):  <path> <c|b> <major> <minor> <octal-mode>
+#
+# Majors from the ZEUS kernel device switch (_cdevsw/_bdevsw):
+#   char: 2=smd(raw)  6=mem/kmem/null  7=sys(/dev/tty)  8=sio(console/tty)
+#   block: 0=zd  8=smd
+# Char device numbers (console/tty/mem) verified against the working WEGA
+# disk (harddisk.wdc). Disk devices use SMD (8/2), NOT WEGA's WDC/zd (0).
+# console is (8,1) == tty1 (the SIO channel 1).
+
+/dev/console c 8 1 622
+/dev/tty0    c 8 0 622
+/dev/tty1    c 8 1 622
+/dev/tty2    c 8 2 622
+/dev/tty3    c 8 3 622
+/dev/tty4    c 8 4 622
+/dev/tty5    c 8 5 622
+/dev/tty6    c 8 6 622
+/dev/tty7    c 8 7 622
+/dev/tty     c 7 0 666
+/dev/mem     c 6 0 644
+/dev/kmem    c 6 1 644
+/dev/null    c 6 2 666
+/dev/smd0    b 8 0 644
+/dev/smd2    b 8 2 644
+/dev/smd3    b 8 3 644
+/dev/smd4    b 8 4 644
+/dev/rsmd0   c 2 0 644
+/dev/rsmd2   c 2 2 644
+/dev/rsmd3   c 2 3 644
+/dev/rsmd4   c 2 4 644
+/dev/root    b 8 2 644
+/dev/rroot   c 2 2 644
+/dev/swap    b 8 1 644
+/dev/usr     b 8 0 644
+/dev/rusr    c 2 0 644
+/dev/tmp     b 8 3 644
+/dev/rtmp    c 2 3 644
+/dev/z       b 8 4 644
+/dev/rz      c 2 4 644
