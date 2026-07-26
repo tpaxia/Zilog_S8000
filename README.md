@@ -16,8 +16,7 @@ The fixes required to run this image are **not in official
 in the [tpaxia MAME fork](https://github.com/tpaxia/mame), branch
 [`s8000`](https://github.com/tpaxia/mame/tree/s8000). This branch is based on
 the CPU-only [`z8000_fixes`](https://github.com/tpaxia/mame/tree/z8000_fixes)
-branch and does not include the separate Olivetti M40 driver or its diagnostic
-instrumentation.
+branch.
 
 The tested fork contains two relevant commits:
 
@@ -52,14 +51,17 @@ missing console input, compiler crashes, or kernel panics.
   write-path, device-node, and hard-link helpers.
 - ZEUS archives:
   <http://www.pofo.de/S8000/misc/harddisk_images/>.
+- `S8000-2.tar`:
+  [VCFed forum post in “Zilog System 8000 Model 21”](https://forum.vcfed.org/index.php?threads/zilog-system-8000-model-21.1255068/page-2#post-1511810).
 - Hardware and installation details:
   Zilog *ZEUS System Administrator's Manual*, 03-3246-04, and
   *System 8000 CPU Hardware Reference Manual*, 03-3200-01.
 
-`S8000-2.tar` is a modern wrapper around an installed ZEUS tree. It contains
-useful `.contents` inventories but also installed-machine residue. The clean
-image is therefore generated from the classified inventory in `inventory/`,
-not by copying every file found in the archive or prepared host trees.
+`S8000-2.tar` was obtained from the VCFed post linked above. It packages an
+installed ZEUS tree and contains useful `.contents` inventories, as well as
+installed-machine residue. The clean image is therefore generated from the
+classified inventory in `inventory/`, not by copying every file found in the
+archive or prepared host trees.
 
 ## Image contents
 
