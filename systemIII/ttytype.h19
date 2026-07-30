@@ -1,0 +1,8 @@
+jx tty0
+h19 console
+jx tty2
+jx tty3
+jx tty4
+jx tty5
+jx tty6
+vz tty7

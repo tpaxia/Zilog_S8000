@@ -1,0 +1,50 @@
+# "@[$]rc_csh clean Model 31 startup"
+	echo
+	uname -sn
+	echo "Multi-user Startup"
+	echo
+
+# Root is already mounted when rc_csh runs, so it cannot be checked safely
+# here.  Check only the auxiliary filesystems while they are unmounted.
+#
+# Use the buffered block devices.  The S8000 raw SMD path corrupts large
+# reads under the current MAME emulation, which makes the original fsck
+# falsely classify allocated inodes as unallocated.
+	/etc/fsck -y /dev/usr /dev/tmp
+	/etc/mount /dev/tmp /tmp >& /dev/null
+	/etc/fsck -y -t /tmp/scratch /dev/z
+	/etc/umount /dev/tmp >& /dev/null
+
+# Set the date
+	/etc/datem
+
+# Mount /z, /tmp and /usr.
+	/etc/mfs
+
+# Give the user a chance to interrupt, then go multi-user
+	/bin/echo -n 'The date the system knows is ' ; date
+	echo 'Going multi-user in 30 seconds\!'
+
+# configure system for correct modem/tty configuration
+	/etc/ttyconfig -t 0-7
+
+# Remove the remote lock file
+	cat /dev/null > /usr/spool/uucp/LCK..tmp
+	/bin/rm -f /usr/spool/uucp/LCK..*
+
+# Save the su and cron log files
+	if ( -e /usr/adm/sulog ) then
+		mv /usr/adm/sulog /usr/adm/osulog
+	endif
+	if ( -e /usr/lib/cronlog ) then
+		mv /usr/lib/cronlog /usr/lib/ocronlog
+	endif
+
+# Start cron, update and the dqueuer
+	/etc/cron >/usr/lib/cronlog
+	/etc/update
+
+# zero out utmp file
+	cat /dev/null > /etc/utmp
+
+	exit 0

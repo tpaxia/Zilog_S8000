@@ -62,12 +62,23 @@ def main() -> None:
     parser.add_argument("--usr-source", type=Path, required=True)
     parser.add_argument("--root-stage", type=Path, required=True)
     parser.add_argument("--usr-stage", type=Path, required=True)
+    parser.add_argument("--tmp-stage", type=Path, required=True)
+    parser.add_argument("--z-stage", type=Path, required=True)
     parser.add_argument("--init", type=Path, required=True)
     parser.add_argument("--kernel", type=Path, required=True)
     args = parser.parse_args()
 
     safe_recreate(args.root_stage)
     safe_recreate(args.usr_stage)
+    safe_recreate(args.tmp_stage)
+    safe_recreate(args.z_stage)
+
+    # makenewfs(M) created these directories during a normal installation.
+    # Keep the auxiliary filesystems otherwise empty.
+    for stage in (args.tmp_stage, args.z_stage):
+        lost_found = stage / "lost+found"
+        lost_found.mkdir()
+        lost_found.chmod(0o750)
 
     selected: dict[str, dict[str, str]] = {}
     with args.manifest.open(newline="") as source:
@@ -96,10 +107,11 @@ def main() -> None:
         copy_entry(source, destination, kind)
         copied += 1
 
-    # The fixed init bypasses rc/inittab and execs an interactive root shell.
+    # Install the selected init under both names used by the ZEUS system.
     fixed_init = args.root_stage / "etc/init"
     fixed_init.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(args.init, fixed_init)
+    fixed_init.chmod(0o755)
     upper_init = args.root_stage / "etc/INIT"
     if upper_init.exists():
         upper_init.unlink()

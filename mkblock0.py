@@ -14,17 +14,21 @@ Block-0 layout (sys/block0.h; magic BLK0MAGIC=0xDEADBABE):
   0x18 b0_rdev    (short) 0x0802  root  makedev smd(maj8) u0 vd2   <- kernel _b0rd -> _rootdev
   0x1a b0_sdev    (short) 0x0801  swap  makedev smd(maj8) u0 vd1   <- _swapdev
   0x1c b0_pdev    (short) 0x0802  pipe  makedev = rdev             <- _pipedev
-  0x1e b0_ssz     (long)  16736   swap size (blocks); nswap = ssz-1
+  0x1e b0_ssz     (long)  3200    swap size (blocks); nswap = ssz-1
   0x22 b0_vfs[16] { long vd_blkoff; long vd_nblocks; char nam[8]; }  (16 bytes each)
-       vd0 usr  @0      /15000
-       vd1 swap @115200 /16736
-       vd2 root @15200  /100000
+       vd0 usr  @0     /12000
+       vd1 swap @12000 /3200
+       vd2 root @15200 /6000
+       vd3 tmp  @21200 /6000
+       vd4 z    @27200 /104736
 
 The PROM monitor autoboots off a HARDCODED ROM string when magic==DEADBABE and
 b0_bdrv(0x08)==0; it never reads 0x18+. The kernel reads rdev/sdev/pdev at
 0x18/0x1a/0x1c.  All big-endian.
 """
 import struct, sys
+
+SUPERBLOCK_FNAME = 428
 
 def main(img):
     with open(img, 'r+b') as f:
@@ -35,9 +39,10 @@ def main(img):
         struct.pack_into('>H', b, 0x18, 0x0802)       # b0_rdev  smd u0 vd2 (root)
         struct.pack_into('>H', b, 0x1a, 0x0801)       # b0_sdev  smd u0 vd1 (swap)
         struct.pack_into('>H', b, 0x1c, 0x0802)       # b0_pdev  smd u0 vd2
-        struct.pack_into('>I', b, 0x1e, 16736)        # b0_ssz
-        vfs = [(0, 15000, b'usr'), (115200, 16736, b'swap'),
-               (15200, 100000, b'root')]
+        struct.pack_into('>I', b, 0x1e, 3200)         # b0_ssz
+        vfs = [(0, 12000, b'usr'), (12000, 3200, b'swap'),
+               (15200, 6000, b'root'), (21200, 6000, b'tmp'),
+               (27200, 104736, b'z')]
         for i, (blk, n, nam) in enumerate(vfs):
             o = 0x22 + i * 16
             struct.pack_into('>I', b, o, blk)
@@ -45,8 +50,16 @@ def main(img):
             b[o + 8:o + 16] = nam.ljust(8, b'\x00')
         f.seek(0)
         f.write(b)
+        # retro-fuse creates valid V7 filesystems but leaves the six-byte
+        # superblock filesystem names empty.  ZEUS mount compares s_fname
+        # with the requested mount name and warns when they differ.
+        for fs_offset, fs_name in (
+            (0, b'usr'), (15200, b'root'), (21200, b'tmp'), (27200, b'z')
+        ):
+            f.seek((fs_offset + 1) * 512 + SUPERBLOCK_FNAME)
+            f.write(fs_name.ljust(6, b'\0'))
     print("block 0 written: magic=DEADBABE rdev=0802 sdev=0801 pdev=0802 "
-          "roff=15200 ssz=16736; vfs " +
+          "roff=15200 ssz=3200; labels usr/root/tmp/z; vfs " +
           " ".join("%s@%d/%d" % (nam.decode(), blk, n) for blk, n, nam in vfs))
 
 if __name__ == '__main__':

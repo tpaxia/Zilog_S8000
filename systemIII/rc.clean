@@ -1,0 +1,44 @@
+: "@[$]rc	2.14 05/27/84 08:13:47 - Zilog Inc."
+: "This is the rc control script.  Init invokes this script and then"
+: "for the other important states where real work occurs we use csh(1)"
+: "scripts"
+
+# The shipped init attaches rc descriptors 0-2 to /.  Reconnect them to the
+# console so interactive startup utilities can display prompts and read input.
+exec < /dev/console > /dev/console 2>&1
+
+TZ=PST8PDT
+export TZ
+trap "INIT 1" 2
+
+if [ $3 = "0" ]
+	then /bin/cat /dev/null > /etc/mnttab
+	if test -b /dev/root
+		then /etc/devnm / | grep root | /etc/setmnt
+		else /etc/devnm / | /etc/setmnt
+	fi
+fi
+
+(
+case ${1-2} in
+1)
+	echo
+	uname -sn
+	echo Single-User Mode
+	if [ $3 = "2" ]
+		then /etc/killall 1 > /dev/null 2>&1
+		     /etc/killall > /dev/null 2>&1
+	fi
+	/etc/umfs > /dev/null 2>&1
+	;;
+2)
+	if [ $1 != $3 ]
+		then exec rc_csh
+	fi
+	;;
+
+*)
+	echo "Unknown state for init:" $*
+	;;
+esac
+)

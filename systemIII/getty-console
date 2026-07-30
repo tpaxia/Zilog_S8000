@@ -1,0 +1,3 @@
+: "Delay console GETTY until rc output and tty configuration have settled."
+sleep 2
+exec /etc/GETTY console 2
