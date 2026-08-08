@@ -39,6 +39,8 @@ In particular, ZEUS requires behavior that stock MAME currently lacks:
   system tick;
 - console modem-line loopback so `/dev/console` has carrier;
 - vectored-interrupt-line reevaluation after interrupt acknowledge;
+- ZBI vectored-interrupt-line reevaluation after hardware RETI, so an HPCPU
+  CIO interrupt cannot leave a lower-priority SMD disk interrupt hidden;
 - correct READY reporting for populated versus empty SMD units;
 - complete multi-sector SMD DMA rather than silently truncating a request to
   its first 512-byte sector.
@@ -71,10 +73,10 @@ archive or prepared host trees.
 
 ## Image contents
 
-The committed image was rebuilt on 2026-07-30. Its SHA-256 is:
+The committed image was rebuilt on 2026-08-08. Its SHA-256 is:
 
 ```text
-8e75be052e41692100948f48d4353cd3a5a221f7e44221e9ac10391c88ea5d75
+40297b0c7f25457c9555603d2853b76f40bf64b3d79238be3393af7533fff38b
 ```
 
 The raw filesystems were read back and compared with the staged manifest:
@@ -145,6 +147,9 @@ Total logical size: 131,936 blocks, or 67,551,232 bytes.
 Block zero contains:
 
 - magic `0xDEADBABE`;
+- Monitor block-size code `1` (512-byte blocks) at offset `0x04`; CPU-A accepts
+  this value, and HPCPU Monitor 10.1 requires it rather than the former zero
+  value;
 - root device `8,2`, swap device `8,1`, pipe device `8,2`;
 - root offset 15,200;
 - VFS records for `/usr`, swap, root, `/tmp`, and `/z`.
@@ -184,18 +189,30 @@ experimenting with a raw device or a modified image.
 ## Running
 
 Build the `s8000_fixes` branch of
-[tpaxia/mame](https://github.com/tpaxia/mame), install the System 8000 ROMs,
-and enable the CPU-A **Support Segmented OS** configuration jumper. The
-included `s8000.cfg` sets this jumper.
+[tpaxia/mame](https://github.com/tpaxia/mame) with the ZBI RETI interrupt-chain
+fix described above, and install the System 8000 ROMs. For CPU-A, enable the
+**Support Segmented OS** configuration jumper; the included `s8000.cfg` sets
+this jumper.
 
-Launch:
+The same `s8000_smd.chd` boots on both CPU boards. Run CPU-A with the `s8000`
+machine:
 
 ```sh
-./s8000 -rp roms s8000 -hard1 /path/to/Zilog_S8000/s8000_smd.chd
+./s8000 s8000 -rp roms \
+  -hard1 /path/to/Zilog_S8000/s8000_smd.chd
 ```
 
-Press the front-panel START key (numeric keypad `+`). Block zero causes the
-monitor to load `smd(0,15200)zeus`; init checks the unmounted auxiliary
+After shutting down CPU-A and exiting MAME, run HPCPU with the `s8000s2`
+machine against the same image:
+
+```sh
+./s8000 s8000s2 -rp roms \
+  -hard1 /path/to/Zilog_S8000/s8000_smd.chd
+```
+
+Do not open the writable CHD in both machines simultaneously. Press the
+front-panel START key (numeric keypad `+`). Block zero causes either monitor to
+load `smd(0,15200)zeus`; init checks the unmounted auxiliary
 filesystems, prompts for the date, mounts `/z`, `/tmp`, and `/usr`, and enters
 multi-user mode:
 
@@ -249,7 +266,9 @@ The rebuild performs these steps:
    `/tmp`, and `/z` partitions are copied into their documented offsets; the
    swap region remains freshly zeroed.
 5. `mkdev` and `fix_dev_majors.py` create and correct the Model 31 devices.
-6. `mkblock0.py` writes the autoboot, root/swap, and VFS configuration.
+6. `mkblock0.py` writes the autoboot, root/swap, and VFS configuration,
+   including Monitor block-size code `1` for 512-byte CPU-A/HPCPU disk
+   transfers.
 7. `chdman` creates an uncompressed CHD.
 8. The result is installed as both `s8000_smd.chd` and
    `debug/s8000.chd`.

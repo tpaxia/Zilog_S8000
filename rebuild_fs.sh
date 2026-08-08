@@ -129,7 +129,11 @@ rm -f "$CHD"
 chdman createhd -i "$IMG" -o "$CHD" --chs "$CHS" --sectorsize 512 --compression none
 
 echo "== install =="
+# The committed CHD is intentionally read-only.  Make an existing artifact
+# writable for replacement, then restore its published mode.
+[ ! -e "$INSTALL" ] || chmod u+w "$INSTALL"
 cp "$CHD" "$INSTALL"
+chmod 444 "$INSTALL"
 mkdir -p "$HERE/debug"
 cp "$CHD" "$DEBUG_INSTALL"
 echo "DONE -> $INSTALL and $DEBUG_INSTALL  (documented Model 31 five-region layout)"
