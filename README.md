@@ -15,15 +15,18 @@ Administrator's Manual. It is not a dump of an untouched physical disk.
 The fixes required to run this image are **not in official
 [mamedev/mame](https://github.com/mamedev/mame) yet**. Use the System 8000 work
 in the [tpaxia MAME fork](https://github.com/tpaxia/mame), branch
-[`s8000`](https://github.com/tpaxia/mame/tree/s8000). This branch is based on
-the CPU-only [`z8000_fixes`](https://github.com/tpaxia/mame/tree/z8000_fixes)
-branch.
+[`s8000_fixes`](https://github.com/tpaxia/mame/tree/s8000_fixes). It contains
+the CPU/MMU corrections developed on
+[`z8000_fixes`](https://github.com/tpaxia/mame/tree/z8000_fixes) together with
+the System 8000 machine-specific fixes.
 
-The tested fork contains two relevant commits:
+The tested branch ends at, and includes, these System 8000 commits:
 
-- `e4ee708355b` — tip of the CPU-only Z8000 fixes used by this branch.
-- `ce73a233b7a` — System 8000 clock, console, Z8010 MMU, interrupt, and SMD
-  device handling.
+- `e32a70aa7d9` — ZEUS clock, console, Z8010 MMU, interrupt, and SMD device
+  handling;
+- `c959d91dc31` — corrected RTC oscillator counting and working-system status;
+- `8d7158bbe1a` — multi-sector SMDC transfers, required for swapping and other
+  requests larger than one 512-byte sector.
 
 In particular, ZEUS requires behavior that stock MAME currently lacks:
 
@@ -36,7 +39,9 @@ In particular, ZEUS requires behavior that stock MAME currently lacks:
   system tick;
 - console modem-line loopback so `/dev/console` has carrier;
 - vectored-interrupt-line reevaluation after interrupt acknowledge;
-- correct READY reporting for populated versus empty SMD units.
+- correct READY reporting for populated versus empty SMD units;
+- complete multi-sector SMD DMA rather than silently truncating a request to
+  its first 512-byte sector.
 
 Using official MAME can cause boot hangs, phantom interrupts, MMU faults,
 missing console input, compiler crashes, or kernel panics.
@@ -162,19 +167,23 @@ all three pristine auxiliary filesystems and reports:
 - `/tmp`: 3 files, 11 blocks, 5,747 free;
 - `/z`: 3 files, 11 blocks, 100,534 free.
 
-Under the current MAME S8000 emulation, large reads through the raw SMD
-character devices (`/dev/rusr`, `/dev/rtmp`, and `/dev/rz`) return incorrect
-data. `fsck` then falsely reports allocated inodes as unallocated and can
-damage a filesystem if run with `-y`. The same checker works correctly through
-the buffered block devices. The production `rc_csh` therefore checks
-`/dev/usr`, `/dev/tmp`, and `/dev/z` while they are unmounted. Until the raw
-SMD transfer bug is fixed, do not run a repairing check on an `r*` device;
-use `fsck -n` for experiments and use the corresponding block device for real
-checks.
+The earlier raw-device `fsck` failures and low-memory swap corruption had the
+same emulation cause: the SMDC packet byte count (`CT`) is the size of the
+whole request, but MAME treated every value above 512 as invalid, replaced it
+with 512, and reported the truncated operation as complete. Commit
+`8d7158bbe1a` processes the full request sector by sector. A 1 MiB regression
+run now swaps successfully and completes a ZEUS kernel link that previously
+ended in `panic: kernel segmentation violation`.
+
+The production `rc_csh` still checks the buffered devices `/dev/usr`,
+`/dev/tmp`, and `/dev/z` while they are unmounted; this matches the tested boot
+configuration and avoids changing the disk image solely because the emulator
+bug was repaired. As with any historical filesystem, use `fsck -n` first when
+experimenting with a raw device or a modified image.
 
 ## Running
 
-Build the `s8000` branch of
+Build the `s8000_fixes` branch of
 [tpaxia/mame](https://github.com/tpaxia/mame), install the System 8000 ROMs,
 and enable the CPU-A **Support Segmented OS** configuration jumper. The
 included `s8000.cfg` sets this jumper.
@@ -204,8 +213,8 @@ full-screen programs such as `vi` may not redraw perfectly. Pressing Return
 normally produces a clean `ZEUS login:` prompt. For more faithful cursor,
 screen, and keyboard behavior, connect an H19/Heath-compatible terminal
 emulator to the S8000 console instead. An experimental MAME H19-console branch
-can also be maintained on top of the `s8000` branch without changing MAME's
-global terminal default.
+can also be maintained on top of the `s8000_fixes` branch without changing
+MAME's global terminal default.
 
 Use `sync` before closing MAME. MAME normally stores disk writes in a
 `diff/s8000*.dif` overlay; delete that overlay when you need to return to the
