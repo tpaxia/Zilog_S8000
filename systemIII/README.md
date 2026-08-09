@@ -50,15 +50,30 @@ also intentionally does not reproduce the shipped binary's corrupt second
 `malloc` call to `0x3578`; a normal rebuild calls the real `sbrk` routine and
 therefore incorporates the repair documented by `patch_init.py`.
 
-## Installed rebuild
+## Superseded: this reconstruction is no longer installed
 
-The production image installs `build/init.corrected-rebuilt`, compiled on
-ZEUS with the recovered Zilog non-segmented C compiler and runtime. It is not
-byte-identical to the stripped archive binary, but it implements the System
-III control flow and the Zilog additions listed above. It runs `/etc/rc`,
-reads `/etc/inittab`, manages the run-state transitions, and starts the normal
-multi-user console login. `/etc/init` and `/etc/INIT` are hard links to this
-same rebuilt executable.
+**The production image now installs the original Zilog binary**,
+`build/init.pristine-911118`, recovered from a pristine 1991-11-18 level-0 root
+dump. The reconstruction described here survives as source only — `init.c` in
+this directory — and is no longer built or installed. The compiled artifact has
+been removed.
+
+The reconstruction existed because the only copy of the original then
+available, `archive/INIT.zeus-3.21-original`, had one corrupt 512-byte sector.
+The pristine binary differs from it in nine bytes, all inside 0x2200–0x23FF,
+seven of them single-bit flips.
+
+The dump vindicates the analysis recorded here on both counts:
+
+- the byte patched at 0x220c by `patch_init.py` (`0x35` → `0x25`) is exactly
+  what the pristine original contains;
+- the corrupt second `malloc` call to `0x3578` is a two-byte corruption — the
+  pristine binary holds `0004` at 0x2284 where the damaged copy holds `f464`.
+
+So the "corrupt shipped binary" was never shipped corrupt; the archive copy had
+rotted. The intended-source equivalence argument above still stands on its own
+terms, and the reconstruction remains the only readable account of what ZEUS
+init does.
 
 The installed `rc.clean` reconnects init's standard descriptors to
 `/dev/console`. `rc_csh.clean` performs the multi-user filesystem checks and
@@ -66,7 +81,7 @@ mounts, and `inittab.clean` starts the console login wrapper. The wrapper and
 configuration files are scripts/data; they do not replace the original ZEUS
 `getty` or `login` executables.
 
-The rebuilt init is the only recompiled userland executable in the image.
-Other installed programs remain original recovered ZEUS binaries. The kernel
-is separately relinked from original ZEUS objects, and the main README
-documents the narrow `date`/`datem` compatibility patches.
+With the original init restored, **no userland executable in the image is
+recompiled**; all are original recovered ZEUS binaries. The kernel is
+separately relinked from original ZEUS objects, and the main README documents
+the narrow `date`/`datem` compatibility patches.

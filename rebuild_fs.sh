@@ -5,7 +5,12 @@
 # A manifest-driven staging pass admits only recovered base-distribution files
 # and the documented Model 31 overlay.  It intentionally excludes cores,
 # backups, compiler traces, renamed boot files and other installed-snapshot
-# residue.  The current fixed init and relinked kernel are explicit overlays.
+# residue.  The pristine init and relinked kernel are explicit overlays.
+#
+# /etc/init is the original Zilog binary recovered from the pristine
+# 1991-11-18 level-0 root dump.  It replaces the earlier source
+# reconstruction (systemIII/init.c), which was only needed while the sole
+# known copy of the original had a corrupt sector.
 # ============================================================================
 set -euo pipefail
 
@@ -24,7 +29,8 @@ IMG=$BUILD/s8000_vfs.img
 CHD=$BUILD/s8000.chd
 INSTALL=$HERE/s8000_smd.chd
 DEBUG_INSTALL=$HERE/debug/s8000.chd
-FIXED_INIT=$BUILD/init.corrected-rebuilt
+PRISTINE_INIT=$BUILD/init.pristine-911118
+PRISTINE_INIT_SHA=7a683ba63c8439398b2cd076dbc7ef08c6efc49f00ad1e55b9bc1a5749c6971a
 RELINKED_ZEUS=$CSVOL/s8000_usr/sys/conf/zeus
 CLEAN_RC=$HERE/systemIII/rc.clean
 CLEAN_PASSWD=$HERE/systemIII/passwd.clean
@@ -50,7 +56,9 @@ CHS="589,7,32"
 # Sanity-check all authoritative inputs before replacing an image.
 [ -f "$INVENTORY/zeus_release_files.csv" ] || { echo "ERROR: no release inventory"; exit 1; }
 [ -f "$INVENTORY/missing_from_s8000-2.csv" ] || { echo "ERROR: no archive comparison"; exit 1; }
-[ -f "$FIXED_INIT" ] || { echo "ERROR: no fixed init"; exit 1; }
+[ -f "$PRISTINE_INIT" ] || { echo "ERROR: no pristine init"; exit 1; }
+[ "$(shasum -a 256 "$PRISTINE_INIT" | cut -d' ' -f1)" = "$PRISTINE_INIT_SHA" ] ||
+    { echo "ERROR: pristine init does not match the 1991-11-18 dump"; exit 1; }
 [ -f "$RELINKED_ZEUS" ] || { echo "ERROR: no relinked ZEUS kernel"; exit 1; }
 [ -f "$CLEAN_RC" ] || { echo "ERROR: no clean rc"; exit 1; }
 [ -f "$CLEAN_PASSWD" ] || { echo "ERROR: no clean passwd"; exit 1; }
@@ -83,7 +91,7 @@ python3 "$STAGER" \
     --usr-stage "$USR_STAGE" \
     --tmp-stage "$TMP_STAGE" \
     --z-stage "$Z_STAGE" \
-    --init "$FIXED_INIT" \
+    --init "$PRISTINE_INIT" \
     --kernel "$RELINKED_ZEUS"
 cp "$CLEAN_RC" "$ROOT_STAGE/etc/rc"
 chmod 700 "$ROOT_STAGE/etc/rc"

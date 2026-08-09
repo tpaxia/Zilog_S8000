@@ -1,14 +1,24 @@
 # Zilog System 8000 — bootable ZEUS 3.2.1 image for MAME
 
-This repository contains `s8000_smd.chd`, a clean, bootable ZEUS 3.2.1
-(Zilog's System III Unix) disk image for the Zilog System 8000 Model 31.
-It performs the normal ZEUS multi-user startup and reaches `ZEUS login:`.
-The image includes the recovered ZEUS development system, including the C
-compilers and the relinked kernel.
+## Use `s8000_smd.chd`
+
+**`s8000_smd.chd` is the deliverable.** It is a clean, bootable ZEUS 3.2.1
+(Zilog's System III Unix) disk image for the Zilog System 8000 Model 31. It
+performs the normal ZEUS multi-user startup and reaches `ZEUS login:`, and it
+includes the recovered ZEUS development system with the C compilers and the
+relinked kernel. Download that one file, point MAME at it (see
+[Running](#running)), and you are done.
+
+**Everything else in this repository exists only to reproduce that file.** The
+build script, staging tools, inventories, recovered binaries, partition seeds
+and configuration sources are the provenance trail and the rebuild path. You do
+not need any of them to run ZEUS, and you should not need to run
+`rebuild_fs.sh` unless you are changing what goes into the image.
 
 The image is a reconstruction from the recovered S8000-2 installed tree, the
-older ZEUS archives, and the file inventories in the ZEUS System
-Administrator's Manual. It is not a dump of an untouched physical disk.
+older ZEUS archives, a pristine 1991-11-18 level-0 root dump, and the file
+inventories in the ZEUS System Administrator's Manual. It is not a dump of an
+untouched physical disk.
 
 ## Important: official MAME is not sufficient
 
@@ -61,6 +71,9 @@ missing console input, compiler crashes, or kernel panics.
   <http://www.pofo.de/S8000/misc/harddisk_images/>.
 - `S8000-2.tar`:
   [VCFed forum post in “Zilog System 8000 Model 21”](https://forum.vcfed.org/index.php?threads/zilog-system-8000-model-21.1255068/page-2#post-1511810).
+- `0-dump-911118-root.backup`, a level-0 `dump` of a live S8000 root
+  filesystem taken 1991-11-18:
+  <https://drive.google.com/file/d/1cgpqKmj1a6vdj1PsfsX_Nna7iOSctdRk/view>.
 - Hardware and installation details:
   Zilog *ZEUS System Administrator's Manual*, 03-3246-04, and
   *System 8000 CPU Hardware Reference Manual*, 03-3200-01.
@@ -71,45 +84,62 @@ installed-machine residue. The clean image is therefore generated from the
 classified inventory in `inventory/`, not by copying every file found in the
 archive or prepared host trees.
 
+`0-dump-911118-root.backup` is a complete, checksum-clean level-0 V7/System III
+`dump` of the **root** filesystem only — it contains no `/usr` and no `/z`. All
+432 of its record headers pass checksum, and it restores to 282 paths. It is
+the same physical machine as the recovered tree used elsewhere here, about
+eleven months later: the staged `/etc/termcap` is byte-identical to the dump's
+own pre-edit backup `/etc/termcapo`. Two things are taken from it: the pristine
+`/etc/init` and the 38 additional device nodes. Its site-specific
+configuration, its 1991 netnews and mail software, and its `zd`-configured
+kernel are not used, because they belong to that installation rather than to
+the Zilog distribution this image reconstructs.
+
 ## Image contents
 
-The committed image was rebuilt on 2026-08-08. Its SHA-256 is:
+The committed image was rebuilt on 2026-08-09. Its SHA-256 is:
 
 ```text
-40297b0c7f25457c9555603d2853b76f40bf64b3d79238be3393af7533fff38b
+3957a2dbb2e4e9e5e5c2b82e87c51778b7eef3a9059f73d672540e4e25b6edd6
 ```
 
 The raw filesystems were read back and compared with the staged manifest:
 
-- root: 251 paths, with no missing or extra entries;
+- root: 265 inodes reachable, with no missing or extra entries;
 - `/usr`: 868 paths, with no missing or extra entries;
-- 30 required character/block device nodes, with corrected on-disk majors;
+- 68 character/block device nodes, each verified on the raw image for type,
+  major and minor;
 - `/zeus` and `/zeus-3.2.1` are the same inode, with link count 2;
-- `/etc/init` and `/etc/INIT` are the same fixed-init inode;
+- `/etc/init` and `/etc/INIT` are the same inode, with link count 2, and their
+  on-disk bytes hash to the pristine init below;
 - the installed `ls`, `libc.a`, init, and kernel hashes match their selected
   source files.
 
-`/etc/init` is the one rebuilt executable in the installed userland. It was
-compiled on ZEUS with the recovered Zilog non-segmented C toolchain from the
-source reconstruction in `systemIII/init.c`. That reconstruction begins with
-the AT&T System III process-management core and restores the Zilog-specific
-behavior recovered from disassembly of the stripped ZEUS 3.21 binary:
+### `/etc/init` is the original Zilog binary
 
-- the initial `HOME`, `PATH`, `TERM`, `SHELL`, and `LOGNAME` environment;
-- console terminal-type lookup through `/etc/ttytype`;
-- initial multi-user state selection from the executable name;
-- the ZEUS console-process handling during a state 1-to-2 transition;
-- the ZEUS run-state signal handling.
+`/etc/init` is the **original stripped ZEUS 3.21 executable**, 11,980 bytes,
+SHA-256 `7a683ba63c8439398b2cd076dbc7ef08c6efc49f00ad1e55b9bc1a5749c6971a`,
+recovered from a pristine 1991-11-18 level-0 `dump` of a real S8000 root
+filesystem. `/etc/init` and `/etc/INIT` are hard links to it.
 
-It also naturally omits the corrupt second allocator call found in the
-recovered binary. The rebuilt init runs the normal `/etc/rc`, reads
-`/etc/inittab`, and reaches the normal multi-user login service; it does not
-bypass startup with a hard-coded shell. `/etc/init` and `/etc/INIT` are hard
-links to this rebuilt executable. See `systemIII/README.md` for the
-source-to-disassembly evidence.
+Earlier builds could not use the original. The only copy then available,
+`archive/INIT.zeus-3.21-original`, has a corrupt 512-byte sector: nine bytes
+differ from the pristine binary at file offsets 0x220c–0x23ee, seven of them
+single-bit flips, all inside the region 0x2200–0x23FF. The `s.out` header and
+segment table are undamaged, which is why nothing caught it structurally. Those
+builds instead installed a source reconstruction, compiled on ZEUS from
+`systemIII/init.c`.
 
-All other installed userland executables, including `/etc/fsck`, `getty`,
-`login`, the shell, and both C compilers, are original recovered ZEUS binaries.
+The dump independently confirms that reconstruction work: the byte the project
+had derived by disassembly and patched at 0x220c (`0x35` → `0x25`) is exactly
+what the pristine binary contains, and the `f464` → `0004` pair at 0x2284 is
+the corrupt allocator call described in `systemIII/README.md`. The
+reconstruction's source and evidence are retained for that reason; the
+compiled artifact is not, since it is no longer installed.
+
+With the original restored, **every executable in the installed userland is an
+original recovered ZEUS binary**, including `/etc/init`, `/etc/fsck`, `getty`,
+`login`, the shell, and both C compilers.
 The kernel is relinked from the original ZEUS objects, and the narrowly scoped
 `date`/`datem` Y2K byte patches are documented below. The startup, mount,
 password, and terminal configuration files are reconstructed installation
@@ -186,6 +216,36 @@ configuration and avoids changing the disk image solely because the emulator
 bug was repaired. As with any historical filesystem, use `fsck -n` first when
 experimenting with a raw device or a modified image.
 
+### Device nodes
+
+`/dev` holds 68 nodes, specified by `devs.txt` and verified on the raw image.
+Thirty are the Model 31 working set: `console`, `tty0`–`tty7`, `tty`, `mem`,
+`kmem`, `null`, the SMD disks (`smd*` block major 8, `rsmd*` char major 2), and
+the partition aliases `root`, `swap`, `usr`, `tmp`, `z` and their raw forms.
+These are the only nodes the boot path opens.
+
+The remaining 38 were recovered from the same pristine 1991-11-18 root dump as
+`/etc/init`, with the major and minor numbers exactly as recorded in that
+machine's on-disk inodes: cartridge tape (`ct0*`, `nct0*`, `rct0*`, `nrct0*`,
+major 1, with `+128` minors for the no-rewind variants), six line printers
+(`lp*`, major 9), the default archive devices `tardev`, `dumpdev` and `resdev`
+that `tar`, `dump` and `restor` fall back to, and the `zd*`/`rzd*` disk names.
+
+Two caveats:
+
+- The S8000 MAME machine emulates no cartridge tape and no printer, so those
+  nodes open with an error. They are present for fidelity and so the archive
+  tools find their default paths.
+- **Do not use the `zd*`/`rzd*` nodes.** The dump machine reached its disks
+  through the `zd` driver (block major 0, raw char major 32); this image is
+  SMD. They name the same partitions but route through a controller that is not
+  emulated. Use `/dev/root`, `/dev/usr`, `/dev/tmp` and `/dev/z` instead.
+
+The dump carried `rct0`, `dumpdev` and `resdev` as hard links to `tardev`'s
+inode, and `zd1` as a link to `swap`. `mkdev` has no link support, so they are
+created as separate inodes with identical major/minor, which the kernel treats
+identically.
+
 ## Running
 
 Build the `s8000_fixes` branch of
@@ -246,9 +306,10 @@ The case-sensitive prepared source trees must be mounted at:
 /Volumes/ZeusFS/s8000_usr
 ```
 
-The rebuilt init is taken from `build/init.corrected-rebuilt`; its reconstructed
-source is `systemIII/init.c`. The relinked kernel is taken from
-`s8000_usr/sys/conf/zeus`.
+The installed init is the pristine original `build/init.pristine-911118`; the
+build refuses to run unless it hashes to the value recorded above. The
+superseded reconstruction survives only as source, in `systemIII/init.c`. The
+relinked kernel is taken from `s8000_usr/sys/conf/zeus`.
 
 Run:
 
@@ -260,12 +321,12 @@ The rebuild performs these steps:
 
 1. `stage_clean_zeus.py` selects only base-distribution entries, confirmed
    common files missing from S8000-2, and the documented Model 31 overlay.
-2. It overlays the current fixed init and relinked kernel.
+2. It overlays the pristine init and the relinked kernel.
 3. It creates `/zeus` and `/zeus-3.2.1` as hard links.
 4. `mkv7img` creates the root filesystem. The saved native ZEUS `/usr`,
    `/tmp`, and `/z` partitions are copied into their documented offsets; the
    swap region remains freshly zeroed.
-5. `mkdev` and `fix_dev_majors.py` create and correct the Model 31 devices.
+5. `mkdev` and `fix_dev_majors.py` create and correct all 68 device nodes.
 6. `mkblock0.py` writes the autoboot, root/swap, and VFS configuration,
    including Monitor block-size code `1` for 512-byte CPU-A/HPCPU disk
    transfers.
