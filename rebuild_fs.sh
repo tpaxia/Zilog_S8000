@@ -32,12 +32,15 @@ DEBUG_INSTALL=$HERE/debug/s8000.chd
 PRISTINE_INIT=$BUILD/init.pristine-911118
 PRISTINE_INIT_SHA=7a683ba63c8439398b2cd076dbc7ef08c6efc49f00ad1e55b9bc1a5749c6971a
 RELINKED_ZEUS=$CSVOL/s8000_usr/sys/conf/zeus
-CLEAN_RC=$HERE/systemIII/rc.clean
+PRISTINE_RC=$HERE/systemIII/rc.clean
+PRISTINE_RC_SHA=763766e6725c96b302398a232a250a71c4b12327ce6aa21e18f7d3a2e8608aca
 CLEAN_PASSWD=$HERE/systemIII/passwd.clean
-CLEAN_RC_CSH=$HERE/systemIII/rc_csh.clean
-CLEAN_MFS=$HERE/systemIII/mfs.clean
-CLEAN_INITTAB=$HERE/systemIII/inittab.clean
-GETTY_CONSOLE=$HERE/systemIII/getty-console
+PRISTINE_RC_CSH=$HERE/systemIII/rc_csh.clean
+PRISTINE_RC_CSH_SHA=6fc0837f67582b878f9151431111dd753825d5bc30bf6e8bea567872e3cc5120
+PRISTINE_MFS=$HERE/systemIII/mfs.clean
+PRISTINE_MFS_SHA=a860102e6c41a1bd0a61d92e1d430376c355fb40b71d92aadb40f2a85d7390be
+PRISTINE_INITTAB=$HERE/systemIII/inittab.clean
+PRISTINE_INITTAB_SHA=f383b6520bc1fde907d4eb050650946ca1d2fee51d6758f5ab391e91962a1cc3
 TTYTYPE=$HERE/systemIII/ttytype.h19
 DATE_PATCHER=$HERE/patch_date_y2k.py
 NATIVE_PARTITIONS=$HERE/native_partitions
@@ -60,12 +63,15 @@ CHS="589,7,32"
 [ "$(shasum -a 256 "$PRISTINE_INIT" | cut -d' ' -f1)" = "$PRISTINE_INIT_SHA" ] ||
     { echo "ERROR: pristine init does not match the 1991-11-18 dump"; exit 1; }
 [ -f "$RELINKED_ZEUS" ] || { echo "ERROR: no relinked ZEUS kernel"; exit 1; }
-[ -f "$CLEAN_RC" ] || { echo "ERROR: no clean rc"; exit 1; }
+[ "$(shasum -a 256 "$PRISTINE_RC" | cut -d' ' -f1)" = "$PRISTINE_RC_SHA" ] ||
+    { echo "ERROR: rc does not match recovered rc.sav"; exit 1; }
 [ -f "$CLEAN_PASSWD" ] || { echo "ERROR: no clean passwd"; exit 1; }
-[ -f "$CLEAN_RC_CSH" ] || { echo "ERROR: no clean rc_csh"; exit 1; }
-[ -f "$CLEAN_MFS" ] || { echo "ERROR: no clean mfs"; exit 1; }
-[ -f "$CLEAN_INITTAB" ] || { echo "ERROR: no clean inittab"; exit 1; }
-[ -f "$GETTY_CONSOLE" ] || { echo "ERROR: no console getty wrapper"; exit 1; }
+[ "$(shasum -a 256 "$PRISTINE_RC_CSH" | cut -d' ' -f1)" = "$PRISTINE_RC_CSH_SHA" ] ||
+    { echo "ERROR: rc_csh does not match recovered root filesystem"; exit 1; }
+[ "$(shasum -a 256 "$PRISTINE_MFS" | cut -d' ' -f1)" = "$PRISTINE_MFS_SHA" ] ||
+    { echo "ERROR: mfs does not match recovered root filesystem"; exit 1; }
+[ "$(shasum -a 256 "$PRISTINE_INITTAB" | cut -d' ' -f1)" = "$PRISTINE_INITTAB_SHA" ] ||
+    { echo "ERROR: inittab does not match recovered inittab.s8000-2"; exit 1; }
 [ -f "$TTYTYPE" ] || { echo "ERROR: no console ttytype"; exit 1; }
 [ -f "$DATE_PATCHER" ] || { echo "ERROR: no date Y2K patcher"; exit 1; }
 [ "$(stat -f %z "$NATIVE_USR")" -eq $((USR_SIZE * 512)) ] ||
@@ -93,20 +99,18 @@ python3 "$STAGER" \
     --z-stage "$Z_STAGE" \
     --init "$PRISTINE_INIT" \
     --kernel "$RELINKED_ZEUS"
-cp "$CLEAN_RC" "$ROOT_STAGE/etc/rc"
+cp "$PRISTINE_RC" "$ROOT_STAGE/etc/rc"
 chmod 700 "$ROOT_STAGE/etc/rc"
 cp "$CLEAN_PASSWD" "$ROOT_STAGE/etc/passwd"
 chmod 644 "$ROOT_STAGE/etc/passwd"
-cp "$CLEAN_RC_CSH" "$ROOT_STAGE/etc/rc_csh"
+cp "$PRISTINE_RC_CSH" "$ROOT_STAGE/etc/rc_csh"
 chmod 700 "$ROOT_STAGE/etc/rc_csh"
-cp "$CLEAN_MFS" "$ROOT_STAGE/etc/mfs"
+cp "$PRISTINE_MFS" "$ROOT_STAGE/etc/mfs"
 chmod 700 "$ROOT_STAGE/etc/mfs"
 rm -f "$ROOT_STAGE/etc/umfs"
 ln "$ROOT_STAGE/etc/mfs" "$ROOT_STAGE/etc/umfs"
-cp "$CLEAN_INITTAB" "$ROOT_STAGE/etc/inittab"
+cp "$PRISTINE_INITTAB" "$ROOT_STAGE/etc/inittab"
 chmod 600 "$ROOT_STAGE/etc/inittab"
-cp "$GETTY_CONSOLE" "$ROOT_STAGE/etc/getty-console"
-chmod 700 "$ROOT_STAGE/etc/getty-console"
 cp "$TTYTYPE" "$ROOT_STAGE/etc/ttytype"
 chmod 644 "$ROOT_STAGE/etc/ttytype"
 python3 "$DATE_PATCHER" "$ROOT_STAGE/bin/date" "$ROOT_STAGE/etc/datem"
@@ -137,11 +141,10 @@ rm -f "$CHD"
 chdman createhd -i "$IMG" -o "$CHD" --chs "$CHS" --sectorsize 512 --compression none
 
 echo "== install =="
-# The committed CHD is intentionally read-only.  Make an existing artifact
-# writable for replacement, then restore its published mode.
+# Loose CHDs must remain writable for ZEUS startup and normal filesystem I/O.
 [ ! -e "$INSTALL" ] || chmod u+w "$INSTALL"
 cp "$CHD" "$INSTALL"
-chmod 444 "$INSTALL"
+chmod 644 "$INSTALL"
 mkdir -p "$HERE/debug"
 cp "$CHD" "$DEBUG_INSTALL"
 echo "DONE -> $INSTALL and $DEBUG_INSTALL  (documented Model 31 five-region layout)"

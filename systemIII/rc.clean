@@ -3,14 +3,13 @@
 : "for the other important states where real work occurs we use csh(1)"
 : "scripts"
 
-# The shipped init attaches rc descriptors 0-2 to /.  Reconnect them to the
-# console so interactive startup utilities can display prompts and read input.
-exec < /dev/console > /dev/console 2>&1
-
 TZ=PST8PDT
 export TZ
 trap "INIT 1" 2
 
+: "In all cases i/o is re-directed to the console"
+
+: "zero out the mount table if this is a bootup"
 if [ $3 = "0" ]
 	then /bin/cat /dev/null > /etc/mnttab
 	if test -b /dev/root

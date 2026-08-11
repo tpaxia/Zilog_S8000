@@ -1,24 +1,20 @@
-# "@[$]rc_csh clean Model 31 startup"
+# "@[$]rc_csh	2.21  12/21/83 15:54:25 - Zilog Inc"
 	echo
 	uname -sn
 	echo "Multi-user Startup"
 	echo
 
-# Root is already mounted when rc_csh runs, so it cannot be checked safely
-# here.  Check only the auxiliary filesystems while they are unmounted.
-#
-# Use the buffered block devices.  The S8000 raw SMD path corrupts large
-# reads under the current MAME emulation, which makes the original fsck
-# falsely classify allocated inodes as unallocated.
-	/etc/fsck -y /dev/usr /dev/tmp
+# Check for filesystem consistency
+	/etc/fsck -y /dev/root
+	/etc/fsck -y /dev/rusr /dev/rtmp
 	/etc/mount /dev/tmp /tmp >& /dev/null
-	/etc/fsck -y -t /tmp/scratch /dev/z
+	/etc/fsck -y -t /tmp/scratch /dev/rz
 	/etc/umount /dev/tmp >& /dev/null
 
 # Set the date
 	/etc/datem
 
-# Mount /z, /tmp and /usr.
+# Now mount the filesystems
 	/etc/mfs
 
 # Give the user a chance to interrupt, then go multi-user
@@ -41,10 +37,21 @@
 	endif
 
 # Start cron, update and the dqueuer
+
 	/etc/cron >/usr/lib/cronlog
 	/etc/update
-
 # zero out utmp file
 	cat /dev/null > /etc/utmp
+
+# notes to user
+
+#	st{ll om printern p} 'o{ndlig' sidl{ngd
+
+
+#	st{ll om diablon (tty7) till b}de read och write
+
+
+# start unitex start script
+
 
 	exit 0

@@ -97,10 +97,10 @@ the Zilog distribution this image reconstructs.
 
 ## Image contents
 
-The committed image was rebuilt on 2026-08-09. Its SHA-256 is:
+The image was rebuilt on 2026-08-11. Its SHA-256 is:
 
 ```text
-3957a2dbb2e4e9e5e5c2b82e87c51778b7eef3a9059f73d672540e4e25b6edd6
+b9a02009a8b6a0699beaab8246e0488e19fbe432625276a443afd9c714057265
 ```
 
 The raw filesystems were read back and compared with the staged manifest:
@@ -141,9 +141,10 @@ With the original restored, **every executable in the installed userland is an
 original recovered ZEUS binary**, including `/etc/init`, `/etc/fsck`, `getty`,
 `login`, the shell, and both C compilers.
 The kernel is relinked from the original ZEUS objects, and the narrowly scoped
-`date`/`datem` Y2K byte patches are documented below. The startup, mount,
-password, and terminal configuration files are reconstructed installation
-configuration rather than executable replacements.
+`date`/`datem` Y2K byte patches are documented below. The installed `rc`,
+`rc_csh`, `mfs`/`umfs`, and Model 31 `inittab` are original recovered files.
+The sanitized password file and H19 terminal mapping are reconstructed
+installation configuration rather than executable replacements.
 
 The kernel is the relinked `zeus` produced in `/usr/sys/conf`. Only the boot
 copies `/zeus` and `/zeus-3.2.1` are installed; the build artifact
@@ -254,27 +255,41 @@ fix described above, and install the System 8000 ROMs. For CPU-A, enable the
 **Support Segmented OS** configuration jumper; the included `s8000.cfg` sets
 this jumper.
 
-The same `s8000_smd.chd` boots on both CPU boards. Run CPU-A with the `s8000`
-machine:
+The same `s8000_smd.chd` boots on both CPU boards. The repository contains
+machine-specific `s8000.cfg` and `s8000s2.cfg` files. Pass the repository to
+MAME with `-cfg_directory` so it loads the configuration whose filename
+matches the selected machine. In particular, `s8000.cfg` enables the CPU-A
+**Support Segmented OS** jumper required by ZEUS. MAME may update the matching
+configuration file when it exits, so review or restore that file if you change
+settings interactively.
+
+Run CPU-A with the `s8000` machine:
 
 ```sh
 ./s8000 s8000 -rp roms \
+  -cfg_directory /path/to/Zilog_S8000 \
   -hard1 /path/to/Zilog_S8000/s8000_smd.chd
 ```
+
+When the MAME window opens, press numeric-keypad `+`, which is mapped to the
+front-panel **START** key.
 
 After shutting down CPU-A and exiting MAME, run HPCPU with the `s8000s2`
 machine against the same image:
 
 ```sh
 ./s8000 s8000s2 -rp roms \
+  -cfg_directory /path/to/Zilog_S8000 \
   -hard1 /path/to/Zilog_S8000/s8000_smd.chd
 ```
 
-Do not open the writable CHD in both machines simultaneously. Press the
-front-panel START key (numeric keypad `+`). Block zero causes either monitor to
-load `smd(0,15200)zeus`; init checks the unmounted auxiliary
-filesystems, prompts for the date, mounts `/z`, `/tmp`, and `/usr`, and enters
-multi-user mode:
+When the MAME window opens, press numeric-keypad `+` to press the HPCPU
+front-panel **START** key.
+
+Do not open the writable CHD in both machines simultaneously. Block zero
+causes either monitor to load `smd(0,15200)zeus`; init checks the unmounted
+auxiliary filesystems, prompts for the date, mounts `/z`, `/tmp`, and `/usr`,
+and enters multi-user mode:
 
 ```text
 Zilog Zeus Kernel -- Release 3.21
@@ -308,8 +323,10 @@ The case-sensitive prepared source trees must be mounted at:
 
 The installed init is the pristine original `build/init.pristine-911118`; the
 build refuses to run unless it hashes to the value recorded above. The
-superseded reconstruction survives only as source, in `systemIII/init.c`. The
-relinked kernel is taken from `s8000_usr/sys/conf/zeus`.
+superseded reconstruction survives only as source, in `systemIII/init.c`.
+The build also verifies and installs the recovered `rc.sav`, `rc_csh`, `mfs`
+(hard-linked as `umfs`), and Model 31 `inittab.s8000-2`. The relinked kernel is
+taken from `s8000_usr/sys/conf/zeus`.
 
 Run:
 
@@ -321,7 +338,8 @@ The rebuild performs these steps:
 
 1. `stage_clean_zeus.py` selects only base-distribution entries, confirmed
    common files missing from S8000-2, and the documented Model 31 overlay.
-2. It overlays the pristine init and the relinked kernel.
+2. It overlays the pristine init, recovered startup/mount files, sanitized
+   password and terminal configuration, and the relinked kernel.
 3. It creates `/zeus` and `/zeus-3.2.1` as hard links.
 4. `mkv7img` creates the root filesystem. The saved native ZEUS `/usr`,
    `/tmp`, and `/z` partitions are copied into their documented offsets; the

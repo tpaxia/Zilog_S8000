@@ -1,4 +1,4 @@
-: "@[$]mfs clean Model 31 layout"
+: "@[$]mfs	2.4  03/15/83 08:30:28 - Zilog Inc"
 
 	case $0 in
 		/etc/mfs | mfs)

@@ -7,10 +7,11 @@
 1:06:k:/etc/GETTY tty6 !
 1:07:k:/etc/GETTY tty7 !
 2:00:c:/etc/GETTY tty0 2
-2:co:c:/bin/sh /etc/getty-console
+2:co:c:/etc/GETTY console 2
 2:02:c:/etc/GETTY tty2 2
 2:03:c:/etc/GETTY tty3 2
 2:04:c:/etc/GETTY tty4 2
 2:05:c:/etc/GETTY tty5 2
 2:06:k
 2:07:k
+
