@@ -1,0 +1,45 @@
+.po 1i
+.TH TYPES 7 Bell
+.V 08/15/84 17:38:16
+.\" @[$]types.7	1.4	08/15/84 17:38:17 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+types \- primitive system data types
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.SH DESCRIPTION
+The data types defined in the include file are used in UNIX system code;
+some data of these types are accessible to user code:
+.PP
+.nf
+.RS
+typedef struct { int r[1]; } *  physadr;
+typedef long            daddr_t;
+typedef char *          caddr_t;
+typedef unsigned short  ushort;
+typedef ushort          ino_t;
+typedef char            cnt_t;
+typedef long            saddr_t;
+typedef long            paddr_t;
+typedef long            time_t;
+typedef int             label_t[9];
+typedef int             dev_t;
+typedef long            off_t;
+.RE
+.fi
+.PP
+The form
+.I daddr_t
+is used for disk addresses except in an i-node on disk, see
+.BR filesys (5).
+Times are encoded in seconds since 00:00:00 GMT, January 1, 1970.
+The major and minor parts of a device code specify kind and unit
+number of a device and are installation-dependent.
+Offsets are measured in bytes from the beginning of a file.
+The
+.I label_t
+variables are used to save the processor state while another
+process is running.
+.SH SEE ALSO
+filsys(5).

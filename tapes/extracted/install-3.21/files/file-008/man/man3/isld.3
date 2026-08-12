@@ -1,0 +1,37 @@
+.po 1i
+.TH ISLD 3 Zilog
+.V 08/15/84 17:20:54
+.\" @[$]isld.3	1.5 08/15/84 17:20:54 - Zilog Inc.
+.SH NAME
+lddbl, ldfloat, ldint, ldlong \- C-ISAM load routines
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBdouble lddbl\fI(p)\fR
+\fBchar  \fI*p;\fR
+.sp
+\fBfloat  ldfloat\fI(p)\fR
+\fBchar  \fI*p;\fR
+.sp
+\fBint  ldint\fI(p)\fR
+\fBchar  \fI*p;\fR
+.sp
+\fBlong  ldlong\fI(p)\fR
+\fBchar  \fI*p;\fR
+.fi
+.SH DESCRIPTION
+These routines load a byte string into a numeric field.
+The byte field need not be word-alligned.
+The parameter \fIp\fR points to the byte string.  
+.PP
+These routines require the C-ISAM library.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isst(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

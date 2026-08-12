@@ -1,0 +1,20 @@
+.po 1i
+.TH TTY 1 Bell
+.V 08/15/84 17:08:35
+.\" @[$]tty.1	1.5	08/15/84 17:08:35 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+tty \- get terminal name
+.SH SYNOPSIS
+.B tty
+.SH DESCRIPTION
+.B Tty
+prints the pathname of the user's terminal.
+.SH EXAMPLES
+.nf
+% tty
+ /dev/tty05
+.fi
+.SH DIAGNOSTICS
+"Not a tty" if the standard input file is not a terminal.

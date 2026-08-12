@@ -1,0 +1,27 @@
+.po 1i
+.TH LOCAL 1 Zilog
+.V 08/15/84 16:56:52
+.\" @[$]local.1	1.6	08/15/84 16:56:52 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+local \- return control to local system
+.SH SYNOPSIS
+.BR local " [ -l ] "
+.SH DESCRIPTION
+.B Local
+returns control to the local 
+system which is running the ZLAB-8000
+Communication Package file transfer software.
+.SH OPTIONS
+.TP
+.B \-l
+A "logout" is given to the remote system before returning to
+the local system.
+.SH FILES
+/usr/src/local.c	C source program for local
+.SH SEE ALSO
+getfile(1), putfile(1), remote(1).
+.br
+\fICOMM -- The ZEUS Communications Package \fR
+in the ZEUS Utilities Manual

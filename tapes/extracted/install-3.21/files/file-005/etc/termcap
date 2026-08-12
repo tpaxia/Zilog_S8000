@@ -1,0 +1,271 @@
+un|dumb|unknown:co#80:am:bs:
+pb|dumb|unknown:co#80:am:bs:
+cl|adm3|3|lsi adm3:\
+	:am:bs:cl=^Z:li#24:ma=j^Jk^P^K^Pl :co#80:
+ca|adm3a|3a|lsi adm3a:\
+	:am:bs:cm=\E=%+ %+ :cl=^Z:co#80:ho=^^:li#24:ma=j^Jk^P^K^P^Z^Ll ^Ll:\
+	:nd=^L:up=^K:
+C1|adm31|31|lsi adm31:is=\Eu\E0:\
+	:al=\EE:am:bs:ce=\ET:cm=\E=%+ %+ :cl=\E*:co#80:dc=\EW:dl=\ER:\
+	:ei=\Er:ho=^^:im=\Eq:li#24:ma=^Z^L^K^P^L j^Jk^Pl :\
+	:kl=^H:kd=^J:ku=^K:kr=^L:kh=^^:\
+	:mi:nd=^L:se=\EG0:\
+	:NM=\E(\EG0:NB=\E(\EG2:NR=\E(\EG4:NS=\E(\EG6:\
+	:AL=\E)\EG0:AB=\E)\EG2:AR=\E)\EG4:AS=\E)\EG6:OV#1:\
+	:so=\EG6:up=^K:
+cb|adm3b|3b|lsi adm3b:\
+	:am:bs:cl=^Z:co#80:ho=^^:li#24:ll=\E=7 :nd=^L:up=^K:so=DING :se= DONG:
+mz|mcz|mcz vdb:\
+	:am:bs:cl=^l:cm=:co#80:ho=^y:li#24:ma=j^Jk^P^K^Pl :nd=^\:up=^_:
+cs|cit|cit101|c101|cit-101:\
+	:ti=\E>\E[?1l\E[?3l\E[?4l\E[4v\E[>6l\E[?7h\E[?8h\E[>9l\E[>13h:\
+	:if=/usr/lib/tabset/vt100:\
+	:co#80:li#24:cl=50\E[;H\E[2J:bs:cm=5\E[%i%2;%2H:nd=2\E[C:up=2\E[A:\
+	:ce=3\E[K:cd=50\E[J:so=\E[7m:se=\E[m:us=\E[4m:ue=\E[m:\
+	:CF=\E[1v:CN=\E[0v:\
+	:NM=\E[0m:NB=\E[0;5m:NR=\E[0;7m:NS=\E[0;5;7m:\
+	:AL=\E[0;1m:AB=\E[0;1;5m:AR=\E[0;1;7m:AS=\E[0;1;5;7m:OV#0:\
+	:ku=\E[A:kd=\E[B:kr=\E[C:kl=\E[D:kh=\E[H:ho=\E[H:\
+	:pt:ma=j^Jh^Hk^Pl ^Kk:sr=5\EM:
+cn|citn|cit101n|c101n|cit-101 w/no init:\
+	:ti=\E[?3l\E[>6l\E[?7h\E[?8h\E[>9l\E[>13h:\
+	:if=/usr/lib/tabset/vt100:\
+	:co#80:li#24:cl=50\E[;H\E[2J:bs:cm=5\E[%i%2;%2H:nd=2\E[C:up=2\E[A:\
+	:ce=3\E[K:cd=50\E[J:so=\E[7m:se=\E[m:us=\E[4m:ue=\E[m:\
+	:ku=\E[A:kd=\E[B:kr=\E[C:kl=\E[D:kh=\E[H:ho=\E[H:\
+	:pt:ma=j^Jh^Hk^Pl ^Kk:sr=5\EM:
+cw|citw|cit101w|c101w|cit-101w:\
+	:ti=\E>\E[?1l\E[?3h\E[?4l\E[4v\E[>6l\E[?7h\E[?8h\E[>9l\E[>13h:\
+	:if=/usr/lib/tabset/vt100:\
+	:co#132:li#24:am:cl=50\E[;H\E[2J:bs:cm=10\E[%i%2;%3H:nd=2\E[C:up=2\E[A:\
+	:ce=3\E[K:cd=50\E[J:so=\E[7m:se=\E[m:us=\E[4m:ue=\E[m:\
+	:ku=\E[A:kd=\E[B:kr=\E[C:kl=\E[D:kh=\E[H:ho=\E[H:\
+	:pt:ma=j^Jh^Hk^Pl ^Kk:sr=5\EM:
+vz|vtz|mcz2/60|vtz2/10:\
+	:ti=\E<\E=\E[?1h\E[>4l\E[>6h\E[?7h\E[>7l\E[?8h\E[=~u1^K\E[=~d1j\E[=~l1^H\E[=~r1 :\
+	:co#80:li#24:am:bs:cl=50\E[H\E[2J:cm=10\E[%i%2;%2H:nd=2\E[C:up=2\E[A:\
+	:ce=3\E[K:cd=50\E[J:so=\E[7m:se=\E[m:us=\E[4m:ue=\E[m:\
+	:al=\E[L:dl=\E[M:dc=\E[P:im=\E[>4h:ei=\E[>4l:\
+	:ku=\E[A:kd=\E[B:kr=\E[C:kl=\E[D:kh=\E[H:ho=\E[H:\
+	:CF=\E[1v:CN=\E[0v:\
+	:NM=\E[0m:NB=\E[0;5m:NR=\E[0;7m:NS=\E[0;5;7m:\
+	:AL=\E[0;1m:AB=\E[0;1;5m:AR=\E[0;1;7m:AS=\E[0;1;5;7m:OV#0:\
+	:ma=j^Jh^Hk^Pl ^Kk^Z^L:
+f1|falco|falco ts100:\
+	:al=3\E[L:bs:cd=50\E[J:ce=5\E[K:cl=50\E[;H\E[2J:cm=5\E[%i%2;%2H:\
+	:co#80:dc=\E[P:dl=3\E[M:do=\E[B:ho=\E[H:\
+	:kd=\E[B:kh=\E[H:kl=\E[D:kr=\E[C:ku=\E[A:li#24:nd=2\E[C:\
+	:se=\E[m:so=\E[7m:sr=\EM:ue=\E[m:up=2\E[A:us=\E[4m:
+f2|falco132:\
+	:al=5\E[L:bs:cd=50\E[J:ce=10\E[K:cl=50\E[;H\E[2J:cm=10\E[%i%2;%3H:\
+	:co#132:dc=5\E[P:dl=5\E[M:do=5\E[B:ho=\E[H:\
+	:kd=\E[B:kh=\E[H:kl=\E[D:kr=\E[C:ku=\E[A:li#24:nd=5\E[C:\
+	:se=\E[m:so=\E[7m:sr=5\EM:ue=\E[m:up=5\E[A:us=\E[4m:
+f3|falco-init|falco ts100 with programmed cursor keys:\
+	:ti=\E[?3l\E[HRG \E~kLFh\E~kUPk\E~kDNj\E~k\E[2J\E[24;0H:\
+	:al=3\E[L:bs:cd=50\E[J:ce=5\E[K:cl=50\E[;H\E[2J:cm=5\E[%i%2;%2H:\
+	:co#80:dc=\E[P:dl=3\E[M:do=\E[B:ho=\E[H:\
+	:kd=\E[B:kh=\E[H:kl=\E[D:kr=\E[C:ku=\E[A:li#24:nd=2\E[C:\
+	:se=\E[m:so=\E[7m:sr=\EM:ue=\E[m:up=2\E[A:us=\E[4m:
+ip|ibmpc|ibm-pc:\
+	:al=\E[L:am:bs:ce=\E[K:cl=\E[H\E[2J:cm=\E[%i%2;%2H:co#80:\
+	:dl=\E[M:li#25:nd=\E[C:se=\E[m:so=\E[7m:up=\E[A:
+z2|zen|z1051|vtz3/20|zentec 1051:\
+	:ti=\E[?3l:\
+	:al=\E[L:am:bs:cd=50\E[J:ce=3\E[K:cl=50\E[H\E[2J:cm=5\E[%i%2;%2H:\
+	:co#80:dc=\E[P:dl=\E[M:do=2\E[B:ho=\E[H:\
+	:kd=\E[B:kh=\E[H:kl=\E[D:kr=\E[C:ku=\E[A:\
+	:li#24:ma=j^Jh^Hk^Pl ^Kk^Z^L:\
+	:nd=2\E[C:se=\E[m:so=\E[7m:ue=\E[m:up=2\E[A:us=\E[4m:\
+	:CF=\E[!0;2Q:CN=\E[0m:\
+	:NM=\E[0m:NB=\E[0;5m:NR=\E[0;7m:NS=\E[0;5;7m:\
+	:AL=\E[0;1m:AB=\E[0;1;5m:AR=\E[0;1;7m:AS=\E[0;1;5;7m:OV#0:
+z3|zenw|zw|z132|132-col zentec 1051:\
+	:ti=\E[?3h:\
+	:al=\E[L:am:bs:cd=50\E[J:ce=3\E[K:cl=50\E[H\E[2J:cm=5\E[%i%2;%3H:\
+	:co#132:dc=\E[P:dl=\E[M:do=2\E[B:ho=\E[H:\
+	:kd=\E[B:kh=\E[H:kl=\E[D:kr=\E[C:ku=\E[A:\
+	:li#24:ma=j^Jh^Hk^Pl ^Kk^Z^L:\
+	:nd=2\E[C:se=\E[m:so=\E[7m:ue=\E[m:up=2\E[A:us=\E[4m:\
+	:CF=\E[!0;2Q:CN=\E[0m:\
+	:NM=\E[0m:NB=\E[0;5m:NR=\E[0;7m:NS=\E[0;5;7m:\
+	:AL=\E[0;1m:AB=\E[0;1;5m:AR=\E[0;1;7m:AS=\E[0;1;5;7m:OV#0:
+kb|h19|heath|h19b|heathkit|heathkit h19:\
+	:al=\EL:am:bs:cd=\EJ:ce=\EK:cl=\EE:cm=\EY%+ %+ :co#80:dc=\EN:dl=\EM:\
+	:do=\EB:ei=\EO:ho=\EH:im=\E@:li#24:mi:nd=\EC:as=\EF:ae=\EG:\
+	:ms:pt:se=\Eq:so=\Ep:up=\EA:vs=\Ex4:ve=\Ey4:\
+	:kb=^h:ku=\EA:kd=\EB:kl=\ED:kr=\EC:kh=\EH:kn#8:\
+	:k1=\ES:k2=\ET:k3=\EU:k4=\EV:k5=\EW:\
+	:l6=blue:l7=red:l8=white:k6=\EP:k7=\EQ:k8=\ER:
+kB|h19bs|heathkit w/keypad shifted:ks=\Et:ke=\Eu:tc=h19b:
+kU|h19us|heathkit w/keypad shifted/underscore cursor:ks=\Et:ke=\Eu:tc=h19u:
+ku|h19u|heathkit with underscore cursor:vs@:ve@:tc=h19b:
+m0|m202|Olivetti m20 for pcos 2.0:\
+	:co#80:li#25:cl=^L:bs:cm=\E[%i%d;%dH:ho=\E[1;1H:\
+	:up=\E[A:nd=\E[B:\
+	:al=\E[C:dl=\E[D:\
+	:im=:ic=\E[E:ei=:dm=:dc=\E[F:ed=:\
+	:so=\E[G:se=\E[H:\
+	:ce=\E[I:cd\E[J:\
+	:pt:
+cT|tvi912|tvi920|tvisp:\
+	:al=\EE:am:bs:ce=\ET:cm=\E=%+ %+ :cl=^Z:co#80:dc=\EW:dl=\ER:\
+	:ei=:ho=^^:im=:ic=\EQ:li#24:nd=^L:pt:se=\Ek:so=\Ej:up=^K:
+cR|adds25|regent 25|reg 25:\
+	:am:bs:ce=\EK:cd=\Ek:co#80:li#24:cl=:cm=\EY%+ %+ :\
+	:ti=\EOR:so=^N:se=^O:\
+	:nd=:up=:ma= h:
+c1|c100|concept100:is=\EU\Ef\E7\E5\E8\El\ENH\EK\E\200\Eo&\200:\
+	:al=3*\E^R:am:bs:bw:cd=16*\E^C:ce=16\E^S:cl=2*^L:co#80:\
+	:dc=16\E^A:dl=3*\E^B:ei=\E\200:eo:ho=\E?:im=\E^P:in:ip=16*:\
+	:kb=^H:kd=\E<:kh=\E?:kl=\E>:kr=\E=:ku=\E;:li#24:\
+	:ll=16*\EU\Ea7 \Eu:mi:nd=\E=:\
+	:se=\Ed\Ee:so=\ED\EE:ta=8\t:ul:up=\E;:vb=\Ek\EK:xn:
+cr|c100rv|concept100rv:is=\EU\Ef\E7\E5\E8\El\ENH\Ek\E\200\Eo&\200:\
+	:al=3*\E^R:am:bs:cd=16*\E^C:ce=16\E^S:cl=2*^L:cm=\Ea%+ %+ :co#80:\
+	:dc=16\E^A:dl=3*\E^B:ei=\E\200:eo:im=\E^P:in:ip=16*:li#24:mi:nd=\E=:\
+	:se=\Ed\ED:so=\ED\Ed:ta=8\t:ul:up=\E;:vb=\EK\Ek:xn:
+cH|hp2645|2645:is=500\EE:if=/usr/lib/tabset/std:\
+	:al=\EL:am:bs:cd=\EJ:ce=\EK:ch=\E&a%2C:cl=\EH\EJ:cm=6\E&a%r%2c%2Y:\
+	:co#80:cv=\E&a%2Y:da:db:dc=\EP:dl=\EM:ei=\ER:gu:im=\EQ:\
+	:li#24:mi:nd=\EC:se=\E&d@:so=\E&dB:up=\EA:
+cm|dm1520|datamedia 1520:\
+	:am:bs:cd=^K:ce=^]:cl=^L:cm=^^%r%+ %.:co#80:ho=^Y:\
+	:li#24:nd=^\:up=^_:xn:
+c2|dm2500|datamedia 2500:\
+	:al=15^P\n\r^X^]:am:bs:ce=^W:cl=^^^^\177:cm=^L%r%n%.%.:co#80:\
+	:dc=10*\b:dl=10*^P^Z^X^]:dm=^P:ed=^X^]:ei=10\377\377^X^]:ho=^B:ic10*:\
+	:im=^P:li#24:nc:nd=^\:pc=\377:so=^N:se=^X^]:up=^Z:
+c3|dm3025|datamedia 3025a:is=\EQ\EU\EV:\
+	:al=130\EP\n\EQ:bs:cd=2\EJ:ce=\EK:cl=2\EM:cm=\EY%r%+ %+ :\
+	:co#80:dc=6\b:dl=130\EP\EA\EQ:dm=\EP:ed=\EQ:ei=\EQ:ho=\EH:\
+	:im=\EP:ip=6:li#24:nd=\EC:pt:so=\EOA:se=\EO@:up=\EA:
+g0|gt40|dec gt40:\
+	:bs:co#72:li#30:os:
+cc|carlock|klc:\
+	:al=^E:am:bs:ce=^U:cl=100^Z:cm=\E=%+ %+ :co#80:dc=\177:dl=^D:dm=:\
+	:ed=:ei=^T:ho=^^:im=^T:li#24:nd=^L:se=^V:so=^V:up=^K:vb=\EV\EV:
+g2|gt42|dec gt42:\
+	:bs:co#72:li#40:os:
+v0|vt50|dec vt50:\
+	:bs:cd=\EJ:ce=\EK:cl=\EH\EJ:co#80:li#12:nd=\EC:pt:up=\EA:
+vh|vt50h|dec vt50h:\
+	:bs:cd=\EJ:ce=\EK:cl=\EH\EJ:cm=\EY%+ %+ :co#80:li#12:nd=\EC:\
+	:pt:sr=\EI:up=\EA:
+v2|vt52|dec vt52:\
+	:bs:cd=\EJ:ce=\EK:cl=\EH\EJ:cm=\EY%+ %+ :co#80:li#24:nd=\EC:\
+	:pt:sr=\EI:up=\EA:
+d0|vt100n|vt100 w/no init:\
+	:co#80:li#24:am:cl=50\E[;H\E[2J:bs:cm=5\E[%i%2;%2H:nd=2\E[C:up=2\E[A:\
+	:ce=3\E[K:cd=50\E[J:so=2\E[7m:se=2\E[m:us=2\E[4m:ue=2\E[m:\
+	:ks=\E[?1h\E=:ke=\E[?1l\E>:ho=\E[H:\
+	:ku=\EOA:kd=\EOB:kr=\EOC:kl=\EOD:\
+	:kh=\E[H:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:pt:sr=5\EM:
+d1|vt100|vt-100|pt100|pt-100|dec vt100:\
+	:co#80:li#24:am:cl=50\E[;H\E[2J:bs:cm=5\E[%i%2;%2H:nd=2\E[C:up=2\E[A:\
+	:ce=3\E[K:cd=50\E[J:so=2\E[7m:se=2\E[m:us=2\E[4m:ue=2\E[m:\
+	:is=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h:ks=\E[?1h\E=:ke=\E[?1l\E>:\
+	:if=/usr/lib/tabset/vt100:ku=\EOA:kd=\EOB:kr=\EOC:kl=\EOD:\
+	:kh=\E[H:k1=\EOP:k2=\EOQ:k3=\EOR:k4=\EOS:pt:sr=5\EM:ho=\E[H:
+dw|dw1|decwriter I:\
+	:bs:co#72:os
+td|dw2|decwriter II:\
+	:bs:co#132:os:
+pd|dtc300s|dtc|diablo 300s:\
+	:bs:co#132:hu=\EH:hd=\Eh:it:os:pl:pt:up=^Z:
+pg|gsi:\
+	:bs:co#132:hd=\Eh:hu=\EH:it:os:pl:pt:up=^Z:
+h5|h1500|hazeltine 1500:\
+	:al=~^Z:am:bs:cd=~^X:ce=~^O:cl=~^\:cm=~^Q%r%.%.:co#80:\
+	:dl=~^S:do=~^K:hz:li#24:nd=^P:se=~^Y:so=~^_:up=~^L:
+h6|h1510|hazeltine 1510:\
+	:al=\E^Z:am:bs:cd=\E^X:ce=\E^O:cl=\E^\:cm=\E^Q%r%.%.:co#80:\
+	:dl=\E^S:do=\E^K:hz:li#24:ma=j^Jk^P^K^Pl :nd=^P:se=\E^Y:so=\E^_:up=\E^L:
+h7|h2000|hazeltine 2000:\
+	:al=6~^z:am:bs:cl=6~^\:cm=~^q%r%.%.:co#74:\
+	:dl=6~^s:ho=~^r:li#27:nc:pc=\177:
+cl|i100|infoton 100:cl=^L:cd=\EJ:ce\EK:li#24:co#80:\
+	:al=\EL:dl=\EM:up=\EA:nd=\EC:ho=\EH:cm=\Ef%r%+ %+ :vb=\Eb\Ea:am:bs
+i2|i200|infoton 200:cl=^L:li#24:co#80:\
+	:up=\034:nd=:ho=:am:bs:
+i4|i400|400|infoton 400:\
+	:al=\E[L:bs:ce=\E[N:cl=\E2J:cm=%i\E%3;%3H:co\#80:dl=\E[M:li\#25:\
+	:nd=\EC:up=\E[A:im=\E[4h\E[2Q:ei=\E[4l\E[0Q:\
+	:dc=\E4h\E[2Q\E[P\E[4l\E[0Q:
+ci|infotonKAS:\
+	:am:bc=^Z:cd=^K:cl=^L:co#80:li#24:nd=^Y:up=^\:ll=^H^\:
+si|addrinfo:\
+	:li#24:co#80:cl=^L:ho=^H:nd=^Y:cd=^K:\
+	:up=^\:am:bc=^Z:cm=\037%+\377%+\377:ll=^H^\:
+c6|mime|mime1|mimei|mimeii:\
+	:al=80^A:am:bs:cd=^_:ce=^^:cl=\035^C:cm=^T%.%.:co#80:dl=80^W:li#24:\
+	:nd=^X:pt:up=^z:ho=\035:dn=^K:so=^N:se=^N:
+c4|microterm|act4:\
+	:am:bs:cd=^_:ce=^^:cl=^L:cm=^T%.%.:co#80:li#24:nd=^X:up=^z:
+c5|microterm5|act5:\
+	:am:bs:cd=^_:ce=^^:cl=^L:cm=^T%.%.:co#80:li#24:nd=^X:up=^Z:ho=^]:\
+	:dn=^K:SO=\EC:SE=\EB:ma=j^Jk^Pl 
+c8|swtp|ct82:\
+	:am:bs:al=^\^Y:cd=^V:ce=^F:cl=^L:cm=^K%.%.:co#82:li#16:\
+	dl=^Z:nd=^I:up=^A:so=^^^V:se=^^^F:dc=^\^H:ic=^\^X:ho=^P:
+cf|fox|fox 1100:if=/usr/lib/tabset/std:\
+	:am:bs:cl=\EK:co#80:li#24:nd=\EC:up=\EA:vb=^P^B^P^C:
+co|owl|owl 1200:if=/usr/lib/tabset/std:\
+	:al=5.5*\EL:am:bs:cd=5.5*\ED:ce=\EI:cl=132\EH\EJ:\
+	:cm=\EX%+ \EY%+ :co#80:dc=5.5*\EO:dl=5.5*\EM:ei=:ic=\EN:im=:ip=5.5*:\
+	:in:li#24:nd=\EC:up=\EA:se?=\E!\200:so?=\E!^H:vb=^P^B^P^C:
+gk|tk4014|4014|tektronix 4014:is=\E\::\
+	:bs:cl=\E^L:co#120:li#56:os:
+ct|t1061|teleray 1061:if=/usr/lib/tabset/teleray:\
+	:al=\EL:bs:cd=\EJ:ce=\EK:cl=\Ej:cm=\EY%+ %+ :co#80:dc=\EQ:\
+	:dl=\EM:ei=:ic=\EP:im=:li#24:nd=\EC:se=\ER@:so=\ERO:up=\EA:
+T2|1200|terminet 1200:\
+	:co#120:os:
+T3|300|terminet 300:\
+	:co#120:os:
+t3|tty33|33:\
+	:co#72:os:
+t7|tty37|37:\
+	:bs:hu?:hd?:up?:os:
+t4|tty43|43:\
+	:am:bs:os:co#132:
+ti|ti700|ti733|ti|ti silent 700:\
+	:bs:co#80:os:dC#162:
+tI|ti745|ti|ti silent 745:\
+	:bs:co#80:os:
+tu|ubell|ubellchar:if=/usr/staff/michael/term/startup:\
+	:am:bs:pt:ce=\Ed:cl=^Z:cm=\E=%+ %+ :co#80:li#24:nd=^L:up=^K:
+cx|xitex|xitex sct-100:\
+	:bs:cd=2000^F^E:ce=1600^E:cl=400^L:cm=\E=%+@%+@:co#64:ho=^D:\
+	:li#16:nd=\t:pc=\200:su=\E=@@^K:up=^K:
+bh|bh3m|beehiveIIIm:if=/usr/lib/tabset/beehive:\
+	:al=160^S:am:bs:cd=^R:ce=^P:cl=^E^R:co#80:dl=300^Q:ho=^E:li#20:ll=^E^K:\
+	:nd=^L:pt:se= ^_:so=^] :up=^K:
+cT|tvi912|tvi920|tvi:\
+	:al=\EE:am:bs:ce=\Et:cm=\E=%+ %+ :cl=\E*:co#80:dc=\EW:dl=\ER:\
+	:ei=:ho=^^:im=:ic=\EQ:in:li#24:nd=^L:pt:se=\Ek:so=\Ej:up=^K:
+dp|ttyWilliams:\
+	:co#80:li#12:bc=^Y:dn=^K:up=^Z:cl=^^:ce=^_:am:ho=^]:nd=^X:
+i4|infoton|400|infoton 400:\
+	:al=\E[P:bs:ce=\E[0N:cl=\E2J:cm=%i\E%3;%3H:co#80:dl=\E[M:li#25:\
+	:nd=\EC:up=\E[A:
+
+Problems remaining:
+dm2500	buggy
+gt40	untested
+gt42	untested
+vt50	untested
+vt50h	untested
+vt100	entries from UCB VAX distribution 4/21/81 WCL
+dw1	untested
+dtc300s	untested
+gsi	untested
+infoton	untested
+fox	untested
+tk4014	untested
+t1061	untested
+1200	untested
+300	untested
+tty33	untested
+tty37	untested
+tty43	untested

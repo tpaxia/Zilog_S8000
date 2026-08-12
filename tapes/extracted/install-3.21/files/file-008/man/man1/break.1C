@@ -1,0 +1,45 @@
+.po 1i
+.TH BREAK 1C UCB
+.V 08/15/84 16:38:42
+.\"@[$]break.1C	1.4	08/15/84 16:38:42 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+break - C-Shell flow control interrupt statement
+.SH SYNOPSIS
+.B break
+.SH DESCRIPTION
+.B Break
+causes execution to resume after the
+.B end
+of the nearest enclosing
+.B foreach
+or
+.B while
+loop.
+The remaining commands on the current line are executed.
+Multi-level breaks are thus possible by writing them all on one line.
+.PP
+The built-in command
+.B continue
+can be used to continue the loop prematurely.
+.SH EXAMPLE
+.RS
+.nf
+ # test.script
+ while(1)
+    echo -n 'enter x: '
+    set x = 'gets'
+    if( $x == 'a') then
+         break
+    else
+         echo 'it didn't break'
+    endif
+ end
+ echo 'it broke'
+.fi
+.RE
+.SH SEE ALSO
+foreach(1C), while(1C), breaksw(1C), end(1C), continue(1C) and
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

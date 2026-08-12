@@ -1,0 +1,66 @@
+.po 1i
+.TH NICE 2 Bell
+.V 08/15/84 17:14:31
+.\"@[$]nice.2	1.5	08/15/84 17:14:31 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+nice \- set program priority
+.SH SYNOPSIS
+.B int nice
+.I (incr)
+.br
+.B int
+.I  incr;
+.SH DESCRIPTION
+The scheduling
+priority of the process is augmented by
+.IR incr .
+Positive priorities get less service than normal.
+Priority 10 is recommended to long-running programs.
+.PP
+Negative increments are ignored except on behalf of 
+the super-user.
+The priority is limited to the range
+\-20 (most urgent) to 20 (least).
+.PP
+The priority of a process is
+passed to a child process by
+.BR fork (2).
+For a privileged process to return to normal priority
+from an unknown state,
+.B nice
+should be called successively with arguments
+\-40 (goes to priority \-20 because of truncation),
+20 (to get to 0),
+then 0 (to maintain compatibility with previous versions
+of this call).
+.SH DIAGNOSTICS
+.B Nice
+will fail and not change the nice value if
+.I incr
+is negative and the effective user
+.SM ID
+of the calling process is not super-user.
+.SM
+\%[EPERM]
+.SH RETURN VALUE
+Upon successful completion,
+.I nice
+returns the new nice value minus 20.
+Otherwise, a value of \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH SEE ALSO
+nice(1).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT NICE	:= 34
+
+	...		!* incr in r0	*!
+	sc	#NICE
+	...		!* return value in r4 *!
+   	   		!* carry flag set if error *!
+.fi
+.ad

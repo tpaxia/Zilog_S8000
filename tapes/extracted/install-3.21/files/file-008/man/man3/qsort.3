@@ -1,0 +1,35 @@
+.po 1i
+.TH QSORT 3 Bell
+.V 08/15/84 17:25:25
+.\" @[$]qsort.3	1.8	08/15/84 17:25:25 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+qsort \- quicker sort
+.SH SYNOPSIS
+.nf
+\fBqsort(base, nel, width, compar)
+\fB   char \fI*base;
+\fB   int \fI(*compar)( );
+\fB   int \fInel, width;\fR
+.nf
+.SH DESCRIPTION
+.B Qsort
+is an implementation
+of the quicker-sort algorithm.
+The first argument is a pointer to the base of the data;
+the second is the number of elements;
+the third is the width of an element
+in bytes;
+the last is the name of the comparison routine
+to be called with two arguments which are pointers
+to the elements being compared.
+The routine must return
+an integer less than, equal to, or greater than 0
+according as the first argument is to be considered
+less than, equal to, or greater than the second.
+.SH SEE ALSO
+sort(1),
+bsearch(3),
+lsearch(3),
+strcmp(3).

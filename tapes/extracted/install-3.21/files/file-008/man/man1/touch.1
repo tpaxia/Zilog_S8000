@@ -1,0 +1,80 @@
+.po 1i
+.TH TOUCH 1 Bell
+.V 08/15/84 17:07:51
+.\" @[$]touch.1	1.7	08/15/84 17:07:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+touch \- update access and modification times of files
+.SH SYNOPSIS
+.B touch
+[
+.B \-acm
+] [ mmddhhmm[yy] ]
+\fIfile\fR \.\.\.
+.SH DESCRIPTION
+.B Touch
+causes the access and modification times of each 
+.I file
+to be updated.  If no time is specified (see
+.B date
+(1)) the current time is used.  The return code from
+.B touch
+is the number of files for which the times could not be successfully
+modified (including files that did not exist and were not created).
+.SH OPTIONS
+.TP
+.B \-a
+causes
+.B touch
+to update only the access time.
+.TP
+.B \-c
+causes
+.B touch
+not to attempt to create a file that does not exist;
+The default is to create one.
+.TP
+.B \-m
+causes
+.B touch
+to update only the modification time.  The default option is
+.B \-am
+(both access and modification times are updated). 
+.SH EXAMPLES
+.nf
+% date
+  Mon Jan 17 15:28:37 PST 1983
+
+% ls -l
+  total 2
+  -rw-rw-rw- 1 carolh       49 Oct 26 09:19 list1
+  -rw-rw-rw- 1 carolh       75 Oct 21 14:22 list2
+
+% touch list2; touch -m 12311000 list1
+
+% ls -l
+  total 2
+  -rw-rw-rw- 1 carolh       49 Dec 31 10:00 list1
+  -rw-rw-rw- 1 carolh       75 Jan 17 15:28 list2
+
+% touch -c list3
+
+% ls -l
+  total 2
+  -rw-rw-rw- 1 carolh       49 Dec 31 10:00 list1
+  -rw-rw-rw- 1 carolh       75 Jan 17 15:28 list2
+
+% touch list3
+
+% ls -l
+  total 3
+  -rw-rw-rw- 1 carolh       49 Dec 31 10:00 list1
+  -rw-rw-rw- 1 carolh       75 Jan 17 15:28 list2
+  -rw-r--r-- 1 carolh        0 Jan 17 15:29 list3
+.fi
+.SH DIAGNOSTICS
+The exit status
+is the number of files unsucessfully touched.
+If all files were sucessfully touched,
+the exit status is 0.

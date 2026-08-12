@@ -1,0 +1,17 @@
+.po 1i
+.TH ABORT 3 Bell
+.V 08/15/84 17:16:51
+.\" @[$]abort.3	1.4	08/15/84 17:16:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+abort \- generate IOT fault
+.SH DESCRIPTION
+.B Abort
+sends an IOT signal that normally terminates
+the process with a memory dump which can be used for debugging.
+(An IOT trap cannot occur in the hardware; this is a software trap.)
+.SH SEE ALSO
+adb(1), signal(2), exit(2).
+.SH DIAGNOSTICS
+"IOT trap \- core dumped" from the shell.

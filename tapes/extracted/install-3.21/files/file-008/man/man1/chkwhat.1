@@ -1,0 +1,33 @@
+.po 1i
+.TH CHKWHAT 1 Zilog
+.V 08/15/84 16:41:27
+.\" @[$]chkwhat.1	1.6	08/15/84 16:41:27 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+chkwhat \- print Zilog Source Control what strings
+.SH SYNOPSIS
+chkwhat [ -w ] \fIfile \fR...
+.SH DESCRIPTION
+.B Chkwhat
+searches the specified files for "what strings"
+and lists the identifying portion of these strings.
+If the
+.I \-w
+option is used the entire "what string" will be printed.
+This option can be helpful when placing "what strings" in an archive.
+The file need not be a text file.
+.LP
+A "what string" shows which version of a source file
+the specified file is or is associated with.
+It is defined as beginning with the four-character
+sequence @[$] and ending with a null, newline, ", or '.
+Chkwhat lists the string from after the @[$] to before
+the terminating character.
+.SH SEE ALSO
+zsc(5), chkin(1), chkout(1)
+.SH LIMITATIONS
+The "what string" was presumably created when the file
+or the source code it was generated from
+was properly checked out of a Zilog Source Control
+file, but there is no guarantee of this.

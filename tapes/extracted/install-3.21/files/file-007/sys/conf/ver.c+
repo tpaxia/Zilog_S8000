@@ -1,0 +1,77 @@
+&R
+&R
+&H zeus at Mon Jul 18 16:13:22 1983
+a0
+#define UTS_LENGTH 9
+char version[] = "$Z$Zilog Zeus Kernel -- Release $R$ -- Generated $D$\n";
+char copyrit[] = "Copyright  1981  Zilog, Inc.\n";
+char utsrelease[UTS_LENGTH]	= "REL:$R$";
+.
+&D
+&R
+&H zeus at Mon Jul 18 16:13:47 1983
+&D
+&H zeus at Mon Jul 18 16:14:06 1983
+&D
+&H martha at Mon May  7 07:56:38 1984
+&D
+&H martha at Mon May  7 07:58:08 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 07:58:34 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 07:58:42 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 07:58:49 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:00:02 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:01:12 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:01:18 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:05 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:12 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:19 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:26 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:32 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:40 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:47 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:02:53 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Mon May  7 08:03:00 1984
+&C Bump up to 21 for R3.21
+&D
+&H martha at Sun May 13 13:47:10 1984
+&C Change copyright message
+c3
+char copyrit[] = "(c) 1983,1984  Zilog, Inc.\n";
+.
+&D
+&H martha at Sat May 19 14:33:53 1984
+&C Remove "REL:" from utsrelease
+c4
+char utsrelease[UTS_LENGTH]	= "$R$";
+.
+&D

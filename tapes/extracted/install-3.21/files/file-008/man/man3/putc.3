@@ -1,0 +1,103 @@
+.po 1i
+.TH PUTC 3 Bell 
+.V 08/15/84 17:23:02
+.\" @[$]putc.3	1.7	08/15/84 17:23:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+putc, putchar, fputc, putw \- put character or word on a stream
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.PP
+\fBint putc\fI(c, stream)
+\fBchar \fIc;
+.br
+\fBFILE \fI*stream;
+.PP
+\fBputchar\fI(c)
+.PP
+\fBfputc\fI(c, stream)
+\fBFILE \fI*stream;
+.PP
+\fBputw\fI(w, stream)
+\fBFILE \fI*stream;\fR
+.fi
+.SH DESCRIPTION
+.B Putc
+appends the character
+.I c
+to the named output
+.IR stream .
+It returns the character written.
+.PP
+.B Putchar(c)
+is defined as 
+.B "putc\fI(c, stdout)."\fR
+.PP
+.B Fputc
+saves on object text and behaves like 
+.B putc,
+but is a genuine function rather than a macro.
+.PP
+.B Putw
+appends word 
+(that is,
+.IR int )
+.I w
+to the output
+.IR stream
+and returns the word written.
+.B Putw
+neither assumes nor causes special alignment in the file.
+.PP
+The standard stream
+.I stdout
+is normally buffered if and only if the
+output does not refer to a terminal;
+this default is changed by
+.BR setbuf (3).
+The standard stream
+.I stderr
+is by default unbuffered unconditionally,
+but use of
+.B freopen
+(
+.BR fopen (3))
+causes it to become buffered.
+.IR Setbuf ,
+sets the state to whatever is desired.
+When an output stream is unbuffered, information appears on the
+destination file or terminal as soon as written.
+When it is buffered,
+many characters are saved up and written as a block.
+.B Fflush
+(
+.BR fclose (3))
+is used to force the block out early.
+.SH SEE ALSO
+fopen(3),
+fclose(3),
+getc(3),
+puts(3),
+printf(3),
+fread(3).
+.SH DIAGNOSTICS
+These functions return the constant
+.SM
+.B EOF
+upon error.
+Since this is a good integer, use
+.BR  ferror (3)
+to detect 
+.B putw
+errors.
+.SH LIMITATIONS
+Because it is implemented as a macro,
+.B putc
+treats a
+.I stream
+argument with side effects improperly.
+In particular
+putc(c, *f++);
+does not work.

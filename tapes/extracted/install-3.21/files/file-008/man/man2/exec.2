@@ -1,0 +1,446 @@
+.po 1i
+.TH EXEC 2 Bell
+.V 08/15/84 17:12:57
+.\"@[$]exec.2	1.14	08/15/84 17:12:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+execl, execv, execle, execve, execlp, execvp  \- execute a file
+.SH SYNOPSIS
+.B int execl
+.I (file, arg0, arg1, ..., argn,
+(char*) \fI0\fR)
+.br
+.B char
+.I *file, *arg0, *arg1, ..., *argn;
+.PP
+.B int execv
+.I (file, argv)
+.br
+.B char
+.I *file, *argv[ ];
+.PP
+.B int execle
+.I (file, arg0, arg1, ..., argn,
+(char*) \fI0, envp\fR)
+.br
+.B char
+.I *file, *arg0, *arg1, ..., *argn,
+\fI*envp\fR[ ];
+.PP
+.B int execve
+.I (file, argv, envp)
+.br
+.B char
+.I *file, *argv[ ], *envp[ ];
+.PP
+.PP
+.B int execlp
+.I (file, arg0, arg1, ..., argn,
+(char*) \fI0\fR)
+.br
+.B char
+.I *file, *arg0, *arg1, ..., *argn;
+.PP
+.B int execvp
+.I  (file, argv)
+.br
+.B char
+.I *file, *argv[ ];
+.SH DESCRIPTION
+.B Exec
+in all its forms overlays the calling process with 
+.I file,
+then transfers to the
+entry point of the core image of the file.
+There can be no return from a successful exec; 
+the calling core image is lost.
+.PP
+File descriptors open in the calling 
+process remain open in the new process,
+except for those whose
+\%close-on-exec 
+flag is set; see 
+.BR fcntl (2).
+For those file descriptors that remain open,
+the file pointer is unchanged.
+.PP
+Ignored signals remain ignored across these calls, 
+but signals that are caught (
+.BR signal (2)) 
+are reset to their default values.
+.PP
+Profiling is disabled for the new process; see
+.BR profil (2).
+.PP 
+Each user has a real user ID and group ID and an effective 
+user ID and group ID.
+The real ID identifies the person using the system; the effective ID
+determines the access privileges.
+.B Exec
+changes the effective user and group ID to
+the owner of the executed file if the file has the 
+set-user-ID or set-group-ID modes.
+The real user ID is not affected.
+.PP
+The new process also inherits the 
+following attributes from the calling process:
+.PP
+.PD 0
+.RS 0.5i
+.PP
+nice value (see 
+.BR nice (2))
+.PP
+process
+.SM ID
+.PP
+parent process
+.SM ID
+.PP
+process group
+.SM ID
+.PP
+tty group
+.SM ID
+(see 
+.BR exit (2)
+and
+.BR signal (2))
+.PP
+trace flag (see
+.BR ptrace "(2) request 0)"
+.PP
+time left until an alarm clock signal (see 
+.BR alarm (2))
+.PP
+current working directory
+.PP
+root directory
+.PP
+file mode creation mask (see
+.BR umask (2))
+.PP
+file size limit (see 
+.BR ulimit (2))
+.PP
+.BR utime ,
+.BR stime ,
+.BR cutime ,
+and
+.B cstime
+(see 
+.BR times (2))
+.RE
+.PD
+.PP
+From C, two interfaces are available.
+.B Execl
+is useful when a known file with known arguments is
+being called;  the arguments to
+.B execl
+are the character strings constituting the file and the arguments;
+the first argument is conventionally
+the same as the file name or its last component.
+A 0 argument must end the argument list. 
+Remember that a 0L must end the argument list in 
+the case of a segmented program making the call to 
+.B execl.
+.PP
+The
+.B execv
+version is useful when the number of arguments is unknown
+in advance;
+the arguments to
+.B execv
+are the name of the file to be executed and a vector 
+of strings containing the arguments.
+The last argument string must be followed by a 0 pointer,
+which must be a 0L in the case of a segmented program 
+making the call to
+.B execv.
+.PP
+When a C program is executed, it is called as follows:
+.PP
+	main(argc, argv, envp)
+.br
+	int argc;
+.br
+	char **argv, **envp;
+.PP
+where 
+.I argc
+is the argument count and 
+.I argv
+is an array of
+character pointers to the arguments themselves.
+.PP
+.I Argc
+is at least one and the first member of the array points to a
+string containing the name of the file.
+.PP
+.I Argv
+is directly usable in another 
+.B execv
+because
+.I argv [ argc ]
+is 0.
+.PP 
+.B Execlp
+and
+.B execlvp
+are called with the same arguments as
+.B execl
+and 
+.B execv
+but duplicate the shell's actions in searching
+for an executable file in a list of directories.
+The directory list is obtained from the environment.
+.SH ARGUMENTS
+The
+.I file
+argument is a pointer to the file to be executed.
+The path prefix for this file is obtained by a 
+search of the directories
+passed as the
+.I environment
+line "\s-1PATH\s+1 ="
+(see
+.BR environ (7)).
+The environment
+is supplied by the shell (see
+.BR sh (1)).
+.PP
+The pointers
+.IR arg0,
+.IR arg1 " ..."
+address null-terminated strings.
+These strings constitute the argument list available to the new process.
+Conventionally,
+.IR arg0
+is the name of the file.
+.PP
+.I Argv
+is an array of character pointers to null-terminated strings.
+These strings constitute the argument list available to the new process.
+By convention,
+.I argv
+must have at least one member,
+and it must point to a string that is the same as
+.I file
+(or its last component).
+.I Argv
+is terminated by a null pointer.
+.PP
+.I Envp
+is a pointer to an array of strings that constitute 
+the environment of the process.
+Each string consists of a name, an =, and a null-terminated value.
+The array of pointers is terminated by a null pointer.
+In the case of a segmented program doing the exec, all nulls will be
+two words of 0.
+The shell (
+.BR sh (1))
+passes an environment entry for each global shell variable
+defined when the program is called.
+.PP
+See
+.BR environ (5)
+for some conventionally used names.
+The C run-time start-off routine places a copy of
+.B envp
+in the global cell 
+.IR environ ,
+which is used by
+.B execv 
+and 
+.B execl
+to pass the environment to any subprograms executed by the
+current program.
+The
+.B exec
+routines use lower-level routines as follows
+to pass an environment explicitly:
+.RS
+.nf
+execle(file, arg0, arg1, . . . , argn, 0, environ);
+execve(file, argv, environ);
+.fi
+.SH FILES
+.ta \w'/bin/sh  'u
+/bin/sh	shell, invoked if command file found
+by
+.B execlp
+or
+.B execvp
+.SH SEE ALSO
+fork(2), environ(5).
+.SH DIAGNOSTICS
+.B Exec
+will fail and return to the calling process if one or more of the
+following are true:
+.IP
+One or more components of the new process file's path name do not exist.
+.SM
+\%[ENOENT]
+.IP
+A component of the new process file's path prefix is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+Search permission is denied for a 
+directory listed in the new process file's
+path prefix.
+.SM
+\%[EACCES]
+.IP
+The new process file is not an ordinary file.
+.SM
+\%[EACCES]
+.IP
+The new process file mode denies execution permission.
+.SM
+\%[EACCES]
+.IP
+The new process file has the appropriate access permission, but has an
+invalid magic number in its header.
+.SM
+\%[ENOEXEC]
+.IP
+The new process file is a pure procedure (shared text) file that is
+currently open for writing by some process.
+.SM
+\%[ETXTBSY]
+.IP
+The new process requires more 
+memory than is allowed by the system-imposed
+maximum
+.SM MAXMEM.
+.SM
+\%[ENOMEM]
+.IP
+The number of bytes in the new 
+process's argument list is greater than the
+system-imposed limit of 5120 bytes.
+.SM
+\%[E2BIG]
+.IP
+The new process file is not as 
+long as indicated by the size values in its
+header.
+.SM
+\%[EFAULT]
+.IP
+.IR Path ,
+.IR argv ,
+or
+.B envp
+point to an illegal address.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+If 
+.B exec
+returns to the calling process an error has occurred; the return value
+will be \-1 and 
+.I errno
+will be set to indicate the error.
+.SH LIMITATIONS
+If
+.B execvp
+is called to execute a file that is a shell command file,
+and if it is impossible to execute the shell,
+the values of
+.I argv[0]
+and
+.I argv[\-1]
+are modified before return.
+.SH ASSEMBLER
+.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n
+.nf
+.na
+    CONSTANT EXECE	:= 59
+
+    _environ LABEL
+
+
+    !***************************************************!
+    !*  execl (filename, arg0, arg1, ... , 0)          *!
+    !*  execute a file - linear argument transmission  *!
+    !*  environment passed automatically               *!
+    !***************************************************!
+
+    ...			!* filename in r0 *!
+    ...			!* pointer to top of stack *!
+       	        	!* in r1 *!
+    ...			!* (arg0 at top *!
+       	           	!* arg1 below it, ... *!
+    ...			!* 0 below all args *!
+       	           	!* that is, pushed first) *!
+    			!* (segmented: same as above only use *!
+    			!* rr0 and rr2.  Zero pushed on stack *!
+    			!* is a long) *!
+    ld	r2,_environ	!* envp pointer *!
+    			!* (segmented: ldl rr4,_environ) *!
+    sc	#EXECE
+    ...			!* return value in r4 *!
+       	            	!* if returns, error *!
+
+
+
+    !***************************************************!
+    !*  execv (filename, argv)                         *!
+    !*  execute a file - vectored argument transmission*!
+    !*  environment passed automatically               *!
+    !***************************************************!
+
+    ...			!* filename, argv in r0 *!
+       	          	!* r1 respectively *!
+    			!* (segmented: filename, argv in *!
+    			!* rr0, rr2) *!
+    ld	r2,_environ	!* envp pointer *!
+    			!* (segmented: ldl rr4,_environ) *!
+    sc	#EXECE
+    ...			!* return value in r4 *!
+       	           	!* if returns, error *!
+
+
+
+    !***************************************************!
+    !* execle (filename, arg0, arg1, ... , 0, env)     *!
+    !*  execute a file - linear argument transmission  *!
+    !***************************************************!
+
+    ...			!* filename in r0 *!
+    ...			!* pointer to top of stack *!
+       	        	!* in r1 *!
+    ...			!* (arg0 at top, *!
+       	           	!* arg1 below it, ... *!
+    ...			!* 0 below all args, *!
+       	         	!* pushed first) *!
+    			!* (segmented: filename, pointer *!
+    			!* in rr0, rr2.  Push a long zero) *!
+    ld	r2,r1		!* note: for segmented programs, the *!
+    ld	r3,#32768	!* appropriate assembly language should *!
+    clr	r4		!* be used to leave rr4 pointing to *!
+    cpir	r4,@r2,r3,z	!* environ instead of r2 *!
+    sc	#EXECE
+    ...			!* return value in r4 *!
+       	           	!* if returns, error *!
+
+
+
+    !***************************************************!
+    !*  execve (filename, argv, env)                   *!
+    !*  execute a file - vectored argument transmission*!
+    !***************************************************!
+
+    ...			!* filename, mode, env in *!
+       	          	!* r0,r1,r2, respectively *!
+    			!* (segmented: filename, mode, env *!
+    			!* in rr0, rr2, rr4) *!
+    sc	#EXECE
+    ...			!* return value in r4 *!
+       	           	!* if returns, error *!
+.fi
+.ad

@@ -1,0 +1,58 @@
+.po 1i
+.TH SWITCH 1C UCB
+.V 08/15/84 17:06:46
+.\"@[$]switch.1C	1.5	08/15/84 17:06:46 - Zilog Inc.
+.ad
+.SH NAME
+switch \- C Shell flow control statement for decision-making
+.SH SYNOPSIS
+\fBswitch \fI(string)\fR
+.sp
+	\fBcase \fIlabel1:\fR
+.sp
+		\fIcommand\fR
+.sp
+	\fBbreaksw\fR
+.sp
+	\fBcase \fIlabel2:\fR
+.sp
+		\fIcommand\fR
+.sp
+	\fBbreaksw\fR
+.sp
+	\fBdefault\fR
+.sp
+		\fIcommand\fR
+.sp
+\fBendsw\fR
+.SH DESCRIPTION
+\fBSwitch\fR is generally useful in the context of a
+\fIforeach\fR or \fIwhile\fR statement.
+.PP
+Each \fIcase label\fR is successively matched against the specified
+\fIstring\fR. 
+.PP
+The file metacharacters "\ \fB*, ?, [, \fRand\fB ]\fR\ " can
+be used in the \fIcase labels\fR.
+If none of the \fIlabels\fR match before a \fIdefault label\fR
+is found, the execution begins after the \fIdefault label.\fR
+.PP
+Each \fIcase label\fR and the \fIdefault label\fR
+must appear at the beginning of a line.
+The command \fBbreaksw\fR
+causes execution to continue after the \fBendsw.\fR
+Otherwise, control falls through case labels and default labels,
+as in C.
+If no label matches and there is no default, execution continues after
+the \fBendsw.\fR
+.SH SEE ALSO
+break(1C),
+breaksw(1C),
+continue(1C),
+exit(1C),
+foreach(1C),
+if(1C),
+logout(1C),
+while(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

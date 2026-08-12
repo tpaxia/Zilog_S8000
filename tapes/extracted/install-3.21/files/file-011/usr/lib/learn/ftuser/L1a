@@ -1,0 +1,12 @@
+#print
+The "ok" response says you're ready for the next lesson.
+All the other responses you type are commands to ZEUS.
+For instance, display the date and time with:   date (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+1b

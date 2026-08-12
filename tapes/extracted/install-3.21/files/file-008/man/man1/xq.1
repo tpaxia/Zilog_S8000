@@ -1,0 +1,180 @@
+.po 1i
+.TH XQ 1 Zilog
+.V 08/15/84 17:11:03
+.\" @[$]xq.1	1.17	08/15/84 17:11:03 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+xq  \- examine or delete requests from the line printer spooler 
+.SH SYNOPSIS
+\fBxq [ -q \fIqueue:dev \fB[ -s ] ]\fR   
+.br
+\fBxq [ -d \fISEQN-list\fB ]\fR
+.SH DESCRIPTION
+.B Xq
+is the part of the general queuing system that allows 
+examination and deletion of items in the queue area. 
+With no options,
+.B xq
+lists devices, queues, requests, and
+statuses for all entries in the queue system.
+.sp
+The \fB-q\fR modifier, if specified, precedes the \fB-s\fR option;
+the two units " \fB-q \fIqueue:dev \fB-s\fR " and " \fB-d \fISEQN-list\fR "  
+cannot be specified together. 
+.sp
+The information listed for queues and devices is:
+.RS
+.TP 6
+.B Q:DEV
+queue name:device name (device name printed only for device entries)
+.TP 6
+.B STATUS
+current status.  Statuses are:
+.RS
+.TP 9
+.B READY
+- ready for printing. 
+.TP 9
+.B RUNNING
+- currently printing. 
+.TP 9
+.B OFFLINE
+- device is offline and cannot be used. 
+.TP 9
+.B DOWN
+- queue or device is down. 
+No entries will be accepted for down queues, and
+no files will be printed on down devices.
+.RE
+.TP 6
+.B PRIORITY
+Current priority of queue. 
+No requests with a priority less than this will
+be allowed to print.
+.TP 6
+.B FORM
+current form mounted (blank if standard form) (not implemented).
+.TP 6
+.B ACTIVE
+active entry's sequence number.  
+.TP 6
+.B PAGES DONE
+number of pages that have already been printed. 
+.TP 6
+.B % DONE
+percentage of the file completed.  
+.RE
+.br
+.sp
+The information listed for requests is:
+.RS
+.TP 6
+.B SEQN
+Sequence number assigned to this request (remains 
+constant until the request is printed or deleted from the queue).
+.TP 6
+.B USER
+User who submitted the request
+.TP 6
+.B Q:DEV
+Queue (and device if specified) to be used in printing.
+.TP 6
+.B REQUEST
+Name of file to be printed (if not suppressed).
+.TP 6
+.B STATUS
+Status of request - Statuses are:
+.RS
+.TP 9
+.B READY
+- ready to be printed when a device becomes free.
+.TP 9
+.B DISPCHD
+- in the process of being sent to a printer. 
+.TP 9
+.B RUNNING
+- request currently being processed. 
+.RE
+.TP 6
+.B FORM
+Form to be printed on (blank if standard form) (not implemented)
+.TP 6
+.B BLKS
+Length of request (in blocks).
+.TP 6
+.B #
+Number of copies to be printed.
+.TP 6
+.B TIME
+Time request was submitted. 
+.TP 6
+.B TO
+Destination of request (if supplied).
+.RE
+.br
+.SH MODIFIERS
+.TP 3
+.BI \-q " que:dev"  
+.br
+This modifier indicates which queue and device the \fB-s\fR option
+effects.  It must precede the \fB-s\fR option on the command line.
+.SH OPTIONS
+.TP 3
+.BI \-d " SEQN-list"  
+Remove request(s) associated with sequence numbers, \fISEQN-list\fR.
+Sequence numbers can be found using the listing form of
+.B xq.
+Other options delete entries from the print queue;
+they are:
+.bp
+.TP 3
+.B  \-s
+Stop printing.
+Causes printing on specified device to stop immediately.
+The \fB-q \fIque:dev\fR modifier must precede, and the request being 
+processed must be owned by the user making the stop request.
+.sp
+The \fB\-s\fR and \fB\-d\fR options cannot be used together.
+.sp
+.SH EXAMPLES
+.nf
+1)         \fBTO ABORT A PRINTING FILE\fR
+.sp 
+To stop the printer while printing, type:
+.sp
+               xq -q \fIque:dev\fR -s
+.sp
+.fi
+where \fIque:dev\fR references the appropriate queue-and-device revealed
+by \fBxq\fR.
+.nf
+.sp
+2)      \fBTO DELETE A REQUEST FROM THE QUEUE\fR
+.sp
+To remove a queued request, type:
+.sp
+                 xq -d \fISEQN\fR
+.sp
+.fi
+where \fISEQN\fR is the sequence number associated with the request to be
+be deleted. \fISEQN\fR is found by issuing the \fBxq\fR command and 
+referring to the \fBSEQN\fR column.    
+.SH FILES
+.nf
+/usr/spool/queuer/activeconfig	
+.br
+/usr/spool/queuer/logfile
+.br
+/usr/spool/queuer/statusdir	
+.br
+/usr/spool/queuer/requestdir
+.br
+/tmp/queuer
+.fi
+.SH SEE ALSO
+pr(1), nq(1), backend(M), dqueuer(M), xq(M).
+.SH DIAGNOSTICS
+If any part of the spooling system appears to have inconsistancies,
+.BR xq (1)
+prints an error and logs it in the spooler-error log-file.

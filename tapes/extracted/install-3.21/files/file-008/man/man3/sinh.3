@@ -1,0 +1,30 @@
+.po 1i
+.TH SINH 3 Bell
+.V 08/15/84 17:26:50
+.\" @[$]sinh.3	1.8	08/15/84 17:26:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sinh, cosh, tanh \- hyperbolic functions
+.SH SYNOPSIS
+.nf
+\fB#include <math.h>
+.PP
+\fBdouble sinh\fI(x)
+\fBdouble\fI x;
+.PP
+\fBdouble cosh\fI(x)
+\fBdouble\fI x;
+.PP
+\fBdouble tanh\fI(x)
+\fBdouble\fI x;\fR
+.fi
+.SH DESCRIPTION
+These functions compute the designated hyperbolic functions
+for real arguments.
+.SH DIAGNOSTICS
+.B Sinh
+and
+.B cosh
+return a huge value of appropriate sign
+when the correct value would overflow.

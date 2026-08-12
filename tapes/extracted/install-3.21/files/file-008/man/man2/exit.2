@@ -1,0 +1,94 @@
+.po 1i
+.TH EXIT 2 Bell 
+.V 08/15/84 17:13:21
+.\"@[$]exit.2	1.7	08/15/84 17:13:21 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+exit \- terminate process
+.SH SYNOPSIS
+.B exit
+.I (status)
+.br
+.B int
+.I status;
+.PP
+.B _exit
+.I (status)
+.br
+.B int
+.I status;
+.SH DESCRIPTION
+.B Exit
+is the normal means of terminating a process.
+.B Exit
+closes all the process's files and notifies the parent process
+if it is executing a
+.BR wait .
+The low-order eight bits of 
+.B status
+are available to the parent process; see
+.BR wait (2).
+.PP
+If the parent process of the calling process is not executing a
+.BR wait ,
+the calling process is transformed into a zombie process.
+A
+.I "zombie process"
+is a process that only occupies a slot in the process table,
+it has no other space allocated either in user or kernel space.
+The process table slot that it occupies is partially overlaid with
+time accounting information
+(see
+.IR <sys/proc.h> )
+to be used by
+.BR times (2).
+.PP
+The parent process
+.SM ID
+of all of the calling process's existing
+child processes  and zombie processes is set to 1.
+This means the initialization process (see
+.BR intro (2))
+inherits each of these processes.
+.PP
+An accounting record is written on the accounting file if the system's 
+accounting routine is enabled; see
+.BR acct (2).
+.PP
+If the process
+.SM ID\*S,
+tty group
+.SM ID\*S,
+and process group
+.SM ID
+of the calling process are equal, the
+.SM
+.B SIGHUP
+signal is sent to each processes that has a process group
+.SM ID
+equal to that of the calling process.
+This call can never return.
+.PP
+The C function
+.B exit
+can cause cleanup actions before the
+final sys exit.
+The function _\fBexit\fR circumvents all cleanup.
+.SH SEE ALSO
+signal(2), wait(2).
+.B WARNING
+See
+.SM
+.B WARNING
+in
+.BR signal (2).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT EXXIT	:= 1
+
+	...			!* status in r0 *!
+	sc	#EXXIT	!* no return	*!
+.fi
+.ad

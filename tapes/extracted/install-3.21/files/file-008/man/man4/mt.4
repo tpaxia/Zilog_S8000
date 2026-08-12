@@ -1,0 +1,201 @@
+.po 1i
+.TH MT 4 Zilog
+.V 08/15/84 17:31:11
+.\" @[$]mt.4	1.19	08/15/84 17:31:11 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mt \- Zilog streaming magnetic tape interface
+.SH DESCRIPTION
+The files
+.BR mt0 ", " ... ", " mt3
+refer to the 1600 bpi streaming magnetic-tape controller.
+The files
+.BR mt0 ", " ... ", " mt3
+are normal-rewind on close, and the files
+.BR nmt0 ", " ... ", " nmt3
+are no-rewind on close.
+When opened for reading or writing, the tape is assumed to
+be in the desired position.
+When a file is closed, a double end-of-file (double tape mark)
+is written if the file was opened for writing.
+If the file is normal-rewind, the tape is rewound.
+If the file is no-rewind and was opened for writing,
+the tape is positioned before the second of the two
+.SM EOF
+marks just written.
+If the file is no-rewind and was opened read-only, the tape is
+positioned after the        
+.SM EOF
+following the data just read.
+Once opened, reading is restricted to tape 
+between the read-head position at open and either
+the last   
+.SM EOF
+or
+the last write.
+Encountering the
+.SM EOF
+returns a zero-length read.
+By judiciously choosing
+.B mt\^
+files, it is possible to read and write multi-file tapes.
+.PP
+A standard tape consists of
+several 512-byte records terminated by an \s-1EOF\s+1.
+In a limited fashion, the tape may be treated like any other file.
+Seeks have their usual meaning and it is possible
+to read or write a byte at a time.
+.PP
+The
+.B mt
+files discussed above are useful
+for accessing the tape as an ordinary file. 
+When unknown tapes are to be dealt with, and especially
+when long records are to be read or written, the
+"raw" interface is appropriate.
+The raw special files are named
+.BR rmt0 ", " ... ", " rmt3.
+Each
+.B read\^
+or
+.B write\^
+call reads or writes the next record on the tape.
+In the case of a write, the record has the same length as the
+buffer given.
+During a read, the record size is passed
+back as the number of bytes read,
+up to the buffer size specified.
+In raw tape I/O, seeks are ignored.
+Encountering an 
+.SM EOF
+returns a zero-length read, with the tape positioned
+after the \s-1EOF\s+1; the next read returns the next
+record.
+.PP
+.BR smt0 ", " ... ", " smt3
+produce files with short inter-record gaps:  
+(.6in) rather than the default (1.2in) gap.
+This applies only to writing;
+either length gap can be read.
+.BR fmt0 ", " ... ", " fmt3
+produce the high speed mode of the 
+drives: 100ips rather than the
+default 25 ips.
+.PP
+Any combination of these options is 
+available through one of the /dev/*mt?
+files.
+.PP
+The minor device number of the device 
+special files determines which combination
+of the above options applies to them.
+The minor device number is formed by ANDing the bits of the desired 
+options.
+Each bit position in the minor device number represents an option.
+.IP
+The rightmost two bits, Bits 0 and 1 respectively, represent one of 
+four controllers.
+.sp
+The next three bits, Bits 2, 3, and 4 respectively, represent one of eight tape 
+drives for each controller.
+.sp
+The next position, Bit 5, if on, represents high speed mode.
+.sp
+The next position, Bit 6, if on,
+indicates that the tape is to be rewound on close.
+.sp
+The next position, Bit 7, denotes long gap if on, short gap if off.
+.PP
+These bits are only relevant when using the 
+.BR mknod (M)
+command to create new
+device files for nine-track magnetic tape drives.
+The device files for all combinations of options for four tape drives 
+are automaticaly created by using the \fBmkmt\fR(M) command.
+.PP
+Streaming occurs automatically
+when there are several reads or writes and the 
+data is not read in from the disk.
+If the tape drives do not stream, 
+then the drive must reposition the tape
+after each block read or written.
+.PP
+There are several 
+.BR ioctl (2)
+system calls that apply to the nine-track tape drive.
+The calls reference an open /dev/*mt* special file.
+The syntax of the calls is: 
+.sp
+.nf
+                \fBioctl(\fIfd, REQUEST, count\fR);
+.fi
+.sp
+\fIfd\fR is a valid file descriptor of a /dev/*mt* file.
+.br
+\fIREQUEST\fR is one of the options below.
+.br
+\fIcount\fR applies to certain of the requests below.
+.sp
+.B MTIOBF 
+\- Skips forward the number of tape blocks specified 
+in the count field.
+This command will not skip over file marks or past the end-of-tape mark.
+The tape blocks can be any size.
+.sp
+.B MTIOBR 
+\- Skips backward the specified number of tape blocks.
+This command will not skip back over file marks or before the 
+beginning-of-tape mark.
+The tape blocks can be of any size.
+.bp
+.B MTIOFF 
+\- Skips forward the number of files (determined 
+by file marks) specified in the count field.
+The tape is positioned at the beginning of the next file.
+The tape will not skip past the end-of-tape mark.
+.sp
+.B MTIOFR
+\- Skips backward the number of files (determined
+by file marks) specified in the count field.
+The tape is positioned at the beginning of the appropriate file.
+The tape will not skip past the beginning-of-tape mark.
+.sp
+.B MTIOWFM
+\- Writes a file mark at the current position.
+If the short-gap device is used, the file mark has a short 
+gap before it.
+This command does not take a count.
+.sp
+.B MTIOSE
+\- Security erase.  The tape is erased at high speed
+from the current position to one meter past the end-of-tape mark.
+This command does not take a count.
+.sp
+.B MTIORW
+\- Rewind the tape.  Leave the tape positioned at the 
+load point.
+This command does not take a count.
+.sp
+.B MTIORWUL
+\- Rewind and unload the tape; leave the drive offline.
+The tape is completely rewound from the current position.
+This command does not take a count.
+.sp
+.B MTIOOL
+\- Put the drive online.
+This command does not take a count.
+.SH FILES
+/dev/mt0		/dev/nmt0
+.br
+/dev/rmt0		/dev/nrmt0
+.br
+/dev/smt0		/dev/nsmt0
+.br
+/dev/fmt0		/dev/nfmt0
+.br
+/dev/srmt0	/dev/nsrmt0
+.br
+/dev/frmt0	/dev/nfrmt0
+.br
+/dev/fsmt0	/dev/nfsmt0

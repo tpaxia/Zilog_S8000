@@ -1,0 +1,39 @@
+.po 1i
+.TH NEWGRP 1 Bell
+.V 08/15/84 16:59:38
+.\" @[$]newgrp.1	1.8 08/15/84 16:59:38 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+newgrp \- log in to a new group
+.SH SYNOPSIS
+.B newgrp
+[\fIgroup\fR]
+.SH DESCRIPTION
+.B Newgrp
+changes the group identification of its caller, analogously to
+.BR  login (1).
+The same person remains logged in, and the current directory
+is unchanged, but calculations of access permissions to files
+are performed with respect to the new group ID.
+.PP
+A password is demanded if the group has
+a password and the user does not.
+.PP
+When most users log in, they
+are members of the group named other.
+.B Newgrp
+is known to the shell, that executes it directly without a fork
+if the shell is a login shell.
+.PP
+You can always
+.B newgrp
+back to your default group at login by typing:
+.B newgrp.
+The super-user can
+.B newgrp
+to any group.
+.SH FILES
+/etc/group, /etc/passwd
+.SH SEE ALSO
+csh(1), login(1), sh(1), group(5).

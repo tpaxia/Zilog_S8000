@@ -1,0 +1,86 @@
+.po 1i
+.TH REMOTELINES 5 Zilog
+.V 08/15/84 17:35:14
+.\"@[$]remotelines.5	1.5	08/15/84 17:35:14 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+remotelines, LCK \- remote line control and lock files
+.SH DESCRIPTION
+.I Remote
+is used to transfer control to a 
+remote system running ZEUS or UNIX software.
+The system administrator is responsible for creating and maintaining
+the file "/usr/spool/uucp/remotelines" which contains the information
+detailing what systems are available and which devices are to be used to
+connect to them.  
+This file has one line for every remote system known to
+.BR remote (1).
+.PP
+Each line contains two or more entries.  The first entry is the
+.I system_name
+string that 
+.BR remote (1)
+recognizes when it is invoked.  The second entry
+is the name of the device 
+(usually a tty line) that connects to the remote
+system.  The third entry is an optional baud rate 
+(the default is 9600).  The
+entries are separated by one tab or space.  The first line
+in the file will become the default if no
+.IR system_name
+is given.  An example would be:
+.br
+.sp
+pdp11 /dev/tty3
+.br
+rzeus /dev/tty4 4800
+.br
+.sp
+which defines two remote systems,
+a PDP 11, called `pdp11', accessed through
+/dev/tty3 and a remote zeus system, known as `rzeus', accessed through
+/dev/tty4 at 4800 baud.
+If no 
+.I system_name
+was given
+.IR remote (1)
+would default to `pdp11'. 
+Note: it is necessary that the remotelines file be
+readable by everyone, so a mode of 0664 (see
+.IR chmod (1))
+is required.
+.PP
+When 
+.IR remote (1)
+is invoked, it scans the remotelines file and determines
+the entry to be used.  
+It then checks to see if a lock file is present for each
+device for the desired system, stopping when it finds a free one.  The
+name of the lock file is 
+composed of the string "/usr/spool/uucp/LCK.." appended
+with the name of the device to be used 
+(all leading path components removed).
+If this file is not present it is 
+assumed that the remote line is not in use.
+.BR Remote (1)
+then creates the file to lock out other requests for the line.  
+It then proceeds to access the proper 
+device and begin the remote operation.
+The system administrator is responsible 
+for making sure all devices defined
+as remote lines are connected to other machines.  
+It is also necessary to make
+the line accessible to everyone by changing the mode to 0666 (see
+.BR chmod (1))
+and disabling it in /etc/inittab (see
+.BR inittab (5)).
+.SH FILES
+/usr/spool/uucp/LCK..*		lock files
+.br
+/usr/spool/uucp/remotelines	database of systems
+.SH SEE ALSO
+remote(1),
+putfile(1),
+getfile(1),
+local(1).

@@ -1,0 +1,63 @@
+.po 1i
+.TH AR 5 Bell
+.V 08/15/84 17:34:00
+.\"@[$]ar.5	1.3	08/15/84 17:34:00 - Zilog Inc.
+.SH NAME
+ar \- archive (library) file format
+.SH SYNOPSIS
+.B #include <ar.h>
+.SH DESCRIPTION
+The archive command
+.B ar
+is used to combine several files into
+one.
+Archives are used mainly as libraries to be searched
+by the link-editor
+.B ld.
+.PP
+A file produced by
+.B ar
+has a magic number at the start,
+followed by the constituent files, each preceded by a file header.
+The magic number and header layout as described in the
+include file are:
+.RS
+.PP
+.nf
+.na
+.\".SO /usr/include/ar.h
+
+/* @[$]ar.h	1.1  12/11/81 17:07:41 - Zilog Inc */
+#define	ARMAG	0177545
+struct	ar_hdr {
+	char	ar_name[14];
+	long	ar_date;
+	char	ar_uid;
+	char	ar_gid;
+	int	ar_mode;
+	long	ar_size;
+};
+.fi
+.RE
+.LP
+The name is a null-terminated string; the date is in the
+form of
+.BR time (2);
+the user ID and group ID are numbers; the mode is a bit pattern
+per
+.BR chmod (2);
+the size is counted in bytes.
+.PP
+Each file begins on a word boundary;
+a null byte is inserted between files if necessary.
+Nevertheless the size given reflects the
+actual size of the file exclusive of padding.
+.PP
+Notice there is no provision for empty areas in an archive
+file.
+.SH SEE ALSO
+ar(1),
+ld(1),
+nm(1).
+.SH LIMITATIONS
+Coding user and group IDs as characters is a botch.

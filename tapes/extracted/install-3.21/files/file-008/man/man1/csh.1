@@ -1,0 +1,182 @@
+.po 1i
+.TH CSH 1 UCB
+.V  08/15/84 16:43:01
+.\" @[$]csh.1	1.17 08/15/84 16:43:01 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+csh \- a command interpreter with C-like syntax
+.SH SYNOPSIS
+\fBcsh\fR[\fB\-cefinstvVxX\fR] [\fIarg ...\fR]
+.SH DESCRIPTION
+.PP
+A
+.B csh
+command script can be interpreted by entering
+.sp
+.RS
+csh script \&...
+.sp
+.RE
+where
+.I script
+is the name of the file containing a number of
+.B csh
+commands and \&... is replaced by a sequence of arguments.
+The C shell places these arguments in the variable
+.I argv
+and then begins to read commands from the script.
+These parameters are then available through the same mechanisms
+used to reference any other C shell variables.
+When a login shell terminates, it executes commands from the file
+\&.logout in the home directory.
+.PP
+The shell then repeatedly performs the following actions:
+a line of command input is read and broken into words.
+This sequence of words is placed on the command history list and parsed.
+Finally, each command in the current line is executed.
+.PP
+.SH OPTIONS
+.PP
+The flag arguments are interpreted as follows:
+.RS
+.IP \fB\-c\fR 5
+Commands are read from the (single) following argument that must
+be present.
+Any remaining arguments are placed in
+.I argv.
+.IP \fB\-e\fR 5
+The shell exits if any invoked command terminates abnormally
+or yields a nonzero exit status.
+.IP \fB\-f\fR 5
+The shell starts faster, because it neither searches for nor
+executes commands from the file \&.cshrc in the invoker's
+home directory.
+.IP \fB\-i\fR 5
+The shell is interactive and prompts for its top-level input,
+even if it appears to not be a terminal.
+Shells are interactive without this option if their inputs
+and outputs are terminals.
+.IP \fB\-n\fR 5
+Commands are parsed, but not executed.
+This aids in syntactic checking of shell scripts.
+.IP \fB\-s\fR 5
+Command input is taken from the standard input.
+.IP \fB\-t\fR 5
+A single line of input is read and executed.
+A \e can be used to escape the new line at the end of this
+line and continue onto another line.
+.IP \fB\-v\fR 5
+Causes the
+.I verbose
+variable to be set, with the effect
+that command input is echoed after history substitution.
+.IP \fB\-x\fR 5
+Causes the 
+.I echo
+variable to be set, so that commands are echoed immediately before
+execution.
+.IP \fB\-V\fR 5
+Causes the
+.I verbose
+variable to be set even before \&.cshrc is executed.
+.IP \fB\-X\fR 5
+Is to
+.B \-x
+as
+.B \-V
+is to
+.B \-v.
+.RE
+.DT
+.PP
+After processing of flag arguments, if arguments remain but none of the
+\fB\-c, \-i, \-s,\fR or \fB\-t\fR options was given, the first
+argument is taken as the name of a file of commands to be executed.
+The shell opens this file, and saves its name for possible
+resubstitution by $0.
+.SH FILES
+.DT
+.ta 2i
+~/.cshrc	Read at beginning of execution by each shell
+.br
+~/.login	Read by  login shell,  after .cshrc at login
+.br
+~/.logout	Read by login shell, at logout
+.br
+/etc/cshprofile 	Read by login shell, before .cshrc file.
+.br
+	This is a system profile file for the csh.
+.br
+	See cshrc(5).
+.br
+/bin/sh 	Standard  shell, for shell scripts  not
+.br
+	starting with a #
+.br
+/tmp/sh*	Temporary file for <<
+.br
+/dev/null	Source of empty file
+.br
+/etc/passwd	Source of home directories for ~name.
+.br
+.fi
+.SH SEE ALSO
+alias(1C),
+break(1C),
+breaksw(1C),
+cd(1C),
+continue(1C),
+echo(1C),
+exit(1C),
+foreach(1C),
+glob(1C),
+history(1C),
+if(1C),
+logout(1C),
+nice(1C),
+nohup(1C),
+onintr(1C),
+repeat(1C),
+set(1C),
+setenv(1C),
+source(1C),
+switch(1C),
+time(1C),
+umask(1C),
+unsetenv(1C),
+wait(1C),
+while(1C),
+access(2),
+exec(2),
+fork(2),
+pipe(2),
+signal(2),
+umask(2),
+wait(2),
+a.out(5),
+environ(5).
+.sp
+\fIThe C shell\fR in the ZEUS Utilities Manual
+.SH LIMITATIONS
+Control structure should be parsed 
+rather than being recognized as built-in commands.  
+This would allow control commands to be placed anywhere,
+to be combined with |, and to be used with & and ; metasyntax.
+.PP
+Commands within loops, prompted for by ?, are not placed in the
+history list.
+.PP
+It should be possible to use the : modifiers on the output of command
+substitutions.
+All and more than one : modifier should be allowed on $ substitutions.
+.PP
+Words can be no longer than 512 characters.
+The number of characters in an argument list or a ccommand substitution
+is limited to 5120 characters.
+The number of arguments to a command that involves file name expansion
+is limited to 853.
+.PP
+To detect looping, the shell restricts the number of
+.BR alias (1C)
+substitutions on a single line to 20.

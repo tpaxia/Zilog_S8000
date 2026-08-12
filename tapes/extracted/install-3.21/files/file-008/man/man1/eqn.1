@@ -1,0 +1,725 @@
+.po 1i
+.TH EQN 1 Bell
+.V 08/15/84 16:49:26
+.\"@[$]eqn.1	1.7	08/15/84 16:49:26 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+eqn, neqn, checkeq  \-  typeset mathematics
+.SH SYNOPSIS
+.B eqn
+[
+.BR \-d xy
+] [
+.BR \-p n
+] [
+.BR \-s n
+] [
+.BR \-f n
+] 
+[
+.I file ] ...
+.br
+.B neqn
+[
+.BR \-d xy
+] [
+.BR \-p n
+] [
+.BR \-s n
+] [
+.BR \-f n
+] 
+[
+.I file ] ...
+.br
+.B checkeq
+[
+.I file ] ...
+.SH DESCRIPTION
+.B Eqn
+is a
+troff(1)
+preprocessor
+for typesetting mathematics
+on a Graphic Systems phototypesetter,
+.B neqn
+on terminals.
+Usage is almost always
+.PP
+	eqn file ... | troff
+.br
+	neqn file ... | nroff
+.PP
+If no files are specified, these programs read from the standard input.
+A line beginning with `.EQ' marks the start of an equation;
+the end of an equation
+is marked by a line beginning with `.EN'.
+Neither of these lines is altered,
+so they may be defined in macro packages
+to get
+centering, numbering, etc.
+It is also possible to set two characters as `delimiters';
+subsequent text between delimiters is also treated as
+.B eqn
+input.
+Delimiters may be set to characters
+.I x
+and
+.I y
+with the command-line argument
+.BI \-d xy
+or (more commonly) with
+`delim
+.IR xy '
+between .EQ and .EN.
+The left and right delimiters may be identical.
+Delimiters are turned off by `delim off'.
+All text that is neither between delimiters nor between .EQ and .EN
+is passed through untouched.
+.PP
+The program
+.B checkeq
+reports missing or unbalanced delimiters and .EQ/.EN pairs.
+.PP
+Tokens within
+.B eqn
+are separated by
+spaces, tabs, newlines, braces, double quotes,
+tildes or circumflexes.
+Braces {} are used for grouping;
+generally speaking,
+anywhere a single character like
+.I x
+could appear, a complicated construction
+enclosed in braces may be used instead.
+Tilde ~ represents a full space in the output,
+circumflex ^ half as much.
+.PP
+.vs 13p
+Subscripts and superscripts are produced with the keywords
+.B sub
+and
+.B sup.
+.PP
+Thus
+.I "x sub i" 
+makes:
+.sp
+.\" eqn: x sub i 
+.sp
+.RS
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "x
+.ds 12 "i
+.as 11 \v'20u'\*(12\v'-20u'
+.ds 11 \x'0'\f1\s10\*(11\|\s\n(99\f\n(98
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 60>\n(.v .ne 60u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+.I "a sub i sup 2"
+produces:
+.sp
+.RS
+.\" eqn: a sub i sup 2
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "a
+.ds 12 "i
+.ds 13 "\f12\fP
+.nr 12 \w'\s7\*(12'
+.nr 13 \w'\s7\*(13'
+.nr 14 \n(13
+.if \n(12>\n(14 .nr 14 \n(12
+.as 11 \v'20u'\*(12\h'-\n(12u'\v'-40u'\
+\*(13\h'-\n(13u+\n(14u'\v'20u'
+.ds 11 \x'0'\f1\s10\*(11\|\s\n(99\f\n(98
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 80>\n(.v .ne 80u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+and
+.I "e sup {x sup 2 + y sup 2}"
+gives
+.sp
+.RS
+.\" eqn: $ e sup {x sup 2 + y sup 2} 
+.EN
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "e
+.ds 12 "x
+.ds 13 "\f12\fP
+.as 12 \v'-20u'\*(13\v'20u'
+.ds 13 "\(pl
+.as 12 "\|\*(13
+.ds 13 "y
+.ds 14 "\f12\fP
+.as 13 \v'-20u'\*(14\v'20u'
+.as 12 "\|\*(13
+.as 11 \v'-20u'\*(12\v'20u'
+.ds 11 \x'0'\x'0-20u'\f1\s10\*(11\|\s\n(99\f\n(98
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 80>\n(.v .ne 80u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+Fractions are made with
+.BR over :
+.I "a over b"
+yields:
+.sp
+.RS
+.\" eqn:  a over b 
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "a
+.ds 12 "b
+.nr 11 \w'\s10\*(11'
+.nr 12 \w'\s10\*(12'
+.nr 13 \n(11
+.if \n(12>\n(13 .nr 13 \n(12
+.ds 11 \v'20u'\h'\n(13u-\n(12u/2u'\*(12\
+\h'-\n(12u-\n(11u/2u'\v'-40u'\*(11\
+\h'-\n(13u-\n(11u-2u/2u'\v'0u'\l'\n(13u'\v'20u'
+.ds 11 \x'0'\f1\s10\*(11\s\n(99\f\n(98
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 80>\n(.v .ne 80u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+.B sqrt
+makes square roots:
+.I "1 over sqrt {ax sup 2 +bx+c}"
+results in:
+.sp
+.RS
+.\" eqn:  1 over sqrt {ax sup 2 +bx+c} 
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "\f11\fP
+.ds 12 "ax
+.ds 13 "\f12\fP
+.as 12 \v'-20u'\*(13\v'20u'
+.ds 13 "\(plbx\|\(plc
+.as 12 "\|\*(13
+.nr 12 \w'\s7\*(12'
+.ds 12 \v'0u'\e\L'-60u'\l'\n(12u'\v'60u'\h'-\n(12u'\*(12
+.nr 11 \w'\s7\*(11'
+.nr 12 \w'\s7\*(12'
+.nr 13 \n(11
+.if \n(12>\n(13 .nr 13 \n(12
+.ds 11 \v'60u'\h'\n(13u-\n(12u/2u'\*(12\
+\h'-\n(12u-\n(11u/2u'\v'-80u'\*(11\
+\h'-\n(13u-\n(11u-2u/2u'\v'0u'\l'\n(13u'\v'20u'
+.ds 11 \x'0'\f1\s10\*(11\s\n(99\f\n(98\x'40u'
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 120>\n(.v .ne 120u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+The keywords
+.B from
+and
+.B to
+introduce lower and upper
+limits on arbitrary things:
+.sp
+.RS
+.\" eqn:  lim from {n-> inf} sum from 0 to n x sub i 
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "\f1lim\fP
+.ds 12 "n\|\(->
+.ds 13 "\(if
+.as 12 "\|\*(13
+.nr 11 \w'\s10\*(11'
+.nr 13 \n(11
+.nr 12 \w'\s7\*(12'
+.if \n(12>\n(13 .nr 13 \n(12
+.ds 13 \v'40u'\h'\n(13u-\n(12u/2u'\s7\*(12\s10\h'-\n(13u-\n(12u/2u'\v'-40u'\
+\h'\n(13u-\n(11u/2u'\*(11\h'\n(13u-\n(11u+2u/2u'\
+
+.ds 11 \(*S
+.ds 12 "\f10\fP
+.ds 14 "n
+.nr 11 \w'\s10\*(11'
+.nr 15 \n(11
+.nr 12 \w'\s7\*(12'
+.if \n(12>\n(15 .nr 15 \n(12
+.nr 14 \w'\s7\*(14'
+.if \n(14>\n(15 .nr 15 \n(14
+.ds 15 \v'40u'\h'\n(15u-\n(12u/2u'\s7\*(12\s10\h'-\n(15u-\n(12u/2u'\v'-40u'\
+\h'\n(15u-\n(11u/2u'\*(11\h'\n(15u-\n(11u+2u/2u'\
+\v'-40u'\h'-\n(15u-\n(14u/2u'\s7\*(14\s10\h'\n(15u-\n(14u/2u'\v'40u'\
+
+.as 13 "\*(15
+.ds 11 "x
+.ds 12 "i
+.as 11 \v'20u'\*(12\v'-20u'
+.as 13 "\*(11
+.ds 13 \x'0'\x'0-20u'\f1\s10\*(13\|\s\n(99\f\n(98\x'20u'
+.nr 13 \w'\*(13'
+.nr MK 0
+.if 120>\n(.v .ne 120u
+.rn 13 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+is made with
+.I "lim from {n\-> inf } sum from 0 to n x sub i."
+.PP
+Left and right brackets, braces, etc.,
+of the right height are made with
+.B left
+and
+.B right:
+.I "left [ x sup 2 + y sup 2 over alpha right ] ~=~1"
+produces:
+.sp
+.RS
+.\" eqn:  left [ x sup 2 + y sup 2 over alpha right ] ~=~1 
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "x
+.ds 12 "\f12\fP
+.as 11 \v'-20u'\*(12\v'20u'
+.ds 12 "\(pl
+.as 11 "\|\*(12
+.ds 12 "y
+.ds 13 "\f12\fP
+.as 12 \v'-20u'\*(13\v'20u'
+.ds 13 "\(*a
+.nr 12 \w'\s6\*(12'
+.nr 13 \w'\s6\*(13'
+.nr 14 \n(12
+.if \n(13>\n(14 .nr 14 \n(13
+.ds 12 \v'20u'\h'\n(14u-\n(13u/2u'\*(13\
+\h'-\n(13u-\n(12u/2u'\v'-40u'\*(12\
+\h'-\n(14u-\n(12u-2u/2u'\v'0u'\l'\n(14u'\v'20u'
+.as 11 "\*(12
+.ds 11 \|\v'-10u'\b'\(lc\(bv\(lf'\v'10u'\*(11\|\v'-10u'\b'\(rc\(bv\(rf'\v'10u'
+.ds 12 "\ 
+.as 11 "\*(12
+.ds 12 "\(eq
+.as 11 "\|\*(12
+.ds 12 "\ 
+.as 11 "\|\*(12
+.ds 12 "\f11\fP
+.as 11 "\|\*(12
+.ds 11 \x'0'\x'0-20u'\f1\s10\*(11\|\s\n(99\f\n(98\x'20u'
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 120>\n(.v .ne 120u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+The
+.B right
+clause is optional.
+Legal characters after 
+.B left
+and
+.B right
+are braces, brackets, bars,
+.B c
+and
+.B f
+for ceiling and floor,
+and "" for nothing at all (useful for a right-side-only bracket).
+.PP
+Vertical piles of things are made with 
+.BR pile ,
+.BR lpile ,
+.BR cpile ,
+and
+.BR rpile :
+.I "pile {a above b above c}"
+produces:
+.sp
+.RS
+.\" eqn:  pile {a above b above c}
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "a
+.ds 12 "b
+.ds 13 "c
+.nr 11 \w'\s10\*(11'
+.nr 14 \n(11
+.nr 12 \w'\s10\*(12'
+.if \n(12>\n(14 .nr 14 \n(12
+.nr 13 \w'\s10\*(13'
+.if \n(13>\n(14 .nr 14 \n(13
+.ds 14 \v'40u'\h'0u*\n(14u'\
+\v'0u'\h'\n(14u-\n(13u/2u'\*(13\h'-\n(14u-\n(13u/2u'\v'0-40u'\
+\v'0u'\h'\n(14u-\n(12u/2u'\*(12\h'-\n(14u-\n(12u/2u'\v'0-40u'\
+\v'0u'\h'\n(14u-\n(11u/2u'\*(11\h'-\n(14u-\n(11u/2u'\v'0-40u'\
+\v'80u'\h'1u*\n(14u'
+.ds 14 \x'0'\x'0-20u'\f1\s10\*(14\s\n(99\f\n(98\x'20u'
+.nr 14 \w'\*(14'
+.nr MK 0
+.if 120>\n(.v .ne 120u
+.rn 14 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+There can be an arbitrary number of elements in a pile.
+.B lpile
+left-justifies,
+.B pile
+and
+.B cpile
+center, with different vertical spacing,
+and 
+.B rpile
+right justifies.
+.PP
+Matrices are made with
+.BR matrix :
+.I "matrix { lcol { x sub i above y sub 2 } ccol { 1 above 2 } }"
+produces:
+.sp
+.RS
+.\" eqn: matrix { lcol { x sub i above y sub 2 } ccol { 1 above 2 } } 
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "x
+.ds 12 "i
+.as 11 \v'20u'\*(12\v'-20u'
+.ds 12 "y
+.ds 13 "\f12\fP
+.as 12 \v'20u'\*(13\v'-20u'
+.ds 13 "\f11\fP
+.ds 14 "\f12\fP
+.nr 11 \w'\s6\*(11'
+.nr 15 \n(11
+.nr 12 \w'\s6\*(12'
+.if \n(12>\n(15 .nr 15 \n(12
+.ds 15 \v'40u'\h'0u*\n(15u'\
+\v'-20u'\*(12\h'-\n(12u'\v'0-60u'\
+\v'-20u'\*(11\h'-\n(11u'\v'0-60u'\
+\v'120u'\h'1u*\n(15u'
+.nr 13 \w'\s6\*(13'
+.nr 11 \n(13
+.nr 14 \w'\s6\*(14'
+.if \n(14>\n(11 .nr 11 \n(14
+.ds 11 \v'40u'\h'0u*\n(11u'\
+\v'-20u'\h'\n(11u-\n(14u/2u'\*(14\h'-\n(11u-\n(14u/2u'\v'0-60u'\
+\v'-20u'\h'\n(11u-\n(13u/2u'\*(13\h'-\n(11u-\n(13u/2u'\v'0-60u'\
+\v'120u'\h'1u*\n(11u'
+.ds 12 "\*(15\ \ \*(11
+.ds 12 \x'0'\x'0-40u'\f1\s10\*(12\s\n(99\f\n(98\x'20u'
+.nr 12 \w'\*(12'
+.nr MK 0
+.if 140>\n(.v .ne 140u
+.rn 12 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+In addition, there is
+.B rcol
+for a right-justified column.
+.PP
+.vs 12p
+Diacritical marks are made with
+.BR dot ,
+.BR dotdot ,
+.BR hat ,
+.BR tilde ,
+.BR bar ,
+.BR vec ,
+.BR dyad ,
+and
+.BR under :
+.I "x dot = f(t) bar"
+is:
+.sp
+.RS
+.\" eqn: x dot = f(t) bar
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "x
+.nr 11 \w'\s10\*(11'
+.nr 10 0u
+.ds 12 \v'-1'.\v'1'
+.nr 12 \w'\s10\*(12'
+.as 11 \h'-\n(11u-\n(12u/2u'\v'0-\n(10u'\*(12\v'\n(10u'\h'-\n(12u+\n(11u/2u'
+.ds 12 "\(eq
+.as 11 "\|\*(12
+.ds 12 "\^f\|\|\f1(\fPt\|\f1)\fP
+.nr 12 \w'\s10\*(12'
+.nr 10 0u
+.ds 13 \v'-1'\l'\n(12u'\v'1'
+.nr 13 \w'\s10\*(13'
+.as 12 \h'-\n(12u-\n(13u/2u'\v'0-\n(10u'\*(13\v'\n(10u'\h'-\n(13u+\n(12u/2u'
+.as 11 "\|\*(12
+.ds 11 \x'0'\f1\s10\*(11\|\s\n(99\f\n(98
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 60>\n(.v .ne 60u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.I "y dotdot bar ~=~ n under"
+is:
+.sp
+.RS
+.\" eqn: y dotdot bar ~=~ n under 
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "y
+.nr 11 \w'\s10\*(11'
+.nr 10 0u
+.ds 12 \v'-1'..\v'1'
+.nr 12 \w'\s10\*(12'
+.as 11 \h'-\n(11u-\n(12u/2u'\v'0-\n(10u'\*(12\v'\n(10u'\h'-\n(12u+\n(11u/2u'
+.nr 11 \w'\s10\*(11'
+.nr 10 20u
+.ds 12 \v'-1'\l'\n(11u'\v'1'
+.nr 12 \w'\s10\*(12'
+.as 11 \h'-\n(11u-\n(12u/2u'\v'0-\n(10u'\*(12\v'\n(10u'\h'-\n(12u+\n(11u/2u'
+.ds 12 "\ 
+.as 11 "\|\*(12
+.ds 12 "\(eq
+.as 11 "\|\*(12
+.ds 12 "\ 
+.as 11 "\|\*(12
+.ds 12 "n
+.nr 12 \w'\s10\*(12'
+.nr 10 0u
+.ds 13 \l'\n(12u'
+.nr 13 \w'\s10\*(13'
+.as 12 \h'-\n(12u-\n(13u/2u'\v'0-\n(10u'\*(13\v'\n(10u'\h'-\n(13u+\n(12u/2u'
+.as 11 "\|\*(12
+.ds 11 \x'0'\x'0-20u'\f1\s10\*(11\|\s\n(99\f\n(98
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 80>\n(.v .ne 80u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+and
+.I "x vec ~=~ y dyad"
+is:
+.sp
+.RS
+.\" eqn: x vec ~=~ y dyad 
+.EQ
+.nr 99 \n(.s
+.nr 98 \n(.f
+.ps 10
+.ft 1
+.ds 11 "x
+.nr 11 \w'\s10\*(11'
+.nr 10 0u
+.ds 12 \v'-1'_\v'1'
+.nr 12 \w'\s10\*(12'
+.as 11 \h'-\n(11u-\n(12u/2u'\v'0-\n(10u'\*(12\v'\n(10u'\h'-\n(12u+\n(11u/2u'
+.ds 12 "\ 
+.as 11 "\|\*(12
+.ds 12 "\(eq
+.as 11 "\|\*(12
+.ds 12 "\ 
+.as 11 "\|\*(12
+.ds 12 "y
+.nr 12 \w'\s10\*(12'
+.nr 10 0u
+.ds 13 \v'-1'_\v'1'
+.nr 13 \w'\s10\*(13'
+.as 12 \h'-\n(12u-\n(13u/2u'\v'0-\n(10u'\*(13\v'\n(10u'\h'-\n(13u+\n(12u/2u'
+.as 11 "\|\*(12
+.ds 11 \x'0'\f1\s10\*(11\|\s\n(99\f\n(98
+.nr 11 \w'\*(11'
+.nr MK 0
+.if 60>\n(.v .ne 60u
+.rn 11 10
+\*(10
+.ps \n(99
+.ft \n(98
+.EN
+.RE
+.sp
+.PP
+Sizes and font can be changed with
+.B size
+.I n
+or
+.B size
+.BI \(+- n,
+.BR roman ,
+.BR italic ,
+.BR bold ,
+and
+.BR font
+.I n.
+Size and fonts can be changed globally in a document by
+.B gsize
+.I n
+and
+.B gfont
+.IR n ,
+or by the command-line arguments
+.BI \-s n
+and
+.BI \-f n.
+.PP
+Normally subscripts and superscripts are reduced by
+3 point sizes from the previous size;
+this may be changed by the command-line argument
+.BI \-p n.
+.PP
+Successive display arguments can be lined up.
+Place
+.B mark
+before the desired lineup point in the first equation;
+place
+.B lineup
+at the place that is to line up vertically in subsequent equations.
+.PP
+Shorthands may be defined
+or existing keywords redefined with
+.BI define :
+.I "define thing % replacement %"
+defines a new token called
+.I thing
+which will be replaced by
+.I replacement
+whenever it appears thereafter.
+The 
+.I %
+may be any character that does not occur in
+.I replacement.
+.PP
+Keywords like 
+.I sum
+( sum )
+.I int
+( int )
+.I inf
+( inf )
+and shorthands like
+.I >=
+( >= )
+.I \->
+( -> ),
+and
+.I !=
+( != )
+are recognized.
+.EN
+Greek letters are spelled out in the desired case, as in
+.I alpha
+or
+.I GAMMA.
+Mathematical words like sin, cos, log are made Roman automatically.
+.IR Troff (1)
+four-character escapes like \e(bs
+can be used anywhere.
+Strings enclosed in double quotes "..."
+are passed through untouched;
+this permits keywords to be entered as text,
+and can be used to communicate
+with 
+.I troff
+when all else fails.
+.SH SEE ALSO
+troff(1), tbl(1), ms(7), eqnchar(7).
+.br
+.I NROFF/TROFF User's Manual
+in the ZEUS Utilities Manual
+.SH BUGS
+.PP
+To embolden digits, parens, etc.,
+it is necessary to quote them,
+as in `bold "12.3"'.

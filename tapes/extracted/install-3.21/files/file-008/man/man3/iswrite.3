@@ -1,0 +1,33 @@
+.po 1i
+.TH ISWRITE 3 Zilog
+.V 08/15/84 17:21:23
+.\" @[$]iswrite.3	1.5 08/15/84 17:21:23 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+iswrite - write a record into an C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBiswrite\fI(isfd, record)\fR
+\fBint \fIisfd;\fR
+\fBchar\fI record[];\fR
+.fi
+.SH DESCRIPTION
+.B Iswrite
+writes the record passed to it in the 
+record parameter to the C-ISAM file.
+The appropriate values will be written to the index 
+file for each index that is defined.
+.PP
+.B Iswrite
+does not change the position of the current 
+record pointer.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

@@ -1,0 +1,70 @@
+.po 1i
+.TH CALENDAR 1 Bell 
+.V 08/15/84 16:38:47
+.\" @[$]calendar.1	1.10	08/15/84 16:38:47 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+calendar \- reminder service
+.SH SYNOPSIS
+.B calendar
+[ \- ]
+.SH DESCRIPTION
+.B Calendar 
+consults the file "calendar" in the current directory
+and prints out lines that contain today's or
+tomorrow's date anywhere in the line.
+Most reasonable month-day dates such as "Dec. 7,"
+"december 7," "12/7," etc., are recognized, but not
+"7 December" or "7/12".
+On weekends, "tomorrow" extends through Monday.
+.PP
+When a
+.B \-
+argument is present, \fBcalendar\fR does its job for every
+user who has a file \fBcalendar\fR in their login directory
+and sends any positive results by
+.BR mail (1).
+Normally this is done daily after midnight under control of
+.BR cron (M).
+.SH EXAMPLE
+The file \fBcalendar\fR in the \fIhome\fR directory can
+have the following lines:
+.sp
+.RS
+3/3	meeting, 10:00 am conference room B
+.br
+3/3	call hank re schedule
+.br
+3/5	dinner with carol -- pm.
+.RE
+.sp
+the command:
+.sp
+.RS
+\fB(cd; calendar)\fR
+.RE
+.sp
+will always execute the \fBcalendar\fR file 
+in the \fIhome\fR directory,
+regardless of the current working directory.
+.SH FILES
+/usr/lib/calprog to figure out today's and tomorrow's dates
+.br
+/etc/passwd
+.br
+/tmp/cal*
+.br
+/usr/lib/crontab
+.SH SEE ALSO
+egrep(1),
+sed(1),
+at(1),
+mail(1),
+cron(M)
+.SH LIMITATIONS
+The calendar must be public information to get reminder service.
+.br
+.B Calendar's
+extended idea of tomorrow does not account for
+holidays.

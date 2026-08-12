@@ -1,0 +1,104 @@
+.po 1i
+.TH SSIGNAL 3 Bell
+.V 08/15/84 17:27:04
+.\" @[$]ssignal.3	1.5 08/15/84 17:27:04 - Zilog Inc
+.ad
+.fi
+.SH NAME
+ssignal, gsignal \- software signals
+.SH SYNOPSIS
+.B #include <signal.h>
+.PP
+.B int \fI(\(**ssignal (sig, action))( )
+.br
+\fB    int \fIsig, (\(**action)( );\fR
+.PP
+.B int gsignal \fI(sig)
+.br
+\fB    int \fIsig;\fR
+.SH DESCRIPTION
+.B Ssignal\^
+and
+.B gsignal\^
+implement a software facility similar to
+.BR signal (2).
+This facility is used by the standard C Library to enable the
+user to indicate the disposition of error conditions, and is
+also made available to the user for his own purposes.
+.PP
+Software signals made available to users are associated
+with integers in the inclusive
+range 1 through 15. An action
+for a software signal is established
+by a call to
+.BR ssignal ,
+and a software signal is raised by a call to
+.BR gsignal .
+Raising a software signal causes the action established for that signal
+to be taken.
+.PP
+The first argument to
+.B ssignal\^
+is a number identifying the type of signal for which an action is to be
+established. The second argument defines the action; it is either the
+name of a (user defined) action function
+or one of the manifest constants
+.SM
+.B SIG_DFL
+(default) or
+.SM
+.B SIG_IGN
+(ignore).
+.B Ssignal\^
+returns the action previously established for that signal type; if no
+action has been established or the signal number is illegal,
+.B ssignal\^
+returns
+.SM
+.BR SIG_DFL .
+.PP
+.B Gsignal\^
+raises the signal identified by its argument,
+.IR sig :
+.RS 5
+.PP
+If an action function has been established for
+.IR sig ,
+then that action is reset to
+.SM
+.B SIG_DFL
+and the action function is entered with argument
+.IR sig .
+.B Gsignal\^
+returns the value returned to it by the action function.
+.PP
+If the action for
+.I sig\^
+is
+.SM
+.BR SIG_IGN ,
+.B gsignal\^
+returns the value 1 and takes no other action.
+.PP
+If the action for
+.I sig\^
+is
+.SM
+.BR SIG_DFL ,
+.B gsignal\^
+returns the value 0 and takes no other action.
+.PP
+If
+.I sig\^
+has an illegal value or no action was ever specified for
+.IR sig ,
+.I gsignal\^
+returns the value 0 and takes no other action.
+.RE
+.SH NOTES
+There are some additional signals with numbers outside the range
+1 through 15 which are used by the standard C Library to indicate
+error conditions.
+Thus, some signal numbers outside the range 1 through 15 are legal,
+although their use may interfere with the operation of the standard
+C Library.

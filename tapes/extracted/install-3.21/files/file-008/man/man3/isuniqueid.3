@@ -1,0 +1,40 @@
+.po 1i
+.TH ISUNIQUEID 3 Zilog
+.V 08/15/84 17:21:19
+.\" @[$]isuniqueid.3	1.5 08/15/84 17:21:19 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isuniqueid - obtain a unique ID for a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisuniqueid\fI(isfd, uniqueid)\fR
+\fBint \fIisfd;\fR
+\fBlong \fI*uniqueid;\fR
+.fi
+.SH DESCRIPTION
+.I Isuniqueid
+obtains a long integer that is
+guaranteed to be unique for a C-ISAM file.
+This is useful if a unique identifier for each record is desired,
+and the file doesn't have a natural one.
+.PP
+Often a programmer may want to use the calls which require
+a unique primary index, but may have no reasonably-sized 
+portion of the data record which is guaranteed to be unique.
+In such a case, a portion of the record could contain the
+serially-incremented four-byte long integer obtained by
+isuniqueid.
+It is the responsibility of the programmer to place the 
+unique long integer in the record buffer using 
+.I stlong
+before a write or rewrite call is made.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

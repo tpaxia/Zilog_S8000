@@ -1,0 +1,108 @@
+.po 1i
+.TH UMASK 1C UCB
+.V 08/15/84 17:08:36
+.\" @[$]umask.1C	1.7 08/15/84 17:08:36 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+umask \- set file-creation mode mask
+.SH SYNOPSIS
+\fBumask\fR [\fInnn\fR]
+.SH DESCRIPTION
+The user file-creation mode mask is set to
+.IR nnn .
+The three octal "digits" in \fInnn\fR
+refer to \fIread\fR/\fIwrite\fR/\fIexecute\fR
+permissions for \fIowner\fR, \fIgroup\fR, and \fIothers\fR,
+respectively (see
+.BR chmod (2)
+and
+.BR umask (2)).
+The value of each specified "digit" in \fInnn\fR is subtracted from the
+corresponding "digit" in the file creation mode (for example, 777 for 
+executable files, 666 for data files) specified by the system
+(see \fIcreat\fR(2)).
+.PP
+If
+.I nnn\^
+is omitted, the current value of the mask is printed.
+.PP
+.B Umask\^
+is recognized and executed by the shell.
+.SH EXAMPLE
+.nf
+% umask 000
+
+% cat /dev/null > umask.00
+
+% ls -l umask.000
+-rw-rw-rw- 1 deck          0 Mar 13 12:23 umask.000
+.fi
+.PP
+The other umask values are as follows:
+.sp
+.nf
+-rw-rw-rw- 1 deck          0 Mar 13 12:23 umask.111
+-r--r--r-- 1 deck          0 Mar 13 12:23 umask.222
+-r--r--r-- 1 deck          0 Mar 13 12:23 umask.333
+--w--w--w- 1 deck          0 Mar 13 12:23 umask.444
+--w--w--w- 1 deck          0 Mar 13 12:23 umask.555
+---------- 1 deck          0 Mar 13 12:23 umask.666
+---------- 1 deck          0 Mar 13 12:23 umask.777
+.fi
+.PP
+If two digits are specified, as in:
+.sp
+.RS
+% umask 22
+.RE
+.sp
+The first (owner) permission bits are untouched and the
+second and third fields are affected as in
+the following file:
+.sp
+.RS
+-rw-r--r-- 1 deck          0 Mar 13 12:23 umask.22
+.RE
+.sp
+.PP
+If only a single number is specified, it affects the
+last field (the "others" permission bits) as in the command:
+.sp
+.RS
+% umask 2
+.RE
+.sp
+The following file permission bits result:
+.sp
+.RS
+-rw-rw-r-- 1 deck          0 Mar 13 12:23 umask.2
+.RE
+.sp
+.PP
+In other words, 
+.B "umask 022"
+removes
+.I group\^
+and
+.I others\^
+write permission (files normally created with mode
+.B 777
+become mode
+.BR 755 ;
+files created with mode
+.B 666
+become mode
+.BR 644 ).
+.SH SEE ALSO
+chmod(1),
+sh(1),
+chmod(2),
+chown(1),
+creat(2),
+umask(2),
+chmog(M).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual
+
+

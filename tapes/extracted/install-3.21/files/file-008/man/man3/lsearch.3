@@ -1,0 +1,51 @@
+.po 1i
+.TH LSEARCH 3 Bell
+.V 08/15/84 17:21:34
+.\" @[$]lsearch.3	1.5 08/15/84 17:21:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+lsearch \- linear search and update
+.SH SYNOPSIS
+.nf
+\fBchar \(**lsearch \fI(key, base, nelp, width, compar)
+\fBchar \fI\(**key;
+\fBchar \fI\(**base;
+\fBint \fI\(**nelp;
+\fBint \fIwidth;
+\fBint \fI(\(**compar)();\fR
+.fi
+.SH DESCRIPTION
+.B Lsearch\^
+is a linear search routine generalized from Knuth (6.1) Algorithm Q.
+It returns a pointer to a table indicating the location where
+a datum can be found.  If the item does not occur, it is added
+at the end of the table.
+The first argument,
+.I key,
+is a pointer to the datum to be located in the table.
+The second argument,
+.I base,
+is a pointer to the base of the table.
+The third argument,
+.I nelp,
+is the address of an integer containing the number of 
+items in the table.
+It is incremented if the item is added to the table.
+The fourth argument,
+.I width,
+is the width of an element
+in bytes.
+The last argument,
+.I compar,
+is the name of the comparison routine.
+It is called with two arguments which are pointers
+to the elements being compared.
+The routine must return zero if the items are equal and
+non-zero otherwise.
+.SH LIMITATIONS
+Unpredictable events can occur if there is not enough room
+in the table to add a new item.
+.SH SEE ALSO
+bsearch(3),
+qsort(3).

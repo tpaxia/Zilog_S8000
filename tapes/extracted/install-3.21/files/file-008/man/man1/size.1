@@ -1,0 +1,30 @@
+.po 1i
+.TH SIZE 1 Bell
+.V 08/15/84 17:04:54
+.\" @[$]size.1	1.7	08/15/84 17:04:54 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+size \- size of an object file
+.SH SYNOPSIS
+.B size
+[ \fIfile\fR ... ]
+.SH DESCRIPTION
+.B Size
+prints the decimal number of bytes required by the text 
+(code) sections, initialized data sections, and bss
+(uninitialized data) portions, and their sum in decimal
+and hexadecimal, of each object-file argument.
+If no file is specified,
+a.out is used.
+.SH EXAMPLES
+.nf
+
+%\fBsize /bin/ls\fR
+.sp
+produces
+.sp
+7276+760+3840 = 11876 = 027144b
+.fi
+.SH SEE ALSO
+objdu(1), objhdr(1), a.out(5).

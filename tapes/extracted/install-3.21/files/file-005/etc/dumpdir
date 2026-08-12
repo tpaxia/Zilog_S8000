@@ -1,0 +1,5 @@
+: "@[$]dumpdir	2.1  07/23/82 20:15:37 - Zilog Inc"
+: A new shell script to notify a user that dumpdir has been made obsolete.
+: Use /etc/restor in place of dumpdir.
+:
+echo2 'Dumpdir is obsolete, use /etc/restor -l[f filename]'

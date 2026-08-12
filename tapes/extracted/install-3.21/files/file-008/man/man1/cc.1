@@ -1,0 +1,257 @@
+.po 1i
+.TH CC 1 Zilog
+.V 08/15/84 16:39:20
+.\" @[$]cc.1	1.31 08/15/84 16:39:20 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cc \- System 8000 C compiler
+.SH SYNOPSIS
+.B cc
+[
+.I options
+] 
+.I file ...
+.SH DESCRIPTION
+.B Cc
+is a non-segmented C "stage" compiler that produces Z8001 code.
+A "stage" compiler produces
+object code from source code in stages. These
+can be strung together without interruption, providing a virtual continuity to
+the compilation, 
+or the compilation can be halted at the termination of any of the stages.
+In the latter case,
+the uninitiated stages can be executed later as stand-alone tasks
+resulting in modules for input to the next stage 
+(or resulting in the executable load module, if the last stage). 
+.sp
+The stages are the compilation, the assembly, and the linkage.
+Consequently, 
+depending on the options, a single 
+.B cc
+call can compile; compile and assemble; or compile, assemble, and link.
+.PP
+The
+.B cc
+compiler provides an unsigned 
+char data type,
+initialized bit fields, the ZEUS Version 7 features of C (structure 
+assignments and enumeration types), and the new ZEUS System III additions
+to the C language: 1) the "void" data type; 2) the unique identification of
+names of structure and union members.
+.SH COMPILE/ASSEMBLE/LINK
+Each C source file ending in \&.c is compiled, producing a corresponding Z8000 
+assembly-language
+source file ending in \&.s. The
+\&.s files are assembled by the Z8000 assembler \fBcas\fR(1), producing, for
+each \&.s file, an un-linked object module ending in \&.o.
+The \&.o files, along with any other C-compatible object
+modules or libraries specified, are passed to the non-segmented linking-loader
+\fBld\fR(1), which links them in the order given,
+producing a single load module whose 
+default name is a.out.
+This streaming compilation, assembly, and linkage 
+is the default. 
+.SH COMPILE/ASSEMBLE
+With a \fB-c\fR option, the stage transaction halts after the
+\&.s Z8000 assembly-language source files produced by \fBcc\fR are assembled 
+by \fBcas\fR, producing corresponding unlinked object modules whose names 
+end in \&.o.
+.SH COMPILE
+With a \fB-S\fR option, the stage transaction halts after \fBcc\fR
+produces a Z8000 assembly-language source file ending in \&.s for each C
+source
+file ending in \&.c. 
+.SH OPTIONS
+.PP
+Specified options may be directed at the compiler or the
+linking-loader (\fBcc\fR and \fBld\fR, respectively).
+\fBCc\fR passes only one command option to \fBcas\fR: the \fB-o\fR and its
+argument. It passes a \fB-u\fR option in an internal call.
+.SH COMPILER-DIRECTED OPTIONS
+.sp
+.TP 8
+.B \-c
+Compile and assemble the named C source files but suppress the linking
+step.
+A \&.o object file is produced for each \&.c source file.
+.TP
+.BI -D name
+.ti -8  
+.BI -D name=def
+.br
+Define
+.I name
+to the preprocessor, as if by #define.
+If no definition is given,
+.I name
+is defined as 1.
+.TP
+.B \-E
+Run only the macro preprocessor
+and send the result to the standard output.
+.TP
+.B \-F
+Invoke the Faster Floating Point (FFP) Library Package, which is available
+as an option.
+.TP
+.BI -I dir
+Bring in a directory of #include files.
+Names that do not begin with / are always
+sought first in the same directory as the source file,
+then in directories named in 
+.B -I
+options, then in directories belonging to a standard list.
+.TP 8
+.B \-Ol
+Invoke the C global optimizer to apply loop optimization.
+.TP
+.B \-Or
+Invoke the C global optimizer to apply loop optimization and register 
+allocation.
+.TP
+.B \-O
+Invoke the C peephole optimizer for Z8000 code.
+.TP
+.B \-p
+Cause the compiler to produce code that counts
+the number of times each routine is called;
+also, if loading takes place, replace the standard
+startup routine with one that automatically calls
+.BR monitor (3)
+at the start and causes a 
+.I mon.out
+file to be written at normal termination of object-execution.
+An execution profile can then be generated 
+by use of
+.BR prof (1).
+.TP
+.B \-P
+Run only the macro preprocessor and place the result for
+each \&.c file in a corresponding \&.i file
+with no # lines in it.
+.TP
+.B \-S [l]
+Compile the named C source files but suppress the assembly and
+link step.
+Leave the assembly language code in corresponding \&.s files.
+If 
+.B l
+(el) is specified, make the original C source lines appear
+as comments preceding the assembly-language code produced for them.
+.TP
+.BI -U name
+Remove any initial definition of 
+.IR name .
+.SH LOADER-DIRECTED OPTIONS
+.TP 
+.BI \-l libname    
+Searches the library archive directory /lib for the library whose name
+is \fBlib\fIlibname\fB.a\fR. For example, to search the math library
+libm.a, the specification is 
+.BR \-lm ;
+to search libld.a, use
+.BR -lld .
+This option is specified during compilation 
+(the last argument on the line) when the compilation,
+assembly, and linkage is performed in a stream. If linkage is performed
+separately from compilation, the \fB-l\fR option is specified at link-time
+(see \fBld\fR(1)).  
+.sp
+Other options can be specified on the 
+.B cc 
+call and are passed to the linker
+.BR ld .
+See the description of 
+.B ld
+for a description of these options. 
+.sp
+Note also that an internal call to the linker
+provides the options
+.B \-X
+and
+.B \-e
+with entry name \fBstart\fR, and adds the library name /lib/libc.a
+to the end of the list of object module names. Consequently, these mandatory 
+options are not specified at the command level.
+.sp
+.B Ld
+recognizes the same set of options passed to it by the C compiler.
+.SH EXAMPLES
+.nf
+.sp
+                \fBcc math1.c math2.c math3.c -lm\fR
+.sp
+.fi
+The above example compiles, assembles, and links three C source files, 
+including the standard
+non-segmented math library /lib/libm.a at linkage time. The load module
+is a.out.
+.sp
+.nf
+       \fBcc -c cee1.c cee2.c cee3.c -I/path/path/speclib\fR
+.sp
+.fi
+The above example compiles and assembles, but does not link, the three
+C source files, one or more of which define "include" statements referencing
+a library located in /path/path/speclib. (Note: "speclib" is the directory
+in which the "included" library can be found--not the library itself).
+The unlinked modules produced
+are cee1.o, cee2.o, and cee3.o.
+.SH FILES
+file.c		source file
+.br
+file.o		object file
+.br
+a.out		load module
+.br
+/tmp/cc.? 	temporaries
+.br
+/lib/cpp       preprocessor
+.br
+/lib/cparse	compiler pass1
+.br
+/lib/gopt      optional global optimizer
+.br
+/lib/codgen	compiler pass3
+.br
+/lib/popt      optional peephole optimizer
+.br
+/lib/clist	optional listing pass
+.br
+/lib/libc.a	standard library
+.br
+/lib/mcrt0.o	optional startup routine for profiling
+.br
+/lib/crt0.o    non-segmented C runtime startup routine
+.SH SEE ALSO
+.nf
+cas(1), ld(1).
+.sp
+.I The C Programming Language -
+  (B. W. Kernighan and D. M. Ritchie, Prentice-Hall, 1978)
+.sp
+\fIThe C Programming Language\fR in the ZEUS Languages/Programming
+  Tools Manual.
+.fi
+.SH DIAGNOSTICS
+The diagnostics produced by the compiler, 
+assembler, or linker 
+are self-explanatory.
+.SH IMPLEMENTATION
+.PP
+The 
+.B cc
+compiler has the following characteristics:
+.RS
+.IP "\ \(bu"
+As many as seven register declarations can be honored.
+The Z8000 registers r8 through r14 can be used for register variables.
+.IP "\ \(bu"
+The 
+.B cc
+compiler produces object code that conforms to the System 8000 calling
+conventions.
+.IP "\ \(bu"
+The name 'z8000' is predefined in the 
+C preprocessor to be the constant 1.

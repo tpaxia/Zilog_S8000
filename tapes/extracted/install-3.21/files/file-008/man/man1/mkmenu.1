@@ -1,0 +1,136 @@
+.po 1i
+.TH MKMENU 1 ZILOG
+.V 08/15/84 16:58:41
+.\" @[$]mkmenu.1	1.11 08/15/84 16:58:41 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mkmenu
+\- menu creation utility
+.SH SYNOPSIS 
+.BI mkmenu " [ file ]"
+.SH MENU SYSTEM OVERVIEW 
+Menus enable commands to be invoked with single keystrokes; they
+restrict or extend the execution environment. 
+In a system the size of ZEUS,
+a menu system provides a prism through which
+a large array of abilities can be narrowed into a more comprehensible
+working set.
+.sp
+ZEUS does not currently provide pre-defined system menus;
+the menu system described here enables the creation, chaining, and execution of
+user-defined menus. 
+These menus are described by five entries in the ZEUS Reference
+Manual: \fBmkmenu\fR(1), \fBzmenu\fR(1), \fBzmprint\fR(1), \fBmenupath\fR(5),
+and \fBdotmenu\fR(5).  
+.sp
+Of the five entries, three describe executable commands of the same name:
+\fBmkmenu\fR, \fBzmenu\fR, and \fBzmprint\fR.
+Invoking
+.B Mkmenu
+(make menu) initiates an interactive session whose product is a 
+file of specifications describing the menu. 
+Invoking
+.B zmenu
+causes the specifications file produced by \fBmkmenu\fR to be sought and
+"driven." 
+.B Zmprint
+produces documentation for the system.
+.sp
+\fBMenupath\fR and \fBdotmenu\fR describe the system; they are not executable
+commands.
+.B Menupath
+describes the system's "geography;" that is, it outlines where
+menu-specification files can be created and discusses how
+\fBmkmenu\fR and \fBzmenu\fR are coordinated with respect
+to that location.
+.B Dotmenu
+describes the menu-specification file created by \fBmkmenu\fR.
+.sp
+From beginning to end a menu creation and display procedure looks like
+this:
+.sp
+.nf
+set one of: 
+             (1) \fBsetenv MENUPATH \fI/dir/dir/menudir\fR
+        or:  (2) \fBvi ~/.menupath\fR  (contents = \fI/dir/dir/menudir\fR)
+        or:  (3) \fBvi /etc/menupath\fR (contents = \fI/dir/dir/menudir\fR)
+        or:  (4) set nothing
+
+     enter:
+                     \fBmkmenu\fR 
+        or:
+                     \fBmkmenu \fImymenu\fR
+.sp
+.fi
+If no argument is passed to \fBmkmenu\fR, one is prompted. An interactive
+session commences, culminating in the production of a menu-specification
+file \fI/dir/dir/menudir/mymenu\fR if (1), (2), or (3) were set, or ./mymenu,
+otherwise.
+
+.sp
+.nf
+    enter:           \fBzmenu \fImymenu\fR
+.sp
+.fi
+\fBZmenu\fR looks for the existence of its search list pointers in the
+order \fIMENUPATH\fR, ~/.menupath, /etc/menupath. If the contents of one
+of these is set to /dir/dir/menudir, \fBzmenu\fR seeks mymenu in that
+directory; otherwise, it seeks mymenu in the invoker's home directory. Note
+that if the \fBmkmenu\fR default is taken, \fBzmenu\fR does not find
+\fImymenu\fR unless the \fBmkmenu\fR default is also the home directory, or
+\fImymenu\fR is moved to the home directory before invoking \fBzmenu\fR. 
+.SH DESCRIPTION
+During a \fBmkmenu\fR session, the menu-specification file is created  
+in one of four directories. In exactly which of the four directories 
+depends upon the status of an environment variable and two pointer-files.
+That is, \fBmkmenu\fR first looks for the existence of an environent variable
+named \fIMENUPATH\fR, whose value is assumed to be a pathname pointing
+to the directory in which the menu-specification file is to reside. If
+\fIMENUPATH\fR does not exist, \fBmkmenu\fR looks for a pointer-file
+in the invoker's home directory named \fB.menupath\fR. If non-existent,
+\fBmkmenu\fR then seeks a file in the /etc directory named \fBmenupath\fR. The
+contents of both these pointer-files are interpreted as a pathname pointing  
+to the directory in which the menu-specification file is to reside. 
+.sp
+If more than one of
+the pointers exists simultaneously, \fBmkmenu\fR issues a prompt to create
+the specifications file in the directory pointed to by the first pointer found.
+If the response is
+negative, a prompt is issued to create the specifications file in the directory
+pointed to by the next pointer found, and so on. The file is created 
+in the first directory
+whose prompt is answered affirmatively, or, if the responses are all 
+negative or no
+pointers are in existence, in the directory from which \fBmkmenu\fR is
+invoked. 
+.SH WARNINGS
+If the menu-specification file is created in a directory pointed
+to by the second or subsequent pointer found, that pointer 
+must be the first pointer found at 
+the time \fBzmenu\fR is invoked or the specifications file will not be found. 
+.sp
+If the specifications file is created in the directory from which \fBmkmenu\fR
+is invoked, it must be moved to the invoker's home directory. Although the
+directory in which \fBmkmenu\fR resides is the default specifications 
+directory for \fBmkmenu\fR, the \fBHOME\fR directory is the default search
+directory for \fBzmenu\fR.
+.sp
+If \fBmkmenu\fR is
+invoked without an argument, 
+a prompt is issued to assign a name to
+the menu being created. If \fBzmenu\fR is to be invoked without an
+argument, that name must be `.menu`.  
+.SH FILES
+.nf
+~/.menupath               user menu-search path
+/etc/menupath             global menu-search path
+ .menu                    default menu-file 
+.fi
+.SH SEE ALSO
+chmod(1), zmenu(1), zmprint(1), dotmenu(5), menupath(5)
+.SH LIMITATIONS
+Leading white space entered into the menu header fields is ignored; it
+must be inserted with an editor. If this is not done, menu header fields
+are aligned at column 0 and column 30 of lines 0 and 1 respectively. 
+

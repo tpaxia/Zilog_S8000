@@ -1,0 +1,75 @@
+.po 1i
+.TH PIPE 2 Bell
+.V 08/15/84 17:14:43
+.\"@[$]pipe.2	1.8	08/15/84 17:14:43 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+pipe \- create an interprocess channel
+.SH SYNOPSIS
+.B int pipe
+.I (fildes)
+.br
+.B int
+.IR fildes [2];
+.SH DESCRIPTION
+The
+.B pipe
+system call creates an Input/Output mechanism called a pipe.
+The file descriptors returned can
+be used in read and write operations.
+When the pipe is written using the descriptor
+.IR fildes [1],
+up to 5120 bytes of data are buffered
+before the writing process is suspended.
+A read using the descriptor
+.IR fildes [0]
+picks up the data.
+Writes with a count of 5120 bytes or less are treated as a unit;
+no other process can intersperse data.
+.PP
+It is assumed that after the 
+pipe has been set up, two or more cooperating
+processes, created by subsequent 
+.B fork
+calls, pass data through the
+pipe with
+.B read
+and
+.B write
+calls.
+.PP
+The shell has a syntax
+to set up a linear array of processes
+connected by pipes.
+.PP
+Read calls on an empty
+pipe (no buffered data) with only one end
+(all write file descriptors closed)
+returns an end-of-file.
+.SH SEE ALSO
+sh(1), csh(1), read(2), write(2), fork(2).
+.SH DIAGNOSTICS
+The function value zero is returned if the
+pipe was created; \-1 if
+too many files (more than 40) are already open.
+.SM
+\%[EMFILE]
+.PP
+A signal is generated if a write on a 
+pipe with only one end is attempted.
+.SH LIMITATIONS
+Should more than 5120 bytes be necessary in any
+pipe among a loop of processes, deadlock occurs.
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT PIPE := 42
+
+	...
+	   	!* fildes in r0 or rr0 *!
+	sc	#PIPE
+	...	!* read file descriptor in r4 *!
+	...	!* write file descriptor in r5 *!
+.fi
+.ad

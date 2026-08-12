@@ -1,0 +1,213 @@
+.po 1i
+.TH ZSC 5 Zilog
+.V 08/15/84 17:36:22
+.\"@[$]zsc.5	1.5	08/15/84 17:36:22 - Zilog Inc.
+.ad
+.SH NAME
+zsc \- Zilog Source Control File conventions
+.SH DESCRIPTION
+A Zilog Source Control File contains all the information
+necessary to re-create any version of an associated source file.
+Text lines in more than one version of the source
+are in the control file only once.
+This ensures that the
+working version of the source is not destroyed
+in the development process.
+This method avoids
+the usual practice of saving several versions
+of a file.
+It is
+less cumbersome and
+wastes less disk storage.
+.LP
+The control file is a conventional ZEUS text file.
+Each successive release
+of the source file is represented 
+by a release entry in the source file.
+The release entry consists of one or more
+level entries,
+representing levels within a release
+of the source file.
+A version is extracted from a control file
+is assigned a version number of the form
+
+	rel.lev
+
+where rel indicates that this is the rel'th release
+and lev indicates that this is the lev'th level
+in release rel.
+(It is possible to include the version number in the source file.)
+.LP
+The first line of each release entry is
+a release line, consisting of the the characters
+
+	&R
+
+The release line
+is immediately followed by the
+first level entry.
+Each level begins with a history
+line which resembles:
+
+	&H isaac at Tue Sep 15 10:17:34 1981
+
+The history line shows the user who entered the version into
+the control file and shows when this was done.
+.LP
+Each history line is followed by zero or more comment lines
+which resemble:
+
+	&C terminal-independent functions added
+
+Comment lines hold documenting information
+entered by the person who added the version to the control file.
+.LP
+Following the history and comment lines are the
+lines which show the differences between this version
+and the previous version.
+(For version 1.1,
+these lines show the differences between the version
+and an empty file.)  The difference
+line are created by the
+.I diff
+program
+run with the -f option;
+see
+.IR diff (1).
+.LP
+The end of the difference lines and of the level entry
+is indicated with a done line:
+
+	&D
+
+.LP
+The control file for a source code file
+called
+.ul
+file
+is called
+.cu
+file+\c
+\&.
+.LP
+The following operations may be done on a Zilog Source Control
+file:
+.IP (1)
+.ul
+Check in
+(add)
+a new version of the source file to the control file.
+This is done with
+.BR chkin (1).
+.IP (2)
+.ul
+Check out
+(extract)
+a version of the source from the control file.
+This is done with
+.BR chkout (1);
+chkin also checks out the same version it is told
+to check in, unless the -r option is used.
+.IP (3)
+.ul
+Check differences
+between the source file and a version in the control file
+or between two versions in the control file.
+This is done with
+.BR chkdiff (1).
+.LP
+A source file is checked out either
+.ul
+editable
+or
+.ul
+read-only.
+An editable source file is meant to be modified and checked
+back in, thus creating a new version.
+When an editable source file is checked out,
+a lock file is created; without a
+lock file a
+modified source file cannot be checked back in
+to an existing control file.
+A read-only source file is meant to be
+listed, compiled, or otherwise input to a program.
+It must not be modified or checked back in.
+Chkout by default creates a read-only source file;
+used with the -e option, chkout creates an editable source file.
+Chkin by default replaces the editable source file
+with a read-only source file;
+used with the -r option, the source file is simply removed.
+.LP
+A read-only source file should contain information
+identifying its version.
+This can be provided by including one or more
+keywords in the file before it is first checked
+in.
+A keyword is one of the following three-character
+sequences.
+In a read-only source file, the keywords are expanded
+as follows.
+.IP $\W$
+This is expanded to a what string,
+which identifies which version of which module (file)
+this is.
+As in this example,
+
+	@[$]master.c	1.2
+
+a what string has four elements:  the four characters
+@[$], to identify this as a what string;
+the name of the source code file (module);
+a tab character;
+and the version number (release).
+Enter $\W$ in the editable source in such a way
+that the what string appears in both the read-only
+source and the object file.
+For example, if
+
+	extern char Version[] = "$\W$";
+
+appears in an editable C source
+
+	extern char Version[] = "@[$]master.c	1.2";
+
+appears in the read-only source and the what string
+appears in the object file.
+.IP $\Z$
+Expands to the characters @[$] to designate
+user-designed what strings.
+.IP $\R$
+Expands to the version number (release).
+.IP $\D$
+Expands to 
+date and time (MM/DD/YY HH:MM:SS) source file was checked out.
+.LP
+The following procedure shows a possible use of the
+source code control programs and illustrates how they are
+used together.
+.IP (1)
+Create the original source file, including $\W$
+and any other keywords that are appropriate.
+.IP (2)
+Check in the original source file.
+Chkin replaces the original source file with a read-only
+source file, substituting keywords.
+.IP (3)
+Compile and test.
+If no further changes are indicated, stop.
+.IP (4)
+Check out an editable source file of the latest version,
+using the -e option of chkout.
+.IP (5)
+Edit indicated changes.
+Go to step 3.
+.SH SEE ALSO
+chkin(1),
+chkout(1),
+chkdiff(1),
+diff(1).
+.SH LIMITATIONS
+A read-only source file is protected only
+by its lack of write permissions.
+Thus its status may go unnoticed
+until the text editor refuses to overwrite it.

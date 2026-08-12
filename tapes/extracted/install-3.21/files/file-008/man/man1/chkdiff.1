@@ -1,0 +1,54 @@
+.po 1i
+.TH CHKDIFF 1 Zilog
+.V 08/15/84 16:40:34
+.\" @[$]chkdiff.1	1.8	08/15/84 16:40:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+chkdiff \- list differences between versions of a source file
+.SH SYNOPSIS
+\fBchkdiff \fR[\fB-h\fR] [\fB-v\fI rel.lev\fR] [\fB-v\fI rel.lev\fR] \fIfile\fR
+.SH DESCRIPTION
+\fBChkdiff\fR lists the differences between a source code 
+file and another version of it in its source control file;
+chkdiff can also list the differences between two versions 
+in the source control file.
+The differences are described in the form used by
+.BR diff (1).
+.LP
+The filename argument must be the name of a source
+file, not its control file.
+By default, the differences listed are those between the 
+source file and the last version in the control file.
+.SH OPTIONS
+.TP
+.B \-h
+Invokes the "halfhearted" version of \fBdiff\fR(1).
+.TP
+.B \-v
+Lists the differences between the source file and the
+specified version if used once.
+If the -v option is used twice,
+the differences listed are those between the
+two specified versions.
+Each -v option is followed by an argument of
+the form \fIrel.lev\fR, where \fIrel\fR is the release 
+number and \fIlev\fR is the release level number.
+.SH FILES
+file+           -- control file for \fIfile\fR
+.br
+/tmp/chkdiffXXX -- temporarily holds one of the versions
+.SH SEE ALSO
+chkin(1), chkout(1), chkwhat(1), zsc(5), diff(1)
+.SH DIAGNOSTICS
+corrupt chkfile:  the convention specified in
+zsc(5) has been violated
+.PP
+diff: files too big, try -h:  version differences cannot
+be calculated because the file is too big
+.PP
+version rel.lev not found:  use chkout -h to find correct 
+version numbers
+.SH LIMITATIONS
+If the files are too big for the differences to be calculated,
+an version entry is made showing \fIno\fR differences.

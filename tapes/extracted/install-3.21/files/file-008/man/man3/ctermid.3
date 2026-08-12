@@ -1,0 +1,60 @@
+.po 1i
+.TH CTERMID 3 Bell
+.V 08/15/84 17:17:17
+.\" @[$]ctermid.3	1.7	08/15/84 17:17:17 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ctermid \- generate file name for terminal
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>\fR
+.sp
+\fBchar \(**\fIctermid(s)\fR
+.br
+\fB     char \(**\fIs;\fR
+.fi
+.SH DESCRIPTION
+.B Ctermid\^
+generates a string that refers to the controlling
+terminal for the current process when used as a file name.
+.PP
+If
+.RI (int) s\^
+is zero, the string is stored in an internal static area,
+the contents of which are overwritten at the next call to
+.BR ctermid ,
+and the address of which is returned.
+If
+.RI (int) s\^
+is non-zero, then
+.I s\^
+is assumed to point to a character array of at least
+.B L_ctermid
+elements; the string is placed in this array and the value of
+.I s\^
+is returned.
+The manifest constant
+.B L_ctermid
+is defined in
+.BR <stdio.h> .
+.SH NOTES
+The difference between
+.B ctermid\^
+and
+.BR ttyname (3)
+is that
+.B ttyname\^
+must be handed a file descriptor and returns the actual name of
+the terminal associated with that file descriptor, while
+.B ctermid\^
+returns a magic string
+.RI ( /dev/tty )
+that will refer to the
+terminal if used as a file name.
+Thus
+.B ttyname\^
+is useless unless the process already has at least one file open
+to a terminal.
+.SH SEE ALSO
+ttyname(3).

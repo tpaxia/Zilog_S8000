@@ -1,0 +1,31 @@
+.po 1i
+.TH BANNER 1 Bell
+.V 08/15/84 16:37:50
+.\" @[$]banner.1	1.7	08/15/84 16:37:50 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+banner \- make posters
+.SH SYNOPSIS
+\fBbanner\fI strings\fR
+.SH DESCRIPTION
+.B Banner\^
+prints its arguments (each up to 10 characters 
+long) in large letters on the standard output.
+.SH EXAMPLES
+.sp
+.RS
+\fBbanner\fI "hi there"\fR
+.br
+\fBbanner\fI hello world\fR
+.br
+\fBbanner\fI "happy" "birthday"\fR
+.sp
+.RE
+.SH LIMITATIONS
+In order to get any of the special symbols, or "hard"
+spaces, the symbol or space must
+be preceded by a backslash "\ \e\ ".
+.I
+Banner
+accepts only 10 characters.

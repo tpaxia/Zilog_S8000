@@ -1,0 +1,239 @@
+#
+# @[$]makenewfs	4.7  08/24/84 19:26:23 - Zilog Inc
+#
+# This shell script will ask to set up the date and time, and will
+# interactively remove all the /dev entries of the disk
+# drives that are not applicable.
+# This shell script makes two new filesystems, /z and tmp
+# In addition, this script links the default virtual filesystem 
+# names to the correct node names in /dev. It also labels all
+# filesystems
+# Great care should be taken when executing this script
+#
+#	IT WILL COMPLETELY DESTROY THE /z AND /tmp FILESYSTEMS!!!
+#
+#
+
+onintr done
+set nonomatch
+
+# set current date and time
+/etc/datem
+
+# set model number
+set model = `/etc/model`
+echo
+
+switch ($model)
+
+	case 11:
+		set dev = md; set tmpsize = 4000; set zsize = 11968
+		set interleave = 7; set sectcyl = 136
+		breaksw
+
+	case 11P:
+		set dev = md; set tmpsize = 6000; set zsize = 26520
+		set interleave = 7; set sectcyl = 85
+		breaksw
+
+	case 21:
+		set dev = zd; set tmpsize = 6000; set zsize = 30400
+		set interleave = 12; set sectcyl = 96
+		breaksw
+
+	case 21P:
+	case 22:
+		set dev = md; set tmpsize = 6000; set zsize = 57154
+		set interleave = 7; set sectcyl = 102
+		breaksw
+
+	case 31:
+		set dev = smd; set tmpsize = 6000; set zsize = 104736
+		set interleave = 16; set sectcyl = 224
+		breaksw
+
+	case 31P:
+	case 32:
+		set dev = smd; set tmpsize = 6000; set zsize = 234944
+		set interleave = 16; set sectcyl = 256
+		breaksw
+
+	default
+		echo Cannot determine model
+		exit -1
+		breaksw
+
+endsw
+
+# Remove all the unused /dev entries
+
+if ("$dev" != "smd") then
+	while (1)
+		echo -n "Do you have any SMD disk drives ? (y or n) "
+		set answer = `gets`
+		switch ("$answer")
+			case "y":
+				break
+			case "n":
+				rm /dev/smd*
+				rm /dev/rsmd*
+				break
+			default:
+				breaksw
+		endsw
+		echo "what?"
+	end
+endif
+
+if ("$dev" != "md") then
+	while (1)
+		echo -n "Do you have any  MD disk drives ? (y or n) "
+		set answer = `gets`
+		switch ("$answer")
+			case "y":
+				break
+			case "n":
+				rm /dev/md*
+				rm /dev/rmd*
+				break
+			default:
+				breaksw
+		endsw
+		echo "what?"
+	end
+endif
+
+if ("$dev" != "zd") then
+	while (1)
+		echo -n "Do you have any  ZD disk drives ? (y or n) "
+		set answer = `gets`
+		switch ("$answer")
+			case "y":
+				break
+			case "n":
+				rm /dev/zd*
+				rm /dev/rzd*
+				break
+			default:
+				breaksw
+		endsw
+		echo "what?"
+	end
+endif
+
+#
+# Create links for nodes in /dev
+# (don't create a link for rswap)
+#
+echo
+echo
+echo Creating links for usr, swap, root, tmp and z file systems
+echo
+cd /dev
+@ i = 0
+foreach j (usr swap root tmp z)
+	ln $dev$i $j
+	if ($i != 1) then
+		ln r$dev$i r$j
+	endif
+	@ i++
+end
+echo All links have been created
+echo
+echo
+
+
+#
+# Label root and /usr filesystems
+#
+echo Labeling root and /usr filesystems...
+/etc/labelit /dev/root root 1 > /dev/null
+/etc/labelit /dev/rusr /usr 1 > /dev/null
+echo
+
+echo 
+echo  
+echo '        	    **** WARNING ****'
+echo 
+echo 	THIS PART OF THE PROGRAM WILL COMPLETELY REMAKE
+echo    THE /z AND /tmp FILE SYSTEMS
+echo 
+echo 
+
+
+while (1)
+	echo -n "Do you want to proceed? (y or n) "
+	set answer = `gets`
+	switch ("$answer")
+		case "y":
+			break
+		case "n":
+			goto done
+		default:
+			breaksw
+	endsw
+	echo "what?"
+end
+
+
+#
+# make the 'tmp' and 'z' file systems
+#
+echo   Initializing /z and /tmp file systems
+echo
+echo "/etc/mkfs /dev/rtmp  $tmpsize $interleave $sectcyl"
+echo
+/etc/mkfs /dev/rtmp  $tmpsize $interleave $sectcyl 
+echo
+echo "/etc/mkfs /dev/rz $zsize $interleave $sectcyl"
+echo
+/etc/mkfs /dev/rz $zsize $interleave $sectcyl
+echo
+echo "The /z and /tmp filesystems are initialized"
+
+#
+# Label /z and /tmp filesystems
+#
+echo Labeling /z and /tmp filesystems...
+/etc/labelit /dev/rz /z 1 > /dev/null
+/etc/labelit /dev/rtmp /tmp 1 > /dev/null
+echo
+
+# In order to run the lost+found shell script the filesystems must
+# be mounted.
+echo
+echo	All filesystems are being mounted temporarily to run
+echo 	the lost+found shell script as explained in the System
+echo 	Administrator Manual. The following shell script takes
+echo 	about 5 minutes to complete.
+echo
+mfs
+
+foreach i (/tmp /z)
+	set dir="$i/lost+found"
+ 		if (! -e $dir) then
+ 			  mkdir $dir
+          	  chmog 0750 zeus 0 $dir
+ 		endif
+ 	@ j = 318
+ 	while $j
+ 		echo > $dir/Z$j
+ 		@ j--
+ 	end
+ 	@ j = 318
+ 	while $j
+ 		rm $dir/Z$j
+ 		@ j--
+	end
+end
+
+echo
+umfs
+echo
+done:
+/etc/chmog 000 zeus 0 /etc/makenewfs
+
+echo
+echo   This file has been made non-executable.
+echo   chmod 700 makenewfs before it can be used again
+echo

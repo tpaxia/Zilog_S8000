@@ -1,0 +1,64 @@
+.po 1i
+.TH MM 7 Bell
+.V 08/15/84 17:37:40
+.\" @[$]mm.7	1.2	08/15/84 17:37:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mm \- the MM macro package for formatting documents
+.SH SYNOPSIS
+.B mm
+[\fIoptions\fR] [\fIfiles\fR]
+.PP
+.B "nroff \-mm"
+[\fIoptions\fR] [\fIfiles\fR]
+.PP
+.B "nroff \-cm"
+[\fIoptions\fR] [\fIfiles\fR]
+.sp 1v
+.B mmt
+[\fIoptions\fR] [\fIfiles\fR]
+.PP
+.B "troff \-mm"
+[\fIoptions\fR] [\fIfiles\fR]
+.PP
+.B "troff \-cm"
+[\fIoptions\fR] [\fIfiles\fR]
+.SH DESCRIPTION
+This package provides a formatting capability for a wide
+variety of documents.
+It is the standard package used by the BTL typing pools and
+documentation centers.
+The manner in which a document is entered and edited is
+essentially independent of whether the document is to be
+eventually formatted at a terminal or phototypeset.
+See the references below for further details.
+.SH OPTIONS
+.TP
+.B \-cm
+Causes
+.IR nroff (1)
+and
+.IR troff (1)
+to use the compacted version of the macro package, thus
+speeding up the process of loading.
+.TP
+.B \-mm
+Results in the use of the non-compacted version of the macro
+package.
+.SH FILES
+.TP "\w'/usr/lib/macros/cmp.[nt].[dt].m    'u"
+/usr/lib/tmac/tmac.m
+pointer to the non-compacted version of the package
+.TP
+/usr/lib/macros/mm[nt]
+non-compacted version of the package
+.TP
+/usr/lib/macros/cmp.[nt].[dt].m
+compacted version of the package
+.TP
+/usr/lib/macros/ucmp.[nt].m
+initializers for the compacted version of the package
+.PD
+.SH SEE ALSO
+troff(1).

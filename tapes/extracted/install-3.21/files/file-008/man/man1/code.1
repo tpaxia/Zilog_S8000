@@ -1,0 +1,73 @@
+.po 1i
+.TH CODE 1 Zilog
+.V 08/15/84 16:42:00
+.\" @[$]code.1	1.14 08/15/84 16:42:00 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+code \-  print characters with hex or octal equivalents
+.SH SYNOPSIS
+\fBcode\fR [ \fB-o\fR ]
+.SH DESCRIPTION
+.B Code
+reads from standard input and lists each character read with
+its hex or octal equivalent on the standard output.
+.PP
+Non-printable characters are displayed with their mnemonic in angle
+brackets, a printable representation in parentheses (with '^' representing
+the "control" key), and their numerical equivalent.
+.PP
+The default numerical representation is hex, with the
+.B -o
+option causing an octal dump.
+.PP
+.B Code
+runs in "raw mode"
+and terminates upon receipt of a DEL character (hex 7F).
+Non-ASCII characters (high bit set) are ignored.
+.SH EXAMPLES
+User input is represented by \fBbold\fR type.
+.sp 2
+.RS
+Without argument: 
+.sp 
+%\fBcode\fR
+.sp
+\fBa\fR           61
+.br
+\fBb\fR           62
+.br
+\fBc\fR           63
+.br
+<del>       7f
+.sp 2
+Input from \fIfile\fR:
+.sp 
+%\fBecho abc > \fIfile\fR
+.br
+%\fBcode < \fIfile\fR
+.sp
+a           61
+.br
+b           62
+.br
+c           63
+.br
+<nl> (^J)   0a
+.br
+<del>       7f
+.bp
+Input from command:
+.sp 
+%\fBcat \fIfile\fB | code -o\fR
+.sp
+a          141
+.br
+b          142
+.br
+c          143
+.br
+<nl> (^J)  012
+.br
+<del>      177
+.RE

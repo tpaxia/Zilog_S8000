@@ -1,0 +1,314 @@
+.po 1i
+.TH LKDATA 2 Zilog
+.V 08/15/84 17:13:49
+.\" @[$]lkdata.2	1.12	08/15/84 17:13:49 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+lkdata, unlk \- lock and unlock data against concurrent access
+.SH SYNOPSIS
+.ft B
+#include <sys/lockblk.h>
+.sp
+.B long lkdata
+.I (fildes, flag, lkblk)
+.br
+.B int
+.I fildes, flag;
+.br
+.B struct
+.I lockblk *lkblk;
+.sp
+.B long unlk
+.I (fildes, flag, lkblk)
+.br
+.B int
+.I fildes, flag;
+.br
+.B struct
+.I lockblk *lkblk;
+.SH DESCRIPTION
+.B Lkdata
+locks regions of files against access by other processes.
+The locking process must have write permission on the file
+or have the file open for writing.
+A process that attempts an access
+forbidden by another process' lock
+sleeps until the other process
+terminates or removes the lock.
+.PP
+.I Fildes
+is an open file descriptor that identifies 
+the file to be locked (
+.BR open (2)).
+.PP
+.I Flag
+is the bitwise or of the following constants.
+.RS
+.sp
+.ta 1.5i 2.5i
+.ul
+Constant	Value	Function
+.in +2.5i
+.ti -2.5i
+LKRONLY	0	Read-only lock
+.ti -2.5i
+LKEXCLUSIVE	1	Exclusive lock
+.ti -2.5i
+LKUSP	0	Lock region begins at read/write pointer
+.ti -2.5i
+LKEXP	2	Lock region beginning specified by
+.I lkblk.
+.ti -2.5i
+LKBLOCKING	0	Block if region not available
+.ti -2.5i
+LKNOBLOCK	4	Return error if regions not available
+.DT
+.RE
+.PP
+A lock is either
+.I exclusive
+or
+.I read-only;
+an exclusive lock forbids other processes all access
+to the locked region;
+a read-only lock forbids all access except reading.
+.PP
+If
+.I flag
+specifies no blocking and part of the specified region
+is already locked by another process,
+.B lkdata
+returns with an EACCES error (
+.BR intro (2) ).
+If
+.I flag
+specifies blocking
+and part of
+the specified region is already locked by another process,
+.B lkdata
+does not return until the whole region is available.
+If a blocking lock would cause deadlock
+(two process waiting indefinitely for each other),
+.B lkdata
+returns with an EDEADLOCK error.
+.PP
+If
+.I flag
+specifies LKUSP,
+the locked region begins relative to the read/write pointer,
+using the offset in the lkblk structure. (
+.BR lseek (2) ).
+If instead
+.I flags
+specifies LKEXP,
+the locked region is specified solely by
+.B lkblk.
+.PP
+The third argument
+points to a structure that 
+specifies the length and origin of the lock region.
+.IP \(bu
+.I lklen
+specifies the length of the locked region.
+If
+.I lklen
+is set to 0, the entire file past the starting point of the lock,
+including the entire region past the end of file
+is locked:  other
+processes are not even permitted to append to the file.
+.IP \(bu
+.I lkoff
+and
+.I lkwhnce
+specify the beginning of the locked region.
+If
+.I lkwhnce
+is 0,
+the locked region
+begins at
+.I lkoff
+bytes from the beginning of the file.
+If
+.I lkwhnce
+is 1,
+the locked region begins at
+.I lkoff
+bytes from the read/write pointer.
+If
+.I lkwhnce
+is 2,
+the locked region begins at
+.I lkoff
+bytes from the end of the file.
+A negative
+.I lkoff
+is permitted as long as the specified
+region does not begin before the beginning of the file.
+An illegal negative offset returns EINVAL.
+.PP
+It is permitted to lock a region past the end of the file;
+if this is done, only the locking process can extend the
+file into that region.
+In particular, if the first byte past the end of the
+file is locked, no other process can append to the file.
+Thus appends to the file can be locked out
+by locking the entire file (setting
+.I len
+to 0)
+or by locking the first byte past the end of the file.
+.PP
+If the same process locks two overlapping regions
+the two regions are merged into a single region.
+If one of the regions is read-only and the other
+is exclusive,
+the overlapping region is exclusive.
+.PP
+.B Unlk
+unlocks regions of a file that may have been locked
+by
+.B lkdata.
+.B Unlk
+has no effect on bytes not previously
+locked and
+restores normal access to bytes previously locked.
+If part of the specified region is locked
+by another process,
+.B unlk
+will successfully unlock its processes' own locks 
+without affecting locks held by other processes.
+It is not an error to unlock a region that
+includes bytes that are not locked
+or to unlock just part of a single locked region.
+.PP
+A file is also unlocked upon the last close(2) of that file
+by the associated process.
+.PP
+The arguments to
+.B unlk
+have the same meaning as those to
+.B lkdata,
+although in
+.I flag
+LKRONLY and LKEXCLUSIVE are ignored.
+.PP
+Here are the declarations in
+.I /usr/include/sys/lockblk.h:
+.sp
+.RS
+.nf
+
+struct lockblk {
+    long    lklen;    /*length of region to lock          */
+    long    lkoff;    /*offset of 1st byte, only w/       */
+                        /*  flag=2,3,6,7                  */
+    int     lkwhnce;/*whence flag ala lseek, only w/      */
+                        /*  flag=2,3,6,7                  */
+} ;
+
+
+#define  LKRONLY     0  /* Request is for a read-only lock   */
+#define  LKEXCLUSIVE 1  /* Request is for an exclusive lock  */
+#define  LKUSP       0  /* Use current seek pointer          */
+#define  LKEXP       2  /* Use explicit offset               */
+#define  LKBLOCKING  0  /* Block if request cannot be        */
+                        /*  immediately honored              */
+#define  LKNOBLOCK   4  /* Do not block, but return an error */
+                        /*  if the request                   */
+                        /*  cannot immediately be honored    */
+
+static long
+lkdata(fd,flag,lk)
+int fd;
+int flag;
+struct lockblk *lk;
+{
+    int stat;
+    long temp;
+
+    switch( lk->lkwhnce )
+    {
+
+    case 0:
+      return(lk->lkoff >= 0l ? lk->lkoff : -1l );
+      break;
+
+    case 1:
+      return(( temp =lk->lkoff+tell(fd) ) >= 0l ? temp : -1l );
+      break;
+
+    case 2:
+      temp = tell(fd);
+      lseek(fd,temp,0l);
+      return(temp);
+      break;
+
+    default:
+      return(-1l);
+    }
+}
+
+static long
+unlk(fd,flag,lk)
+int fd;
+int flag;
+struct lockblk *lk;
+{
+    return(lkdata(fd,flag,lk));
+}
+.fi
+.RE
+.SH SEE ALSO
+unlk(2), lseek(2).
+.SH DIAGNOSTICS
+If successful, the call returns the offset of the beginning
+of the locked region.
+If unsuccessful, the call returns -1.
+.PP
+An EDEADLOCK error (
+.BR intro (2) )
+is overcome by removing the lock that is causing the deadlock.
+One sure way to overcome EDEADLOCK
+is for the process receiving the error to remove its locks
+one by one until the
+.B lkdata
+call no longer returns EDEADLOCK.
+.SH LIMITATIONS
+The \fIlockblk\fR structure could have been a union, but it complicates
+the implementation for only marginal advantage.
+.PP
+The access control checks for this call are somewhat different than
+those for other calls.  In particular, if the file is open only for
+reading,
+.B lkdata
+checks whether the process currently has write permission
+to the file.  This can lead to
+inconsistency in the application of the access control rules.
+For example, consider a setuid program.
+While operating under the effective uid, it can lock
+a file opened only for reading but writable by the effective
+uid.  If it reverts to its real uid,
+the file may no longer be writable and subsequent locking calls fail.
+There is no inconsistency if the 
+file is opened for reading and writing.
+A similar inconsistency exists if the access permissions on the file
+are changed after a process opens it for reading only.
+.SH ASSEMBLER
+.nf
+.na
+    CONSTANT LKDATA := 49
+    ...     !*  fildes, flag, lkblk in r0, r1 and r2    *!
+    ...     !*  ( if segmented: fildes, flag, in r0, r1,      *!
+            !*  lkblk in rr2 )                 *!
+    sc    #LKDATA
+    ...     !*  return value in rr4, carry flag set if error *!
+
+    CONSTANT UNLK := 50
+    ...     !*  fildes, flag, lkblk in r0, r1 and r2    *!
+    ...     !*  ( if segmented: fildes, flag, in r0, r1,      *!
+            !*  lkblk in rr2 )                 *!
+    sc    #UNLK
+    ...     !*  return value in rr4, carry flag set if error *!
+
+.fi
+.ad

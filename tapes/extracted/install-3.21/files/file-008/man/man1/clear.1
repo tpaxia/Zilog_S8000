@@ -1,0 +1,18 @@
+.po 1i
+.TH CLEAR 1 UCB
+.V 08/15/84 16:41:55
+.\" @[$]clear.1	1.2	08/15/84 16:41:55 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+clear \- clear terminal screen
+.SH SYNOPSIS
+\fBclear\fR
+.SH DESCRIPTION
+.B Clear
+clears the terminal screen.
+It determines the user's terminal type from the environment variable
+TERM and searches /etc/termcap for its clear-screen control sequence.
+No action is taken if the terminal type is not described.
+.SH FILES
+/etc/termcap	terminal capability data base

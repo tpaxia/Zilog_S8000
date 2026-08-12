@@ -1,0 +1,4 @@
+: '@[$]sdisk.sh	1.1  05/29/84 13:43:25 - Zilog Inc'
+: 'start periodic disk accounting'
+cd /usr/adm
+nohup sh /usr/lib/acct/dodisk > diskdiag 2>&1 &

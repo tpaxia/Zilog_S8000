@@ -1,0 +1,255 @@
+.po 1i
+.TH MM 1 Bell 
+.V 08/15/84 16:58:58
+.\" @[$]mm.1	1.12 08/15/84 16:58:58 - Zilog Inc
+.ad
+.fi
+.SH NAME
+mm \- print out documents formatted with the \s-1MM\s+1 macros
+.SH SYNOPSIS
+.B mm
+[ \fIoptions\fR ] [ \fIfiles\fR ]
+.SH DESCRIPTION
+.B Mm
+produces documents created with \fBnroff\fR(1) and the MM
+text-formatting macro package.
+(The macro package is capitalized here to
+distinguish it from \fBmm\fR(1).)
+It has options to specify preprocessing by \fBtbl\fR(1) and/or
+.BR neqn (1)
+and postprocessing by various terminal-oriented output filters.
+The proper pipelines and the required arguments and flags for
+\fBnroff\fR(1) and MM macros are generated, depending on
+the \fBmm\fR options selected.
+.PP
+.I Options
+for
+.B mm
+are given below.
+Any other arguments or flags (e.g.,
+.BR \-rC3 )
+are passed
+to
+.BR nroff (1)
+as appropriate.
+Such options can occur in any order,
+but they must appear before the
+.I files
+arguments.
+If no arguments are given,
+.B mm
+prints a list of its options.
+.SH OPTIONS
+.PP
+.PD 0
+.TP
+.B \-12
+The document is to be produced in 12-pitch.
+May be used when
+.SM
+.I $TERM
+is set to one of
+.BR 300 ,
+.BR 300s ,
+and
+.BR 450 .
+The pitch switch on the
+.SM DASI
+300 and 300s terminals must be manually
+set to
+.B 12
+if this option is used.
+.sp
+.TP
+.B \-c
+Invoke
+.BR col (1). 
+Note that
+.BR col (1)
+is invoked automatically by
+.B mm
+unless
+.I term
+is one of
+.BR 300 ,
+.BR 300s ,
+.BR 450 ,
+.BR 37 ,
+.BR 4000A ,
+.BR 382 ,
+and
+.BR X .
+.sp
+.TP
+.B \-E
+Invoke the
+.B \-e
+option of
+.BR nroff (1).
+.sp
+.TP
+.B \-e
+Invoke
+.BR neqn (1).
+.sp
+.TP
+.BI \-T term
+The type of output terminal;
+for a list of recognized values for
+.IR term ,
+type
+.BR "help term2" .
+If this option is
+.I not
+used,
+.B mm
+will use the value of the shell variable
+.SM
+.I $TERM
+from the environment (see
+.BR profile (5)
+and
+.BR environ (7))
+as the value of
+.IR term ,
+if
+.SM
+.I $TERM
+is set;
+otherwise,
+.B mm
+will use
+.B 450
+as the value of
+.IR term .
+If several terminal types are specified,
+the last one takes precedence.
+.sp
+.TP
+.B \-t
+Invoke
+.BR tbl (1).
+.sp
+.TP
+.B \-y
+Use the non-compacted version of the macros (see
+.BR mm (7)).
+.PD
+.PP
+As an example (assuming that the shell variable
+.SM
+.I $TERM
+is set in the environment to
+.BR 450 ),
+the two command lines below are equivalent:
+.RS
+.PP
+\fBmm \|\-t \|\-rC3 \|\-12 \|ghh\(**
+.br
+tbl \|ghh\(** \|\(bv \|nroff \|\-cm \|\-T450\-12 \|\-h \|\-rC3\fR
+.RE
+.PP
+.B Mm
+reads the standard input
+when
+.B \-
+is specified
+in place of \fIfiles\fR.
+(Mentioning other files together with
+.B \-
+leads to disaster.)\ 
+This option allows
+.B mm
+to be used as a filter, e.g.:
+.RS
+.PP
+\fBcat \|dws \|\(bv \|mm \|\-\fR
+.RE
+.SH HINTS
+.PD 0
+.TP
+1.
+.B Mm
+invokes
+.BR nroff (1)
+with the
+.B \-h
+flag.
+With this flag,
+.BR nroff (1)
+assumes that the terminal has tabs set
+every 8 character positions.
+.sp
+.TP
+2.
+Use the
+.BI \-o list
+option of
+.BR nroff (1)
+to specify ranges of pages to be output.
+Invoking 
+.B mm 
+with one or more of the
+.BR \-e ,
+.BR \-t ,
+and
+.B \-
+options, together with the
+.BI \-o list
+option of
+.BR nroff (1)
+can cause a harmless "broken pipe" diagnostic
+if the last page of the document is not specified in
+.IR list .
+.sp
+.TP
+3.
+If you use the
+.B \-s
+option of
+.BR nroff (1)
+(to stop between pages of output),
+use line-feed (rather than return or new-line)
+to restart the output.
+The
+.B \-s
+option of
+.BR nroff (1)
+does not work with the
+.B \-c
+option of
+.BR mm ,
+or if
+.B mm
+automatically invokes
+.BR col (1)
+(see
+.B \-c
+option above).
+.sp
+.TP
+4.
+If you misrepresent to
+.B mm
+about the kind of terminal its output will be printed on,
+you'll get (often subtle) garbage.
+However, if you are redirecting output into a file, use the
+.B \-T37
+option, and then use the appropriate terminal filter when you actually 
+print that file.
+.PD
+.br
+.ne 4
+.SH SEE ALSO
+.tr ~
+.PD 0
+col(1), env(1), eqn(1), greek(1), mmt(1), nroff(1), tbl(1),
+profile(5), mm(7), term(7).
+.PP
+.I "\s-1MM\s+1\-Memorandum Macros\^"
+in the ZEUS Utilities Manual.
+.sp
+.SH DIAGNOSTICS
+.tr ~~
+"mm: no input file" if none of the arguments is a readable file and
+\fBmm\fR is not used as a filter.

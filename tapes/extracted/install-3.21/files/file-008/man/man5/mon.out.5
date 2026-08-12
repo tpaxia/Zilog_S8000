@@ -1,0 +1,124 @@
+.po 1i
+.TH MON.OUT 5
+.V 08/15/84 17:34:53
+.\" @[$]mon.out.5	1.4 08/15/84 17:34:53 - Zilog Inc.
+.SH NAME
+mon.out - profile information
+.SH DESCRIPTION
+.I Mon.out
+is a file containing profiling information.
+This information is produced by either \fBmonitor\fR(3) or
+.BR segmon (3),
+depending on whether the user program was
+compiled nonsegmented or segmented.
+\fIMon.out\fR has two formats, one for nonsegmented code and
+one for segmented code.
+.PP
+The format produced by 
+.BR monitor (3)
+is a file divided
+into 3 sections - a header, the routine counts, and the
+timing information.
+The header is a fixed structure, whereas the other sections vary
+in size depending on the number of routines profiled and the size
+of the sample range.
+.PP
+.nf
+    typedef short UNIT;
+/* structure of the header */
+    struct hdr {       /* header information  */
+        UNIT *lowpc;   /* low end of range  */
+        UNIT *highpc;  /* high end of range */
+        int  ncount;   /* number of routines counted */
+            };
+.PP
+/* strucure used for the routine counts */
+    struct cnt {           /* routine information */
+        unsigned cvalue;   /* number of times routine*/
+                           /* is called */
+        long cncall;       /* address to the routine */
+                           /* being counted */
+                }  cbuf[350];
+.fi
+.PP
+Although \fIcbuf\fR has a maximum size of 350 structures,
+the number of structures is determined by the number of
+routines counted (\fIncount\fR).
+The rest of the file is timing information, read one UNIT
+at a time until the end of file is reached.
+.PP
+The format produced by 
+.BR segmon (3)
+is a bit different
+from the above format.
+This is because the previous format is a profile of only 1
+segment and 1 sample range whereas this format must handle
+multiple segments and multiple sample ranges.
+The file consists of routine counts, segment headers, and
+timing information.
+The routine count section consists of 2 parts a header and
+the actual count.
+.PP
+.nf
+/* structure for the routine header*/
+    struct rhdr {      /* header information    */
+        long seghdr;   /* offset where seg headers start */
+        long size;     /* size of rountine section and */
+                       /*  seg headers section in bytes */
+        long ncount;   /* number of routines   */
+        long numseg;   /* number of segments    */
+        }
+/* structure for the routine counts */
+    struct cnt  {      /* area for the routine counts  */
+        unsigned long cvalue; /* no. of times routine */
+                       /* is called */
+        long cncall;   /* address of routine */
+        } cbuf[350];
+.fi
+.PP
+As in the above format the amount of information in \fIcbuf\fR
+is determined by \fIncount\fR.
+The structure used for the segment header is:
+.PP
+.nf
+    struct shdr {    /* segment header     */
+        long lowpc;  /* low end for range  */
+        long highpc; /* high end for range */
+        long scale;  /* scale of timing    */
+        long segnum; /* segment number     */
+        }
+.fi
+.PP
+The number of segment headers depends on the number of
+segments being profiled.
+The timing section is read a UNIT at a time until the end
+of file is reached.
+.SH EXAMPLE
+If there were 3 segments and 10 routines profiled,
+the layout would appear as:
+.PP
+.nf
+            routine header (rhdr)
+            routine information (cbuf[0])
+                    .
+                    .
+            routine information (cbuf[9])
+            segment    header 1 (shdr)
+            segment header 2
+            segment header 3
+            timing information for seg header 1
+            (length determined by highpc - lowpc)
+                (of segment header 1)
+            timing information block for seg 2
+            timing information block for seg 3
+.fi
+.ad
+.SH SEE ALSO
+prof(1),
+sprof(1),
+monitor(1),
+segmon(3),
+sprofil(2),
+profil(2),
+cc(1),
+scc(1).

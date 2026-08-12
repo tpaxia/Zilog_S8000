@@ -1,0 +1,427 @@
+.po 1i
+.TH ADMIN 1 Bell
+.V 08/15/84 16:36:24
+.\" @[$]admin.1	1.3  08/15/84 16:36:24 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+admin \- create and administer SCCS files
+.SH SYNOPSIS
+\fBadmin\fR [\fB\-a\fIlogin]\fR
+.br
+      [\fB\-d\fIflag[flag-val]]\fR
+.br
+      [\fB\-e\fIlogin]\fR
+.br
+      [\fB\-f\fIflag[flag-val]]\fR
+.br
+      [\fB\-h\fR]
+.br
+      [\fB-i\fR[\fIname\fR]]
+.br
+      [\fB\-m\fR[\fImrlist\fR]]
+.br
+      [\fB\-n\fR]
+.br
+      [\fB\-r\fIrel\fR]
+.br
+      [\fB\-t\fR[\fIname\fR]]
+.br
+      [\fB\-y\fR[\fIcomment\fR]]
+.br
+      [\fB\-z\fR]
+.br
+         \fIfiles\fR
+.sp
+.SH DESCRIPTION
+.B Admin
+is used to create new SCCS files and change parameters of
+existing ones.
+Arguments to
+.B admin,
+which may appear in any order, consist of keyletter arguments,
+which begin with \fB\-\fR,
+and named files (note that SCCS file names must begin with 
+the characters \fBs.\fR).
+.PP
+If a named file doesn't exist, it is created,
+and its parameters are initialized according to
+the specified keyletter arguments.
+Parameters not initialized by a keyletter argument
+are assigned a default value.
+If a named file does exist, parameters corresponding 
+to specified keyletter arguments are changed,
+and other parameters are left as is.
+.PP
+If a directory is named,
+.B admin
+behaves as though each file in the directory were
+specified as a named file,
+except that non-SCCS files (last component of the path 
+name does not begin with \fBs.\fR) and unreadable files
+are silently ignored.
+.PP
+If a name of \fB\-\fR is given, the standard input is read;
+each line of the standard input is taken to be the name of an 
+SCCS file to be processed.
+Again, non-SCCS files and unreadable files are silently ignored.
+.PP
+The keyletter arguments are as follows.
+Each is explained as though only one named file is to be 
+processed since the effects of the arguments apply independently 
+to each named file.
+.SH OPTIONS
+.TP
+\fB\-a\fIlogin\fR
+A \fIlogin\fR name, or numerical ZEUS group ID,
+to be added to the list of users which
+may make deltas (changes) to the SCCS file.
+A group ID is equivalent to specifying all
+\fIlogin\fR names common to that group ID.
+Several
+.B a
+keyletters may be used
+on a single
+.B admin
+command line.
+As many \fIlogin\fRs, or numerical group ID, as desired may 
+be on the list simultaneously.
+If the list of users is empty,
+then anyone may add deltas.
+.TP
+\fB\-d\fIflag\fR
+Causes removal (deletion) of the specified \fIflag\fR from 
+an SCCS file.
+The
+.B \-d
+keyletter may be specified only when processing existing
+SCCS files.
+Several
+.B \-d
+keyletters may be supplied on a single
+.B admin
+command.
+See the
+.B \-f
+keyletter for allowable \fIflag\fR names.
+.IP "	l\fIlist\fR" 12
+A \fIlist\fR of releases to be "unlocked".
+See the
+.B \-f
+keyletter for a description of the
+.B l
+flag and the syntax of a \fIlist\fR.
+.PP
+.TP
+\fB\-e\fIlogin\fR
+A \fIlogin\fR name, or numerical group ID, to be erased from 
+the list of users allowed to make deltas (changes) to the 
+SCCS file.
+Specifying a group ID is equivalent to specifying all
+\fIlogin\fR names common to that group ID.
+Several
+.B e
+keyletters may be used on a single
+.B admin
+command line.
+.TP
+\fB\-f\fIflag\fR
+This keyletter specifies a \fIflag\fR, and, possibly, a value 
+for the \fIflag\fR, to be placed in the SCCS file.
+Several
+.B f
+keyletters may be supplied on a single
+.B admin\^
+command line.
+The allowable \fIflag\fRs and their values are:
+.IP "      b" 12
+Allows use of the
+.B \-b
+keyletter on a
+.BR get (1)
+command to create branch deltas.
+.IP "      c\fIceil\fR" 12
+The highest release (i.e., "ceiling"), a number less than 
+or equal to 9999, which may be retrieved by a
+.BR get
+command for editing.
+The default value for an unspecified
+.B c
+flag is 9999.
+.IP "      d\fISID\fR" 12
+The default delta number (SID) to be used by a
+.BR get
+command.
+.IP "      f\fIfloor\fR" 12
+The lowest release (i.e., "floor"), a number greater than 0 
+but less than 9999, which may be retrieved by a
+.BR get
+command for editing.
+The default value for an unspecified
+.B f
+flag is 1.
+.IP "      i" 12
+Causes the "No id keywords (ge6)" message issued by
+.BR get 
+or
+.BR delta (1)
+to be treated as a fatal error.
+In the absence of this flag, the message is only a warning.
+The message is issued if no SCCS identification keywords
+(see
+.BR get (1))
+are found in the text retrieved or stored in the SCCS file.
+.IP "      j" 12
+Allows concurrent
+.BR get 
+commands for editing on the same SID of the SCCS file.
+This allows multiple concurrent updates to the same
+version of the SCCS file.
+.IP "      l\fIlist\fR" 12
+A \fIlist\fR of releases to which deltas can no longer be made
+(\fBget -e\fR against one of these "locked" releases fails).
+The \fIlist\fR has the following syntax:
+.IP "" 12
+\fB<list> ::= <range> \(or <list> , <range>
+.br
+<range> ::=	\fIRELEASE NUMBER\fB | a\fR
+.IP  "" 12
+The character \fBa\fR in the \fIlist\fR is equivalent to specifying
+\fIall releases\fR for the named SCCS file.
+.IP "      m\fImod\fR" 12
+\fIMod\fRule name of the SCCS file substituted for all 
+occurrences of the %M% keyword in SCCS file text retrieved by
+.BR get. 
+If the
+.B m
+flag is not specified, the value assigned is the name of 
+the SCCS file with the leading \fBs.\fR removed.
+.IP "      n" 12
+Causes
+.BR delta 
+to create a "null" delta in each of those releases 
+(if any) being skipped when a delta is made in a
+.I new
+release (e.g., in making delta 5.1 after delta 2.7, releases 
+3 and 4 are skipped).
+These null deltas serve as "anchor points" so that branch 
+deltas may later be created from them.
+The absence of this flag causes skipped releases to be
+non-existent in the SCCS file preventing branch deltas 
+from being created from them in the future.
+.IP "      q\fItext\fR" 12
+User definable text substituted for all occurrences
+of the %Q% keyword in SCCS file text retrieved by
+.BR get .
+.IP "      t\fItype\fR" 12
+\fIType\fR of module in the SCCS file substituted for all 
+occurrences of %Y% keyword in SCCS file text retrieved by
+.BR get .
+.IP "      v[\fIpgm\fR]"
+Causes 
+.BR delta 
+to prompt for Modification Request 
+(\fIMR\fR) numbers as the reason for creating a delta.
+The optional value specifies the name of an \fIMR\fR
+number validity checking program (see 
+.BR delta (1)).
+(If this flag is set when creating an SCCS file, the
+.B m
+keyletter must also be used even if its value is null).
+.PP
+.TP
+.B \-h
+Causes
+.B admin
+to check the structure of the SCCS file
+(see
+.BR sccsfile (5)),
+and to compare a newly computed check-sum (the sum of 
+all the characters in the SCCS file except those in the first 
+line) with the check-sum that is stored in the first line of 
+the SCCS file.
+Appropriate error diagnostics are produced.
+.IP
+This keyletter inhibits writing on the file, so that it
+nullifies the effect of any other keyletters supplied, and
+is, therefore, only meaningful when processing existing files.
+.TP
+\fB\-i[\fIname\fR]
+The \fIname\fR of a file from which the text for a new SCCS 
+file is to be taken.
+The text constitutes the first delta of the file (see
+.B \-r
+keyletter for delta numbering scheme).
+If the
+.B i
+keyletter is used, but the file name is omitted,
+the text is obtained by reading the standard input
+until an end-of-file is encountered.
+If this keyletter is omitted, then the SCCS file is created empty.
+Only one SCCS file may be created by an
+.B admin
+command on which the
+.B i
+keyletter is supplied.
+Using a single
+.B admin
+to create two or more SCCS files require that they be 
+created empty (no
+.B \-i
+keyletter).
+Note that the
+.B \-i
+keyletter implies the
+.B \-n
+keyletter.
+.TP
+\fB\-m[\fImrlist\fR]
+The list of Modification Requests (\fIMR\fR) numbers is inserted 
+into the SCCS file as the reason for creating the initial delta 
+in a manner identical to 
+.BR delta .
+The
+.B v
+flag must be set and the \fIMR\fR numbers are validated if the
+.B v
+flag has a value (the name of an \fIMR\fR number validation program).
+Diagnostics will occur if the
+.B v
+flag is not set or \fIMR\fR validation fails.
+.TP
+.B \-n
+This keyletter indicates that a new SCCS file is to be created.
+.TP
+\fB\-r\fIrel\fR
+The
+.I rel\c
+ease into which the initial delta is inserted.
+This keyletter may be used only if the
+.B \-i
+keyletter is also used.
+If the
+.B \-r
+keyletter is not used, the initial delta is inserted into release 1.
+The level of the initial delta is always 1
+(by default initial deltas are named 1.1).
+.TP
+\fB\-t[\fIname\fR]
+The \fIname\fR of a file from which descriptive text for 
+the SCCS file is to be taken.
+If the
+.B \-t
+keyletter is used and
+.B admin
+is creating a new SCCS file (the
+.B \-n
+and/or
+.B \-i
+keyletters also used), the descriptive text file name
+must also be supplied.
+In the case of existing SCCS files: (1) a
+.B \-t
+keyletter without a file name causes removal of descriptive text
+(if any) currently in the SCCS file, and (2) a
+.B \-t
+keyletter with a file name causes text (if any) in the
+named file to replace the descriptive text (if any) currently 
+in the SCCS file.
+.TP
+\fB\-y\fR[\fIcomment\fR]
+The
+.I comment
+text is inserted into the SCCS file as a comment for the 
+initial delta in a manner identical to that of 
+.BR delta .
+Omission of the \fB\-y\fR keyletter results in a default
+comment line being inserted in the form:
+.br
+date and time created
+.IR \s-1YY\s+1 / \s-1MM\s+1 / \s-1DD\s+1
+.IR \s-1HH\s+1 : \s-1MM\s+1 : \s-1SS\s+1
+by
+.I login
+.br
+The 
+.B \-y
+keyletter is valid only if the 
+.B \-i
+and/or
+.B \-n
+keyletters are specified (i.e., a new SCCS file is being created).
+.TP
+.B \-z
+The SCCS file check-sum is recomputed and stored in the first line
+of the SCCS file (see
+.B \-h ,
+above).
+.TP
+\fBNote:\fR The use of this keyletter on a truly corrupted file
+may prevent future detection of the corruption.
+.SH FILES
+The last component of all SCCS file names must be of the 
+form \fBs.\fP\fIfile-name\fP.
+New SCCS files are given mode 444 (see \fBchmod\fR(1)).
+Write permission in the pertinent directory is,
+of course, required to create a file.
+All writing done by
+.I admin
+is to a temporary x-file, called \fBx.\fP\fIfile-name\fP, 
+created with mode 444 if the
+.B admin
+command is creating a new SCCS file, or with the same mode
+as the SCCS file if it exists.
+After successful execution of
+.B admin
+,
+the SCCS file is removed (if it exists), and the x-file
+is renamed with the name of the SCCS file.
+This ensures that changes are made to the SCCS file only
+if no errors occurred.
+.PP
+It is recommended that directories containing SCCS files be mode
+755
+and that SCCS files themselves be mode 444.
+The mode of the directories allows only the owner to modify
+SCCS files contained in the directories.
+The mode of the SCCS files prevents any modification
+at all except by SCCS commands.
+.PP
+If it should be necessary to patch an SCCS file for any reason,
+the mode may be changed to 644 by the owner
+allowing use of \fBed\fR(1).
+\fICare must be taken!\fR
+The edited file should
+.I always
+be processed by an
+\fBadmin -h\fR
+to check for corruption followed by an
+.B admin
+.B \-z
+to generate a proper check-sum.
+Another
+\fBadmin -h\fR
+is recommended to ensure the SCCS file is valid.
+.PP
+.B Admin
+also makes use of a transient lock file
+(called \fBz.\fP\fIfile-name\fP),
+which is used to prevent simultaneous updates to the 
+SCCS file by different users.
+See 
+.BR get (1)
+for further information.
+.SH SEE ALSO
+delta(1),
+ed(1),
+get(1),
+help(1),
+prs(1),
+what(1),
+sccsfile(5).
+.br
+\fISource Code Control System User's Guide\fR in the
+ZEUS Utilites Manual
+.SH DIAGNOSTICS
+Use
+\fBhelp\fR(1) for explanations.

@@ -1,0 +1,42 @@
+.po 1i
+.TH ISADDINDEX 3 Zilog
+.V 08/15/84 17:20:26
+.\" @[$]isaddindex.3	1.5 08/15/84 17:20:26 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isaddindex - add an index to a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisaddindex\fI(isfd, keydesc)\fR
+\fBint \fIisfd;\fR
+\fBstruct\fI keydesc *keydesc;\fR
+.fi
+.SH DESCRIPTION
+.B Isadddindex
+adds an index to the C-ISAM file indicated by the
+.I isfd
+parameter.
+The index is defined in the keydesc structure.
+This call executes only if the C-ISAM file has been opened
+for exclusive access, and for both input and output.
+.PP
+There is no limit to the number of indices
+added through the isaddindex call.
+However, the maximum number of parts
+defined for an index is eight.
+Also, the maximum number of bytes in an index is 118.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+.PP
+isbuild(3),
+isdelindex(3),
+isindexinfo(3),
+isopen(3).
+.br
+C-Isam Programmer's Guide in the Zeus Languages/Programming Tools Manual

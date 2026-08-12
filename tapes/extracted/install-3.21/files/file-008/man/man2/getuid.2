@@ -1,0 +1,51 @@
+.po 1i
+.TH GETUID 2 Bell
+.V 08/15/84 17:13:35
+.\"@[$]getuid.2	1.5	08/15/84 17:13:35 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+getuid \- get user identity
+.br
+getgid \- get group identity
+.br
+geteuid \- get effective user identity
+.br
+getegid \- get effective group identity
+.SH SYNOPSIS
+.B int getuid( )
+.PP
+.B int geteuid( )
+.PP
+.B int getgid( )
+.PP
+.B int getegid( )
+.SH DESCRIPTION
+.B Getuid
+returns the real user ID of the current process,
+.B geteuid
+the effective user ID.
+The real user ID identifies the person who is logged in,
+and the effective user ID determines access permission.
+.PP
+.B Getgid
+returns the real group ID,
+.B getegid
+the effective group ID.
+.SH SEE ALSO
+setuid(2).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT GETUID := 24
+	...
+	sc	#GETUID
+	...	!* real user ID in r4, effective user ID in r5 *!
+
+
+	CONSTANT GETGID := 47
+	...
+	sc	#GETGID
+	...	!* real group ID in r4, effective group ID in r5 *!
+.fi
+.ad

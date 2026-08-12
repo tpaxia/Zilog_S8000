@@ -1,0 +1,25 @@
+.po 1i
+.TH REPEAT 1C UCB
+.V 08/15/84 17:02:17
+.\"@[$]repeat.1C	1.5	08/15/84 17:02:17 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+repeat \- repeat a command
+.SH SYNOPSIS
+.B repeat
+\fIcount command\fR
+.SH DESCRIPTION
+The specified 
+.I command
+is subject to the same restrictions as the
+.I command
+in the one line
+statement above and is executed
+.I count
+times.
+I/O redirections occurs exactly once, even if
+.I count
+is 0.
+.SH SEE ALSO
+\fIThe C Shell\fR in the ZEUS Utilities Manual

@@ -1,0 +1,88 @@
+.po 1i
+.TH LOGIN 1 Bell
+.V 08/15/84 16:56:54
+.\" @[$]login.1	1.11 08/15/84 16:56:54 - Zilog Inc.
+.ad
+.fi 
+.SH NAME
+login  \- sign on to the computer
+.SH DESCRIPTION
+.B Login
+can be invoked explicitly,
+but is invoked by the system when a connection
+is established.
+.PP
+Echoing is turned off (if possible) during the typing of the password,
+so it does not appear on the written record of the session.
+.PP
+If password aging has been invoked by the super-user
+the password may have expired.
+In this case, 
+.BR passwd (1)
+is invoked to change it.
+.PP
+A dial-up \fBlogin\fR attempt must complete the login within one
+minute or the connection is broken.
+.PP
+After a successful login, accounting files are updated,
+the user is informed of the existence of mail,
+and the message-of-the-day file is displayed (\fBmotd\fR (5)).
+.B Login
+initializes the environment variable TERM (describing the login terminal
+type), the user and group IDs, and the working directory,
+then executes a command interpreter (usually
+.BR  csh (1))
+according to specifications found in a password file.
+Argument 0 of the command interpreter is \-csh.
+.PP
+The
+.I environment\^
+(see
+.BR environ (5))
+is initialized to:
+.sp
+.RS
+.RI \s-1HOME\s+1= login-directory\^
+.br
+\s-1PATH\s+1=:/bin:/usr/bin
+.br
+.RI \s-1LOGNAME\s+1= login-name\^
+.RE
+.SH OPTIONS
+.TP
+.BI \- name
+Turns off the display of message-of-the-day file.
+.SH FILES
+.ta 20m
+/etc/utmp	accounting
+.br
+/usr/adm/wtmp	accounting
+.br
+/usr/spool/mail/*	mail
+.br
+/etc/motd	message-of-the-day
+.br
+/etc/passwd	password file
+.br
+/etc/profile	system profile
+.br
+/etc/cshprofile	system cshrc
+.br
+/etc/ttytype	terminal type file
+.SH SEE ALSO
+newgrp(1), mail(1), passwd(1), motd(5), passwd(5), ttytype(5),
+init(M), getty(M).
+.br
+\fIZEUS for Beginners\fR in the ZEUS Utilities Manual
+.SH DIAGNOSTICS
+"Login incorrect,"
+if the name or the password is bad.
+.sp
+"No shell," 
+if the shell is missing.
+.sp
+"Cannot open password file,"
+if the password file is missing.
+.sp
+"No directory,"
+cannot find the home directory (usually due to unmounted filesystems).

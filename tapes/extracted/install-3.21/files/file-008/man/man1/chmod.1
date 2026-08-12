@@ -1,0 +1,223 @@
+.po 1i
+.TH CHMOD 1 Bell
+.V 08/15/84 16:41:36
+.\" @[$]chmod.1	1.9	08/15/84 16:41:36 - Zilog Inc.
+.ad
+.fi 
+.SH NAME
+chmod \- change mode
+.SH SYNOPSIS
+\fBchmod \fImode file ...
+.SH DESCRIPTION
+The file protection mode controls the read, write,
+and execute permissions for the owner of a file, the
+owner\'s group, and other users. The file protection mode
+is changed according to
+.I mode,
+which can be an absolute number or a symbolic set of
+letters.
+.PP
+The protection mode of a file is shown 
+with the \fBls\ -l\fR command as in the example below:
+.sp
+.RS
+-rwxrw-r-- 1 owner group  2268 Mar  3 12:42 filename
+.RE
+.sp
+.PP
+The \fImode\fR portion of the command usually takes the
+form of a 3-digit number. The first digit controls the
+permission bits for the owner of the file, the second
+digit controls the permission bits for the members of
+the same group, and the third digit controls the permissions
+for everyone else. 
+.PP
+A leading fourth digit controls special access codes
+to set a new user or group identification on execution of the
+file.
+.RS
+.sp
+1000         tricky bit (\fIchmod\fR (2))
+.br
+2000         set group ID on execution
+.br
+4000         set user ID on execution
+.RE
+.PP
+The \fImode\fR is a three-digit 
+number constructed from the following numbers:
+.sp
+.RS
+\fBNumber:\fR Bits:   Meaning:
+.sp
+\fB0\fR       ---     no permissions
+.br
+\fB1\fR       --x     execute (search in directory) only
+.br
+\fB2\fR       -w-     write only
+.br
+\fB3\fR       -wx     write and execute (search)
+.br
+\fB4\fR       r--     read only
+.br
+\fB5\fR       r-x     read and execute (search)
+.br
+\fB6\fR       rw-     read and write
+.br
+\fB7\fR       rwx     read, write and execute (search)
+.RE
+.sp
+.PP
+Thus the command:
+.sp
+.RS
+\fBchmod 750 \fIfile\fR
+.RE
+.sp
+changes the protection mode of \fIfile\fR such that the
+owner has read, write, and execute permission; members
+of the owner's group have read and execute permission; 
+and all others are excluded from any access to the file.
+.PP
+The file permission bits will look like the following:
+.sp
+.RS
+-rwxr-x--- 1 owner group 2268 Mar  3 12:42 filename
+.RE
+.PP
+Note that the first character in the string
+refers to the nature of
+the file ( "-" if it is a regular file, "d" if it is
+a directory file and "p" if it is a named pipe.
+For special device files, a "c" refers 
+to a "character" file, and "b" refers a "block" file).
+.PP
+The first set of 3 bits refers to the permissions for 
+the owner, the second set of 3 bits refers to the permissions
+for those in the owner's group, and the last set of 3 bits
+refers to the permissions for everyone else.
+.sp
+.RS
+File  User  Group Others
+.br
+file   7     5     0
+.br
+-     rwx   r-x   ---    1 owner group 2268 Mar  3 12:42 filename
+.RE
+.PP
+A command using the symbolic \fImode\fR has the form:
+.RS
+.sp
+\fBchmod \fIwho operator permission file\fR
+.sp
+.RE
+.PP
+Where \fIwho\fR is one or more of the following letters:
+.sp
+.RS
+\fBLetter:\fR who:     Bits affected:
+.sp
+\fBu\fR       user     -rwx------
+.br
+\fBg\fR       group    ----rwx---
+.br
+\fBo\fR       others   -------rwx
+.sp 
+\fBa\fR       all      -rwxrwxrwx
+.RE
+.sp
+If \fIwho\fR is omitted, the default is \fIall\fR,
+but the setting of the file-creation-mask (\fIumask\fR(2)) is
+taken into account.
+.PP
+The \fIoperator\fR can be any of the following:
+.sp
+.RS
+\fB+\fR    to add permission to the file's mode,
+.br
+\fB\-\fR    to take away permission
+.br
+\fB=\fR    to assign permission absolutely.
+.RE
+.sp
+All other bits are reset.
+.PP
+.I Permission
+is any combination of the letters
+.sp
+.RS
+\fBLetter:\fR  Bit:    Meaning:
+.sp
+\fBr\fR        r--     read 
+.br
+\fBw\fR        -w-     write
+.br
+\fBx\fR        --x     execute
+.sp
+\fBs\fR                set owner or group ID
+.br
+\fBt\fR                save text \- sticky bit
+.sp
+.RE
+.PP
+Only the owner of a file or the super-user can change its mode.
+.sp
+.SH EXAMPLES
+.PP
+The command:
+.sp
+.RS
+\fBchmod 740 \fRfilename\fR
+.sp
+.RE
+produces the following file protections:
+.sp
+.RS
+-rwxr----- 1 owner group 2268 Mar  3 12:42 filename
+.RE
+.PP
+The owner can read, write to, and execute the file; members
+of the owner's group can only read the file; and everyone
+else has no access at all.
+.sp
+The command:
+.sp
+.RS
+\fBchmod 551 \fIfilename\fR
+.sp
+.RE
+produces the following file protections:
+.sp
+.RS
+-r-xr-x--x 1 owner group 2268 Mar  3 12:42 filename
+.RE
+.PP
+The owner has read and execute permission, members of
+the owner's group also have read and execute permission,
+while everyone else is restricted to execute permission.
+.sp
+The command:
+.sp
+.RS
+\fBchmod 765 \fIfilename\fR
+.sp
+.RE
+produces the following file protections:
+.sp
+.RS
+-rwxrw-r-x 1 owner group 2268 Mar  3 12:42 filename
+.RE
+.PP
+The owner can read, write to, and execute the file; members
+of the owner's group can read and write to the file, but
+they cannot execute it; and all others can read the
+the file and execute it, but they cannot write to it.
+.SH SEE ALSO
+ls(1),
+umask(1),
+chown(1),
+chmod(2),
+stat(2),
+umask(2),
+chmog(M),
+chown(M).

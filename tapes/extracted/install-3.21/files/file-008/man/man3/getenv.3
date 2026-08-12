@@ -1,0 +1,26 @@
+.po 1i
+.TH GETENV 3 Bell
+.V 08/15/84 17:19:43
+.\" @[$]getenv.3	1.6	08/15/84 17:19:43 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+getenv \- value for environment name
+.SH SYNOPSIS
+.nf
+\fBchar *getenv\fR(\fIname\fR)
+.br
+\fBchar *\fIname;\fR
+.fi
+.SH DESCRIPTION
+.B Getenv
+.a
+searches the environment list (
+.BR environ (7))
+for a string of the form
+.IB name = value
+and returns
+.I value
+if such a string is present, otherwise 0 (NULL).
+.SH SEE ALSO
+environ(7), exec(2).

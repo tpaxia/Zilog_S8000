@@ -1,0 +1,29 @@
+.po 1i
+.TH ABS 3 Bell
+.V 08/15/84 17:16:52
+.\" @[$]abs.3	1.6	08/15/84 17:16:52 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+abs \- integer absolute value
+.SH SYNOPSIS
+.ta 5m
+.B int abs
+(
+.I i
+)
+.br
+.B	int
+.IR i ;
+.ta
+.SH DESCRIPTION
+.B Abs
+returns
+the absolute value of its integer operand.
+.SH SEE ALSO
+floor(3) for
+.I fabs.
+.SH LIMITATIONS
+The returned value is what the hardware gives on the largest negative
+integer.
+On the Z8000, 0x8000 returns 0x8000.

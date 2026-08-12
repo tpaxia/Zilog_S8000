@@ -1,0 +1,108 @@
+.po 1i
+.TH READ 2 Bell
+.V 08/15/84 17:14:57
+.\" @[$]read.2	1.10	08/15/84 17:14:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+read \- read from file
+.SH SYNOPSIS
+.B int read
+.I (fildes, buffer, nbytes)
+.br
+.B char
+.I *buffer;
+.br
+.B int
+.I fildes;
+.br
+.B unsigned
+.I nbytes;
+.SH DESCRIPTION
+A file descriptor is a word
+returned from a successful
+.BR open (2)
+.BR creat (2)
+.BR  dup (2),
+or
+.BR pipe (2)
+call.
+.I Buffer
+is the location of
+.I nbytes
+contiguous
+bytes into which the input is placed.
+It is not guaranteed
+that all
+.I nbytes
+bytes are read; for example,
+if the file refers to a typewriter, at most one line
+is returned.
+In any event, the number of characters read is returned.
+.PP
+If the returned value is 0, then
+end-of-file has been reached.
+.PP
+When attempting to read from an empty pipe (or
+.SM FIFO\*S):
+.IP
+If
+.SM O_NDELAY
+is set, the read will return a 0.
+.IP
+If
+.SM O_NDELAY
+is clear, the read will block until data is written to the file
+or the file is no longer open for writing.
+.PP
+When attempting to read a file associated with a tty that has no data
+currently available:
+.IP
+If
+.SM O_NDELAY
+is set, the read will return a 0.
+.IP
+If
+.SM O_NDELAY
+is clear, the read will block until data becomes available.
+.SH DIAGNOSTICS
+.I Read
+will fail if one or more of the following are true:
+.IP
+.I Fildes
+is not a valid file descriptor open for reading.
+.SM
+\%[EBADF]
+.IP
+.I Buffer
+points outside the allocated address space.
+.SM
+\%[EFAULT]
+.IP
+Many conditions
+generate an error; for example
+physical I/O errors, bad buffer address, out of range
+.I nbytes,
+file descriptor not that of
+an input file.
+.SH RETURN VALUE
+Upon successful completion a non-negative integer is returned
+indicating the number of bytes actually read.
+Otherwise, a \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+open(2), creat(2), dup(2), pipe(2).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT READ	:= 3
+
+	...		!* fildes, buffer, nbytes in
+	   		!* r0, r1, r2 respectively *!
+			!* (segmented: r0, rr2, r4, respectively) *!
+	sc	#READ
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

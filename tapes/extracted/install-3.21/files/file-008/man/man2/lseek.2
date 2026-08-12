@@ -1,0 +1,95 @@
+.po 1i
+.TH LSEEK 2 Bell
+.V 08/15/84 17:14:02
+.\"@[$]lseek.2	1.8	08/15/84 17:14:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+lseek \- move read/write pointer
+.SH SYNOPSIS
+.B long lseek
+.I (fildes, offset, whence)
+.br
+.B long
+.I offset;
+.br
+.B int
+.I fildes, whence;
+.PP
+.SH DESCRIPTION
+The file
+descriptor refers to a file open for reading or writing.
+The read (alternatively write) pointer for the file is set as follows:
+.RS
+.IP "\ \(bu"
+If \fIwhence\fR is 0, the pointer is set to \fIoffset\fR bytes.
+.IP "\ \(bu"
+If \fIwhence\fR is 1, the pointer is set to its current location plus
+\fIoffset\fR.
+.IP "\ \(bu"
+If \fIwhence\fR is 2, the pointer is set to the size of the
+file plus \fIoffset\fR.
+.RE
+.DT
+.PP
+The returned value is the resulting pointer location.
+.PP
+Seeking far beyond the end of a file then writing
+creates a gap that occupies no physical space and reads as zeros.
+.SH SEE ALSO
+open(2), creat(2), fseek(3), dup(2), fcntl(2).
+.SH DIAGNOSTICS
+.B Lseek
+will fail
+and the file pointer will remain unchanged
+if one or more of the following are true:
+.IP
+.I Fildes
+is not an open file descriptor.
+.SM
+\%[EBADF]
+.IP
+.I Fildes
+is associated with a pipe or fifo.
+.SM
+\%[ESPIPE]
+.IP
+.I Whence
+is not 0, 1 or 2.
+.SM
+\%[EINVAL
+and
+.SM
+SIGSYS
+\%signal]
+.IP
+The resulting file pointer would be negative.
+.SM
+\%[EINVAL]
+.PP
+Some devices are incapable of seeking.
+The value of the file pointer associated with such a device
+is undefined.
+.SH RETURN VALUE
+Upon successful completion, a non-negative integer
+indicating the file pointer value
+is returned.
+Otherwise, a value of \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH LIMITATIONS
+.I Lseek
+should not be used for terminals or modems. 
+It may produce undefined results for other character special files.
+.SH ASSEMBLER
+.nf
+.na
+  CONSTANT LSEEK    := 19
+
+  ...   !* fildes in r0, high byte of offset in r1,     *!
+        !* low byte of offset in r2, whence in r3       *!
+  subl  rr4,rr4
+  sc    #LSEEK
+  ...   !* return value in rr4, carry flag set if error *!
+.fi
+.ad

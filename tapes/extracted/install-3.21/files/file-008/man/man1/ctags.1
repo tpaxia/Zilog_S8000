@@ -1,0 +1,74 @@
+.po 1i
+.TH CTAGS 1 Zilog 
+.V 08/15/84 16:43:51
+.\" @[$]ctags.1	1.9	08/15/84 16:43:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ctags \- maintain a tags file for C or Fortran programs
+.SH SYNOPSIS
+.B ctags
+[ 
+.B \-auw
+]
+\fIfile \fR...
+.SH DESCRIPTION
+.B Ctags
+makes a tags file for
+.BR ex (1)
+from the specified C or Fortran programs.
+Files ending in ".f" are assumed to be Fortran source files
+and all others are assumed to be C source files.
+A tags file gives the locations of specified objects (in this case
+functions) in a group of files.
+Each line of the tags file contains the function name,
+the file in which it is defined, and a scanning pattern used to find
+the function definition.
+These are given in separate fields on the line,
+separated by blanks or tabs.
+.SH OPTIONS
+.TP
+.B \-a
+Causes the output to be appended to the tags file
+instead of rewriting it.
+.TP
+.B \-u
+Causes the specified files to be
+.I updated
+in tags, that is, all references to them are deleted,
+and the new values are appended to the file.
+The tags file is then piped through
+.BR sort (1)
+to restore the ordering required by
+.BR ex (1).
+This option implies the
+.B \-a
+option.
+.TP
+.B \-w
+Suppresses warning diagnostics.
+.PP
+The tag
+.I main
+is treated specially in C programs.
+The tag formed is created by prepending
+.I M
+to the name of the file, with a trailing .c removed, if
+any, and leading pathname components also removed.
+This makes use of ctags practical in directories with
+more than one program.
+Fortran programs are not named main, so this is not necessary.
+.SH FILES
+tags     output tags file
+.PP
+.SH SEE ALSO
+ex(1),
+vi(1).
+.SH LIMITATIONS
+In a directory with only one \fImain,\fR
+the tag \fImain\fR will still not be created.
+.PP
+In Fortran\ 77, the program statement is optional, and if missing,
+no entry will be made in tags.
+.LP
+

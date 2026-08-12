@@ -1,0 +1,13 @@
+/usr/lib/learn/ftuser/fetch
+#print
+A file called count.c has just been moved to your working directory.
+The count file is executable, but the ".c" file is C source code.
+Display the program itself with:   cat count.c (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+2a

@@ -1,0 +1,127 @@
+.po 1i
+.TH AR 1 Zilog
+.V 08/15/84 16:36:48
+.\" @[$]ar.1	1.11 08/15/84 16:36:48 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ar \- archive and library maintainer
+.SH SYNOPSIS
+.B ar
+\fIoption/key [ posname ] arch_file  arch_members\fR ...
+.SH DESCRIPTION
+.B Ar
+(archiver) groups and maintains files, called "members,"
+in a single archive file.
+It is used to create and update library files in the format used by the loader.
+.SH OPTIONS
+.TP
+.B c
+Create.
+Normally
+.B ar
+creates
+.I arch_file
+when it needs to.
+The create option suppresses the
+normal message that is produced when
+.I arch_file
+is created.
+.TP
+.B l
+Local.
+Normally
+.B ar
+places its temporary files in the directory /tmp.
+This option causes them to be placed in the present working directory. 
+.TP
+.B v
+Verbose.
+.B Ar
+gives a file-by-file
+description of the making of a
+new archive file from the old archive and the constituent members. 
+When used with
+.I t,
+it gives a long listing of all information about the archive members. 
+When used with
+.I p,
+it precedes each listing with the archive member's name. 
+.SH KEYS
+.I Key
+is one character from the set
+.B dmpqrtx,
+optionally concatenated with one or more of the options,
+.B abciluv.
+.I Arch_file
+is the archive master file.
+The
+.I arch_members 
+are constituent members of the archive file.
+The meanings of the
+.I key
+characters are as follows:
+.TP
+.B d
+Delete the named \fIarch_members\fR from \fIarch_file\fR. 
+.TP
+.BR m [ abi ]
+Move the named \fIarch_members\fR to the end of \fIarch_file\fR.
+If one of the positioning characters \fBa\fR, \fBb\fR, or \fBi\fR is given,
+then the
+.I posname
+argument must be present.
+It is the name of an archive member before or after which the named 
+\fIarch_members\fR will be moved.
+This holds true for the \fBr\fR key as well.
+.TP
+.B p
+Print the named \fIarch_members\fR of \fIarch_file\fR.
+.TP
+.B q
+Quickly append the named \fIarch_members\fR to the end of \fIarch_file\fR. 
+The optional positioning characters \fBa\fR, \fBb\fR, and \fBi\fR 
+are invalid.
+The command does not check whether the added members
+are already in the archive.
+Useful only to avoid quadratic behavior when creating a large
+archive piece-by-piece.
+.TP
+.BR r [ uabi ]
+Replace the named \fIarch_members\fR in the archive file, \fIarch_file\fR.
+If the optional character
+.B u
+is used with
+.B r,
+then only those files with modified dates later 
+than the named \fIarch_members\fR are replaced.
+If an optional positioning character from the set
+.B abi
+is used, then the
+.I posname
+argument must be present.  This specifies that new members 
+are to be placed after (after = \fBa\fR)\fR or before 
+(before = \fBb\fR or \fBi\fR) the named archive member, \fIposname\fR. 
+Otherwise, new members are placed at the end of the archive.
+.TP
+.B t
+Print a table of contents of \fIarch_file\fR.
+If no \fIarch_members\fR are named, all members of the archive are 
+printed in the table.
+If \fIarch_members\fR are given, only those archive members are printed 
+in the table.
+.TP
+.B x
+Extract the named \fIarch_members\fR.
+If no \fIarch_members\fR are given, all members of the archive are
+extracted.
+In neither case does
+.B x
+alter \fIarch_file\fR. 
+.SH FILES
+/tmp/v*	temporaries
+.SH SEE ALSO
+ld(1), ranlib(1), ar(5)
+.SH LIMITATIONS
+If an archive member is mentioned twice in the argument lists,
+it may be put in the archive twice.

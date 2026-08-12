@@ -1,0 +1,71 @@
+.po 1i
+.TH SPLIT 1 Bell
+.V 08/15/84 17:06:25
+.\" @[$]split.1	1.11	08/15/84 17:06:25 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+split \- split a file into pieces
+.SH SYNOPSIS
+.B split
+[ \fB\-\fIn ] [ \fIfile\fR [ \fIname\fR ] ]
+.SH DESCRIPTION
+.B Split
+reads
+.I file
+and writes
+it in
+.IR n -line
+pieces (default 1000),
+or
+.IR n -character 
+pieces if the number ends with a 'c' (default 10000),
+as many as necessary, onto a set of output files.
+The name of the first output file is
+.I name
+with
+.B aa
+appended, and so on lexicographically.
+The maximum number of files created is 676.
+If there is more data to split from the original file
+and all 676 files have been used, the balance will go
+into the last file, namely, 
+.I name
+with 
+.B zz
+appended.
+If no output name is given,
+.B x
+is default.
+.PP
+If no input file is given, or if
+.B \-
+is given in its stead, then the standard input file is used.
+.SH EXAMPLE
+.nf
+% cat list
+  boa
+  boar
+  board
+  boardinghouse
+  boast
+  boat
+  boathouse
+  boatload
+  boatman
+  boatmen
+.sp
+% split -5 list
+.sp
+% ls
+  list xaa xab
+.sp
+.ta 2.5i
+% cat xaa	% cat xab
+  boa	  boat
+  boar	  boathouse
+  board	  boatload
+  boardinghouse	  boatman
+  boast	  boatmen
+.fi
+.ta

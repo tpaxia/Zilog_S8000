@@ -1,0 +1,39 @@
+.po 1i
+.TH STRIP 1 Bell
+.V 08/15/84 17:06:34
+.\" @[$]strip.1	1.5	08/15/84 17:06:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+strip  \- remove symbols and relocation bits and header (optional)
+.SH SYNOPSIS
+.B strip
+[\fB-h\fR] \fIfile\fR \.\.\.
+.SH DESCRIPTION
+.B Strip
+removes the symbol table and relocation bits ordinarily attached
+to the output of the assembler and loader.
+This is useful to save space after a program has been debugged.
+.PP
+This effect of
+.B strip
+is the same as use of the
+.B \-s
+option
+of
+.BR ld .
+.SH OPTIONS
+.TP
+.B \-h
+Cause the header and segment table to be stripped.
+.SH SEE ALSO
+ld(1), objdu(1), objhdr(1), a.out(5).
+.SH DIAGNOSTICS
+"file not in correct object format" if the file is not a nonsegmented
+executable file.
+.sp
+"cannot recreate file" if the file is not owned by the invoker of
+the program.
+.sp
+"file already stripped" if the file has no symbol table or relocation
+information and the -h option has not been specified.

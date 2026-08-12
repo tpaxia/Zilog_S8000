@@ -1,0 +1,61 @@
+.po 1i
+.TH CUSERID 3 Bell
+.V 08/15/84 17:17:39
+.\" @[$]cuserid.3	1.7	08/15/84 17:17:39 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cuserid \- character login name of the user
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.sp
+\fBchar \(**cuserid \fR(\fIs\fR)
+.br
+\fB     char \fI\(**s;\fR
+.fi
+.SH DESCRIPTION
+.B Cuserid\^
+generates a character representation of the login
+name of the owner of the current process.
+If
+.RI (int) s\^
+is zero, this representation is generated in an
+internal static area, the address of which is returned.
+If
+.RI (int) s\^
+is non-zero,
+.I s\^
+is assumed to point to an array of at least
+.B L_cuserid
+characters; the representation is left in this array.
+The manifest constant
+.B L_cuserid
+is defined in
+.BR <stdio.h> .
+.SH DIAGNOSTICS
+If the login
+name
+cannot be found,
+.B cuserid\^
+returns
+.SM
+.BR NULL ;
+if
+.I s\^
+is non-zero in this case,
+.B \e0
+will be placed at
+.IR \(**s .
+.SH SEE ALSO
+getlogin(3), getpwuid(3).
+.SH LIMITATIONS
+.B Cuserid\^
+uses 
+.BR getpwnam (3);
+thus the results of a user's call to the latter will be
+obliterated by a subsequent call to the former.
+.br
+The name
+.B cuserid\^
+is rather a misnomer.

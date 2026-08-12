@@ -1,0 +1,72 @@
+.po 1i
+.TH ISBUILD 3 Zilog
+.V 08/15/84 17:20:33
+.\" @[$]isbuild.3	1.5 08/15/84 17:20:33 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isbuild - define a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisbuild \fI(filename, recordlength, keydesc, mode)\fR
+\fBchar \fI*filename;\fR
+\fBint \fIrecordlength;\fR
+\fBstruct \fIkeydesc *keydesc;\fR
+\fBint \fImode;\fR
+.fi
+.SH DESCRIPTION
+.B Isbuild
+defines and creates a C-ISAM file.
+It causes two operating system files to be 
+created and initialized.
+One of these two files, named by appending 
+.I .dat
+to the 
+filename parameter, will hold the data.
+The other, named by appending ".idx" to the filename parameter,
+will hold the dictionary and the indices.
+.PP
+The filename parameter should point to a null-terminated 
+character string no more than ten characters long.
+.PP
+After 
+.B isbuild
+has completed successfully, the C-ISAM
+file will remain open for further processing.
+The 
+.B isbuild
+function returns a C-ISAM file descriptor,
+used for all operations on the open file.
+.PP
+The 
+.I keydesc
+points to a structure containing a
+description of the file's primary index.
+Alternate indices may be added later using 
+.BR isaddindex .
+.PP
+.I Mode
+specifies the user's access intentions (input, output,
+or both) and the user's locking requirements (exclusive, manual,
+or automatic).
+The 
+.I mode
+will be ISEXCLLOCK, ISMANULOCK, or ISAUTOLOCK
+arithmetically added to ISINPUT, ISOUTPUT, or ISINOUT.
+.SH LIMITATIONS
+.PP
+Filenames are limited to ten or less characters.
+.SH FILES
+.IP
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isaddindex(3),
+isindexinfo(3),
+isopen(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

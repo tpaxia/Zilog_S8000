@@ -1,0 +1,76 @@
+.po 1i
+.TH CONV 3 Bell
+.V 08/15/84 17:17:09
+.\" @[$]conv.3	1.6  08/15/84 17:17:09 - Zilog Inc
+.ad
+.fi
+.SH NAME
+toupper, tolower, toascii \- character translation 
+.SH SYNOPSIS
+.nf
+\fB#include <ctype.h>
+.sp
+\fBint toupper \fR(\fIc\fR)
+.br
+\fBint \fIc\fR;
+.sp
+\fBint tolower \fR(\fIc\fR)
+.br
+\fBint \fIc\fR;
+.sp
+\fBint _toupper \fR(\fIc\fR)
+.br
+\fBint \fIc\fR;
+.sp
+\fBint _tolower \fR(\fIc\fR)
+.br
+\fBint \fIc\fR;
+.sp
+\fBint toascii \fR(\fIc\fR)
+.br
+\fBint \fIc\fR;\fR
+.fi
+.SH DESCRIPTION
+.B Toupper\^
+and
+.B tolower\^
+have as domain the range of
+.BR getc :
+the integers from \-1 through 255.
+If the argument of
+.B toupper\^
+represents a lower-case letter, the
+result is the corresponding upper-case
+letter.
+If the argument of
+.B tolower\^
+represents an upper-case letter, the
+result is the corresponding lower-case
+letter.
+All other arguments in the domain are
+returned unchanged.
+.PP
+.B _toupper\^
+and
+.B _tolower\^
+are macros that accomplish the same thing as
+.B toupper\^
+and
+.B tolower\^
+but have restricted domains and are faster.
+.B _toupper\^
+requires a lower-case letter as its argument;
+its result is the corresponding upper-case letter.
+.B _tolower\^
+requires an upper-case letter as its argument;
+its result is the corresponding lower-case letter.
+Arguments outside the domain cause garbage results.
+.PP
+.B Toascii\^
+yields its argument with all bits turned off that are not
+part of a standard
+.SM ASCII
+character; it is intended for compatibility
+with other systems.
+.SH SEE ALSO
+ctype(3).

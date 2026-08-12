@@ -1,0 +1,128 @@
+.po 1i
+.TH BRK 2 Bell
+.V 08/15/84 17:12:27
+.\" @[$]brk.2	1.13	08/15/84 17:12:27 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+brk, sbrk \- change core allocation
+.SH SYNOPSIS
+.B int brk
+.I (addr)
+.br
+.B char 
+.I *addr;
+.PP
+.B char *sbrk
+.I (incr)
+.br
+.B int
+.I incr;
+.SH DESCRIPTION
+.B Brk
+sets the system's idea of the lowest location not used by the program
+(called the break)
+to
+.I addr
+(rounded up to the next multiple of 256 bytes).
+For example, if the original break is at location 0x12ac and
+the user program requests 0x400 more bytes
+via 
+.BR sbrk (0x400),
+.B sbrk
+returns 0x12ac and the 
+user may now address up to location 0x16ff.
+At this point,
+a brk(0x1501) would allow the user to address up to 0x15ff.
+Locations greater than
+.I addr
+and below the stack pointer
+are not in the address space and thus
+cause a memory violation if accessed.
+.PP
+In the alternate function
+.B sbrk,
+.B incr
+more bytes are added to the
+program's data space and a pointer to the
+start of the new area is returned.
+.PP
+When a program begins execution via
+.BR exec ,
+the break is set at the
+highest location defined by the program
+and data storage areas.
+Therefore, only programs with growing
+data areas need to use
+these calls.
+.PP
+.B Brk
+and
+.B sbrk
+will fail without making any change in the allocated space
+if such a change would result in more space being allocated
+than is allowed by a system-imposed maximum (see
+.BR ulimit (2)).
+.PP
+Both
+.B brk
+and
+.B sbrk
+apply only to non-segmented programs.
+.SH RETURN VALUE
+Upon successful completion,
+.B brk
+returns a value of 0 and
+.B sbrk
+returns the old break value.
+Otherwise, a value of \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+sgbrk(2),
+ssgbrk(2),
+exec(2),
+malloc(3),
+end(3).
+.SH DIAGNOSTICS
+\-1 is returned and errno is set to ENOMEM if fulfilling the request
+would result in more space being allocated
+than is allowed.
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT BREAK	:= 17
+
+	...		!* new break value in r0 *!
+	clr	r4
+	sc	#BREAK
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad
+.PP
+.BR BREAK
+performs the function of
+.BR brk .
+The name of the routine differs from that in C.
+.PP
+.BR Sbrk
+is implemented in terms of
+.BR brk .
+To use
+.BR sbrk ,
+the program must keep track of the current break value and add the
+argument of
+.BR sbrk
+to it before calling
+.BR brk .
+This current break value is
+initially equal to the variable _end and after successive
+calls to
+.BR brk
+or
+.BR sbrk
+must be changed to the address (the argument to
+.BR brk )
+or the current break value plus the increment,
+respectively.

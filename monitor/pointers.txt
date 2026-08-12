@@ -1,0 +1,39 @@
+# Operands that are addresses, not constants.
+#
+# Outside branches and pointer tables, an operand falling inside the ROM may be
+# an address or an ordinary number, and nothing in the encoding says which.
+# Guessing wrong is worse than leaving hex: naming a constant means the constant
+# silently changes if code ahead of it moves.  So tools/gen.py only symbolises
+# what is listed here.
+#
+#   <instruction address> <operand value>   # why
+#
+# `make pointers` regenerates the provable subset (tools/pointers.py); this file
+# is hand-maintained so that verified additions survive.
+
+# ---- derived automatically ------------------------------------------------
+0162 0024   # argument to the routine at 0x050c
+019e 01b1   # LDA computes an address
+021a 022e   # argument to the routine at 0x050c
+0e6a 0d98   # argument to the routine at 0x050c
+0f80 0dae   # argument to the routine at 0x050c
+12b8 1214   # argument to the routine at 0x12ea
+12c4 1234   # argument to the routine at 0x12ea
+12ce 1248   # argument to the routine at 0x12ea
+12da 126c   # argument to the routine at 0x12ea
+159e 1c2e   # block bounds for the jp @r12 dispatch
+15a2 15a8   # block bounds for the jp @r12 dispatch
+1808 1444   # LDA computes an address
+180e 145c   # LDA computes an address
+183e 1454   # LDA computes an address
+1842 1458   # LDA computes an address
+2046 2050   # block bounds for the jp @r12 dispatch
+204a 160a   # block bounds for the jp @r12 dispatch
+32d6 325e   # LDA computes an address
+
+# ---- verified by reading the code -----------------------------------------
+0170 016c   # push of the command-loop address as the handler return address
+0ac2 12fc   # compares the PSA's NMI vector (psa+0x2e) against trap_nmi
+1666 234a   # installs a trap handler into the PSA being built at r9
+1678 2342   # ditto: 0x2342 is `set 0x2(r15),#0xe; sc #1; iret`
+1aa2 23a0   # ditto

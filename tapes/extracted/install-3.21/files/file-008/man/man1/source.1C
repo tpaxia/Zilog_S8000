@@ -1,0 +1,31 @@
+.po 1i
+.TH SOURCE 1C UCB
+.V 08/15/84 17:06:14
+.\"@[$]source.1C	1.5	08/15/84 17:06:14 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+source \- execute commands in a shell script in the current shell
+.SH SYNOPSIS
+.B source
+.I file
+.SH DESCRIPTION
+The shell reads commands from
+.I file.
+.B Source
+commands can be nested; if they are nested too deeply, the shell can
+run out of file descriptors.
+.SH LIMITATIONS
+An error in a
+.B source
+at any level terminates all nested
+.B source
+commands.
+Input during 
+.B source
+commands is never placed on the history list. 
+.B Source
+output cannot be re-directed.
+.SH SEE ALSO
+\fIThe C Shell\fR in the ZEUS Utilities Manual
+

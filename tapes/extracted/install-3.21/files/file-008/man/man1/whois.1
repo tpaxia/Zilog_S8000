@@ -1,0 +1,211 @@
+.po 1i
+.TH WHOIS 1 Zilog
+.V 08/15/84 17:10:43
+.\" @[$]whois.1	1.11  08/15/84 17:10:43 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+whois \- access the user information database
+.SH SYNOPSIS
+.B whois
+[ \fIname\fR...  ] [
+.B \-a
+\fIname\fR ] [
+.B \-m
+]
+.SH DESCRIPTION
+.B Whois
+accesses a database containing information such as login name,
+actual name of the user, office phone and other similiar data. 
+The database information is accessed
+by entering the login name or the actual user's name. 
+It is also possible to modify your entry in the database file 
+or to add your own entry if one does not already exist.
+.PP
+The commands have the following meanings:
+.TP 16
+\fBwhois\fR \fIname\fR ... \^ 
+prints only those users whose login names have been
+specified from the database file. 
+.TP 16
+\fBwhois \-a\fR \fIname\fR\^
+prints the user whose actual name is 'name'.
+.TP 16
+\fBwhois \-m\fR\^
+adds new user to the database.
+Otherwise one can modify his/her information in the database
+to any field except the Login name field. 
+See the examples section.
+.PP
+When the system is trying to match a \fIname\fR, 
+the fields are converted to lowercase and compared.
+.PP
+When a \fIname\fR is specified the pattern matching 
+syntax of the shell is supported.
+This means *, ? and [] work.
+These symbols must be enclosed in quotes to avoid 
+interpretation by the shell. 
+See
+.BR csh (1)
+or
+.BR sh (1).
+.SH EXAMPLES
+To get the information about the login \fIname\fR lindy:
+.sp
+.RS
+% \fBwhois\fR lindy
+.sp
+Login name       lindy
+.br
+Actual user:     John Lindquist
+.br
+Office phone:    4394
+.br
+Home phone:      
+.br
+Group:           
+.br
+Misc:            
+.RE
+.sp
+.PP
+The following example displays the information about the 
+actual user, John Lindquist. 
+Because the name contains a blank it must be 
+enclosed in quotes.
+.sp
+.RS 
+% \fBwhois -a\fR "\fIJohn Lindquist\fR"
+.br
+Login name          lindy
+.br
+    Actual user     John Lindquist
+.br
+    Office phone    4394
+.br
+    Home phone      
+.br
+    Group           
+.br
+    Misc            
+.RE
+.sp
+.PP
+This example is the same as the previous, but 
+using pattern matching.
+.sp
+.RS
+% \fBwhois -a\fR "\fI*lind*\fR"
+Login name          lindy
+.br
+    Actual user     John Lindquist
+.br
+    Office phone    4394
+.br
+    Home phone      
+.br
+    Group           
+.br
+    Misc            
+.br
+.RE
+.sp
+.PP
+To modify the database enter:
+.sp
+.RS
+% \fBwhois -m\fR
+.RE
+.sp
+.PP
+No name is entered in this case.
+An entry can be modified only by the person
+who owns it.
+.sp
+.RS
+Login name          lindy
+.br
+    Actual user     John Lindquist
+.br
+    Office phone    4421
+.br
+    Home phone      
+.br
+    Group           
+.br
+    Misc            
+
+OK? no
+.br
+Field? office
+.sp
+Office phone        4394
+.sp
+Login name          lindy
+.br
+    Actual user     John Lindquist
+.br
+    Office phone    4394
+.br
+    Home phone      
+.br
+    Group           
+.br
+    Misc            
+.br
+OK? y
+.RE
+.sp
+The above example describes how to modify a record 
+in the database file.
+Note that when supplying the field name any un-ambiguous 
+abbreviation of the field name can be used.
+For example, for office, an "o" could have been used.
+.SH DIAGNOSTICS
+Following is a list of the error messages and their meanings.
+.TP
+Whois database is in use; try again later
+.sp
+Someone is modifying the database. 
+In order to do this they must have exclusive
+use of it during the operation.
+.TP
+You cannot modify the login name field
+.sp
+An attempt was made to modify the login name field.
+All fields but login can be modified;  login cannot
+.TP
+\&....: No such user
+.sp
+The user looked for does not exist in the database file.
+.TP
+\&..: unknown flag
+.sp
+A flag has been specified which is not known to the system.
+.TP
+\&.... contains separator (:)
+.sp
+The information placed into a field contains the 
+separator character used to separate characters in the database. 
+This can't be done.
+.TP
+No action taken
+.sp
+Nothing has happened.
+.TP
+Usage: whois ......
+.sp
+Unknown options were specified.
+.SH FILES
+.ta 1.5i
+\&/etc/whois	database file
+.br
+\&/etc/owhois	old copy of the database file
+.ta
+.SH SEE ALSO
+who(1), whodo(1), whoami(1), whois(5).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual
+for meta-character (pattern matching) syntax.
+.SH DIAGNOSTICS
+Self-explanatory or explained above.

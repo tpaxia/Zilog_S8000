@@ -1,0 +1,23 @@
+.po 1i
+.TH SETENV 1C UCB
+.V 08/15/84 17:03:48
+.\" @[$]setenv.1C	1.7 08/15/84 17:03:49 - Zilog Inc.
+.ad
+.SH NAME
+setenv \- establish or revise an environment variable
+.SH SYNOPSIS
+\fBsetenv\fI [name value]
+.SH DESCRIPTION
+The command 
+.BI setenv " name value"
+\fRSets the value of the environment variable
+.I name
+to be
+.I value,
+a single string.
+Useful environment variables are TERM, the type of terminal, and
+SHELL, the shell being used.
+.SH SEE ALSO
+csh(1), env(1), printenv(1), set(1C), unsetenv(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual.

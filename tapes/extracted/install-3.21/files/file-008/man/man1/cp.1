@@ -1,0 +1,32 @@
+.po 1i
+.TH CP 1 Bell
+.V 08/15/84 16:42:31
+.\" @[$]cp.1	1.5	08/15/84 16:42:32 - Zilog Inc.
+.ad
+.fi
+.SH  NAME
+cp \- copy a file into another or into a directory
+.SH SYNOPSIS
+\fBcp \fIfile1 file2\fR
+.br
+\fBcp \fIfile directory\fR
+.SH DESCRIPTION
+.I File1
+is copied onto
+.IR file2 .
+The mode and owner of  
+.I file2
+are preserved if it already
+existed; the mode of the source file
+is used otherwise.
+.PP
+In the second form, one or more
+.I files
+are copied into the
+.I directory
+with their original file names.
+.PP
+.B Cp
+refuses to copy a file onto itself.
+.SH SEE ALSO
+cat(1), pr(1), mv(1).

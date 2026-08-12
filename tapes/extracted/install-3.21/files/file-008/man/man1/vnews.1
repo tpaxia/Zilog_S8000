@@ -1,0 +1,78 @@
+.po 1i
+.TH VNEWS 1 Zilog
+.V  08/15/84 17:09:54
+.\" @[$]vnews.1	1.5 08/15/84 17:09:54 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+vnews \- "visually" display the news items
+.SH SYNOPSIS
+.B vnews
+[
+.B -h
+]
+.SH DESCRIPTION
+.B Vnews
+is a version of
+.BR news (1)
+that lists the news items in "screen" format.
+.PP
+The "news titles" are displayed in three columns and cursor
+manipulation is permitted by using the following keys:
+.sp
+.PD 0
+.TP 12
+.B down arrow
+.TP 
+.B j
+.TP 
+.B CTRL-j
+move the cursor down the screen
+.sp
+.TP
+.B up arrow
+.TP
+.B k
+.TP
+.B CTRL-k
+move the cursor up the screen
+.sp
+.TP
+.B f 
+.TP
+.B w
+move the cursor forward (to the right)
+.sp
+.TP
+.B b
+move the cursor backward (to the left)
+.sp
+.PP
+Typing the following keys performs the functions described:
+.sp
+.TP 12
+.B right arrow 
+.TP
+.B l
+display the news item
+.sp
+.TP
+.B :q
+quit
+.sp
+.TP
+.B ?<CR>
+display "help" file
+.sp
+.PD
+.SH OPTIONS
+.TP 12
+.B \-h
+Turns off "highlighting" of the cursored item;
+"highlighting" is on by default.
+.SH FILES
+/usr/lib/screen/vnewshelp                "help" file
+.SH SEE ALSO
+news(1).
+.SH LIMITATIONS
+Paging back to a previous page is not implemented.

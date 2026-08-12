@@ -1,0 +1,61 @@
+.po 1i
+.TH RM 1 Bell
+.V 08/15/84 17:02:32
+.\" @[$]rm.1	1.5	08/15/84 17:02:33 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+rm, rmdir  \- remove (unlink) files
+.SH SYNOPSIS
+.B rm
+[
+.B \-fir
+] \fIfile\fR ...
+.PP
+.B rmdir
+\fIdir\fR ...
+.PP
+.SH DESCRIPTION
+.B Rm
+removes the entries for one or more files from a directory.
+If an entry was the last link to the file, the file
+is destroyed.
+Removal of a file requires write permission in its directory,
+but neither read nor write permission on the file itself.
+.PP
+If a file has no write permission
+and the standard input is a terminal,
+its permissions are printed and a line is read from
+the standard input.
+If that line begins with y, the file is deleted,
+otherwise the file remains.
+If a designated file is a directory, an error comment
+is printed unless the optional argument
+.B \-r
+has been used.
+.PP
+.B Rmdir
+removes entries for the named directories,
+which must be empty.
+.SH OPTIONS
+.TP
+.B \-f
+No questions are asked
+when the
+.B \-f
+(force) option is given.
+.TP
+.B \-i
+Asks whether to delete each file (interactive option), and, under
+.BR \-r ,
+whether to examine each directory.
+.TP
+.B \-r
+Recursively deletes the entire contents of the
+specified directory, and the directory itself.
+.SH SEE ALSO
+chmod(2), unlink(2).
+.SH DIAGNOSTICS
+Diagnostics are self-explanatory.
+It is forbidden to remove the file \&.. to avoid the
+consequences of inadvertently doing something like rm \-r \&.*.

@@ -1,0 +1,122 @@
+.po 1i
+.TH WRITE 2 Bell
+.V 08/15/84 17:16:33
+.\" @[$]write.2	1.11	08/15/84 17:16:33 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+write \- write on a file
+.SH SYNOPSIS
+.B int write
+.I (fildes, buffer)
+.br
+.B char
+.I *buffer;
+.br
+.B int
+.I fildes;
+.br
+.B unsigned int
+.I nbytes;
+.SH DESCRIPTION
+A file descriptor is a word returned from a
+successful
+.BR open (2)
+.BR creat (2)
+.BR dup (2),
+or
+.BR pipe (2)
+call.
+.PP
+.I Buffer
+is the address of
+.I nbytes
+contiguous
+bytes that are written on the output file.
+The number of characters actually written is returned.
+It is an error if this is not the same as requested.
+.PP
+If the
+.SM O_APPEND
+flag of the file status flags is set,
+the file pointer will be set to the end of the file prior to each write.
+.PP
+If the file being written is a pipe (or
+.SM FIFO\*S),
+no partial writes will be permitted.
+Thus, the write will fail if a write of
+.I nbyte
+bytes would exceed a limit.
+.PP
+If the file being written is a pipe (or
+.SM FIFO\*S)
+and the
+.SM O_NDELAY
+flag of the file flag word is set,
+then write to a full pipe (or
+.SM FIFO\*S)
+will return a count of 0.
+Otherwise (\c
+.SM O_NDELAY
+clear), writes to a full pipe (or
+.SM FIFO\*S)
+will block until space becomes available.
+.PP
+Writes which are multiples
+of 512 characters long and begin on a 512-byte boundary
+in the file
+are more efficient than any others.
+.SH SEE ALSO
+creat(2), open(2), pipe(2).
+.SH DIAGNOSTICS
+.B Write
+will fail and the file pointer will remain 
+unchanged if one or more of the
+following are true:
+.IP
+.I Fildes
+is not a valid file descriptor open for writing.
+.SM
+\%[EBADF]
+.IP
+An attempt is made to write to a pipe that is not open
+for reading by any process.
+.SM
+\%[EPIPE
+and
+.SM
+SIGPIPE
+signal]
+.IP
+An attempt was made to write a file that exceeds the
+process's file size limit or the maximum file size.
+See 
+.BR ulimit (2).
+.SM
+\%[EFBIG]
+.IP
+.I Buffer
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion the number of bytes actually written
+is returned.
+Otherwise, \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH ASSEMBLER
+.na
+.nf
+   CONSTANT WRITE	:= 4
+
+   ...		!* fildes, buffer, nbytes in			*!
+      		!* r0, r1, r2 respectively			*!
+   		!* (segmented: fildes in r0, segment number	*!
+   		!* of buffer in r1, offset of buffer in r2, 	*!
+   		!* nbytes in r3)				*!
+   sc	#WRITE
+   ...		!* return value in r4 *!
+      		!* carry flag set if error *!
+.ad
+.fi

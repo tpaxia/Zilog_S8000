@@ -1,0 +1,57 @@
+.po 1i
+.TH PROF 1 Zilog
+.V 08/15/84 17:00:56
+.\" @[$]prof.1	1.9 08/15/84 17:00:56 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+prof \- display profile data
+.SH SYNOPSIS
+.B prof
+[
+.B \-al
+] [ \fIfile\fR ]
+.SH DESCRIPTION
+.B Prof
+interprets the file
+.I mon.out
+produced by the
+.I monitor
+subroutine.
+Under default modes, the symbol table in the named object file
+.I (a.out
+default) is read and correlated with the
+.I mon.out
+profile file.
+For each external symbol, the percentage of time spent
+executing between that symbol and the next is printed (in
+decreasing order), together with the number of times that
+routine was called and the number of milliseconds per call.
+.PP
+In order for the number of calls to a routine to be tallied,
+the
+.B \-p
+option of
+.B cc
+must have been given when the file containing the
+routine was compiled.
+This option also arranges for the
+.I mon.out
+file to be produced automatically.
+.SH OPTIONS
+.TP
+.B \-a
+All symbols are reported rather than just external symbols.
+.TP
+.B \-l
+Output is listed by symbol value rather than decreasing percentage.
+.SH FILES
+.ta \w'mon.out  'u
+mon.out	for profile
+.br
+a.out		for namelist
+.SH SEE ALSO
+cc(1), profil(2), monitor(3), mon.out(5).
+.SH LIMITATIONS
+Beware of errors due to the granularity of the profile data;
+it typically is accurate to within eight bytes as a symbol.

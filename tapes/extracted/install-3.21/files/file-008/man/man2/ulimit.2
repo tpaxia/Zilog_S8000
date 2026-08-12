@@ -1,0 +1,72 @@
+.po 1i
+.TH ULIMIT 2 Bell
+.V 08/15/84 17:15:53
+.\" @[$]ulimit.2	1.6	08/15/84 17:15:53 - Zilog Inc.
+.SH NAME
+.ad
+.fi
+ulimit \- get and set user limits
+.SH SYNOPSIS
+.B long ulimit
+.I (cmd, newlimit)
+.br
+.B int
+.I cmd;
+.br
+.B long
+.I newlimit;
+.SH DESCRIPTION
+This function provides for control over process limits.
+The
+.I cmd
+values
+available are:
+.TP 5
+.B 1
+Get the process's file size limit.
+The limit is in units of 512-byte blocks
+and is inherited by child processes.
+Files of any size can be read.
+The default limit on writable file sizes is 5000 blocks.
+.TP 5
+.B 2
+Set the process's file size limit to
+the value of
+.IR newlimit .
+Any process may decrease this limit,
+but only a process with an effective user
+.SM ID
+of super-user may increase the limit.
+.B Ulimit
+will fail and the limit will be 
+unchanged if a process with an effective user
+.SM ID
+other than
+super-user attempts to increase its file size limit.
+.SM
+\%[EPERM]
+.TP 5
+.B 3
+Get the maximum possible break value.
+See
+.BR brk (2).
+.SH RETURN VALUE
+Upon successful completion, a non-negative value is returned.
+Otherwise, a value of \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+brk(2), write(2).
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT ULIMIT	:= 64
+
+	...		!* cmd in r0, high word of new limit	*!
+			!* in r1, low word of newlimit in r2	*!
+	clr	rr4
+	sc	#ULIMIT
+	...		!* return value in rr4 *!
+	   		!* carry flag set if error *!
+.ad
+.fi

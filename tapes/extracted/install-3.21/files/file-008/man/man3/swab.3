@@ -1,0 +1,29 @@
+.po 1i
+.TH SWAB 3 Bell
+.V 08/15/84 17:27:57
+.\" @[$]swab.3	1.5	08/15/84 17:27:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+swab \- swap bytes
+.SH SYNOPSIS
+.nf
+\fBswab\fI(from, to, nbytes)\fR
+.br
+\fB     char\fI *from, *to;\fR
+.br
+\fB     int \fInbytes;\fR
+.fi
+.SH DESCRIPTION
+.B Swab
+copies
+.I nbytes
+bytes pointed to by
+.I from
+to the position pointed to by
+.I to,
+exchanging adjacent even and odd bytes.
+It is useful for carrying binary data between
+S8000 and PDP-11.
+.I Nbytes
+should be even.

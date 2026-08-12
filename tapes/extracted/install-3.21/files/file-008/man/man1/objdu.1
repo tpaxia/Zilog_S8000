@@ -1,0 +1,32 @@
+.po 1i
+.TH OBJDU 1 Zilog
+.V 08/15/84 17:00:21
+.\" @[$]objdu.1	1.5	08/15/84 17:00:21 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+objdu \- dump for object and load modules
+.SH SYNOPSIS
+.B objdu
+[\fB\-r\fR] [\fB\-h\fR] \fIfile\fR
+.SH DESCRIPTION
+.B Objdu
+dumps S8000 load modules in hex format,
+since bytes in a word are displayed in the Z8000 ordering and addresses
+correspond to the link addresses. 
+Header information is also displayed in a convenient format. Values are
+decimal unless otherwise noted.
+.SH OPTIONS
+.TP
+.B \-h
+Print only the header information.
+.TP
+.B \-r
+Print relocation information if the file is not stripped.
+.SH DIAGNOSTICS
+.na
+"Not a loadable file ..." 	for non-S8000 load modules
+.sp
+"Premature EOF" for files with an odd number of bytes
+.SH SEE ALSO
+nm(1), a.out(5), od(1), objhdr(1).

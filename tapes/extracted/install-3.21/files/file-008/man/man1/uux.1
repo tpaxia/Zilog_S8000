@@ -1,0 +1,104 @@
+.po 1i
+.TH UUX 1 Bell
+.V 08/15/84 17:09:31
+.\" @[$]uux.1	1.16	08/15/84 17:09:31 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+uux \- ZEUS-to-ZEUS command execution
+.SH SYNOPSIS
+.B uux
+[
+.B \-
+]
+.I command-string
+.SH DESCRIPTION
+.B Uux
+gathers 0 or more files from various systems,
+executes a command on a specified system,
+and sends standard output to a file on a specified
+system.
+.PP
+The 
+.I command-string 
+is made up of one or more arguments that look
+like a shell command line,
+except command and file names
+may be prefixed by
+\fIsystem-name\fB!\fR.
+A null \fIsystem-name\fR is interpreted as the local system.
+.PP
+File names may be one of
+.IP
+(1) a full pathname;
+.IP
+(2) a pathname preceded by
+.IR ~xxx ;
+where
+.I xxx
+is a userid on the specified system
+replaced by that user's login directory;
+.br
+.IP
+(3) anything else is prefixed by the current directory.
+.PP
+Any special shell characters such as <>;| or ! should
+be escaped with a backslash (\\) or quoted.
+Quote the entire \fIcommand-string\fR, or quote the special
+characters as individual arguments.
+.SH OPTIONS
+.TP
+.B \-
+Causes the standard input to the
+.B uux
+command to be the standard input to the \fIcommand-string\fR.
+.SH EXAMPLES
+.IP
+\fBuux "!diff usg!/usr/dan/f1 pwba!/a4/dan/f1 > !fi.diff"\fR
+.PP
+gets the f1 files from the usg and pwba machines,
+executes a
+.B diff
+command
+and puts the results in f1.diff in the local directory.
+Note that '!' is a csh metacharacter and must be escaped by
+a double quote (") or a backslash (\\)
+when running 
+.B uux
+from the csh.
+.PP
+The command
+.IP
+\fBpr abc | uux - usg!lpr -c\fR
+.PP
+sets up the output of \fIpr abc\fR as standard input to a line printer
+(\fBlpr\fR(1)) command to be executed on system usg. Note the use of the
+\fB-c\fR option to \fBlpr\fR.
+.SH FILES
+/usr/spool/uucp          spool directory
+.br
+/usr/lib/uucp/L-cmds     command restriction file
+.br
+/usr/lib/uucp/*          data and programs
+.SH SEE ALSO
+uucp(1).
+.SH WARNING
+An installation can, and for security reasons
+generally will, limit the list of
+commands executable on behalf of an incoming request from
+.B uux.
+Typically, a restricted site permits little more than
+the receipt of mail via 
+.B uux.
+.SH LIMITATIONS
+Only the first command of a shell pipeline can 
+have a \fIsystem-name\fB!\fR.
+All other commands are executed on the system of the first
+command.
+.sp
+The shell metacharacter * will probably not do what you want it to do.
+.sp
+The shell tokens << and >> are not implemented.
+.sp
+You are not notified on the remote machine when you are denied
+execution permission.

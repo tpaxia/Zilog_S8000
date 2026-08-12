@@ -1,0 +1,31 @@
+.po 1i
+.TH GETPW 3  Bell
+.V 08/15/84 17:20:06
+.\" @[$]getpw.3	1.6	08/15/84 17:20:06 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+getpw \- get name from UID
+.SH SYNOPSIS
+.nf
+\fBgetpw\fI(uid, buf)\fR
+\fBchar \fI*buf;\fR
+\fBint uid;\fR
+.fi
+.SH DESCRIPTION
+.B Getpw
+searches the password file for
+the (numerical)
+.IR uid ", and fills in " "buf"
+with the corresponding line;
+it returns nonzero if
+.IR uid ""
+cannot be found.
+The line is null-terminated.
+.SH FILES
+/etc/passwd
+.SH SEE ALSO
+getpwent(3),
+passwd(5).
+.SH DIAGNOSTICS
+Nonzero return on error.

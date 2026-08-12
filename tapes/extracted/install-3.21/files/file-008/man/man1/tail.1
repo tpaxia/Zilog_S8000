@@ -1,0 +1,71 @@
+.po 1i
+.TH TAIL 1 Bell
+.V 08/15/84 17:07:01
+.\" @[$]tail.1	1.11 08/15/84 17:07:01 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+tail \- print the last 10 lines of a file
+.SH SYNOPSIS
+\fBtail\fR [ \fB+-\fR[\fInumber[\fBbcl\fR] ]  [
+.B \-f
+] ] [ \fIfile\fR ]
+.SH DESCRIPTION
+.B Tail
+copies the named file to the standard output beginning
+at a designated place.
+If no file is named, the standard input is used.
+.PP
+Copying begins at distance
+.BI + number
+from the beginning, or
+.BI \- number
+from the end of the input
+(if
+.I number
+is null, the value 10 is assumed).
+.I Number
+is counted in units of lines, blocks, or characters,
+according to the appended option.
+When no units are specified, counting is by lines.
+.SH OPTIONS
+.TP 8
+.B  b
+\fINumber\fR is counted in blocks.
+.TP 8
+.B  c
+\fINumber\fR is counted in characters.
+.TP 8
+.B  l
+\fINumber\fR is counted in lines.
+.TP 8
+.B  \-f
+The "follow" option. 
+If the input file is not a pipe, the program will 
+not terminate after the line of the input file has 
+been copied, but will enter an endless loop, wherein 
+it sleeps for a second and then attempts to read and 
+copy further records from the input file.
+Thus it may be used to monitor the growth of a file that is
+being written by some other process.
+.SH EXAMPLE
+The command:
+.sp
+.RS
+\fBtail -f \fIfile\fR
+.RE
+.sp
+prints the last ten lines of \fIfile\fR
+followed by any lines that are appended to \fIfile\fR
+between the time
+.B tail
+is initiated and killed.
+.SH SEE ALSO
+cat(1), dog(1), head(1), more(1), dd(1).
+.SH LIMITATIONS
+Tails relative to the end of the file
+are treasured up in a buffer, and thus
+are limited in length.
+.sp
+Various kinds of behavior may happen
+with character special files.

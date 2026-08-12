@@ -1,0 +1,57 @@
+.po 1i
+.TH TYPES 5 Bell
+.V 08/15/84 17:36:14
+.\"@[$]types.5	1.6	08/15/84 17:36:14 - Zilog Inc.
+.ad
+.SH NAME
+types \- primitive system data types
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.SH DESCRIPTION
+The data types defined in the include file
+are used in ZEUS system code;
+some data of these types are accessible to user code:
+.PP
+.nf
+.\" .SO /usr/include/sys/types.h
+/* @[$]types.h	1.1  12/11/81 17:21:31 - Zilog Inc */
+typedef   struct { int r[1]; } *physadr;
+typedef   unsigned short  ushort;
+typedef   char            cnt_t;
+typedef   long            daddr_t;  	/* disk address      */
+typedef   char            *caddr_t;  	/* core address      */
+typedef   long            saddr_t;      /* segmented address */
+typedef   long            paddr_t;      /* physical address  */
+typedef   long            uaddr_t;      /* user address      */
+typedef   unsigned in     ino_t;     	/* i-node number     */
+typedef   long            time_t;   	/* a time            */
+typedef   int             label_t[9]; 	/* program status    */
+typedef   int             dev_t;    	/* device code       */
+typedef   long            off_t;    	/* offset in file    */
+
+	/* selectors and constructor for device code         */
+
+#define	major(x)  	(int)(((unsigned)x>>8))
+#define	minor(x)  	(int)(x&0377)
+#define	makedev(x,y)	(dev_t)((x)<<8|(y))
+.fi
+.PP
+The form
+.I daddr_t
+is used for disk addresses except in an
+i-node on disk, see
+.BR filsys (5).
+Times are encoded in seconds since 00:00:00 GMT, January 1, 1970.
+The major and minor parts of a device code
+specify kind and unit number of a device
+and are installation-dependent.
+Offsets are measured in bytes from the beginning of a file.
+The
+.I label_t
+variables are used to save the processor state
+while another process is running.
+.SH SEE ALSO
+adb(1),
+lseek(2),
+time(2),
+filsys(5).

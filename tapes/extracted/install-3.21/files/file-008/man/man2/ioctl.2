@@ -1,0 +1,62 @@
+.po 1i
+.TH IOCTL 2 Bell
+.V 08/15/84 17:13:37
+.\"@[$]ioctl.2	1.12	08/15/84 17:13:37 - Zilog Inc.
+.SH NAME
+ioctl \- input / output control device
+.SH SYNOPSIS
+.B #include <sys/ioctl.h>
+.PP
+.B int ioctl
+.I (fildes, request, arg)
+.br
+.B int
+.I fildes, request;
+.SH DESCRIPTION
+.B Ioctl
+performs a variety of functions
+on character special files (devices).
+The writeups of various devices
+in Section 4 discuss how
+.B ioctl
+applies to them.
+.PP
+.B Ioctl
+will fail if one or more of the following are true:
+.IP
+.I Fildes
+is not a valid open file descriptor.
+.SM
+\%[EBADF]
+.IP
+.I Fildes
+is not associated with a character special device.
+.SM
+\%[ENOTTY]
+.IP
+.I Request
+or
+.I arg
+is not valid.
+See
+.BR tty (4).
+.SM
+\%[EINVAL]
+.SH RETURN VALUE
+If an error has occurred,
+a value of \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+tty(4).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT IOCTL	:= 54
+
+	...	!* fildes, request in r0, r1 respectively *!
+		!* arg in r2 *!
+	sc	#IOCTL
+	...	!* return value in r4 *!
+.fi
+.ad

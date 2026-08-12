@@ -1,0 +1,29 @@
+.po 1i
+.TH RAND 3 Bell
+.V 08/15/84 17:25:28
+.\" @[$]rand.3	1.6	08/15/84 17:25:28 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+rand, srand \- random number generator
+.SH SYNOPSIS
+.nf
+\fBsrand\fI(seed)
+.br
+\fBint \fIseed;
+.PP
+\fBrand( )\fR
+.fi
+.SH DESCRIPTION
+.B Rand
+uses a multiplicative congruent
+random number generator
+with period 28329 to return successive pseudo-random
+numbers in the range from 0 to 32767.
+.PP
+The generator is reinitialized by calling
+.B srand
+with 1 as an argument.
+It is set to a random starting point by calling
+.B srand
+with any argument.

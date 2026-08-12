@@ -1,0 +1,25 @@
+.po 1i
+.TH EXIT 1C UCB
+.V 08/15/84 16:50:23
+.\"@[$]exit.1C	1.6	08/15/84 16:50:23 - Zilog Inc.
+.ad
+.SH NAME
+exit \- exit a shell
+.SH SYNOPSIS
+.B exit
+.br
+.B exit
+.I (expression)
+.SH DESCRIPTION
+The shell exits either with the value of the
+.I status
+variable (first form) or with the value of the specified
+.I  expression
+(second form). This command is ignored if the 
+.I ignoreexit
+variable is set.
+.SH SEE ALSO
+break(1C),
+logout(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual.

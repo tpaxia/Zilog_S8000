@@ -1,0 +1,41 @@
+.po 1i
+.TH CHECKLIST 5 Zilog
+.V 08/15/84 17:34:06
+.\" @[$]checklist.5	1.2 08/15/84 17:34:06
+.ad
+.fi
+.SH NAME
+checklist \- default control information for fsck(M)
+.SH DESCRIPTION
+.B Checklist\^
+contains the filesystems that are processed by 
+.BR fsck (M)
+in the default case.
+.PP
+This is an \s-1ASCII\s0 file.
+The filesystems are listed one to a line and refer to the
+raw device in the form:
+.br
+.sp
+.in +8
+\/dev/r{zd,smd,md}\fIn\fR
+.in -8
+.br
+.sp
+where 
+.I n
+is the filesystem number.
+The root device is an exception and the block device is the one used.  Thus:
+.br
+.sp
+.in +8
+/dev/root
+.br
+.in -8
+.PP
+This file resides in the directory
+.BR /etc .
+.SH FILES
+/etc/checklist
+.SH "SEE ALSO"
+fsck(M).

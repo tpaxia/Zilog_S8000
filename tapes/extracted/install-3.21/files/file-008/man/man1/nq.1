@@ -1,0 +1,187 @@
+.po 1i
+.TH NQ 1 Zilog
+.V 08/15/84 17:00:06
+.\" @[$]nq.1	1.20	08/15/84 17:00:06 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+nq  \- print enqueuing program
+.SH SYNOPSIS
+.B nq
+[ \fIoptions ] [ files ]\fR
+.SH DESCRIPTION
+The ZEUS print-request spooling system is comprised of three elements:
+.BR nq ,
+which enqueues jobs directed at one of the printer devices;
+.BR dqueuer (M),
+which dispatches those requests; and
+.BR xq (M),
+which examines and possibly deletes one or more requests,
+or stops and starts the queuer(s) temporarily.
+.sp
+.B Nq
+accepts any number of files to be queued-for-printing.
+If none are given, standard input is read.
+.sp
+With no options,
+.B nq
+takes either its argument-files or standard input 
+and queues them in the default queue
+for the system used. 
+The default queue is the first in
+the list of queues printed to standard output when \fBxq\fR is executed 
+without arguments. 
+All attributes used to print these files 
+take on reasonable values for the default device. 
+.sp
+An option modifies the pertinent attributes; it references 
+all files following it on the command 
+line until overidden by another option.
+.SH OPTIONS
+.TP 3
+.B \-b
+If it was turned off by a previous command, return to
+burst-page printing (the default). 
+.TP 3
+.B  \-c
+Normally,
+.B nq
+remembers the names of queued files. 
+To insulate the file against 
+changes that can occur before printing, 
+the \fB-c\fR option forces  
+.B nq
+to make a file-copy.
+.TP 3
+\fB\-d\fI dest\fR
+.br
+Certain burst-page formats allow for a destination field;  
+this option sets that field. 
+If the 
+.B -m 
+option is also specified, and if
+.I dest
+is a valid login name,
+.BR mail (1)
+is sent to user 
+.IR dest .
+.TP 3
+.B  \-m
+Report by
+.BR mail (1)
+when printing is complete. 
+If the 
+.B -d 
+option is specified, 
+.BR mail (1)
+is sent to the identified user (see 
+.B -d 
+option).
+.TP 3
+.BR \-n [\fBbcdmpqrst\fR]
+This option negates previous options, resetting the value of the
+referenced option(s) to the default.   
+To retain compatibility with the obsolete
+.BR lpr (1)
+format, 
+if no option is given, 
+.B -nm 
+is assumed. 
+.bp
+.TP 3
+\fB\-p\fI pri\fR
+.br
+Print file at priority
+.IR pri .
+Valid priorities are 
+.BR rush ,
+.BR normal , 
+and
+.BR deferred . 
+Abbreviations to one character are accepted (ie, \fB-p rush\fR, \fB-p ru\fR,
+and \fB-p r\fR are all valid examples of setting priority to rush). 
+All 
+.B rush 
+requests print before 
+.B normal 
+requests,
+which print before 
+.B deferred 
+requests. 
+In addition, a mask can be set for a queue that prevents job requests 
+below a specific priority from printing. See \fBxq\fR(M)
+and \fBspool\fR(5) for additional information on masking job-priorities
+with a queue priority-mask. 
+.TP 3
+\fB\-q\fI que[:dev]\fR
+If this option is omitted, the file is sent to the default queue.
+When specified, the files are sent to queue
+.IR que
+to be printed on the first available device.
+If a queue is serviced by more
+than one device and a specific device is desired,
+the
+.I :dev
+option can be added.
+.I que
+and
+.I dev
+are site-dependent strings; 
+their values are found using the
+.BR xq (1) 
+command or through the system administrator.
+.TP 3
+.B  \-r
+Once printed, remove the file from the system. 
+.TP 3
+.B  \-s
+Silence.  
+Prevents file from appearing in queue-lists (see
+.BR xq (1)).
+.TP 3
+\fB\-t\fI number\fR
+Print file
+.I number
+times.
+.SH EXAMPLES
+Print 
+.I file1 
+with burst-pages.
+.IP
+\fBnq\fI file1\fR
+.in 5
+.sp
+Print \fIfile1\fR without burst-pages; print \fIfile2\fR with
+burst-pages.
+(Because burst-page is the default, this example suggests a previous
+.B -nb
+for
+.IR file2 .
+.IP
+\fBnq -nb\fI file1\fR \fB-b\fI file2\fR
+.in 5
+.sp
+The following example prints
+.I num
+copies of 
+.IR file1 .
+.IP
+\fBnq -t \fInum file1\fR   
+.in 5
+.sp
+.SH FILES
+/usr/spool/queuer/activeconfig
+.br
+/usr/spool/queuer/statusdir
+.br
+/usr/spool/queuer/requestdir
+.br
+/tmp/queuer
+.br
+/usr/spool/queuer/logfile
+.SH SEE ALSO
+xq(1), backend(M), dqueuer(M), xq(M).
+.SH "DIAGNOSTICS"
+If the dequeuing daemon is not active,
+.B nq
+will print a message saying so, and accept the request anyway.

@@ -1,0 +1,92 @@
+.po 1i
+.TH DEVNAMES 4 Zilog
+.V 08/15/84 17:30:34
+.\" @[$]devnames.4	1.7	08/15/84 17:30:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+root, rroot, usr, rusr, tmp, rtmp, z, rz,
+tardev, dumpdev and resdev
+.SH DESCRIPTION
+The files
+.IR "root, rroot, usr, rusr, tmp, rtmp, z and rz",
+found in /dev, are links to the default devices for the filesystems
+.IR "/, /usr, /tmp and /z".
+The following table shows these files and the default devices
+to which they are linked for different types of disks:
+.nf
+.sp 2
+                           Devices
+                5-1/4 inch    8 inch      SMD
+  Files            Disk        Disk       Disk
+.sp
+/dev/root        /dev/md2    /dev/zd2   /dev/smd2
+/dev/rroot       /dev/rmd2   /dev/rzd2  /dev/rsmd2
+
+/dev/usr         /dev/md0    /dev/zd0   /dev/smd0
+/dev/rusr        /dev/rmd0   /dev/rzd0  /dev/rsmd0
+
+/dev/tmp         /dev/md3    /dev/zd3   /dev/smd3
+/dev/rtmp        /dev/rmd3   /dev/rzd3  /dev/rsmd3
+
+/dev/z           /dev/md4    /dev/zd4   /dev/smd4
+/dev/rz          /dev/rmd4   /dev/rzd4  /dev/rsmd4
+.fi
+.PP
+The files 
+.I tardev
+and 
+.I resdev
+are used by
+.BR tar (1) 
+and 
+.BR reserv (1)
+their default devices.
+The file 
+.I dumpdev
+is used by 
+.BR dump (M)
+and
+.BR restor (M)
+as their default device.
+These files should be linked to the appropriate raw tape device.
+If not linked, 
+.I /dev/rct0
+is used by default.
+For example, if the 9-track tape device is to be the
+default dump device, then the following link should be
+made:
+.nf
+.sp
+        ln /dev/rmt0 /dev/dumpdev
+.fi
+.SH FILES
+/dev/root
+.br
+/dev/rroot
+.br
+/dev/usr
+.br
+/dev/rusr
+.br
+/dev/tmp
+.br
+/dev/rtmp
+.br
+/dev/z
+.br
+/dev/rz
+.br
+/dev/tardev
+.br
+/dev/dumpdev
+.br
+/dev/resdev
+.SH SEE ALSO
+reserv(1),
+tar(1),
+dump(M),
+makenewfs(M),
+mfs(M),
+rc(M),
+restor(M).

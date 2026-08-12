@@ -1,0 +1,71 @@
+.po 1i
+.TH BASENAME 1 Bell 
+.V 08/15/84 16:37:53
+.\" @[$]basename.1	1.7	08/15/84 16:37:53 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+basename, dirname \- deliver portions of path names
+.SH SYNOPSIS
+\fBbasename \fIstring [ \fIsuffix\fR ]
+.br
+\fBdirname \fIstring\fR
+.SH DESCRIPTION
+.B Basename
+deletes any prefix ending in a slant "\ /\ " and the
+.I suffix,
+(if it is present in the string) from
+.I string,
+and prints the result on the standard output.
+.PP
+.B Basename
+can be used inside of command substitution marks (\`\ \`)
+in the body of shell scripts.
+.PP
+.B Dirname\^
+delivers all but the last level of the path name in
+.IR string .
+.SH EXAMPLES
+.PP
+The command:
+.sp
+.RS
+basename /usr/spool/file.c
+.RE
+.sp
+returns the string:
+.sp
+.RS
+file.c
+.RE
+.sp
+the command:
+.sp
+.RS
+basename /usr/spool/file.c .c
+.RE
+.sp
+returns the string:
+.sp
+.RS
+file
+.RE
+.sp
+The command:
+.sp
+.RS
+set NAME=`dirname /usr/src/cmd/cat.c`
+.RE
+.sp
+sets the shell variable
+.B NAME
+to
+.RS
+.sp
+/usr/src/cmd 
+.RE
+.sp
+.SH SEE ALSO
+csh(1), sh(1) and,
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

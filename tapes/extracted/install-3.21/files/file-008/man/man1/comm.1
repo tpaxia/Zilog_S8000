@@ -1,0 +1,107 @@
+.po 1i
+.TH COMM 1 Bell
+.V  08/15/84 16:42:21
+.\" @[$]comm.1	1.16 08/15/84 16:42:21 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+comm \- select or reject lines common to two sorted files
+.SH SYNOPSIS
+\fB comm \fR[\fB\-\fR[\fB123\fR]] [\fB-\fR] \fIfile1 file2\fR
+.SH DESCRIPTION
+.B Comm
+reads
+.I file1
+and
+.I file2,
+(which must be ordered in ASCII-collated sequence,
+see \fBsort\fR(1))
+and produces three-column output.
+.PP
+column 1 contains those lines only in \fIfile1;\fR
+.br
+column 2 contains lines only in \fIfile2;\fR
+.br
+column 3 contains lines in both files.
+.PP
+A dash (\fB-\fR) may be used in place of one of the compared elements 
+and refers to the standard input.
+Using the standard input as an argument enables interactive
+input (or input from a pipe)
+to be compared with the contents of the named argument file.
+Interactive entries must also be in ASCII-collated (sorted) sequence. 
+.PP
+Flags 1, 2, or 3 suppress printing of the corresponding
+column.
+Thus the command:
+.sp
+.RS
+\fBcomm -12 \fIfile1 file2\fR
+.RE
+.PP
+prints only the lines in column 3 -- the lines
+common to the two files;
+.PP
+The command:
+.sp
+.RS
+\fBcomm -23 \fIfile1 file2\fR
+.RE
+.sp
+prints only lines in column 1 -- the lines
+only in the first file 
+.PP
+The command:
+.sp
+.RS
+\fBcomm -123 \fIfile1 file2\fR
+.RE
+.sp 
+is not valid.
+.bp
+.SH EXAMPLES
+The results for the examples were obtained using the following
+two lists.
+.sp
+.nf
+%\fBcat temp1\fR
+a
+b
+c
+d
+e
+
+%\fBcat temp2\fR
+c
+d
+e
+f
+g
+h
+
+%\fBcomm temp1 temp2\fR
+a
+b
+		c
+		d
+		e
+	f
+	g
+	h
+
+%\fBcomm -23 temp1 temp2\fR
+a
+b
+
+%\fBcomm -13 temp1 temp2\fR
+f
+g
+h
+
+%\fBcomm -12 temp1 temp2\fR
+c
+d
+e
+
+.SH SEE ALSO
+cmp(1), diff(1), sort(1), uniq(1).

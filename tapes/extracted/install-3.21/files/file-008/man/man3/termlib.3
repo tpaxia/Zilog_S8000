@@ -1,0 +1,158 @@
+.po 1i
+.TH TERMLIB 3 Zilog
+.V 08/15/84 17:29:18
+.\" @[$]termlib.3	1.10	08/15/84 17:29:19 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+tgetent, tgetnum, tgetflag, tgetstr, tgoto, tputs \- terminal independent operation routines
+.SH SYNOPSIS
+.nf
+\fBchar PC; \fR
+\fBchar *BC; \fR
+\fBchar *UP; \fR
+\fBshort \fIospeed; \fR
+.PP
+\fBtgetent\fI(bp, name)\fR
+\fBchar \fI*bp, *name;\fR
+.PP
+\fBtgetnum\fI(id)\fR
+\fBchar \fI*id;\fR
+.PP
+\fBtgetflag\fI(id)\fR
+\fBchar \fI*id;\fR
+.PP
+\fBchar *\fR
+\fBtgetstr\fI(id, area)\fR
+\fBchar \fI*id, **area;\fR
+.PP
+\fBchar *\fR
+\fBtgoto\fI(cm, destcol, destline)\fR
+\fBchar\fI *cm;\fR
+\fBint\fI destcol, destline;\fR
+.PP
+\fBtputs\fI(cp, affcnt, outc)\fR
+\fBregister\fI char *cp;\fR
+\fBint\fI affcnt;\fR
+\fBint\fI (*outc)();\fR
+.fi
+.SH DESCRIPTION
+These functions extract and use capabilities 
+from the terminal capability data
+base
+.BR termcap (5).
+.PP
+.B Tgetent
+extracts the entry for terminal
+.I name
+into the buffer at
+.I bp.
+.I Bp
+is a character buffer of size
+1024 and must be retained through all subsequent calls
+to
+.B tgetnum,
+.B tgetflag,
+and
+.B tgetstr.
+.B Tgetent
+returns \-1 if it cannot open the
+.I termcap
+file, 0 if the terminal name given does not have an entry,
+and 1 if all goes well.
+It looks in the environment for a TERMCAP variable.
+If found and the value does not begin with a slash,
+and the terminal
+.B name
+is the same as the environment string TERM,
+the TERMCAP string is used instead of reading the termcap file.
+Alternatively, if the TERMCAP variable does not begin with a slash
+and the terminal
+.B name
+is not the same as the TERM variable, then
+.I /etc/termcap
+is used to find TERM's description.
+If it does begin with a slash, 
+the string is used as a path name rather than
+.I /etc/termcap.
+This speeds up entry into programs that call
+.BR tgetent
+helps debug new terminal descriptions, and helps
+to make one for the terminal if the file
+.I /etc/termcap
+cannot be written.
+.PP
+.B Tgetnum
+gets the numeric value of capability
+.I id,
+returning \-1 if is not given for the terminal.
+.B Tgetflag
+returns 1 if the specified capability is present in
+the terminal's entry, 0 if it is not.
+.B Tgetstr
+gets the string value of capability
+.I id,
+placing it in the buffer at
+.I area,
+advancing the
+.I area
+pointer.
+It decodes the abbreviations for this field described in
+.BR termcap (5),
+except for cursor addressing and padding information.
+.PP
+.B Tgoto
+returns a cursor addressing string decoded from
+.I cm
+to go to column
+.I destcol
+in line
+.I destline.
+It uses the external variables
+.I UP
+(from the \fBup\fR capability)
+and
+.I BC
+(if 
+.I bc
+is given rather than 
+.IR bs )
+if necessary to avoid placing \fB\en\fR, \fB^D,\fR or \fB^@\fR in
+the returned string.
+Programs that call \fItgoto\fR must turn off the XTABS bit(s),
+since \fItgoto\fR can now output a tab.
+Programs using termcap must always turn off XTABS.
+If a \fB%\fR sequence is given that is not understood, then
+.B tgoto
+returns the string \*(lqOOPS\*(rq.
+.PP
+.B Tputs
+decodes the leading padding information of the string
+.I cp;
+.I affcnt
+gives the number of lines affected by the operation, or 1 if this is
+not applicable.
+.I Outc
+is a routine called with each character in turn.
+The external variable
+.I ospeed
+must contain the output speed of the terminal as encoded by
+.B stty
+(in
+.BR ioctl (2)).
+The external variable
+.B PC
+must contain a pad character to be used (from the \fBpc\fR capability)
+if a null (\fB^@\fR) is inappropriate.
+.SH FILES
+/usr/lib/libtermlib.a	nonsegmented library
+.br
+/usr/lib/slibtermlib.a	segmented library
+.br
+/etc/termcap		default data base
+.DT
+.SH SEE ALSO
+ex(1),
+termcap(5),
+tty(4),
+ioctl(2).

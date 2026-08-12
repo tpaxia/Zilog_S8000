@@ -1,0 +1,43 @@
+.po 1i
+.TH NICE 1C UCB
+.V 08/15/84 16:59:47
+.\"@[$]nice.1C	1.6	08/15/84 16:59:47 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+nice \- set the priority of a command
+.SH SYNOPSIS
+.B nice
+.I [ number ]
+.I command
+.SH DESCRIPTION
+.B Nice
+without an argument, increments the
+.I nice
+value for this shell by seven.
+With a number argument, 
+.B nice 
+increments the
+.I nice
+number of the current shell 
+by the given
+.I number
+(e.g., 'nice -+8' and 'nice -8' 
+have the same effect, that is , incrementing the priority by 8).
+.PP
+With a command argument, \fInice\fR increments the
+.I nice
+value of the given command by
+.I number
+and by seven if no number is given.
+.PP
+The super-user can specify negative niceness 
+by using the "nice \--number ..." command.
+The command is always executed in a subshell, and the restrictions
+placed on commands in simple
+.B if
+statements apply.
+.SH SEE ALSO
+nice(1), nohup(1C). 
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

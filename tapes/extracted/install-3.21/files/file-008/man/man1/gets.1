@@ -1,0 +1,48 @@
+.po 1i
+.TH GETS 1 UCB
+.V 08/15/84 16:53:39
+.\" @[$]gets.1	1.9	08/15/84 16:53:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+gets \- get a string from standard input
+.SH SYNOPSIS
+.B gets
+[ \fIdefault\fR ]
+.SH DESCRIPTION
+.B Gets
+can be used with
+.BR csh (1)
+or
+.BR sh (1)
+to read a string from the standard input.
+If a
+.I default
+is given, it is used if just a carriage return is typed
+or an error occurs.
+The resultant string (either the default or as read from the standard
+input) is written to the standard output.
+If no
+.I default
+is given and an error occurs,
+.B gets
+exits with exit status 1.
+.SH EXAMPLE
+The following csh script will set the variable \fIa\fR
+to whatever is typed into the terminal at the prompt,
+and then echo the contents of the variable "a".
+.RS
+.sp
+.nf
+# example csh script
+
+echo -n "Enter a letter:"
+set a=`gets`
+echo $a
+.RE
+.fi
+.SH SEE ALSO
+csh(1), line(1), sh(1).
+.br
+.I "The C Shell" 
+in the ZEUS Utilities Manual.

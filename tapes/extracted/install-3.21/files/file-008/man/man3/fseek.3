@@ -1,0 +1,58 @@
+.po 1i
+.TH FSEEK 3 Bell 
+.V 08/15/84 17:19:34
+.\" @[$]fseek.3	1.8	08/15/84 17:19:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+fseek, ftell, rewind \- reposition a stream 
+.SH SYNOPSIS
+.nf
+#include <stdio.h>
+.PP
+\fBfseek\fR(\fIstream, offset, ptrname\fR)
+\fBFILE \fR*\fIstream;\fR
+\fBlong \fIoffset;\fR
+\fBint \fIptrname;\fR
+.PP
+\fBlong ftell(\fIstream\fR)
+\fBFILE \fR*\fIstream;\fR
+.PP
+\fBrewind(stream)\fR
+.fi
+.SH DESCRIPTION
+.B Fseek
+sets the position of the next input or output
+operation on the
+.IR stream .
+The new position is at the signed distance
+.I offset
+bytes
+from the beginning, the current position, or the end of the file,
+according as 
+.I ptrname
+has the value 0, 1, or 2.
+.PP
+.B Fseek
+undoes any effects of
+.BR  ungetc (3).
+.PP
+.B Ftell
+returns the current value of the offset relative to the beginning
+of the file associated with the named
+.IR stream .
+It is measured in bytes on ZEUS;
+on some other V7 Unix systems it is the only foolproof way to obtain an 
+.I offset
+for
+.BR fseek .
+.PP
+.B Rewind(stream)
+is equivalent to
+.B "fseek\fR(\fIstream, 0L, 0)."\fR
+.SH SEE ALSO
+lseek(2),
+fopen(3).
+.SH DIAGNOSTICS
+.B Fseek
+returns \-1 for improper seeks.

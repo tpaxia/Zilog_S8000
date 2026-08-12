@@ -1,0 +1,88 @@
+.po 1i
+.TH GETPWENT 3 Bell
+.V 08/15/84 17:20:07
+.\" @[$]getpwent.3	1.8	08/15/84 17:20:07 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+getpwent, getpwuid, getpwnam, setpwent, endpwent \- get password file entry
+.SH SYNOPSIS
+.nf
+\fB#include <pwd.h>
+.PP
+\fBstruct passwd *getpwent();
+.PP
+\fBstruct passwd *getpwuid\fI(uid)\fB
+.br
+int\fI uid;
+.PP
+\fBstruct passwd *getpwnam\fI(name)\fB
+.br
+char\fI *name;
+.PP
+\fBint setpwent();
+.PP
+\fBint endpwent();\fR
+.fi
+.SH DESCRIPTION
+.B Getpwent,
+.B getpwuid,
+and
+.B getpwnam
+each return a pointer to an object with the
+following structure containing the broken-out
+fields of a line in the password file.
+.RS
+.PP
+.nf
+."\.SO /usr/include/pwd.h
+struct  passwd { /* see getpwent(3) */
+        char    *pw_name;
+        char    *pw_passwd;
+        int     pw_uid;
+        int     pw_gid;
+        char    pw_age;
+        char    *pw_comment;
+        char    *pw_gecos;
+        char    *pw_dir;
+        char    *pw_shell;
+};
+.ft R
+.ad
+.fi
+.RE
+.PP
+The fields
+.I pw_comment,
+and
+.I pw_gecos
+are unused; the others have meanings described in
+.BR passwd (5).
+.PP
+.B Getpwent
+reads the next line after opening the file if necessary;
+.B setpwent
+rewinds the file;
+.B endpwent
+closes it.
+.PP
+.B Getpwuid
+and
+.B getpwnam
+search from the beginning until a matching
+.I uid
+or
+.I name
+is found, or until EOF is encountered.
+.SH FILES
+/etc/passwd
+.SH SEE ALSO
+getlogin(3),
+getgrent(3),
+passwd(5).
+.SH DIAGNOSTICS
+Null pointer
+(0) returned on EOF or error.
+.SH LIMITATIONS
+All information
+is contained in a static area and must be copied if it is to be saved.

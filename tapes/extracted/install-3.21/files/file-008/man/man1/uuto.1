@@ -1,0 +1,150 @@
+.po 1i
+.TH UUTO 1 Bell  
+.V 08/15/84 17:09:23
+.\"@[$]uuto.1	1.6 08/15/84 17:09:23 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+uuto, uupick \- public \s-1ZEUS\s+1-to-\s-1ZEUS\s+1 file copy
+.SH SYNOPSIS
+.B uuto
+.I [ options ] 
+.I source-files 
+.I destination
+.br
+.B uupick
+[
+.B \-s
+\fIsystem\fR ]
+.SH DESCRIPTION
+\fBUuto\fR sends
+.I source-files\^
+to
+.IR destination .
+.I Uuto\^
+uses 
+\fBuucp\fR (1)
+to send files while   
+the local system is controlling the file access.
+A 
+.I source-file 
+name is a path name on your machine.
+Destination has the form:
+.sp
+.RS
+system\f3!\fP\fIuser\fP
+.RE
+.PP
+where
+.I system\^
+is taken from a list of system names
+that
+\fBuucp\fR
+knows about (see
+\fBuuname\fR (1)).
+.I User\^
+is the login name
+of someone on the specified system.
+.SH OPTIONS
+.PD 0
+.TP 5 
+.B \-m
+Send mail to the sender when the copy is complete.
+.sp
+.TP
+.B \-p
+Copy the source file into the spool directory before transmission.
+.sp
+.PP
+The files (and sub-trees, if directories are specified) are sent to
+.SM PUBDIR
+on
+.IR system ,
+where
+.SM PUBDIR
+is a public directory defined in the
+\fBuucp\fR
+source.
+The files are sent to
+.sp
+.RS
+\s-1PUBDIR\s+1/receive/\fIuser\fP/\fImysystem\fR/files.
+.RE
+.sp
+The recipient is notified by
+\fBmail\fR (1)
+of the arrival of files.
+.sp
+.PP
+\fBUupick\fR
+accepts or rejects the files transmitted to the user.
+\fBuupick\fR
+searches
+.SM PUBDIR
+for files destined for the user.
+For each entry (file or directory) found,
+the following message is printed on the standard output:
+.RS
+.sp
+\fBfrom \fIsystem\^\fB:\fR [\^file \fIfile-name\^\fR] [dir \fIdirname\^\fR] \fB?\fR
+.RE
+.sp
+\fBUupick\fR then reads a line from the standard input to determine the
+disposition of the file:
+.sp
+.TP 16
+new-line
+Go on to next entry.
+.sp
+.TP
+.B d
+Delete the entry.
+.sp
+.TP
+.BI m " dir"
+Move the entry to named directory
+.I dir
+(current directory is default).
+.sp
+.TP
+.BI a " dir"
+Same as \fBm\fR except moving all the files sent from
+.IR system .
+.sp
+.TP
+.B  p
+Print the content of the file.
+.sp
+.TP
+.B q
+Stop.
+.sp
+.TP
+\s-1EOT\s0 (control-d)
+Same as
+.BR q .
+.sp
+.TP
+.BI ! command\^
+Escape to the shell to do
+.IR command .
+.sp
+.TP
+.B *
+Print a command summary.
+.sp
+.PP
+\fBUupick\fR
+invoked with the
+.BI \-s system\^
+option will only search
+the
+.SM PUBDIR
+for files sent from
+.IR system .
+.sp
+.SH FILES
+\s-1PUBDIR\s+1	/usr/spool/uucppublic	   public directory
+.SH SEE ALSO
+mail(1),
+uucp(1), uuname(1), uustat(1).

@@ -1,0 +1,41 @@
+.po 1i
+.TH NOHUP 1C UCB
+.V 08/15/84 17:00:02 
+.\" @[$]nohup.1C	1.10 08/15/84 17:00:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+nohup \- no hang-up on interrupts in a dial-up situation
+.SH SYNOPSIS
+.B nohup
+.I command
+.SH DESCRIPTION
+.B Nohup
+executes
+.I command
+with telephone hangups and quits ignored.
+If output is not re-directed by the user, it will be sent to
+nohup.out.
+If
+nohup.out
+is not writable in the current directory, output is redirected to
+$HOME/nohup.out.
+.PP
+.B Nohup
+is used in shell scripts. It causes the shell to 
+ignore telephone hangups for the remainder of the script.
+With a command argument, 
+.B nohup
+executes
+.I command
+with hangups and quits ignored.
+.SH LIMITATIONS
+Unless the shell is running detached (in background),
+.B nohup
+has no effect.
+.SH SEE ALSO
+nice(1C), 
+onintr(1C),
+signal(2).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual.

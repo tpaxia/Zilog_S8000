@@ -1,0 +1,102 @@
+# "@[$]mkmt	1.3  05/28/84 21:16:14 - Zilog Inc"
+#
+#	C shell script for making the devices for Zilog 
+#		nine track magnetic tape drive
+#
+
+foreach f ($argv)
+	switch ($f)
+
+	case  mt0 :
+		echo making device entries for $f
+		/etc/mknod	/dev/mt0	b 9 192
+		/etc/mknod	/dev/rmt0	c 3 192
+		/etc/mknod	/dev/nmt0	b 9 128
+		/etc/mknod	/dev/fmt0	b 9 224
+		/etc/mknod	/dev/smt0	b 9 64
+		/etc/mknod	/dev/frmt0	c 3 224
+		/etc/mknod	/dev/nrmt0	c 3 128
+		/etc/mknod	/dev/srmt0	c 3 64
+		/etc/mknod	/dev/fnmt0	b 9 160
+		/etc/mknod	/dev/snmt0	b 9 0
+		/etc/mknod	/dev/fsmt0	b 9 96
+		/etc/mknod	/dev/fnrmt0	c 3 160
+		/etc/mknod	/dev/snrmt0	c 3 0
+		/etc/mknod	/dev/fsrmt0	c 3 96
+		/etc/mknod	/dev/fsnmt0	b 9 32
+		/etc/mknod	/dev/fsnrmt0	c 3 32
+		/etc/chmog 666 bin 0 /dev/*mt0
+
+		breaksw
+
+	case  mt1 :
+		echo making device entries for $f
+		/etc/mknod	/dev/mt1	b 9 196
+		/etc/mknod	/dev/rmt1	c 3 196
+		/etc/mknod	/dev/nmt1	b 9 132
+		/etc/mknod	/dev/fmt1	b 9 228
+		/etc/mknod	/dev/smt1	b 9 68
+		/etc/mknod	/dev/frmt1	c 3 228
+		/etc/mknod	/dev/nrmt1	c 3 132
+		/etc/mknod	/dev/srmt1	c 3 68
+		/etc/mknod	/dev/fnmt1	b 9 164
+		/etc/mknod	/dev/snmt1	b 9 4
+		/etc/mknod	/dev/fsmt1	b 9 100
+		/etc/mknod	/dev/fnrmt1	c 3 164
+		/etc/mknod	/dev/snrmt1	c 3 4
+		/etc/mknod	/dev/fsrmt1	c 3 100
+		/etc/mknod	/dev/fsnmt1	b 9 36
+		/etc/mknod	/dev/fsnrmt1	c 3 36
+		/etc/chmog 666 bin 0 /dev/*mt1
+
+		breaksw
+
+	case  mt2 :
+		echo making device entries for $f
+		/etc/mknod	/dev/mt2	b 9 200
+		/etc/mknod	/dev/rmt2	c 3 200
+		/etc/mknod	/dev/nmt2	b 9 136
+		/etc/mknod	/dev/fmt2	b 9 232
+		/etc/mknod	/dev/smt2	b 9 72
+		/etc/mknod	/dev/frmt2	c 3 232
+		/etc/mknod	/dev/nrmt2	c 3 136
+		/etc/mknod	/dev/srmt2	c 3 72
+		/etc/mknod	/dev/fnmt2	b 9 168
+		/etc/mknod	/dev/snmt2	b 9 8
+		/etc/mknod	/dev/fsmt2	b 9 104
+		/etc/mknod	/dev/fnrmt2	c 3 168
+		/etc/mknod	/dev/snrmt2	c 3 8
+		/etc/mknod	/dev/fsrmt2	c 3 104
+		/etc/mknod	/dev/fsnmt2	b 9 40
+		/etc/mknod	/dev/fsnrmt2	c 3 40
+		/etc/chmog 666 bin 0 /dev/*mt2
+
+		breaksw
+
+	case  mt3 :
+		echo making device entries for $f
+		/etc/mknod	/dev/mt3	b 9 204
+		/etc/mknod	/dev/rmt3	c 3 204
+		/etc/mknod	/dev/nmt3	b 9 140
+		/etc/mknod	/dev/fmt3	b 9 236
+		/etc/mknod	/dev/smt3	b 9 76
+		/etc/mknod	/dev/frmt3	c 3 236
+		/etc/mknod	/dev/nrmt3	c 3 140
+		/etc/mknod	/dev/srmt3	c 3 76
+		/etc/mknod	/dev/fnmt3	b 9 172
+		/etc/mknod	/dev/snmt3	b 9 12
+		/etc/mknod	/dev/fsmt3	b 9 108
+		/etc/mknod	/dev/fnrmt3	c 3 172
+		/etc/mknod	/dev/snrmt3	c 3 12
+		/etc/mknod	/dev/fsrmt3	c 3 108
+		/etc/mknod	/dev/fsnmt3	b 9 44
+		/etc/mknod	/dev/fsnrmt3	c 3 44
+		/etc/chmog 666 bin 0 /dev/*mt3
+
+		breaksw
+
+	default : 
+		echo $f\: invalid argument
+		usage: mkmt [mt0 mt1 . . .]
+	endsw
+end

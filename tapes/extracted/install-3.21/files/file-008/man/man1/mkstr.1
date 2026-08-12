@@ -1,0 +1,94 @@
+.po 1i
+.TH MKSTR 1 UCB   
+.V 08/15/84 16:58:52
+.\" @[$]mkstr.1	1.10	08/15/84 16:58:52 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mkstr \- create an error message file by massaging C source
+.SH SYNOPSIS
+.B mkstr
+[
+.B \-
+]
+\fImessagefile prefix file\fR ...
+.SH DESCRIPTION
+.B Mkstr
+is used to create files of error messages.
+Its use can make programs with large numbers of error diagnostics much
+smaller. It reduces system overhead while running the program: the
+error messages do not have to be constantly swapped in and out.
+.PP
+.B Mkstr
+processes each of the specified
+.I files,
+placing a modified version of the input file in a file whose name
+consists of the specified
+.I prefix 
+and the original name. The modification, discussed below, consists of
+the extraction of the error message and its replacement with a pointer
+to the message now seated in the \fImessagefile\fR.
+A typical usage of
+.B mkstr
+is:
+.sp
+.RS
+\fBmkstr \fIpistrings xx *.c\fR
+.RE
+.sp
+.PP
+This command causes all the error messages from all the C source
+files in the current directory to be placed in the file
+.IR pistrings .
+The modified source files are placed in
+files whose names are prefixed with
+.I xx.
+.PP
+To move error messages in the source file to the message file,
+.B mkstr
+seeks the string
+\%`error("'
+in the input stream.
+Each time it occurs, the C string starting at the `"' is placed
+in the message file. The string is terminated with a 
+null character and a new-line character.
+The null character terminates the message so it can be easily used
+when retrieved. The new-line character makes it possible to 
+.B cat
+the error message file to see its contents.
+To enable the message to be retrieved, an
+.B lseek
+pointer is placed in the modified version of the source file. 
+For example:
+.PP
+.DT
+.nf
+\fBchar\fR	efilname[] =  "/usr/lib/pi_strings";
+\fBint\fR	efil = -1;
+.sp
+error(a1, a2, a3, a4)
+{
+	\fBchar\fR buf[256];
+
+	\fBif\fR (efil < 0) {
+		efil = open(efilname, 0);
+		\fBif\fR (efil < 0) {
+oops:
+			perror(efilname);
+			exit(1);
+		}
+    }
+    \fBif\fR (lseek(efil, (long) a1, 0) |\|| read(efil, buf, 256) <= 0)
+    	\fBgoto\fR oops;
+    printf(buf, a2, a3, a4);
+}
+.fi
+.SH OPTIONS
+.TP
+.B \-
+Causes the error messages to be placed at the end of the specified
+message file for recompiling part of a large
+.BR mkstr \|ed
+program.
+.SH SEE ALSO
+lseek(2), xstr(1).

@@ -1,0 +1,103 @@
+.po 1i
+.TH FORK 2 Bell
+.V 08/15/84 17:13:30
+.\"@[$]fork.2	1.5	08/15/84 17:13:30 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+fork  \- spawn new process
+.SH SYNOPSIS
+.B int fork( )
+.SH DESCRIPTION
+.B Fork
+is the only way new processes are created.
+The new process's image is a copy of
+the caller of
+.BR fork .
+The only differences are:
+.IP
+The child process has a unique process
+.SM ID\*S.
+.IP
+The child process has a different parent process
+.SM ID
+(i.e., the
+process
+.SM ID
+of the parent process).
+.IP
+The child process's
+.BR utime (2)
+.BR stime (2) 
+.BR cutime ,
+and
+.B cstime
+are set to 
+.BR 0 ;
+see
+.BR times (2).
+.PP
+.B Fork
+returns a value of
+.B 0
+to the child process.
+.PP
+.B Fork
+returns the process
+.SM ID
+of the child process to the
+parent process.
+This process ID is used by
+.BR wait (2).
+.PP
+Files open before the 
+.B fork
+are shared, and have a common read-write pointer.
+This is the way that standard input and output
+files are passed and also how
+pipes are set up.
+.PP
+Only the super-user can take the last process-table slot.
+.SH DIAGNOSTICS
+.B Fork
+will fail and no child process will be created if one or more of the
+following are true:
+.IP
+The system-imposed limit on the total 
+number of processes under execution
+would be exceeded.
+.SM
+\%[EAGAIN]
+.IP
+The system-imposed limit on the total number of 
+processes under execution
+by a single user would be exceeded.
+.SM
+\%[EAGAIN]
+.SH RETURN VALUE
+Upon successful completion,
+.B fork
+returns a value of 0 to the child process and returns the process
+.SM ID
+of the
+child process to the parent process.
+Otherwise, a value of \-1 is
+returned to the parent process, no child process is created, and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+exec(2), wait(2).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT FORK	:= 2
+
+	sc	#FORK
+	<instruc>	!* new process returns here, parent UserID in
+	        	   r4... this instruction must be 1 word, and
+	        	   is usually a "jr" instruction *!
+	<instruc>	!* old process returns here, child process ID
+	        	   in r4, carry flag set if error *!
+.fi
+.ad
+.sp

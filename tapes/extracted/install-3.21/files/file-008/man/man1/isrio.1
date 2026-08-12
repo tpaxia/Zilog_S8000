@@ -1,0 +1,31 @@
+.po 1i
+.TH ISRIO 1 Zilog
+.V 08/15/84 16:54:51
+.\" @[$]isrio.1	1.6	08/15/84 16:54:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isrio \- determine if terminal is a RIO System
+.SH SYNOPSIS
+.B isrio
+.SH DESCRIPTION
+.B Isrio
+outputs a character sequence ("ESC?") that causes a
+RIO System to return another character sequence.
+.B Isrio
+prints a "y" if the terminal
+is a RIO System, an "n" if it is not.
+Thus, the program can be used significantly in initialization files,
+as in the following example:
+.sp
+.RS
+if (`isrio` == "y") setenv TERM mcz
+.RE
+.sp
+.SH SEE ALSO
+getfile(1), local(1), putfile(1).
+.SH DIAGNOSTICS
+Non-RIO terminals that recognize the sequence "ESC?" will execute that
+terminal function first and after a timeout, 
+.B isrio
+returns "y".

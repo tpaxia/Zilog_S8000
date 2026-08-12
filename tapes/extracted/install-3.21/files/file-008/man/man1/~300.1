@@ -1,0 +1,190 @@
+.po 1i
+.TH 300 1 Bell
+.V 08/15/84 17:11:44
+.\"@[$]~300.1	1.6	08/15/84 17:11:44 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+300, 300s \- handle special functions of DASI terminals
+.SH SYNOPSIS
+\fB300\fR  [\fB\-d\fIc,l,t\fR] [\fB\-\fIn\fR] [\fB+12\fR]
+.br
+\fB300s\fR [\fB\-d\fIc,l,t\fR] [\fB-\fIn\fR] [\fB\+12\fR]
+.SH DESCRIPTION
+.B 300\^
+supports special functions and optimizes the use of the
+DASI 300 (GSI 300 or DTC 300) terminal.
+.B 300s\^
+performs the same functions for the DASI
+300s (GSI 300s or DTC 300s) terminal.
+.PP
+.B 300s
+converts half-line forward,
+half-line reverse, and full-line
+reverse motions to the correct vertical motions.
+It also draw Greek letters and other special symbols.
+Use of 12-pitch text is permitted.
+Printing time is reduced 5 to 70%.
+.PP
+.B 300\^
+can be used to print equations neatly, in the sequence:
+.PP
+.RS
+\fBneqn \fIfile \fB| nroff | 300\fR
+.PP
+.RE
+\fBWARNING:\fR
+If your terminal has a PLOT switch, make sure it is turned
+ON before
+.B 300\^
+is used.
+.SH OPTIONS
+.TP 9
+.BI \-d\^  c , l , t\^
+Controls delay factors.
+.IP
+The default setting is
+.BR \-d3,90,30 .
+DASI 300 terminals sometimes produce peculiar output when
+faced with very long lines, too many tab characters, or long
+strings of blankless, non-identical characters.
+.IP
+One null (delay) character is inserted in a line for every set of
+.I t\^
+tabs, and for every contiguous string of
+.I c\^
+non-blank, non-tab characters.
+.IP
+If a line is longer than
+.I l\^
+bytes, 1+(total length)/20 nulls are inserted at the end of that line.
+Items can be omitted from the end of the list,
+implying use of the default values.
+Also, a value of zero for
+.I t\^
+.RI ( c )
+results in two null bytes per tab (character).
+The former may be needed for C programs, the latter for files like
+.BR /etc/passwd .
+.IP
+Because terminal behavior varies according to the specific
+characters printed and the load on a system, the user may
+have to experiment with these values to get correct output.
+.IP
+The
+.B \-d
+option exists only as a last resort for those few cases
+that do not otherwise print properly.
+For example, the file
+.B /etc/passwd
+may be printed using
+.BR \-d3,30,5 .
+The value
+.B \-d0,1
+is a good one to use for C programs that have many
+levels of indentation.
+.IP
+Note that the delay control interacts heavily with the
+prevailing carriage return and line-feed delays.
+The
+.BR stty (1)
+modes
+.B "nl0 cr2"
+or
+.B "nl0 cr3"
+are recommended for most uses.
+.TP 9
+.BI \- n\^
+Controls the size of half-line spacing.
+.IP
+A half-line, by default, is equal to 4 vertical plot increments.
+Because each increment equals 1/48 of an inch, a 10-pitch
+line-feed requires 8 increments, while a 12-pitch line-feed
+needs only 6.
+.IP
+The first digit of
+.I n\^
+overrides the default value, allowing for individual taste
+in the appearance of subscripts and superscripts.
+.IP
+For example,
+.BR nroff (1)
+half-lines could be made to act as quarter-lines by using
+.BR \-2 .
+The user can also obtain appropriate half-lines for
+12-pitch, 8 lines/inch mode by using the option
+.B \-3
+alone, having set the PITCH switch to 12-pitch.
+.TP 9
+.B +12
+Permits use of 12-pitch, 6 lines/inch text.
+DASI 300 terminals normally allow only two combinations:
+10-pitch, 6 lines/inch, or 12-pitch, 8 lines/inch.
+To obtain the 12-pitch, 6 lines per inch combination,
+the user should turn the
+PITCH switch to 12, and use the
+.B +12
+option.
+.PP
+.B 300\^
+can be used with the
+.B nroff\^
+.B \-s
+flag or
+.B \&.rd
+requests, when it is necessary to insert paper manually or
+change fonts in the middle of a document.
+Instead of hitting the return key in these cases,
+you must use the line-feed key to get any response.
+.PP
+In many (but not all) cases, the following sequences are equivalent:
+.RS
+.IP
+nroff \-T300 files
+.IP
+and
+.IP
+nroff files | 300
+.sp
+.IP
+nroff \-T300\-12 files
+.IP
+and
+.IP
+nroff files | 300\ +12
+.PP
+.RE
+The use of
+.B 300\^
+can thus often be avoided unless
+special delays or options are required;
+in a few cases, however, the additional movement optimization of
+.B 300\^
+may produce better-aligned output.
+.PP
+The
+.BR neqn (\fBeqn\fR(1))
+names of, and resulting output for, the Greek and special
+characters supported by
+.B 300\^
+are shown in
+.BR greek (7).
+.SH SEE ALSO
+450(1),
+eqn(1),
+mesg(1),
+stty(1),
+tabs(1),
+tbl(1),
+troff(1),
+greek(7).
+.SH LIMITATIONS
+Some special characters cannot be correctly printed in column 1
+because the print head cannot be moved to the left from there.
+.PP
+If your output contains Greek and/or reverse line-feeds,
+use a friction-feed platen instead of a forms tractor;
+although good enough for drafts, the latter has a tendency
+to slip when reversing direction, distorting Greek characters
+and misaligning the first line of text after one or more
+reverse line-feeds.

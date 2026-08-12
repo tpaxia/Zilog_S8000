@@ -1,0 +1,19 @@
+.po 1i
+.TH OBJSU 1 Zilog
+.V 08/15/84 17:00:25
+.\" @[$]objsu.1	1.6  08/15/84 17:00:25 - Zilog Inc
+.ad
+.fi
+.SH NAME
+objsu \- object module underscore stripper
+.SH SYNOPSIS
+.B objsu
+\fIfile\fR ...
+.SH DESCRIPTION
+.B Objsu
+is specifically designed for removing the leading underscore
+from names in the symbol table section of a.out files.
+.SH SEE ALSO
+nm(1), a.out(5).
+.SH DIAGNOSTICS
+"file not in correct a.out format" if magic number is not valid.

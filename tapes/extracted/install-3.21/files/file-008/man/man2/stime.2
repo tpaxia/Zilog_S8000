@@ -1,0 +1,45 @@
+.po 1i
+.TH STIME 2 Bell
+.V 08/15/84 17:15:42
+.\"@[$]stime.2	1.5	08/15/84 17:15:42 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+stime \- set time
+.SH SYNOPSIS
+.B int stime
+.I (tp)
+.br
+.B long
+.I *tp;
+.SH DESCRIPTION
+.B Stime
+sets the system's idea of the time and date.
+Time, pointed to by
+.I tp,
+is measured in seconds from 0000 GMT Jan 1, 1970.
+Only the super-user can use this call.
+.SH SEE ALSO
+date(1), time(2), ctime(3).
+.SH DIAGNOSTICS
+.B Stime
+will fail if the effective user
+.SM ID
+of the calling process is not super-user.
+.SM
+\%[EPERM]
+.SH RETURN VALUE
+Zero is returned if the time was set;
+\-1 if user is not the super-user.
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT STIME	:= 25
+
+	...		!* time in rr0 *!
+	clr	r4
+	sc	#STIME
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.ad
+.fi

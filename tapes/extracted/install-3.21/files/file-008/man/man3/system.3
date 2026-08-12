@@ -1,0 +1,43 @@
+.po 1i
+.TH SYSTEM 3 Bell
+.V 08/15/84 17:29:03
+.\" @[$]system.3	1.8 08/15/84 17:29:03 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+system \- issue a shell command 
+.SH SYNOPSIS
+.nf
+\fBsystem\fI(string)
+.br
+\fB     char \fI*string;
+.sp
+\fBcsystem\fI(string)
+.br
+\fB     char \fI*string;\fR
+.fi
+.SH DESCRIPTION
+.B System
+causes the
+.I string
+to be given to
+.BR  sh (1)
+as input as if the string had been typed as a command
+at a terminal.
+The current process waits until the shell has
+completed, then returns the exit status of the shell.
+.PP
+.B Csystem
+cause the 
+.I string
+to be given to 
+.BR csh (1)
+instead of the shell.
+The current process waits until the cshell has completed, then returns
+the exit status in the same manner as the shell.
+.SH SEE ALSO
+popen(3),
+exec(2),
+wait(2).
+.SH DIAGNOSTICS
+Exit status 127 indicates the shell could not be executed.

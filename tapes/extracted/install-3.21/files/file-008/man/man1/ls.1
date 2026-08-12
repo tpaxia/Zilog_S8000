@@ -1,0 +1,234 @@
+.po 1i
+.TH LS 1 UCB
+.V 08/15/84 16:57:18
+.\" @[$]ls.1	1.15	08/15/84 16:57:18 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ls  \- list the contents of a directory
+.SH SYNOPSIS
+.B ls
+[
+.B \-aAcCdDfFgilmnqrRstux1
+] \fIfile\fR ...
+.SH DESCRIPTION
+For each file argument,
+.B ls
+repeats its name and any other information requested.
+For each directory argument,
+.B ls
+lists the contents of the directory.
+The output is sorted alphabetically by default.
+When no argument is given, the current directory is listed.
+When several arguments are given,
+the arguments are first sorted appropriately,
+but file arguments appear
+before directories and their contents.
+.PP
+The mode information printed under the
+.B \-l
+option contains 10 characters.
+The first character is interpreted as follows:
+.IP
+ d	directory
+ b	block-type special file
+ c	character-type special file
+ p	named pipe
+ \-	plain file
+.PP
+The next nine characters are interpreted
+as three sets of permission bits.
+The first set is permissions for the owner of the file or directory;
+the next set is for others in the same user-group;
+and the last set is for all other users.
+Within each set, the three characters indicate
+permission respectively to read, write in, or
+execute the file as a program.
+For a directory, execute permission is interpreted
+to mean permission to search the directory
+for a specified file.
+The permissions are as follows:
+.IP
+ r	readable
+ w	writable
+ x	executable
+ \-	permission is not granted
+.PP
+The group-execute permission character is given as
+.B s
+if the file has set-group-ID mode;
+likewise the user-execute permission character is given as
+.B s
+if the file has set-user-ID mode.
+.PP
+The last character of the mode (normally x or \-) is 
+.B t
+if the 1000 bit of the mode is on.
+See
+.BR  chmod (1)
+for the meaning of this mode.
+.PP
+There are three possible listing formats.
+The format chosen depends on whether the output is going
+to a terminal, and can also be controlled by option flags.
+(1) The default format for a terminal is to list the contents
+of directories in multicolumn format,
+with the entries sorted down the columns
+(changed with the
+.B \-x
+option).
+(2) If the standard output is not a terminal, the default format is to
+list one entry per line.
+(3) Finally, there is a stream output format in which files are listed
+across the page, separated by commas
+(changed with the
+.B \-m
+option).
+Files which are not the contents of a directory being interpreted
+are always sorted across the page rather than down the page in columns.
+This is because the individual file names are arbitrarily long.
+.SH OPTIONS
+.TP
+.B  \-a
+List all entries.
+Without this option,
+files beginning with
+.B \&.
+are omitted.
+.TP
+.B \-A
+Like
+.B \-a,
+but
+.B \&.
+and
+.B \&..
+are suppressed.
+For the superuser, this option is on by default,
+and
+.B \-A
+suppresses
+.B \&.
+listings.
+.TP
+.B \-c
+Use time of last modification to i-node (mode, etc.)
+instead of last modification to file for sorting
+.RB ( \-t )
+or printing
+.RB ( \-l ).
+.TP
+.B  \-C
+Force multicolumn output (default if output device is a terminal).
+.TP
+.B  \-d
+If argument is a directory, list only its name, not
+its contents (mostly used with \fB\-l\fR to get
+status on directory).
+.TP
+.B \-D
+List only directories.
+.TP
+.B  \-f
+Force each argument to be interpreted as a directory
+and list the name found in each slot.
+This option turns off
+.B "\-l, \-t, \-s,"
+and
+.B \-r,
+and
+turns on
+.BR \-a ;
+the order is the order in which entries
+appear in the directory.
+.TP
+.B \-F
+Indicate directories by appending a
+.B /
+to the filename in the listing,
+and executable files by appending a
+.BR * .
+It should be noted that a space is appended to files 
+that do not match the above.  This may affect programs
+that use the output of 
+.B ls
+as their input.  (see 
+.B cpio
+).
+.TP
+.B  \-g
+Give group ID instead of owner ID in long listing;
+use only with the \fB\-l\fR function.
+.TP
+.B  \-i
+Print i-number in first column
+of the report for each file listed.
+.TP
+.B  \-l
+List in long format, giving permission mode bits,
+number of links, owner, group, size in bytes, and time of last
+modification for each file.
+The year is printed (instead of the time in hours and minutes) for files
+older than six months.
+For a directory, the total count of blocks (including indirect blocks)
+is printed.
+For a special file, the size field instead contains
+the major and minor device numbers.
+.TP
+.B  \-m
+Force stream output format.
+.TP
+.B \-n
+In long listings, give numeric uid or group id
+instead of name of user or group.
+.TP
+.B  \-q
+Force printing of nongraphic characters in file names as
+the character ? (default if output device is a terminal).
+.TP
+.B  \-r
+Reverse the order of sort to get reverse alphabetic
+or oldest first.
+.TP
+.B \-R
+Recursively list the contents of each directory found.
+.TP
+.B  \-s
+Give size in blocks,
+including indirect blocks, for each entry.
+.TP
+.B  \-t
+Sort by time modified (latest first) instead of
+by name, as is normal.
+.TP
+.B  \-u
+Use time of last access instead of last
+modification for sorting
+.RB ( \-t )
+or printing
+.RB ( \-l ).
+.TP
+.B  \-x
+Force columnar printing to be sorted across rather than
+down the page
+(default if the last character of the name the program is invoked
+with is not an l or an s).
+.TP
+.B  \-1
+(Dash one) Force one entry per line
+output format (default if output is redirected
+or piped).
+.SH FILES
+/etc/passwd to get user ID's for "ls \-l"
+.br
+/etc/group to get group ID's for "ls \-lg"
+.SH SEE ALSO
+file(1),
+find(1),
+chmod(1),
+chown(1),
+umask(1C),
+chmog(M),
+chown(M).
+.SH LIMITATIONS
+New line and tab are considered printing characters in file names.

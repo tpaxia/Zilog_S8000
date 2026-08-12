@@ -1,0 +1,194 @@
+.po 1i
+.TH UUCP 1 Bell
+.V 08/15/84 17:08:56
+.\" @[$]uucp.1	1.19 08/15/84 17:08:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+uucp, uulog, uuname \- ZEUS to ZEUS copy
+.SH SYNOPSIS
+.B uucp
+[\fIoption\fR] \.\.\.
+\fIsource-file\fR 
+\.\.\. 
+\fIdestination-file\fR
+.PP
+.B uulog
+[\fB\-su\fR] \.\.\.
+.PP
+.B uuname
+.SH DESCRIPTION
+\fBUucp\fR
+copies files named by the
+.I source-file\^
+arguments to the
+.I destination-file\^
+argument.
+A filename can be a pathname on your machine, or can have the form:
+.PP
+.RS .5i
+\fIsystem-name!pathname\fR
+.RE
+.PP
+where
+.I system-name\^
+is taken from a list of system names which
+\fBuucp\fR knows about.
+Shell metacharacters
+?\(**[\^]
+appearing in
+.I pathname\^
+are expanded on the appropriate system.
+Any special shell characters such as <>;| or ! should be quoted
+or escaped with a backslash (\\).
+.PP
+Pathnames can be one of:
+.PP
+.TP
+(1)
+a full pathname;
+.TP
+(2)
+a pathname preceded by
+.BI ~ user\^
+where
+.I user\^
+is a login name on the specified system
+replaced by that user's login directory;
+.TP
+(3)
+a pathname preceded by
+.BI ~/ user\^
+where
+.I user\^
+is a login name on the specified system
+replaced by that user's directory under PUBDIR;
+.TP
+(4)
+anything else is prefixed by the current directory.
+.PP
+If an erroneous pathname is specified for the remote system,
+the copy will fail.
+If the
+.I destination-file\^
+is a directory, the last part of the
+.I source-file\^
+name is used.
+If a simple
+.I ~user\^
+destination is inaccessible to 
+.BR uucp ,
+data is copied to a spool directory and the user is notified by
+.BR mail (1).
+.PP
+.B Uucp
+preserves execute permissions across the transmission
+and gives 0666 read and write permissions (see
+.BR chmod (2)).
+.SH OPTIONS
+.TP
+.B \-c
+Use the source file when copying out rather than
+copying the file to the spool directory (default).
+.TP
+.B \-C
+Copy the source file to the spool directory.
+.TP
+.B \-d
+Make all necessary directories for the file copy (default).
+.TP
+.BI \-e sys\^
+Send the
+.B uucp\^
+command to system
+.I sys\^
+to be executed there.
+(This will only be successful if the remote
+machine allows the
+.B uucp
+command to be executed by
+/usr/lib/uucp/uuxqt .)
+.TP 
+.B \-f
+Do not make intermediate directories for the file copy.
+.TP 
+.B \-m
+Send mail to the requester when the copy is complete.
+.TP
+.BI \-n user\^
+Notify
+.I user\^
+on the remote system that a file was sent.
+.PP
+.B Uulog
+maintains a summary log
+of 
+.B uucp
+and
+\fBuux\fR(1)
+transactions in the file
+/usr/spool/uucp/LOGFILE; 
+it gathers
+information from partial log files named
+/usr/spool/uucp/LOG.\(**.? .
+(These files are only created if the
+LOGFILE
+is being used by another process.)
+It removes the partial log files.
+.PP
+The options cause 
+.B uulog
+to print logging information:
+.TP .5i
+.BI \-s sys\^
+Print information about work involving system
+.IR sys .
+.TP
+.BI \-u user\^
+Print information about work done for the specified
+.IR user .
+.PP
+.B Uuname
+lists the \fBuucp\fR names of known systems.
+The
+.B \-l
+option returns the local system name.
+.SH FILES
+.TP 1.5i
+/usr/spool/uucp
+spool directory
+.TP
+/usr/spool/uucppublic
+public directory for receiving and sending (PUBDIR)
+.TP
+/usr/lib/uucp/\(**
+other data and program files
+.SH SEE ALSO
+mail(1),
+uustat(1),
+uux(1).
+.SH WARNING
+The domain of remotely accessible files can (and for obvious
+security reasons, usually should) be severely restricted.
+You will very likely not be able to fetch files by pathname;
+ask a responsible person on the remote system to send them to you.
+For the same reasons you will probably not be able to send files
+to arbitrary pathnames.
+As distributed, the remotely accessible files are those whose
+names begin
+.B /usr/spool/uucppublic
+(equivalent to
+.B ~nuucp
+or just
+.BR ~ ).
+.SH LIMITATIONS
+.br
+All files received by
+.B uucp
+are owned by uucp .
+.sp
+The \-\fBm\fR option only works sending files or receiving
+a single file.
+.sp
+Receiving multiple files specified by special shell characters
+\fB?\(**[]\fR does not activate the \-\fBm\fR option.

@@ -1,0 +1,30 @@
+.po 1i
+.TH ISRENAME 3 Zilog
+.V 08/15/84 17:21:08
+.\" @[$]isrename.3	1.5 08/15/84 17:21:08 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isrename - rename a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisrename\fI(oldname, newname)\fR
+\fBchar \fI*oldname;\fR
+\fBchar \fI*newname;\fR
+.fi
+.SH DESCRIPTION
+.B Isrename
+will rename the file specified by the oldname
+parameter to the name specified by the newname parameter.
+The name parameters must be null terminated strings.
+.SH LIMITATIONS
+No name may be longer than 10 characters.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

@@ -1,0 +1,204 @@
+# "@[$]package	1.17  06/15/84 17:45:31 - Zilog Inc"
+# package - A C shell script for extracting optional packages from the end 
+#           of the Zeus release tape version 3.1 or later.
+# Copyright  Zilog, Inc. 1983, all rights reserved
+
+# Rewind tape if its already in the drive
+dd if=/dev/rct0 of=/dev/null count=1 >& /dev/null
+
+# Interrupt handling
+
+onintr byebye
+
+# Initial variable settings.
+# To add a package add the package name to the packages list.
+# The packages list must correspond to the order of the packages on
+# the release tape.
+
+set packages = (acct gopt learn sccs zmenu voldump plzasm games crash)
+
+# foreach filesystem a list of the size of each package is required.
+# for example the first package "acct" needs 53 blocks on the root,
+# therfore the first size in szroot is 53.  Any new packages size must
+# be added here.
+
+set szroot = (53  296 0    0   0   151 390 0   97)
+set szusr =  (331 0   1337 537 107 11  0  529 0)
+
+# First insure that the user has placed the release tape in the drive.
+
+if (-e "/usr/spool/reserv") then
+	echo To use this script the system administrator must have reserved
+	echo the tape drive and placed the Zeus release tape into the tape
+	echo drive.  See reserv\(1\) for details if this has not been done.
+	echo
+else
+	echo To use this script the system administrator must have placed 
+	echo the Zeus release tape into the tape drive.  
+	echo
+endif
+
+# Get the tape drive number or use default drive 0.
+
+while (1)
+	echo -n "Enter the tape drive number or <CR> for default drive 0: "
+	set drive = `gets`
+	if ("$drive" == "") then
+		set drive = 0
+		break
+	else
+		if !(-e "/dev/rct$drive") then
+			echo Invalid drive number $drive, try again.
+		else
+			break;
+		endif
+	endif
+end
+
+# Verify the tape drive.
+
+echo
+echo Using tape drive $drive.
+echo
+
+# Present the list of packages.
+
+echo The following packages are available\:
+set j = 1
+foreach i ($packages)
+	echo -n "$j.) "
+	echo $i.
+	@ j++
+end
+
+# Get the number for the associated package.
+
+while (1)
+	echo -n "Enter the package number you wish to install (1-$#packages): "
+	set packnum = `gets`
+	set j = 1
+	while (1)
+		if ("$packnum" == $j) break
+		if ($j == $#packages) then
+			set j = error
+			break
+		endif
+		@ j++
+	end
+	if ($j == "error") then
+		echo "Invalid package number, try again."
+	else
+		break
+	endif
+end
+
+# Verify the package name.
+
+echo
+echo Installing the $packages[$packnum] package.
+echo
+
+# Inform the user of the size requirements for this package.  
+# The logic here is a bit dicy since the csh offers no multi 
+# dimensional arrays thus the size is extracted with the switch 
+# statement.
+
+foreach i (root usr)
+	switch ($i)
+		case "root":
+			set size = $szroot[$packnum]
+			breaksw
+		case "usr":
+			set size = $szusr[$packnum]
+			breaksw
+	endsw
+	if ($size == "0") then
+		continue
+	endif
+
+	echo The $packages[$packnum] package requires $size free 
+	echo blocks on the $i filesystem.
+	echo
+	
+	# Magic sed script gets free blocks from df.
+
+	set freeblks = `df -f /dev/$i | sed 's/\(.*:[ 	]*\)\([0-9]*\)\(.*\)/\2/'`
+	if (`expr $freeblks \> $size` == "0") then
+		echo There are only $freeblks blocks left on the $i
+		echo filesystem. This is not enough for the $packages[$packnum] 
+		echo package.
+		echo
+		goto byebye
+	else
+		echo There are $freeblks blocks left on the $i filesystem.
+		while (1)
+			echo -n "Do you wish to proceed (y/n): "
+			set answer = `gets`
+			switch ("$answer")
+				case "y":
+					break
+				case "n":
+					goto byebye
+				default:
+					breaksw
+			endsw
+			echo "what?"
+		end
+		echo
+	endif
+end
+
+# Now we have the tape drive number and the package name so its time
+# to skip to the proper tar file on the release tape
+
+echo Positioning the tape, this takes a while.
+echo
+set j = $packnum
+@ j--
+dd if=/dev/nrct$drive of=/dev/null bs=20b files=8 count=1 >& /dev/null
+if ($j != "0") then
+	@ j--
+	dd if=/dev/nrct$drive of=/dev/null bs=20b files=$j count=1 >& /dev/null
+endif
+
+# Well the die is cast and the user has determined that (he/she) wants
+# the optional package so tar it off.
+
+echo
+echo Taring off the package.
+echo
+cd /
+tar xvfb /dev/rct$drive 20
+
+# Now its time to do any other necessary magic for the package chosen
+# It is assumed that the user is zeus while running this script so that
+# the files came off the tape with the proper owner, permission and
+# group. What is left are the links and directories that might need to
+# be made. Naturally this is specific to each package.
+
+switch ($packages[$packnum])
+
+	case "acct":
+		# accounting directories
+		mkdir /usr/adm/acct >& /dev/null
+		/etc/chmog 775 adm 0 /usr/adm/acct
+		mkdir /usr/adm/acct/fiscal >& /dev/null
+		/etc/chmog 775 adm 0 /usr/adm/acct/fiscal
+		mkdir /usr/adm/acct/nite >& /dev/null
+		/etc/chmog 775 adm 0 /usr/adm/acct/nite
+		mkdir /usr/adm/acct/sum >& /dev/null
+		/etc/chmog 775 adm 0 /usr/adm/acct/sum
+		breaksw
+
+	case "sccs":
+		# no sccs links
+		breaksw
+
+endsw
+		
+exit 0
+
+# This is the erroneous exit statement
+
+byebye:
+	exit 1

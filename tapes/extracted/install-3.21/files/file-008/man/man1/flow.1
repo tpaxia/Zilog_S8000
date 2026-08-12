@@ -1,0 +1,90 @@
+.po 1i
+.TH FLOW 1 Zilog
+.V 08/15/84 16:51:33
+.\" @[$]flow.1	1.8  08/15/84 16:51:33 - Zilog Inc
+.ad
+.fi
+.SH NAME
+flow \- flow analysis of C programs
+.SH SYNOPSIS
+.B flow
+[
+.B -bcors
+]
+[-
+.BI I dir
+]
+[
+.I output-suffix
+]
+.I files ...
+.SH DESCRIPTION
+.B Flow
+performs a flow analysis on the named files producing 3 tables: 
+which functions call which; 
+which functions are called by which; 
+which functions reside in which source files. 
+These tables are called flow.CALLS,
+flow.CALLEDBY and flow.RESIDES respectively.
+.PP
+To create these tables, first the C source files must be 
+converted into trace files. 
+Then any trace files specified on the command line as well as
+any trace files produced are processed to create the needed tables.
+In order to facilitate the use of flow with
+.BR make (1)
+the 'trace 
+files' may be saved.
+.PP
+The 'files' specified on the command line can be any mixture 
+of C source files and trace files. 
+Remember that trace files are name 'file.t'.
+.SH OPTIONS
+.TP
+.B \-b
+Generate the 'CALLEDBY' file.
+.TP
+.B \-c
+Generate the 'CALLS' table.
+.TP
+.B \-o
+Rather than using the prefix 'flow' for naming the output 
+tables, use the prefix supplied by the user, which is the 
+next argument.
+.TP
+.B \-r
+Generate the 'RESIDES' file.
+.br
+The default for the 'table' flag is to produce all tables.
+.TP
+.B \-s
+Save the trace files.
+Trace file names are the 'rootname' of the C source file,
+with a '.t' appended. 
+For example, if the source file is adb.c, its trace file
+would be adb.t.
+.TP
+.BI \-I dir
+Bring in a directory of #include files.
+Names that do not begin with / are always sought first in the same
+directory as the source file, then in directories named in 
+.B \-I
+options, then in directories belonging to a standard list.
+.SH FILES
+/tmp/flow[ABCDE]	temporary processing files
+.br
+file.i			files produced by the C pre-processor
+.br
+file.t			trace files
+.SH SEE ALSO
+cc(1)
+.SH DIAGNOTICS
+Diagnostics are intended to be self-explanatory. 
+However, when processing interrupts, misleading diagnostics 
+can occur.
+.SH LIMITATIONS
+Since the output tables are produced with the help of 
+.BR tbl (1) 
+and
+.BR nroff (1),
+the process is slow.

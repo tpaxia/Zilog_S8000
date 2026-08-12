@@ -1,0 +1,101 @@
+.po 1i
+.TH SCRIPT 1 UCB
+.V 08/15/84 17:03:27
+.\" @[$]script.1	1.12	08/15/84 17:03:27 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+script \- make a file copy of all terminal interactions
+.SH SYNOPSIS
+.B script
+[
+.B \-a
+] [
+.B \-q
+] [
+.B \-S
+.I shell
+] [ \fIfile\fR ]
+.SH DESCRIPTION
+.B Script
+makes a file of everything printed on your terminal.
+The typescript is saved in a file, and can be sent to the
+line printer later with
+.BR nq (1).
+If a file name is given, the typescript is saved there. 
+If not, the typescript is saved in the file
+.I typescript.
+.PP
+To exit
+.BR script ,
+type control-D. 
+This sends an end-of-file to all processes you have 
+started up, and causes
+.B script
+to exit.
+For this reason, control-D behaves as though you had 
+typed an infinite number of control-D's.
+.PP
+This program is useful when using a crt and a hard-copy
+record of the dialog is desired, as for a student handing
+in a program that was developed on a crt when hard-copy
+terminals are in short supply.
+.SH OPTIONS
+.TP
+.B \-a
+Causes
+.B script
+to append to the
+.I typescript
+file instead of creating a new file.
+.TP
+.B \-q
+Asks for "quiet mode", where the "script started"
+and "script done" messages are turned off.
+.TP
+\fB\-S \fIshell\fR
+Lets you specify any shell you want.
+The default shell is the one specified
+in the user's entry of the /etc/passwd file.
+If the requested shell is not available,
+.B script
+uses any shell it can find.
+.SH EXAMPLES
+.nf
+Script started on Thu Oct 28 13:21:23 1982
+$ cat list1
+boat
+boathouse
+boatload
+boatman
+boatmen
+$ rev list1
+taob
+esuohtaob
+daoltaob
+namtaob
+nemtaob
+$ 
+script done on Thu Oct 28 13:21:55 1982
+.fi
+.SH LIMITATIONS
+Since ZEUS has no way to write an end-of-file down a pipe 
+without closing the pipe, there is no way to simulate a 
+single control-D without ending
+.BR script .
+.PP
+The new shell has its standard input coming from a pipe rather 
+than a tty, so stty will not work, and neither will ttyname.
+Programs such as
+.B ls
+do not produce a multi-column format
+because they are writing to a pipe.
+In general,
+.B script
+does not work well when a program attempts to use 
+many system features other than character-oriented I/O.
+.PP
+When the user interrupts a printing process,
+.B script
+attempts to flush the output backed up in the pipe for better response.
+Usually the next prompt also gets flushed.

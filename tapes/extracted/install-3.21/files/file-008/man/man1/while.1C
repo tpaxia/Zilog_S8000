@@ -1,0 +1,44 @@
+.po 1i
+.TH WHILE 1C UCB
+.V 08/15/84 17:10:32
+.\"@[$]while.1C	1.5	08/15/84 17:10:32 - Zilog Inc.
+.ad
+.SH NAME
+while \- C Shell flow control statement for loop initiation
+.SH SYNOPSIS
+.nf
+\fBwhile (\fIexpression\fB) \fR
+
+	\fIcommand\fR
+
+\fBend\fR
+.fi
+.SH DESCRIPTION
+While the specified \fIexpression\fR evaluates nonzero,
+the commands between the \fBwhile\fR
+and the matching \fBend\fR are executed.
+\fBBreak\fR and \fBcontinue\fR
+can be used to terminate or continue the loop prematurely.
+The \fBwhile\fR and \fBend\fR must appear on separate lines.
+Prompting occurs here the first time through the loop as for the
+\fIforeach\fR statement if the input is a terminal.
+.SH EXAMPLE
+.nf
+#
+\fBwhile ( 1 )\fR	# "1" is always true, therefore
+			# this is an endless loop
+
+\fB	echo "This is an endless loop"\fR
+
+			# The string is printed forever
+			# or until it is interupted
+
+\fBend\fR		# end of the while loop
+.fi
+.SH SEE ALSO
+break(1C), breaksw(1C),
+continue(1C), foreach(1C),
+if(1C),
+onintr(1C), switch(1C),
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

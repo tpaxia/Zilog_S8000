@@ -1,0 +1,41 @@
+.po 1i
+.TH L3TOL 3 Bell
+.V 08/15/84 17:21:28
+.\" @[$]l3tol.3	1.6	08/15/84 17:21:28 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+l3tol, ltol3 \- convert between three-byte integers and long integers
+.SH SYNOPSIS
+.nf
+\fBl3tol\fI(lp, cp, n)
+\fB     long \fI*lp;
+\fB     char \fI*cp;
+\fB     int \fIn;
+.PP
+\fBltol3\fI(cp, lp, n)
+\fB     char \fI*cp;
+\fB     long \fI*lp;
+\fB     int \fIn;\fR
+.fi
+.SH DESCRIPTION
+.B L3tol
+converts a list of
+.I n
+three-byte integers packed into a character string
+pointed to by 
+.I cp
+into a list of long integers pointed to by
+.IR lp .
+.PP
+.B Ltol3
+performs the reverse conversion from long integers
+.RI ( lp )
+to three-byte integers
+.RI ( cp ).
+.PP
+These functions are useful for file system maintenance since
+disk addresses are three bytes long.
+.SH SEE ALSO
+filsys(5).
+

@@ -1,0 +1,199 @@
+.po 1i
+.TH ICP 4 Zilog
+.V 08/15/84 17:30:39
+.\" @[$]icp.4	1.5 08/15/84 17:30:39 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+icp \- general Intelligent Communication Processor interface
+.SH DESCRIPTION
+An 
+.B ICP
+device driver implements a protocol-independent
+access method for both the 
+.B ICP
+controller boards and the general control
+functions of an 
+.B ICP.
+It is also the link between a ZEUS Protocol Driver and an 
+associated 
+.B ICP
+Protocol Driver.
+All communication between the protocol driver-pair passes
+through the 
+.B ICP
+device driver.
+.PP
+The 
+.B ICP
+device utilizes the concept of mutual exclusion; ie, only one process
+may use the control functions (
+.BR open (2), 
+.BR close (2),
+.BR read (2), 
+.BR write (2), 
+.BR ioctl (2))
+at a time.
+.PP
+Under ZEUS, the
+.B ICP
+is viewed as any other special file.   
+For example, to perform a dump of an
+.BR ICP's 
+memory contents, a user can read memory using 
+.BR hd (1).
+.PP
+The files
+.I /dev/icp*
+are the special files which allow access to the 
+.BR ICP s
+installed on a system. Note: the maximum number of icps is 8, but the
+currently implemented maximum is 3.
+.PP
+Each 
+.B ICP
+has 9 ports and logical port numbers, which correspond 
+to the ports of all 
+.BR ICP s
+ranging from 0 to 71.
+.PP
+Several
+.BR ioctl (2)
+calls apply to 
+.BR ICP s.
+Most use the following structure (defined in
+.IR <icpio.h> ):
+.sp
+.nf
+.ft 3
+#define	ICP_PMAX	9
+.sp
+struct icpquery {
+       char     icpq_istate;          /* state of the ICP    */
+.sp
+       struct  {
+               char     icpq_pstate;  /* function to perform */
+                                      /* on port             */
+               char     icpq_pp;      /* protocol on port    */
+       } iport[ICP_PMAX];
+};
+.ft R
+.fi
+.PP
+A few
+.B ioctl
+calls have the form:
+.PP
+.in +0.5i
+.B #include <icpio.h>
+.sp
+.B ioctl(fildes, code, arg)
+.br
+.B int fildes;
+.br
+.B int code;
+.br
+.B struct icpquery *arg;
+.in -0.5i
+.PP
+The applicable codes are:
+.TP
+.B STARTPP
+Looking thru the the icpquery structure that is passed to it, this
+command attempts to locate protocols other than the NULL protocol.
+Upon finding one, it associates the given protocol with
+the port (\fIiport[x]\fR).
+If successful, it will start the protocol running on this
+particular port on the 
+.BR ICP .
+This command may return an error under the following conditions:
+.nf
+.sp
+     the icpquery structure pointer passed is null;
+     the protocol may not be associated with this port;
+     the \fBICP\fR has a hardware error;
+     or there has been a system memory fault.
+.fi
+.PP
+If the indicated protocol is started sucessfully, the
+appropriate icpq-pstate will be equal to the value P_ASSOC,
+otherwise the protocol cannot be started and icpq-pstate
+will be equal to P_NOASSOC.
+.TP
+.B STOPPP
+This command looks through the icpquery structure passed to
+it for protocols other than the NULL protocol.
+Upon finding one, it attempts to dissociate the
+given protocol from the port (\fIiport[x]\fR).
+If successful, the protocol on this
+specific port on the 
+.BR ICP .
+will be stopped.
+This command may return an error on the following conditions:
+.nf
+.sp
+     the icpquery structure pointer passed is null;
+     the protocol may not be dissociated
+          from this port;
+     the \fBICP\fR has a hardware error;
+     or there has been a system memory fault.
+.fi
+.PP
+The values that the various members of the query structure
+may contain are:
+.nf
+.sp
+icpq-istat      ICP_RUNNING
+		      ICP_ISOPEN
+		      ICP_ERROR
+		      ICP_SOFTERR
+		      ICP_ACK
+
+icpq-pp	      the protocol that is active on this port
+		      otherwise NULLPROTO. Defined protocol
+		      values are in "icpio.h"
+.fi
+.TP
+.B QUERY
+A pointer to the icpquery structure is passed to this command. Utilizing
+this pointer, QUERY fills the icpquery structure with both the state of an
+.BR ICP 
+and the
+protocols that are running on the 
+.BR ICP .
+.PP
+.in +0.5i
+.B #include <icpio.h>
+.br
+.sp
+.B ioctl(fildes, code, 0)
+.br 
+.B int fildes;
+.br
+.B int code;
+.in -0.5i
+.TP
+STARTI
+Removes reset from an 
+.B ICP
+controller board, and attempts to
+set it running.
+If there was a previous hardware error, it will reset
+the error condition.
+This command will return an error if the 
+.B ICP
+cannot be started.
+.TP
+.B STOPI
+This unconditionally stops an 
+.B ICP
+controller board.
+There is no error indication returned if the 
+.B ICP
+is already stopped.
+.SH FILES
+/dev/icp*
+.SH SEE ALSO
+ioctl(2),
+icpload(M),
+icpcntrl(M).

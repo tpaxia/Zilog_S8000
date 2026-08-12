@@ -1,0 +1,10 @@
+#print
+Now you might want to change the program so that it counts down from
+a different number than 10, or prints a different message. To do that,
+you need to edit the source code and then recompile the program.
+SORRY- this course is not yet complete. Type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok

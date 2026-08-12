@@ -1,0 +1,47 @@
+.po 1i
+.TH PUTS 3 Bell
+.V 08/15/84 17:23:26
+.\" @[$]puts.3	1.6	08/15/84 17:23:26 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+puts, fputs \- put a string on a stream
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.PP
+\fBputs\fI(s)
+\fB     char\fI *s;
+.PP
+\fBfputs\fI(s, stream)
+\fB     char\fI *s;
+\fB     FILE \fI*stream;\fR
+.fi
+.SH DESCRIPTION
+.B Puts
+copies the null-terminated string
+.I s
+to the standard output stream
+.I stdout
+and appends a
+new line character.
+.PP
+.B Fputs
+copies the null-terminated string
+.I s
+to the named output
+.IR stream .
+.PP
+Neither routine copies the terminal null character.
+.SH SEE ALSO
+fopen(3),
+gets(3),
+putc(3),
+printf(3),
+ferror(3),
+fread(3).
+.SH LIMITATIONS
+.B Puts
+appends a new line, but
+.B fputs
+does not.

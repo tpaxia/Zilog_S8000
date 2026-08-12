@@ -1,0 +1,31 @@
+.po 1i
+.TH WAIT 1C UCB
+.V 08/15/84 17:10:00
+.\" @[$]wait.1C	1.6	08/15/84 17:10:00 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+wait \- await completion of process
+.SH SYNOPSIS
+.B wait
+.SH DESCRIPTION
+All child processes are waited for.
+It the shell is interactive, then an interrupt can disrupt the wait,
+when the shell prints names and process numbers of all children
+known to be outstanding.
+.PP
+The shell \fIwait\fRs until all processes started with
+.B &
+have completed, and report on abnormal terminations.
+.PP
+Because the
+.BR  wait (2)
+system call must be executed in the parent process,
+the shell itself executes
+.B wait,
+without creating a new process.
+.SH SEE ALSO
+csh(1), sh(1), wait (2).
+.SH LIMITATIONS
+Not all the processes of a three- or more-stage pipeline
+are children of the shell, and thus cannot be waited for.

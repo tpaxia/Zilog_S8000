@@ -1,0 +1,58 @@
+.po 1i
+.TH ISINDEXINFO 3 Zilog
+.V 08/15/84 17:20:50
+.\" @[$]isindexinfo.3	1.5 08/15/84 17:20:50 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isindexinfo - access a C-ISAM file's directory information
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisindexinfo\fI(isfd, buffer, number)\fR
+\fBint \fIisfd;\fR
+\fBint \fInumber;\fR
+\fBstruct \fIkeydesc *buffer;\fR
+\fRor\fB
+\fBstruct \fIdictinfo *buffer;\fR
+.fi
+.SH DESCRIPTION
+.B Isindesinfo
+gives the caller access to information about
+the C-ISAM file such as information about the defined
+indexes, their location within the record, their length
+and whether duplicate values are allowed.
+.PP
+Information about a particular index is obtained by specifying
+the number of the index using the number parameter. General
+information such as the number of indexes, index record
+size, and data record size is obtained by calling 
+.B isindexinfo
+with the number parameter set to 0 and reading the buffer
+into a structure of type 
+.I dictinfo.
+.PP
+.I Buffer 
+can contain information in the format of either
+.I keydesc
+or
+.I dictinfo 
+depending on whether the number
+parameter is positive or 0. As indexes are added and
+deleted the number of a particular index may vary. However,
+if the number of indexes indicated in 
+.I dictinfo 
+are examined,
+review of all of the indexes is guaranteed.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isaddindex(3),
+isbuild(3),
+isdelindex(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

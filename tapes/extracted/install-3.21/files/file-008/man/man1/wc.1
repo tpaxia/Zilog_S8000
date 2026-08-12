@@ -1,0 +1,74 @@
+.po 1i
+.TH WC 1 UCB
+.V 08/15/84 17:10:02
+.\" @[$]wc.1	1.11	08/15/84 17:10:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+wc \- word count
+.SH SYNOPSIS
+.B wc
+[
+.B \-clptw
+] [\fB -v\fR ] [ \fB-u\fR ] [ \fB-s\fIpagesize ] [ \fB-b\fIbaudrate\fR ]
+.br
+[ 
+.I file
+\& ... ]
+.SH DESCRIPTION
+.B Wc
+counts pages, lines, words, and characters in \fIfile,\fR where a word is
+a string of characters delimited by spaces, tabs, or newlines. If no
+argument file is given,  
+pages, lines, words, and characters are accepted from standard input.
+A control-D terminates the passing of data from the standard input. 
+.SH OPTIONS
+.TP
+.B -c
+Give only the character count.
+.TP
+.B -l
+Give only the line count.
+.TP
+.B -p
+Give only the page count.
+.TP
+.B -t
+Give only the time at the set baud rate.  Default is 300 baud.
+.TP
+.B -w
+Give only the word count.
+.TP
+.B -v
+Verbose.  Give a header for the counts, add
+a page count and the time to print file at the set baud rate.
+.TP
+.B -u
+.B Uucp
+time.  Calculate the time over the \fBuucp\fR network at the current baud rate.
+.TP
+.BI -s pagesize
+Change the default 66 lines/page to \fIpagesize\fR.
+.TP
+.BI -b baudrate
+Change the default baud rate (300) to \fIbaudrate\fR.
+.SH EXAMPLES
+.RS
+.sp
+% \fBwc whatis.1\fR
+.br
+  29    120     641 whatis.1
+.sp
+% \fBwc -v -u -s20 -b1200\fR
+.br
+  lines   words   chars   pages   time@1200
+   29      120     641     2        5 se    whatis.1	
+.sp
+% \fBwc -c whatis.1\fR
+.br
+   641 whatis.1
+.sp
+% \fBwc -l whatis.1\fR
+.br
+   29 whatis.1
+.RE

@@ -1,0 +1,153 @@
+.po 1i
+.TH CRAPS 6 Bell
+.V 08/15/84 17:36:44
+.\"@[$]craps.6	1.3 08/15/84 17:36:44 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+craps \- the game of craps
+.SH SYNOPSIS
+.B craps
+.SH DESCRIPTION
+.ad
+.fi
+.B Craps
+is a form of the game of craps that is played in Las Vegas.
+The program simulates the
+.IR roller ,
+while the user (the
+.IR player )
+places bets.
+The player may choose, at any time, to bet with the roller or with the 
+.IR House .
+A bet of a negative amount is taken as a bet with the House,
+any other bet is a bet with the
+roller.
+.PP
+The player starts off with a ``bankroll'' of $2,000.
+.PP
+The program prompts with:
+.PP
+.RS 5
+bet?
+.RE
+.PP
+The bet can be all or part of the player\fB'\fRs bankroll.
+Any bet over the total bankroll is rejected
+and the program prompts with ``bet?'' until a proper bet is made.
+.PP
+Once the bet is accepted, the
+roller throws the dice.
+The following rules apply (the player wins or loses depending on
+whether the bet is placed with the roller or with the
+House; the odds are even).
+The
+.I first\^
+roll is the roll immediately following a bet.
+.PP
+.nf
+	1. On the first roll:
+.fi
+.PP
+.RS 15
+.TP "\w`any~other~number\ \ \ `u"
+7~or~11
+wins for the roller;
+.TP
+2,~3,~or~12
+wins for the House;
+.TP
+any~other~number
+is the \fIpoint\fR, roll again (Rule 2 applies).
+.RE
+.sp
+.nf
+	2. On subsequent rolls:
+.fi
+.RS 15
+.TP "\w`any~other~number\ \ \ `u"
+point
+roller wins;
+.TP
+7
+House wins;
+.TP
+any~other~number
+roll again.
+.RE
+.sp
+If a player loses the entire bankroll,
+the House
+will offer to lend the player an additional $2,000.
+The program will prompt:
+.PP
+.RS 5
+marker?
+.RE
+.PP
+A ``yes'' (or ``y'') 
+consummates the loan.
+Any other reply terminates the game.
+.sp
+If a player owes the House money,
+the House reminds the player, before a bet is placed,
+how many markers are
+outstanding.
+.sp
+If, at any time, the bankroll of a player who has outstanding markers
+exceeds $2,000, the House asks:
+.PP
+.RS 5
+Repay marker?
+.RE
+.PP
+A reply of ``yes'' (or ``y'') indicates the player's willingness to
+repay the loan.
+If only 1 marker is outstanding, it is immediately repaid.
+However, if more than 1 marker are
+outstanding, the House asks:
+.PP
+.RS 5
+How many?
+.RE
+.PP
+markers the player would like to repay.
+If an invalid number is entered
+(or just a carriage return),
+an appropriate message is printed
+and the program will prompt with ``How many?''
+until a valid number is entered.
+.sp
+If a player accumulates 10 markers 
+(a total of $20,000 borrowed from the House),
+the program informs the player of the situation and exits.
+.sp
+Should the bankroll of a player who has outstanding markers
+exceed $50,000, the
+.I total\^
+amount of money borrowed will be
+.I automatically\^
+repaid to the House.
+.sp
+Any player who accumulates $100,000 or more
+breaks the bank.
+The program then prompts:
+.PP
+.RS 5
+New game?
+.RE
+.sp
+Any reply other than ``yes'' is 
+considered ``no'' (except in the case of ``bet\fB?''\fR or
+``How many?'').
+To exit,
+send an interrupt (break), \s-1DEL\s+1, or control-\s-1D\s+1.
+The program will indicate whether the player won, lost, or broke even.
+.SH MISCELLANEOUS
+The random number generator for the die numbers uses the seconds from
+the time of day.
+Depending on system usage, these numbers, at times, may seem strange
+but occurrences of this type in a real dice situation are not uncommon.
+.tr ~~
+.SH FILES
+/usr/games/craps	the program

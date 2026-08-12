@@ -1,0 +1,99 @@
+.po 1i
+.TH VLS 1 Zilog
+.V  08/15/84 17:09:51
+.\" @[$]vls.1	1.7 08/15/84 17:09:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+vls \- "visually" list files and directories
+.SH SYNOPSIS
+.B vls
+[
+.B -h
+] \fIfile\fR ...
+.SH DESCRIPTION
+.B Vls
+is a version of
+.BR ls (1)
+that lists files and directories in "screen" format.
+The display is equivalent to an "ls -F" listing where
+directories are indicated by appending a "/"
+to the filename in the listing;
+also, executable files are indicated by appending an "*".
+.PP
+After the display is output, cursor manipulation is permitted by
+using the following keys:
+.sp
+.PD 0
+.TP 12
+.B down arrow
+.TP
+.B j
+.TP
+.B CTRL-j
+move the cursor down the screen
+.sp
+.TP
+.B up arrow
+.TP
+.B k
+.TP
+.B CTRL-k
+move the cursor up the screen
+.sp
+.TP
+.B f
+.TP
+.B w
+move the cursor forward (to the right)
+.sp
+.TP
+.B b
+move the cursor backward (to the left)
+.sp
+.PP
+If the cursor is placed over an item, typing the following keys
+performs various list functions:
+.sp
+.TP 12
+.B right arrow 
+.TP
+.B l
+change to cursored directory and list
+.sp
+.TP
+.B left arrow
+.TP
+.B h
+change to directory "above" in the dirctory hierarchy and list
+.PD
+.TP
+.B L
+give long format listing
+.PP
+Other miscellaneous commands are:
+.TP 12
+.B :n
+list the next item given
+in the command line
+.TP
+.B :q
+quit
+.TP
+.B ?<CR>
+display "help" file
+.TP
+.B <CR>
+If there is more than one page of display, type carriage return 
+to view the next page.
+.SH OPTIONS
+.TP 12
+.B -h
+Turns off "highlighting" of the cursored item;
+"highlighting" is on by default.
+.SH FILES
+/usr/lib/screen/vlshelp                "help" file
+.SH SEE ALSO
+ls(1).
+.SH LIMITATIONS
+Paging back to a previous page is not implemented.

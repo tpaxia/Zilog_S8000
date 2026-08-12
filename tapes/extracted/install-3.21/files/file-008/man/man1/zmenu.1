@@ -1,0 +1,181 @@
+.po 1i
+.TH ZMENU 1 ZILOG
+.V 08/15/84 17:11:35
+.\" @[$]zmenu.1	1.8 08/15/84 17:11:35 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+zmenu
+\- Zilog menu driver
+.SH SYNOPSIS
+.BI zmenu " [ file ]"
+.SH DESCRIPTION
+For an overview of the menu system, see \fBmkmenu\fR(1).
+.sp
+\fBZmenu\fR is the menu system's driver. If invoked with an argument
+in the manner '\fBzmenu \fImenuname\fR', \fBzmenu\fR seeks a file of
+menu specifications with the name \fImenuname\fR. If invoked without an
+argument, \fBzmenu\fR seeks a file of menu specifications with the 
+name .menu.
+.sp
+\fBZmenu\fR seeks the menu-specification file in the directory pointed
+to by the first existent pointer in its "search list." This search-list
+is comprised of an environment variable \fIMENUPATH\fR and two pointer-files,
+~/.menupath and /etc/menupath. \fBzmenu\fR looks for its search-list members
+in the order given here; it expects to find the specifications file in
+the directory pointed to by the first pointer it finds, whether or not there
+are other search-list members in existence. Typically, however, there will
+only be one pointer in existence at any given moment. If there are no pointers
+in existence, \fBzmenu\fR seeks the specifications file in the invoker's 
+home directory.  
+.sp
+When a menu is displayed, the header information
+specified by \fBmkmenu\fR is displayed at the 
+top of the screen, 
+along with the system time and date, the current
+menu name, and the tty port number. 
+Below this, up to 16 menu selections are displayed. 
+.sp
+Commands are invoked by selecting the appropriate menu option. At command
+termination, the user is returned to the menu. 
+.sp
+If a file of the name \fImenuname\fR.hlp exists in the directory which
+contains the invoked menu, entering a `?` displays \fImenuname\fR.hlp
+in "page" mode until end-of-file is sensed. The menu is subsequently 
+re-displayed. 
+.sp
+`Invalid option. Try again.` is displayed when unrecognizable input is 
+entered. If a selected option cannot be executed, `Option not implemented,
+try again.` is displayed.
+.sp
+Operation of \fBzmenu\fR in different user environments is controlled
+via the appropriate usage of special environment variables. They are:
+.bp
+.TP
+.I MENUPATH
+If the environment variable \fIMENUPATH\fR is set, \fBzmenu\fR searches
+the directory named by \fIMENUPATH\fR for the \fImenuname\fR given in 
+`\fBzmenu\fR \fImenuname\fR`. This is assumed to be a menu created in the
+format .menu(5), usually by \fBmkmenu\fR. 
+This environment variable is first in the search-list; if it exists,
+and the named \fImenuname\fR is not located in the directory to which it points,
+no other directories will
+be searched. This is true though ~/.menupath and /etc/menupath
+also exist. If \fIMENUPATH\fR does not exist, first ~/.menupath and
+then /etc/menupath, and finally the user's \fIHOME\fR directory are searched.
+Again, once a menu-specification directory pointer-file is 
+determined to exist, no other search list members are sought. 
+See menupath(5). 
+.TP
+.I ZMSHELL
+If \fIZMSHELL\fR is set to either /bin/sh or /bin/csh, shell
+commands can be invoked at the menu prompt by preceding the command with
+a `!`. 
+.TP
+.I ZMTIME
+If \fIZMTIME\fR is set to AMPM, system time is displayed in the
+format HH:MM [AM|PM], otherwise in the format HH:MM:SS.
+.TP
+.I ZMCENTER
+If \fIZMCENTER\fR is set to `YES`, field 2 in the menu header is centered.
+If \fIZMCENTER\fR is either unset or `NO`, field 2 is left-justified. 
+.TP
+.I ZMBELL
+If \fIZMBELL\fR is set to `YES`, displayed error messages are accompanied
+by a "beep". If \fIZMBELL\fR is either unset or `NO`, error messages are
+silent.
+.TP
+.I ZMHHILITE
+If \fIZMHHILITE\fR is set to `YES`, menu header information is displayed
+in hilighted format by \fBzmenu\fR. If \fIZMHHILITE\fR is either unset or
+`NO`, header information is not hilighted.  
+.TP
+.I ZMOHILITE
+If \fIZMOHILITE\fR is set to `YES`, menu selections are displayed in
+hilighted format. If \fIZMOHILITE\fR is either unset or `NO`, menu
+selections are not hilighted.
+.TP
+.I ZMINTIGN
+If \fIZMINTIGN\fR is set to `YES`, all operator-generated interrupt/kill
+signals are ignored. If this variable is set, a user-supplied exit point should
+also be available. If \fIZMINTIGN\fR is either unset or `NO`, the normal
+kill/interrupt signals are operative.
+.TP
+.I ZMCOLUMNS
+If \fIZMCOLUMNS\fR is set to `ONE` or is not set, all menus with 
+sixteen or fewer selections are displayed in single-column format.
+Menus with more than sixteen selections are automatically displayed in
+double-column format. If \fIZMCOLUMNS\fR is set to `TWO`, 
+menus with more than four selections are displayed in double-column
+format.
+.TP
+.I ZMPROMPT
+If \fIZMPROMPT\fR is set, its contents replace the default 
+`Please make a selection:` 
+prompt issued with every new screen. 
+A maximum of seventy characters are allowed in this field.
+.TP
+.I ZMRETMSG
+If \fIZMRETMSG\fR is set, its contents replace the default
+`Depress RETURN to continue` prompt displayed at command termination.
+A maximum of seventy characters
+are allowed in this field.
+.TP
+.I ZMPORT
+If \fIZMPORT\fR is set, its contents replace the default value `Port` 
+displayed adjacent the ttyslot() value in the menu header.  
+A maximum of four characters are
+allowed in this field.
+.TP
+.I ZMAMPM 
+This variable is used in conjunction with \fIZMTIME\fR; it must be set 
+subsequent to the setting of \fIZMTIME\fR. 
+If \fIZMAMPM\fR is set, its contents
+replace the default value of `AMPM` set by \fIZMTIME\fR. The 
+first two characters set by \fIZMAMPM\fR replace `AM`, the second
+two, `PM`. A maximum of four characters are allowed in this
+field.
+.TP
+.I ZMHLPMSG
+If \fIZMHLPMSG\fR is set, its contents replace the default `Depress RETURN
+for more` accompanying the termination of the help (?) option.
+A maximum of thirty-five characters are allowed in this field.   
+.TP
+.I ZMHLPRES
+If \fIZMHLPRES\fR is set, its contents replace the default `'b' will restart`
+prompt returned to restart display of a help file. 
+A maximum of twenty characters are allowed in this field.
+.TP
+.I ZMHLPXIT
+If \fIZMHLPXIT\fR is set, its contents replace the default `'x' will exit` 
+prompt returned to exit display of a help file. A maximum of twenty
+characters are allowed in this field.
+.TP
+.I ZMHLPERR
+If \fIZMHLPERR\fR is set, its contents replace the 
+default `Help not available ...` 
+prompt displayed when help is not available (ie, no file \fIhelpfile\fR.hlp
+exists in the directory in which the \fImenuname\fR in \fBzmenu \fImenuname\fR
+resides). A maximum of seventy characters are allowed in this field.
+.TP
+.I ZMNOTERR
+If \fIZMNOTERR\fR is set, its contents replace the default `Option not
+implemented, try again!` prompt displayed when the option selected cannot be
+executed by \fBzmenu\fR.
+.TP
+.I ZMINVERR
+If \fIZMINVERR\fR is set, its contents replace the default `Invalid option,
+try again!` prompt displayed when the option selected is unrecognizable.
+A maximum of seventy characters are allowed in this field.
+.SH FILES
+.nf
+~/.menupath               user menu-search path
+/etc/menupath             global menu-search path
+ .menu                    default menu file
+.SH SEE ALSO
+.nf
+mkmenu(1), setenv(1), zmprint(1), dotmenu(5), 
+menupath(5), termcap(5)
+.SH LIMITATIONS
+Operator input cannot specify commandline arguments; however, this
+feature can be provided using shell scripts.

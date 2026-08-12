@@ -1,0 +1,37 @@
+.po 1i
+.TH WHOIS 5 Zilog
+.V 08/15/84 17:36:20
+.\" @[$]whois.5	1.4  08/15/84 17:36:20 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+whois \- whois database file
+.SH DESCRIPTION
+.I Whois
+contains an entry for each user.
+Each entry contains the following information:
+.sp 3
+.in +4
+Login name
+.br
+Actual user's name (full name)
+.br
+Office phone
+.br
+Home phone
+.br
+Group associated with
+.br
+Miscellaneous comments
+.in -4
+.sp 3
+This is an ASCII file. 
+Each field within each user's entry is separated
+from the next by a colon. 
+Each user is separated from the next by a newline.
+.sp 3
+This file resides in the directory /etc.
+.SH FILES
+\&/etc/whois
+.SH SEE ALSO
+whois(1).

@@ -1,0 +1,130 @@
+.po 1i
+.TH AT 1 Bell
+.V 08/15/84 16:37:12
+.\" @[$]at.1	1.9	08/15/84 16:37:12 - Zilog Inc.
+.ad
+.fi 
+.SH NAME
+at \- execute command or shell script file at a later time
+.SH SYNOPSIS
+.B at
+\fItime\fR [\fIday\fR ] \fIfile\fR
+.SH DESCRIPTION
+.B At
+makes a copy of the named shell script
+.I file
+and executes it at the specified time. 
+.PP
+.B At
+checks the 
+.I file
+to see if it is a C-Shell or Bourne-Shell script, inserts
+a
+.BR cd (1)
+command (directing the shell to the proper 
+.I file
+)
+and the appropriate shell variables 
+(see 
+.B setenv
+in
+.BR sh(1))
+and places a copy of the file in /usr/spool/at/yy.ddd.hhhh.uu. 
+.PP
+At the specified time
+.I atrun 
+checks the file to determine its shell type
+and invokes the appropriate shell which executes
+the 
+.B cd
+command, sets the environment variables and 
+executes the shell script commands.
+.PP
+When the 
+.I file
+is run, it has the access privileges of
+its owner and group. The program /usr/lib/atrun
+insures that the 
+.I file 
+was placed on the spool by 
+.B at 
+and runs the program 
+.PP
+The
+.I time
+is one to four digits, with an optional following
+\fIA, P, N,\fR or \fIM,\fR for
+AM, PM, noon or midnight.
+One and two digit numbers are taken to be hours, three and four digits
+to be hours and minutes.
+If no letters follow the digits, a 24 hour clock time is understood.
+.PP
+The optional
+.I day
+is either a month name followed by a day number,
+or a day of the week; if the word \fIweek\fR follows,
+execution of the file is moved seven days further off.
+Names of months and days can be recognizably truncated.
+.PP
+The mode of the shell script file need not be marked executable.
+.PP
+.B At
+programs are executed by periodic execution
+of the command
+.I /usr/lib/atrun
+from
+.BR cron (M).
+The frequency of
+.B at
+depends upon how often
+.I atrun
+is executed.
+.PP
+Standard output or error output is lost unless redirected.
+.SH EXAMPLES
+Examples of legitimate commands are:
+.IP
+at 8:30am 
+.I file
+.sp
+   executes
+.I file
+at 8:30 on the current day
+.sp
+at 8am jan 24 
+.I file
+.sp
+   executes
+.I file
+at 8:00 on jan 24
+.sp
+at 1530 fr week
+.I file
+.sp
+   executes 
+.I file
+at 3:30 a week from this friday
+.sp
+.SH FILES
+/usr/spool/at/yy.ddd.hhhh.uu    copy of shell program
+.br
+/usr/spool/at/lasttimedone    time of last execution
+.br
+/usr/spool/at/past    dir of activities in progress 
+.br
+/usr/lib/atrun    deamon which executes due files
+.SH SEE ALSO
+calendar(1),
+cd(1),
+pwd(1),
+setenv -- in csh(1),
+cron(M).
+.SH DIAGNOSTICS
+Complains about various syntax errors and times out of range.
+.SH LIMITATIONS
+Due to the periodic execution of
+.I /usr/lib/atrun
+by
+.I cron(M),
+accurate scheduling of tightly synchronized shell scripts
+is not possible.

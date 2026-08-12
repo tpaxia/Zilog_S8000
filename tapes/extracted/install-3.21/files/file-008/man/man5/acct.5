@@ -1,0 +1,116 @@
+.po 1i
+.TH ACCT 5 Bell
+.V 08/15/84 17:33:34
+.\" @[$]acct.5	1.6 08/15/84 17:33:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+acct \- per-process accounting file format
+.SH SYNOPSIS
+.B #include <sys/acct.h>
+.SH DESCRIPTION
+Files produced as a result of calling
+.IR acct (2)
+have records in the form defined by
+.BR <sys/acct.h> ,
+whose contents are:
+.sp
+.nf
+.na
+
+/* @[$]acct.h    2.4  03/07/83 17:56:39 - Zilog Inc */
+/*
+ * Accounting structures
+ */
+
+typedef    ushort comp_t;        /* "floating point" */
+        /* 13-bit fraction, 3-bit exponent  */
+
+struct    acct
+{
+    char      ac_flag;      /* Accounting flag */
+    char      ac_stat;      /* Exit status */
+    ushort    ac_uid;       /* Accounting user ID */
+    ushort    ac_gid;       /* Accounting group ID */
+    dev_t     ac_tty;       /* control typewriter */
+    time_t    ac_btime;     /* Beginning time */
+    comp_t    ac_utime;     /* acctng user time in clock ticks */
+    comp_t    ac_stime;     /* acctng system time in clock ticks */
+    comp_t    ac_etime;     /* acctng elapsed time in clock ticks */
+    comp_t    ac_mem;       /* memory usage */
+    comp_t    ac_io;        /* chars transferred */
+    comp_t    ac_rw;        /* blocks read or written */
+    char      ac_comm[8];   /* command name */
+};    
+
+extern  struct  acct  acctbuf;
+extern  struct  inode *acctp;  /* inode of accounting file */
+
+#define  AFORK  01        /* has executed fork, but no exec */
+#define  ASU    02        /* used super-user privileges */
+#define    ACCTF    0300        /* record type: 00 = acct */
+
+.fi
+.ad
+.DT
+.PP
+In
+.IR ac_flag ,
+the AFORK flag is turned on by each
+.BR fork (2)
+and turned off by an
+.BR exec (2).
+The
+.I ac_comm\^
+field is inherited from the parent process and reset by any
+.IR exec .
+Each time the system charges the process with a clock tick,
+it also adds the current process size to
+.IR ac_mem\^ ,
+computed as follows:
+.IP
+(data size) + (text size) / (number of in-core processes using text)
+.PP
+The value of
+.I ac_mem\^/\^ac_stime\^
+can be viewed as an approximation to the mean process size,
+as modified by text-sharing.
+.PP
+.ne 20
+The following structure represents the total accounting format
+used by the various accounting commands:
+.PP
+.na
+.nf
+.lg 0
+/*
+ *    total accounting (for acct period), also for day
+ */
+
+struct    tacct    {
+    uid_t     ta_uid;       /* userid */
+    char      ta_name[8];   /* login name */
+    float     ta_cpu[2];    /* cum. cpu time, p/np (mins) */
+    float     ta_kcore[2];  /* cum kcore-minutes, p/np */
+    float     ta_con[2];    /* cum. connect time, p/np, mins */
+    float     ta_du;        /* cum. disk usage */
+    long      ta_pc;        /* count of processes */
+    unsigned short    ta_sc;    /* count of login sessions */
+    unsigned short    ta_dc;    /* count of disk samples */
+    unsigned short    ta_fee;   /* fee for special services */
+};
+.fi
+.lg
+.DT
+.SH SEE ALSO
+acctcom(1),
+acct(2),
+acct(M).
+.SH LIMITATIONS
+The
+.I ac_mem\^
+value for a short-lived command gives little information about
+the actual size of the command, because
+.I ac_mem\^
+can be incremented while a different command (e.g., the shell)
+is being executed by the process.

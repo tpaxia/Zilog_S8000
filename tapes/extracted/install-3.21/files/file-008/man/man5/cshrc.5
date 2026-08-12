@@ -1,0 +1,51 @@
+.po 1i
+.TH CSHRC 5 Zilog
+.V 08/15/84 17:34:11
+.\"@[$]cshrc.5	1.4	08/15/84 17:34:11 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cshrc, cshprofile, login \- setting up an environment at login time
+.SH DESCRIPTION
+Users of the C-shell,
+.B csh,
+can set up a consistent environment before a session begins.
+If the home directory contains a file named
+.I .login,
+that file will be executed (via the C-shell's source command)
+only at login time.
+If a second file,
+.I .cshrc,
+exists in the home directory, this file also will be executed. 
+The
+.I .cshrc
+file will be executed before the
+.I .login
+file. 
+The difference is that the
+.I .cshrc
+file is executed by every shell, not just the login shell.
+.PP
+If the file
+.I /etc/cshprofile
+exists, it will be executed for every C-shell user 
+at login before either the
+.I .login
+or the
+.I .cshrc
+are executed. 
+.SH FILES
+$home/.cshrc
+.br
+$home/.login
+.br
+/etc/cshprofile
+.SH SEE ALSO
+csh(1),
+login(1),
+printenv(1),
+sh(1),
+su(1),
+profile(5),
+environ(7),
+term(7).

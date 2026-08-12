@@ -1,0 +1,66 @@
+.po 1i
+.TH SU 1 Bell
+.V 08/15/84 17:06:41
+.\" @[$]su.1	1.8 08/15/84 17:06:41 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+su  \- substitute user ID temporarily
+.SH SYNOPSIS
+.B su
+[
+.B \-
+] [ \fIname\fR [ \fIarg\fR .\|.\|. ] ]
+.SH DESCRIPTION
+.B Su
+demands the password of the specified
+.I userid,
+unless the current 
+.I userid
+is ZEUS.
+.B Su
+then changes to the specified 
+.I userid
+and invokes the user's default shell (\fIpasswd\fR (5))
+without changing the current directory or the
+environment (\fIenviron\fR (5)).
+The new user ID stays in force until the shell exits.
+.PP
+If no 
+.I userid
+is specified, ZEUS is assumed.
+To remind the super-user of the responsibilities,
+the shell substitutes # for its usual prompt.
+.PP
+Any additional arguments are passed to the shell,
+permitting the super-user to run shell procedures
+with restricted privileges
+(an
+.I arg\^
+of the form
+.B \-c
+.I string\^
+executes
+.I string\^
+via the shell).
+When additional arguments are passed,
+.B /bin/sh
+is always used.
+When no additional arguments are passed,
+.B su\^
+uses the shell specified in the password file.
+.PP
+.SH OPTIONS
+.TP
+.B \-
+Cause the environment to be changed
+to the one that would be expected if the user actually logged in again.
+Otherwise, the environment is passed along with the possible
+exception of
+.SM
+.BR $PATH \*S,
+which is set to
+.B /bin:/etc:/usr/bin
+for ZEUS.
+.SH SEE ALSO
+csh(1), sh(1) env(1), login(1), environ(5).

@@ -1,0 +1,33 @@
+.po 1i
+.TH MKDIR 1 Bell
+.V 08/15/84 16:58:38
+.\" @[$]mkdir.1	1.5	08/15/84 16:58:38 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mkdir  \- make a directory
+.SH SYNOPSIS
+.B mkdir
+\fIdirname\fR ...
+.SH DESCRIPTION
+.B Mkdir
+creates specified directories
+in mode 777 joined with logical and to the complement of the current
+.B umask
+value.
+The
+.B umask
+value is controlled by the
+.B umask
+shell command.
+Standard entries (\&.  for the directory itself, and \&.. for
+its parent), are made automatically.
+.PP
+.B Mkdir
+requires write permission in the parent directory.
+.SH SEE ALSO
+csh(1), rm(1), sh(1), umask(2), chmod(1).
+.SH DIAGNOSTICS
+.B Mkdir
+returns exit code 0 if all directories were successfully made.
+Otherwise, it prints a diagnostic and returns nonzero.

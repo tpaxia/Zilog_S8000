@@ -1,0 +1,59 @@
+.po 1i
+.TH CAT 1 Bell
+.V 08/15/84 16:39:04 
+.\" @[$]cat.1	1.15 08/15/84 16:39:04 - Zilog, Inc. 
+.ad
+.fi
+.SH NAME
+cat \- concatenate and print files
+.SH SYNOPSIS
+\fBcat\fR [ \fB-\fR ] [ \fB\-s\fR ] [ \fB\-u\fR ] \fIinput_file\fR ...
+.SH DESCRIPTION
+.B Cat
+reads each named
+.I input_file
+in sequence
+and writes it to the standard output (unless redirected). If standard (keyboard)
+input is the sole source of input, \fBcat\fR takes no \fIinput_file\fR
+arguments, but output must be redirected or the information entered will
+not be saved anywhere. For keyboard input, a control-D (EOF) terminates entry.
+.SH OPTIONS
+.TP
+.B \-
+This option enables keyboard input to be interspersed with input from
+\fIinput_files\fR. 
+.TP
+.B \-s
+Renders \fBcat\fR silent about non-existent files.
+.TP
+.B \-u
+Does not buffer the output in 512-byte blocks as usual.
+.SH EXAMPLES
+.PP
+.RS
+\fBcat \fIfile\fR
+.RE
+.PP
+prints the file to standard output.
+.PP
+.RS
+\fBcat \fIfile1 file2 \fB>\fI file3\fR
+.RE
+.PP
+concatenates the first two files and places the result in the third
+file. The third file is created if it does not exist.
+.PP
+.RS
+\fBcat > \fIoutf\fR  
+.RE
+.PP
+takes keyboard input and writes it to outf. A control-D terminates
+input. 
+.PP
+.RS
+\fBcat - \fIfile1\fB - \fIfile2\fB >\fI outf\fR
+.RE
+.PP
+writes keyboard input, file1, keyboard input, and file2 to outf.
+.SH SEE ALSO
+cp(1), pr(1), more(1).

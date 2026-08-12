@@ -1,0 +1,21 @@
+.po 1i
+.TH GLOB 1C UCB
+.V 08/15/84 16:53:52
+.\"@[$]glob.1C	1.5	08/15/84 16:53:52 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+glob \- print strings on the terminal without spaces
+.SH SYNOPSIS
+.BR glob " wordlist"
+.SH DESCRIPTION
+Like
+.B echo,
+but no \e escapes are recognized and words are delimited
+by null characters in the output.
+Useful for programs which use the shell to expand a list of words.
+.SH SEE ALSO
+echo(1C), echo2(1).
+.br
+.I "The C Shell" 
+in the ZEUS Utilities Manual

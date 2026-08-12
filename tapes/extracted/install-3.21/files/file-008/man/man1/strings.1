@@ -1,0 +1,68 @@
+.po 1i
+.TH STRINGS 1 UCB
+.ad
+.V 08/15/84 17:06:32
+.\" @[$]strings.1	1.6	08/15/84 17:06:32 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+strings \- print strings in object or other binary file
+.SH SYNOPSIS
+.B strings
+[
+.B \-
+] [
+\fB\-\fInumber\fR
+] [
+.B \-o
+] \fIfile\fR \.\.\.
+.SH DESCRIPTION
+.B Strings
+prints all strings of printable characters in
+.I file
+that are more than 4 characters long.
+If
+.I file
+is in object format,
+.I strings
+only looks for strings in the initialized data portion.
+.PP
+.I Strings
+is useful for identifying random object files and many other things.
+.SH OPTIONS
+.TP
+.B \-
+Examine the entire file, even if it is in object format.
+.TP
+\fB\-\fInumber\fR
+.I number
+is the minimum string length instead of 4.
+.TP
+.B \-o
+Give each string's offset in octal.
+.SH EXAMPLES
+.nf
+$ strings /bin/ls          $ strings -o /bin/ls
+/etc/passwd                  7450 /etc/passwd
+/etc/group                   7462 /etc/group
+total %D                     7481 total %D
+%5u                          7491 %5u 
+%4D                          7496 %4D 
+%2d                          7501 %2d 
+%-6.6s                       7506 %-6.6s
+%-6d                         7513 %-6d
+%3d,%3d                      7518 %3d,%3d
+%7ld                         7526 %7ld
+%-7.7s %-4.4s                7531  %-7.7s %-4.4s 
+%-12.12s                     7547  %-12.12s
+%.14s                        7562 %.14s
+%s unreadable                7571 %s unreadable
+ls: out of memory            7586 ls: out of memory
+ls: too many files           7605 ls: too many files
+%s not found                 7625 %s not found
+(null)                       7708 (null)
+Day Mon 00 00:00:00 1900     7910 Day Mon 00 00:00:00 1900
+SunMonTueWedThuFriSat        7936 SunMonTueWedThuFriSat
+.fi
+.SH SEE ALSO
+od(1).

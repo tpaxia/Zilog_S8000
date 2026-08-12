@@ -1,0 +1,71 @@
+.po 1i
+.TH NEWS 1 Zilog
+.V 08/15/84 16:59:40
+.\" @[$]news.1	1.6	08/15/84 16:59:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+news \- print news items
+.SH SYNOPSIS
+.B news
+[ \fB-ans\fR ] [ \fIitems\fR ]
+.SH DESCRIPTION
+.B News\^
+is used to keep the user informed of current events.
+By convention, these events are described by files in
+the directory
+.IR /usr/lib/news .
+.PP
+When invoked without arguments,
+.B news\^
+prints the contents of all current files in
+.IR /usr/lib/news ,
+most recent first,
+with each preceded by an appropriate header.
+.B News\^
+stores the "currency" time
+as the modification date of a file named
+.I .news_time
+in the user's home directory (the identity of this directory
+is determined by the environment variable
+.SM
+.IR $HOME\*S );
+.PP
+If a
+.I delete\^
+is typed during the printing of a news item, printing stops and the
+next item is started.
+Another
+.I delete\^
+within one second of the first causes the program to terminate.
+Only files more recent than
+this currency time are considered "current".
+.SH OPTIONS
+.TP
+.B \-a
+Prints all items, regardless of currency;
+the stored time is not changed.
+.TP
+.B \-n
+Reports the names of the current items without printing
+their contents, and without changing the stored time.
+.TP
+.B \-s
+Reports how many current items exist, without printing their
+names or contents, and without changing the stored time.
+It is useful to include such an invocation of
+.B news\^
+in one's
+.I .login
+file.
+.PP
+All other arguments are assumed to be specific news items
+that are to be printed.
+.SH FILES
+/usr/lib/news/\(**
+.br
+\&\s-1$HOME\s+1/\f3.\fPnews_time
+.br
+/etc/motd
+.SH SEE ALSO
+environ(5).

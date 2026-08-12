@@ -1,0 +1,12 @@
+cp /usr/lib/learn/ftuser/count count
+#print
+A special C program has just been copied to your working directory.
+To find out what the program does, run it by typing:   count (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+1c

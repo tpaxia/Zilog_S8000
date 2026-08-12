@@ -1,0 +1,242 @@
+.po 1i
+.TH SCANF 3 Bell 
+.V 08/15/84 17:25:43
+.\" @[$]scanf.3	1.5	08/15/84 17:25:43 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+scanf, fscanf, sscanf \- formatted input conversion
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.PP
+\fBscanf \fI(format \fR[ , pointer ] . . . \fB)
+.br
+\fBchar \fI*format;
+.PP
+\fBfscanf \fI(stream, format \fR[ , pointer ] . . . \fB)
+.br
+\fB     FILE \fI*stream;
+.br
+\fB     char \fI*format;
+.PP
+\fBsscanf \fI(s, format \fR[ , pointer ] . . . \fB)
+.br
+\fB     char \fI*s, *format;\fR
+.fi
+.SH DESCRIPTION
+.B Scanf
+reads from the standard input stream
+.IR stdin .
+.B Fscanf
+reads from the named input
+.IR stream .
+.I Sscanf
+reads from the character string
+.IR s .
+Each function reads characters, interprets
+them according to a format, and stores the results in its arguments.
+Each expects as arguments
+a control string
+.I format
+and a set of
+.I pointer
+arguments
+indicating where the converted input will be stored.
+.PP
+The
+control string
+usually contains
+conversion specifications that are used to direct interpretation
+of input sequences.
+The control string contains:
+.RS
+.IP 1. 4
+Blanks, tabs, or new lines that match optional white space in the input.
+.IP 2. 4
+An ordinary character (not %) that must match
+the next character of the input stream.
+.IP 3. 4
+Conversion specifications, consisting of the
+character
+.BR % ,
+an optional assignment suppressing character
+.BR * ,
+an optional numerical maximum field width, and a conversion
+character.
+.DT
+.RE
+.PP
+A conversion specification directs the conversion of the
+next input field; the result
+is placed in the variable pointed to by the corresponding argument,
+unless assignment suppression was
+indicated by
+.BR * .
+An input field is defined as a string of nonspace characters;
+it extends to the next inappropriate character or until the field
+width, if specified, is exhausted.
+.PP
+The conversion character indicates the interpretation of the
+input field; the corresponding pointer argument must
+usually be of a restricted type.
+The following conversion characters are legal:
+.RS
+.IP \fB%\fR 4
+a single % is expected in the input; no assignment is done.
+.IP \fBd\fR 4
+a decimal integer is expected;
+the corresponding argument must be an integer pointer.
+.IP \fBo\fR 4
+an octal integer is expected;
+the corresponding argument must be a integer pointer.
+.IP \fBx\fR 4
+a hexadecimal integer is expected;
+the corresponding argument must be an integer pointer.
+.ti -0.2i
+.IP \fBs\fR 4
+a character string is expected;
+the corresponding argument must be a character pointer
+pointing to an array of characters large enough to accept the
+string and a terminating \e0, which will be added.
+The input field is terminated by a space character
+or a new line.
+.IP \fBc\fR 4
+a character is expected; the
+corresponding argument should be a character pointer.
+The normal skip over space characters is suppressed
+in this case;
+to read the next nonspace character, use %1s.
+If a field width is given, the corresponding argument
+must refer to a character array, and the
+indicated number of characters is read.
+.IP \fBf\fR 4
+a floating point number is expected;
+the next field is converted accordingly and stored through the
+corresponding argument, which should be a pointer to a
+.IR float .
+The input format for
+floating point numbers is
+specified under \fIatof\fR(3).
+.IP \fBe\fR 4
+same as f
+.IP \fB[\fR 4
+indicates a string not to be delimited by space characters.
+The left bracket is followed by a set of characters and a right
+bracket; the characters between the brackets define a set
+of characters making up the string.
+If the first character
+is not circumflex (\|^\|), the input field
+is all characters until the first character not in the set between
+the brackets.
+If the first character
+after the left bracket is ^, the input field is all characters
+until the first character that is in the remaining set of characters
+between the brackets.
+The corresponding argument must point to a character array.
+.RE
+.DT
+.PP
+The conversion characters
+.BR d ,
+.BR o ,
+and
+.B x
+can be capitalized or preceeded by
+.B l
+to indicate which a pointer to
+.I long
+rather than to
+.B int
+is in the argument list.
+Similarly, the conversion characters
+.B e
+or
+.B f
+can be capitalized or
+preceded by
+.B l
+to indicate a pointer to 
+.B double
+rather than to 
+.BR float .
+The conversion characters
+.BR d ,
+.B o
+and
+.B x
+can be preceded by
+.B h
+to indicate a pointer to
+.B short
+rather than to
+.BR int .
+.PP
+The
+.B scanf
+functions return the number of successfully matched and assigned input
+items.
+This is used to decide how many input items were found.
+The constant
+.SM
+.B EOF
+is returned upon end of input.
+This is different from 0, which means that no conversion was done;
+if conversion was intended, it was frustrated by an
+inappropriate character in the input.
+.PP
+For example, the call
+.IP "" 10
+int i; float x; char name[50];
+.br
+scanf( "%d%f%s", &i, &x, name);
+.PP
+with the input line
+.IP
+25   54.32E\(mi1  thompson
+.PP
+assigns to
+.I i
+the value
+25,
+.I x
+the value 5.432, and
+.I name
+contains
+.IR thompson\e0 .
+Or,
+.IP
+int i; float x; char name[50];
+.br
+scanf("%2d%f%*d%[1234567890]", &i, &x, name);
+.PP
+with input
+.IP
+56789 0123 56a72
+.PP
+assigns 56 to
+.I i,
+789.0 to
+.I x,
+skip 0123,
+and place the string 56\e0 in
+.IR name .
+The next call to
+.B getchar
+returns a.
+.SH SEE ALSO
+atof(3),
+getc(3),
+printf(3).
+.SH DIAGNOSTICS
+The 
+.B scanf
+functions return
+.SM
+.B EOF
+on end of input,
+and a short count for missing or illegal data items.
+.SH LIMITATIONS
+The success of literal matches and suppressed
+assignments is not directly
+determinable.

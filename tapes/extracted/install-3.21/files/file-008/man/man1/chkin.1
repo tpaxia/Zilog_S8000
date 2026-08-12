@@ -1,0 +1,113 @@
+.po 1i
+.TH CHKIN 1 Zilog
+.V 08/15/84 16:40:49
+.\" @[$]chkin.1	1.17 08/15/84 16:40:49 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+chkin \- check in file to Zilog Source Control file
+.SH SYNOPSIS
+\fBchkin\fR [\fB-b\fR] [\fB-c\fR \fIcomment\fR] [\fB-d \fIdir]
+[\fB-r\fR] [\fB-v \fIver.rev] file\fR ...
+.SH DESCRIPTION
+.nf
+.sp
+   control file:                  file+   
+   source or checked out file:    file
+   lock file:                     file-
+.fi
+.sp
+The control file is the name of the source file plus a trailing +.
+The checked out version of the control file is the name of the
+source file. The lock file is the name of the 
+checked out file plus a trailing -.
+.sp
+\fBChkin\fR checks in to its Zilog Source Control file (see \fBzsc\fR(5))
+a new source file or a file previously checked out with \fBchkout\fR(1). 
+If the control file does not exist, the source file being checked
+in is
+assumed new and its contents become the new control file.  
+.sp
+If the control file exists, \fBchkin\fR looks for a lock file.
+The existence of the lock file indicates that the source
+file was previously checked out for editing by
+.BR chkout .
+If the lock file exists, the differences between 
+the source file and the last revision in the control file
+are found using
+.BR diff (1)
+and these differences recorded in the control file. 
+If the lock file is missing, \fBchkin\fR will not check in the file.
+.sp
+After the revised checked out file replaces the control file,
+\fBchkin\fR removes 
+the lock file if present.
+The checked out file is replaced by a read-only
+version of itself:  see
+.BR chkout (1).
+Command line argument
+.I file
+can be either the control file or the checked out file.
+If the control file is specified and the\fB -d\fR option is not
+used, the checked out file is assumed to be in the working 
+directory even if the control file is not.
+.sp
+By default, \fBchkin\fR assigns the new revision the same
+version number as the last version and increments the revision number. Thus,
+version.revision coordinates at 1.5 become 1.6, 1.7, 1.8, ... 1.n. 
+Also by default, \fBchkin\fR prompts for comments and reads 
+standard input until a control-d (EOF) is entered as the first character
+typed at the \fB>\fR prompt.
+This input is inserted in the control file as comment lines
+(see
+.BR zsc (5)).
+Each comment line (terminated by a carriage return)
+is limited to 256 characters.
+.bp
+Note that the interrupt key typed after the comment lines
+have been entered can result in an inconsistent control file.
+.SH OPTIONS
+.TP
+.B \-b
+Bump the version number:  the version number is incremented; 
+the revision number is 1.
+.TP
+\fB\-c\fR \fIcomment\fR
+Insert \fIcomment\fR (enclose in double quotes) as a comment line; 
+don't prompt for a comment.
+.TP
+\fB\-d \fIdir\fR
+Get the checked out file from directory \fIdir\fR 
+instead of the present working directory.
+.TP
+.B \-r
+The checked out file is removed; it is not replaced by a read-only file.
+.TP
+\fB\-v \fIver.rev\fR
+Checks the file in with the specified version number,
+.IR ver . 
+The revision number
+.I rev
+must be 1.
+.SH FILES
+.nr I 20n
+.in +\nIu
+.ti -\nIu
+file+            -- control file for \fIfile\fR
+.ti -\nIu
+file-            -- lock file for \fIfile\fR
+.ti -\nIu
+/tmp/chkinXXXXXX -- latest revision restored here
+.ti -\nIu
+chkinXXXXXX      -- temporary for keyword substitution
+.ti -\nIu
+/bin/diff        -- program which derives revision differences
+.SH SEE ALSO
+chkout(1), chkdiff(1), chkwhat(1), zsc(5).
+.SH DIAGNOSTICS
+no lock file for xxxxx:  either the lock file has been 
+removed or you are trying to check in a new source file 
+to an existing control file
+.LP
+corrupt chkfile:  the convention specified in
+\fBzsc\fR(5) has been violated

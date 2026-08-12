@@ -1,0 +1,40 @@
+.po 1i
+.TH GOODMAGIC 3 Zilog
+.V 08/15/84 17:20:18
+.\" @[$]goodmagic.3	1.4	08/15/84 17:20:19 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+goodmagic \- determine magic number validity
+.SH SYNOPSIS
+\fBextern int \fIswap_flg;\fR
+.PP
+\fBgoodmagic\fI(magic);\fR
+.br
+\fBint \fImagic;\fR
+.br
+.SH DESCRIPTION
+.B Goodmagic
+determines if
+.I magic
+is a valid
+.BR a.out (5)
+magic number. If the value is not valid, 0 is returned. If
+.I magic
+appears to be a byte-swapped magic number,
+.I swap_flg
+is non-zero. If
+.I magic
+is valid, the value returned is in the range 1 through 6.
+Values 1 through 3 are nonsegmented magic numbers N_MAGIC1, N_MAGIC3,
+and N_MAGIC4 respectively; values 4 through 6 are returned for
+segmented magic numbers S_MAGIC1, S_MAGIC3, and S_MAGIC4.
+.SH SEE ALSO
+a.out(5).
+.SH DIAGNOSTICS
+.B Goodmagic
+returns 0 if
+.I magic
+is not a valid
+.BR a.out (5)
+magic number.

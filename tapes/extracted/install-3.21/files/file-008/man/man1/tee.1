@@ -1,0 +1,40 @@
+.po 1i
+.TH TEE 1 Bell
+.V 08/15/84 17:07:35
+.\" @[$]tee.1	1.6	08/15/84 17:07:35 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+tee \- pipe fitting
+.SH SYNOPSIS
+.B tee
+[
+.B \-a
+] [
+.B \-i
+]
+[ \fIfile\fR ] \.\.\.
+.SH DESCRIPTION
+.B Tee
+transcribes the standard input to the standard
+output and makes copies in the 
+.I files.
+.SH OPTIONS
+.TP
+.B \-a
+causes the output to be appended to the
+.I files
+rather than overwriting them.
+.TP
+.B \-i
+ignores interrupts.
+.SH EXAMPLE
+The command:
+.sp
+.RS
+\fBcode < \fI/etc/passwd | \fBtee \fItemp\fR
+.RE
+.sp
+translates the file \fI/etc/passwd\fR with the \fBcode\fR
+program, printing the results on the terminal, and putting
+a second copy in the file \fItemp\fR.

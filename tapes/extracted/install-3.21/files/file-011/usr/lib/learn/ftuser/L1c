@@ -1,0 +1,13 @@
+#print
+The count program displayed output at your terminal, which is the
+default output device for programs you run. The program output
+can instead be redirected to a file. Use the ">" character to send
+the output to file "out" by typing:   count > out (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+test -r out
+#next
+1d

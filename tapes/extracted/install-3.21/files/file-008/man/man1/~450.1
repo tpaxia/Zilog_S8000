@@ -1,0 +1,92 @@
+.po 1i
+.TH 450 1 Bell
+.V 08/15/84 17:11:51
+.\"@[$]~450.1	1.6	08/15/84 17:11:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+450 \- handle special functions of the DASI 450 terminal
+.SH SYNOPSIS
+.B 450
+.SH DESCRIPTION
+.B 450
+supports special functions and optimizes the use of the
+DASI 450 terminal, or any terminal that is functionally
+identical, such as the DIABLO 1620 or XEROX 1700.
+.PP
+.B 450
+converts half-line forward, half-line reverse, and full-line
+reverse motions to the correct vertical motions.
+It also draws Greek letters and other special symbols in the
+same manner as \fI300\fR(1).
+.B 450
+can be used to print equations neatly, in the sequence:
+.PP
+.RS
+\fBneqn \fIfile \fB| nroff | 450\fR
+.RE
+.PP
+WARNING:
+make sure that the PLOT switch on your terminal is ON before
+.B 450
+is used.
+The SPACING switch should be put in the desired position
+(either 10- or 12-pitch).
+In either case, vertical spacing is 6 lines/inch, unless dynamically
+changed to 8 lines per inch by an appropriate escape sequence.
+.PP
+.B 450
+can be used with the
+.IR nroff (1)
+.B \-s
+flag or
+.B \&.rd
+requests, when it is necessary to insert paper manually or
+change fonts in the middle of a document.
+Instead of hitting the return key in these cases,
+use the line-feed key to get any response.
+.PP
+In many (but not all) cases, the use of
+.B 450
+can be eliminated in favor of one of the following:
+.PP
+.RS
+nroff\| \-T450\| files\| .\|.\|.
+.RE
+or
+.RS
+nroff\| \-T450\-12\| files\| .\|.\|.
+.RE
+.PP
+The use of
+.B 450
+can often be avoided, unless special delays or options are required;
+in a few cases, however, the additional movement optimization of
+.B 450
+may produce better-aligned output.
+.PP
+The
+.BR neqn (\fBeqn\fR(1))
+names of, and resulting output for, the Greek and special
+characters supported by
+.B 450
+are shown in
+.BR greek (7).
+.SH SEE ALSO
+300(1),
+eqn(1),
+mesg(1),
+stty(1),
+tabs(1),
+tbl(1),
+troff(1),
+greek(7).
+.SH LIMITATIONS
+Some special characters cannot be correctly printed in column 1
+because the print head cannot be moved to the left from there.
+.PP
+If your output contains Greek and/or reverse line-feeds, use a
+friction-feed platen instead of a forms tractor; although good
+enough for drafts, the latter has a tendency to slip when
+reversing direction, distorting Greek characters and misaligning
+the first line of text after one or more reverse line-feeds.

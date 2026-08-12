@@ -1,0 +1,70 @@
+.po 1i
+.TH ME 7 Zilog
+.V 08/15/84 17:37:37
+.\" @[$]me.7	1.4 08/15/84 17:37:37 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+me - macros for formatting manuscripts using nroff or troff
+.SH SYNOPSIS
+.B nroff -me
+[\fIoptions\fR] \fIfile\fR 
+.br
+.B troff -me
+[\fIoptions\fR] \fIfile\fR
+.SH DESCRIPTION
+This package of 
+.B nroff\fR and 
+.B troff\fR macro definitions
+provides a canned formatting facility for technical papers
+in various formats.
+.PP
+Output of the 
+.BR eqn (1)
+.BR neqn (1)
+and 
+.BR tbl (1)
+preprocessors
+for equations and tables is acceptable as input.
+.SH REQUESTS
+.IP \.bc
+Start a new column
+.IP \.bp
+Start a new page
+.IP \.ce \fIN\fR
+Center the next \fIN\fR lines
+.IP \.in \fI+N\fR
+Indent \fIN\fR spaces
+.IP \.ip
+Begin a paragraph with indented body
+.IP \.lp
+Begin a left-justified block-style paragraph
+.IP \.np
+Begin an indented, numbered paragraph
+.IP \.pp
+Begin an indented paragraph
+.IP \.sh
+Give a section header
+.IP \.sp \fIN\fR
+Leave \fIN\fR lines of blank space
+.IP \.ti \fI+N\fR
+Begin temporary indent of \fIN\FR spaces
+.IP \.tp
+Begin a title page
+.IP \.ul \fIN\fR
+Under-line the next \fIN\fR lines (italics in 
+.BR troff )
+.IP \.1c
+Revert to single column output
+.IP \.2c
+Automatic two column out-put
+.SH FILES
+/usr/lib
+.SH SEE ALSO
+eqn(1),
+troff(1),
+refer(1),
+tbl(1).
+.sp
+.I Writing Papers With Nroff Using -ME 
+in the ZEUS Utilities Manual

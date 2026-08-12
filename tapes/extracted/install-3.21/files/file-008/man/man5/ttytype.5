@@ -1,0 +1,46 @@
+.po 1i
+.TH TTYTYPE 5 Zilog
+.V 08/15/84 17:36:10
+.\"@[$]ttytype.5	1.4	08/15/84 17:36:10 - Zilog Inc.
+.ad
+.SH NAME
+ttytype \- terminal/types table
+.SH DESCRIPTION
+Ttytype resides in the directory /etc and associates terminal
+types with ports.
+There is one line per terminal port.  
+Each line contains two fields; a two-character terminal capabilities
+code and the tty name for that port. 
+The fields are separated by a blank character. 
+The two-character code is 
+found in /etc/termcap and is the first two characters
+describing each entry in that file.
+A typical eight-user configuration using vtz-2/10 and Adm31
+terminals looks like this:
+.sp
+.nf
+.RS
+vz console
+vz tty1
+31 tty2
+vz tty3
+vz tty4
+31 tty5
+31 tty6
+vz tty7
+.RE
+.fi
+.PP
+This file is read by 
+.BR login (1)
+to set up the environment variable TERM.
+\&'TERM' is used by
+.BR vi (1), and
+.BR ex (1).
+.SH FILES
+/etc/ttytype
+.br
+/etc/termcap
+.SH SEE ALSO
+login(1),
+termcap(5).

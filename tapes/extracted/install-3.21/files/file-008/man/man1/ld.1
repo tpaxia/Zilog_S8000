@@ -1,0 +1,282 @@
+.po 1i
+.de IX
+.TX \\$2
+\&\\$1
+..
+'	# hanging label
+.de TX
+.if !"\\$1"" .nr )I \\$1n
+.br
+.in \\n()Ru
+.nr )E 1
+.ns
+.it 1 }N
+.di ]B
+..
+.ne 3v
+.TH LD 1 Zilog  
+.V 08/15/84 16:55:29
+.\" @[$]ld.1	1.16	08/15/84 16:55:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ld \- nonsegmented Z8000 and 8-bit loader
+.SH SYNOPSIS
+.B ld
+[ \fIoptions\fR ] \fIfile\fR ...
+.SH DESCRIPTION
+.PP
+.B Ld
+creates load modules for execution under ZEUS
+and downloading to target hardware.
+.PP
+.B Ld
+combines several object files into one load module file, 
+resolving external references and searching libraries.
+In the simplest case, \fBld\fR combines several object files 
+producing an executable load module.
+An object module can be used as input to a subsequent
+.B ld
+run; the
+.B -r
+option must be given to preserve the relocation bits.
+.PP
+The object module is named by specifying the
+.B -o
+option followed by a space and the desired name; otherwise, if the
+\fB-o\fR option is unspecified, the output module is given
+the default name \fBa.out\fR.
+.PP
+If no errors occur during the link,
+the output file is executable.
+.PP
+The argument routines are concatenated in the order
+specified.  In absence of the 
+.B -e
+option, the entry point of the output is the
+beginning of the first routine.
+.PP
+If any argument is a library, it is searched once at the point it is
+encountered in the argument list.
+Only those routines defining an unresolved external reference are linked.
+The order of routines within a library is significant: 
+If a routine from a library references another routine in the library,
+and the library has not been processed by \fBranlib\fR(1), the referenced
+routine must appear after the referencing routine in the library.  
+However, if named `__.SYMDEF`, the first member of a library is a dictionary
+for the library; it is repeatedly searched to satisfy all references.
+.PP
+The symbols `_etext`, `_edata`, and `_end` in assembly language code
+(`etext`, `edata`, and `end` in C programs)
+are reserved and cannot be redefined by the user.
+The symbol `_etext` refers to the first location above the text section,
+or the start of the data section;
+the symbol `_edata` refers to the first location above initialized data,
+or the start of the bss section; 
+the symbol `_end` refers to the first location above all data,
+and can be used as a starting location for a dynamic allocation
+area managed by the user.
+.PP
+Except for
+.BR -l ,
+the options must appear before the file names.
+The
+.B -l
+option must follow the names of any routines which reference it.
+.PP
+To link a program for downloading
+to a Z8000 development module, the
+.B -o
+option must be used with an uppercase file name, and the
+.B -b
+option must be used to specify a starting address that is 0x4600 or higher.
+No special name or address is required to link a program
+for downloading to a Z8 development module.
+.SH OPTIONS
+.PP
+.BI -b " address"  
+.TP
+.BI -b section " \fIaddress\fR" 
+Set the bottom location for the program, or for the specified section if
+.I section 
+is specified.
+\fISection\fR can be one of
+\fBt\fR, \fBd\fR, or \fBb\fR for text, data, and bss.
+The address can be specified in decimal, hex, or octal using the
+standard C language conventions: a leading zero indicates octal, and
+a leading 0x indicates hex.
+The address specified must be a multiple of 256.
+When no section is selected, the bottom applies to the memory image  
+if the program is combined instruction and data, or to text 
+if separate instruction and data.
+Only one \fB\-t\fR or \fB-b\fR option per section may be specified.
+Errors result if sections overlap, or the bottom address causes a section
+to wrap around.
+.TP
+.B -d
+Force definition of common storage
+even if the
+.B -r
+flag is present.
+.TP
+.BI -e " label"  
+Make
+.I label 
+the entry point to the loaded
+program.
+The link address of the text section is the default.
+However, in almost all cases the \fB-e\fR option will be used with the
+non-segmented C runtime startup routine /lib/crt0.o. See the \fBEXAMPLES\fR
+section.
+.TP
+.B -i
+Separate the program text and data
+areas when the output file is executed.
+Text occupies segment 0; its origin is 0x0000. Data and bss occupy segment 1;
+data's origin is 0x0000. Bss follows data. 
+.TP
+.BI -l x
+Search the named library.
+The library
+.RI /lib/lib x .a
+is sought;
+if it is inaccessible or missing
+.RI /usr/lib/lib x .a
+is searched followed by
+.RI /z/bin/lib x .a.
+The specifed library file is used as though
+its full name had been used instead of the
+.B -l
+option.
+A library is searched when its name is encountered,
+so the placement of a
+.B -l
+option is significant.
+.TP
+.BI -N many
+This option specifies how \fImany\fR of the characters appearing in the name
+of a symbol table entry will be considered by
+.B ld. 
+If 
+.I many 
+is 
+.B l,
+then \fBld\fR uses the entire long name (the default). If 
+.I many 
+is
+.B s, 
+then 
+.B ld
+uses only the first 8 characters.
+.TP
+.BI -o " name" 
+Change to
+.I name
+the   
+.B ld
+output file. 
+The form of the load module remains the same as described in \fBa.out\fR(5).
+.TP
+.B -r
+Generate relocation bits in the output file
+so that it can be used in a subsequent
+.B ld
+run.
+This flag overrides the 
+.B -t
+and
+.B -b
+options.
+It also prevents final definitions from being
+given to common symbols,
+and suppresses the undefined symbol diagnostics.
+The -r flag may not be used to generate 8-bit object files.
+.TP
+.B -s
+Strip the output:  remove the symbol table
+and relocation bits to save space.
+.TP
+.BI -t " address"   
+.TP
+.BI -t section " \fIaddress\fR" 
+Set the highest location of the program or section
+to the hex, octal, or decimal number specified.
+.I section   
+can be one of
+.BR t ,
+.B d,
+or
+.B b
+for text, data, and bss.
+This option is similar to 
+.B -b
+except a top address is specified instead of a bottom one.
+The link location of the program or section is justified so that 
+in most cases the top is within 256 bytes of the specified
+address; the gap is filled with nulls.  
+The low address of the section or program is always a
+multiple of 256.  
+.TP
+.BI -u symbol
+Take \fIsymbol\fR and enter 
+it as undefined in the symbol table.
+This is useful for linking wholly from a library, since initially the symbol
+table is empty and an unresolved reference is needed
+to force the link of the first routine.
+.TP
+.B -w
+Suppress the symbol redefinition warning. This warning is produced
+while searching archives. If an archive contains a module that defines
+a symbol that is already defined, a redefinition warning is produced.
+.TP
+.B -x
+Enter only external and global symbols and 
+do not preserve local symbols in the output symbol table.
+This option saves some space in the output file.
+.TP
+.B -X
+Except for section names and entries that begin with `L`, save local symbols
+in the symbol table.  
+This option is used by
+the C compiler
+to discard internally generated labels while
+retaining symbols local to routines.
+.SH EXAMPLES
+.nf
+ld -X -e start /lib/crt0.o mod1.o mod2.o mod3.o 
+   -o mastermod -lc
+.sp
+.fi
+The above example combines ./mod1.o, ./mod2.o, and ./mod3.o into an output
+load module ./mastermod. Text, data, and bss are mapped to segment 0.
+.nf
+.sp
+ld -X -e start /lib/crt0.o -i /z/mod1.o 
+   /usr/mod2.o /z2/work/mod3.o -lc
+.sp
+.fi
+The above example combines /z/mod1.o, /usr/mod2.o, and /z2/work/mod3.o into
+an output load module ./a.out. Text is mapped to segment 0; data and bss to
+segment 1. 
+.SH FILES
+{/lib,/usr/lib,/z/bin/lib}/lib*.a  libraries for -l option
+.br
+a.out		output file
+.br
+/lib/crt0.o     non-segmented C runtime startup routine
+.SH SEE ALSO
+LOAD(1), ar(1), ranlib(1), a.out(5)
+.SH DIAGNOSTICS
+Any undefined references cause the special symbol `_end` to be reported
+as undefined.
+The "redefinition" warning occurs
+if, while searching an archive, a symbol that is already defined is
+defined in an archive member.
+This warning can be suppressed with the
+.B -w
+option.
+It does not occur if the symbol name begins with two
+underscores (one underscore in C).
+.SH LIMITATIONS
+The "redefinition" warning should not occur on symbols that occur twice
+within the same archive. The double underscore exception is a kludge.

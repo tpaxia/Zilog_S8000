@@ -1,0 +1,60 @@
+.po 1i
+.TH SMD 4 Zilog
+.V 08/15/84 17:31:34
+.\" @[$]smd.4	1.8	08/15/84 17:31:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+smd \- Storage module disk
+.SH DESCRIPTION
+The 
+.B smd
+device provides the interface to disks conforming
+tp the Storage Module Device industry standard.
+.PP
+The files
+.I "smd0 ... smdF"
+refer to sections of disk drive 0.
+The files
+.I "smd10 ... smd1F"
+refer to drive 1 etc.
+This allows a large disk to be broken up
+into more manageable pieces.
+.PP
+The
+.B smd
+files access the disk via the system's normal buffering 
+mechanism and can be read and written without regard to
+physical disk records.
+There is also a raw interface that provides for direct 
+transmission between the disk and the user's read or write buffer.
+A single read or write call results in exactly one I/O operation
+and therefore raw I/O is considerably more efficient when
+many words are transmitted.
+The names of the raw files begin with
+.B rsmd
+and end with a number which selects the same disk
+section as the corresponding
+.B smd
+file.
+.PP
+In raw I/O the buffer must begin on a word boundary.
+.SH FILES
+/dev/smd*
+.br
+/dev/rsmd*
+.SH LIMITATIONS
+In raw I/O
+.B read
+and
+.BR write (2)
+truncate file offsets to 512-byte block boundaries,
+and
+.B write
+scribbles on the tail of incomplete blocks.
+Thus,
+in programs that are likely to access raw devices,
+.B read, write
+and
+.BR lseek (2)
+should always deal in 512-byte multiples.

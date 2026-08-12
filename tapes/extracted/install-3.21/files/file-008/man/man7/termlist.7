@@ -1,0 +1,60 @@
+.po 1i
+.TH TERMLIST 7 Zilog
+.V 08/15/84 17:38:07
+.\"@[$]termlist.7	1.5 08/15/84 17:38:07 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+terminal list \- terminal names and codes
+.SH DESCRIPTION
+.PP
+The list of terminals supported in /etc/termcap and
+/etc/termcap.others can be found on-line under the pathname
+/usr/pub/termlist.
+.PP
+The manufacturer and model of the terminal
+are listed under the heading "Terminal"
+and the possible codes that 
+can be specified when setting up the
+terminal environment are listed 
+under "Code".
+To set up the terminal environment, use the following
+command:
+.sp
+.RS
+\fBsetenv TERM \fIcode\fR
+.RE
+.PP
+For example, for a VTZ-2/10 terminal, 
+the possible codes are
+.BR vz ,
+.BR vtz ,
+.BR mcz-2/60 ,
+and 
+.BR vtz-2/10 ;
+therefore, any one of these codes can be used in
+the
+.B setenv
+command.
+.PP
+In the on-line list, an asterisk (*) 
+following the terminal name indicates
+that the terminal description is in /etc/termcap.others.
+If this is the case,
+the termcap entry must be moved to /etc/termcap, 
+or, the following command
+must be specified:
+.sp
+.RS
+\fBsetenv TERMCAP /etc/termcap.others\fR
+.RE
+.PP
+Otherwise, if no asterisk is indicated 
+following the terminal name, the terminal
+description is in /etc/termcap.
+.SH FILES
+/usr/pub/termlist
+.SH SEE ALSO
+ex(1),
+vi(1),
+environ(5).

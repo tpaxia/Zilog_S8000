@@ -1,0 +1,59 @@
+.po 1i
+.TH SETRET 3 Zilog
+.V 08/15/84 17:26:24
+.\" @[$]setret.3	1.7	08/15/84 17:26:24 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+setret, longret \- nonlocal goto
+.SH SYNOPSIS
+.nf
+\fB#include <setret.h>
+.PP
+\fBsetret\fI(env)
+\fB     ret_buf \fIenv;
+.PP
+\fBlongret\fI(env, val)
+\fB     ret_buf \fIenv;
+\fB     int \fIval;\fR
+.fi
+.SH DESCRIPTION
+These routines deal with errors 
+and interrupts encountered in
+a low-level subroutine of a program.
+.PP
+.B Setret 
+saves its stack environment in
+.I env
+for later use by
+.B longret.
+It returns value 0.
+.PP
+.B Longret
+restores the environment saved by the last call of
+.BR setret .
+It then returns so that execution
+continues as if the call of 
+.B setret
+had just returned the value
+.I val
+to the function that invoked
+.B setret,
+which must not return in the interim.
+All accessible data have values as of the time
+.B longret
+was called.
+.PP
+.B Longret 
+and
+.B setret
+are like
+.I longjmp
+and 
+.I setjmp
+routines on other V7 Unix systems. The only difference is
+that there must not be any declaration of register variables
+in the routine that calls 
+.B setret.
+.SH SEE ALSO
+signal(2).

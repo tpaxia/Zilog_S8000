@@ -1,0 +1,98 @@
+.po 1i
+.TH TIME 2 Bell
+.V 08/15/84 17:15:44
+.\"@[$]time.2	1.8	08/15/84 17:15:44 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+time, ftime \- get date and time
+.SH SYNOPSIS
+.B long time((long *) 0)
+.PP
+.B long time(
+.I tloc)
+.br
+.B long
+.I *tloc;
+.sp
+.B #include <sys/types.h>
+.br
+.B #include <sys/timeb.h>
+.br
+.B ftime(
+.I tp)
+.br
+.B struct
+.I timeb *tp;
+.SH DESCRIPTION
+.B Time
+returns the time since 00:00:00 GMT, Jan. 1, 1970, measured
+in seconds.
+.PP
+If
+.I tloc
+is nonnull,
+the return value is also stored in the
+place to which
+.I tloc
+points.
+.PP
+The
+.I ftime
+entry fills in a structure pointed to by its argument,
+as defined by
+.IR sys/timeb.h :
+.PP
+.nf
+.ta .5i +\w'unsigned 'u
+/*
+ * Structure returned by ftime system call
+ */
+struct timeb {
+    time_t	time;
+    unsigned short millitm;
+    short	timezone;
+    short	dstflag;
+};
+.fi
+.PP
+The structure contains the time since the beginning of the system,
+up to 1000 milliseconds of more-precise interval,
+the local timezone (measured in minutes of time 
+westward from Greenwich),
+and a flag that, if nonzero, indicates that
+Daylight Saving time applies locally 
+during the appropriate part of the year.
+.SH DIAGNOSTICS
+.B Time
+will fail if 
+.I tloc
+points to an illegal address.
+.SM \%[EFAULT]
+.SH RETURN VALUE
+If sucessful,
+.B time
+returns the time (a long value, measured in seconds).
+Otherwise it returns \-1 and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+date(1), stime(2), ctime(3).
+.SH ASSEMBLER
+.na
+.nf
+    CONSTANT FTIME	:= 35
+
+    ...		!* tp in r0 *!
+    		!* (segmented: tp in rr0) *!
+    clr	r4
+    sc	#FTIME
+    ...		!* return value in r4, carry flag set if error	*!
+
+    CONSTANT TIME	:= 13
+
+    ...
+    sc	#TIME
+    ...		!* time since 1970 in rr4 *!
+.ad
+.fi

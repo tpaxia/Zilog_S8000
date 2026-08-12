@@ -1,0 +1,39 @@
+.po 1i
+.TH GPASSWD 1 Zilog
+.V $D
+.\" @[$]gpasswd.1	1.8 08/15/84 16:53:56 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+gpasswd \- change group password
+.SH SYNOPSIS
+.B gpasswd
+[ \fIname\fR ]
+.SH DESCRIPTION
+This command changes (or installs) a password
+associated with the group
+.IR name
+(your own group by default).
+.PP
+The program prompts for the old password and then for the new one.
+The caller must supply both.
+The new password must be typed twice to forestall mistakes.
+.PP
+New passwords must be at least four characters long if they use
+a sufficiently rich alphabet and at least six characters long
+if monocase.
+.PP
+Only the owner of the name or the super-user can change a password;
+the owner must prove he knows the old password.
+.PP
+Once the password has been
+changed, a notice is sent to all members of the group.
+.SH FILES
+/etc/passwd
+.br
+/etc/gtmp*
+.SH SEE ALSO
+login(1), crypt(3), passwd(5).
+.SH LIMITATIONS
+Under certain conditions the group file will not be updated.
+In these situations the new file resides in /etc/gtmp*.

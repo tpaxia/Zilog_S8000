@@ -1,0 +1,237 @@
+.po 1i
+.TH CDC 1 Bell
+.V 08/15/84 16:39:55
+.\" @[$]cdc.1	1.12 08/15/84 16:39:55 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cdc \- change the delta commentary of an SCCS delta
+.SH SYNOPSIS
+.B cdc -r\fISID [\fB\-m\fI[MRlist]] [\-\fBy\fI[comment]] file\fR ...
+.SH DESCRIPTION
+.B Cdc
+alters the 
+delta (change) commentary of each named \fIfile\fR
+for the Source Code Control System Identification String (SID) specified by the
+.B \-r
+keyletter. 
+.PP
+A delta commentary
+is defined to be the Modification Request
+(\fIMR\fR)
+and comment information normally specified via the
+.BR delta (1)
+command
+(\fB\-m\fR
+and 
+.B \-y
+keyletters).
+.PP
+If \fIfile\fR is a directory,
+.B cdc
+behaves as though each file in the named directory were named specifically.
+However, non-SCCS files (last component of the
+pathname does not begin with 
+.BR s. )
+and unreadable files
+are silently ignored.
+If the argument  
+.B \-
+is given, the standard (usually keyboard) input is read (see 
+.BR WARNINGS );
+each line of the standard input is taken to be the name of an
+SCCS file to be processed.
+.PP
+Arguments to
+.BR cdc ,
+which may appear in any order, consist of
+keyletters, their 
+arguments, and \fIfiles\fR. 
+.PP
+All the described
+keyletter
+arguments (eg: \fB-m\fI[MRlist\fR]) apply independently to each named 
+\fIfile\fR. 
+.TP
+\fB\-m\fR[\fIMRlist\fR]
+If the SCCS file has the
+.B v
+flag set (see 
+.BR admin (1))
+then a list of 
+.I MR
+numbers
+to be added to, or deleted from, the delta commentary of the
+.I SID
+specified by the
+.B \-r
+keyletter may be supplied.
+The list begins and ends with the double-quote character when
+more than one number is given.
+A null
+.I MRlist
+has no effect.
+.IP
+.I MRlist
+members are added to the list of 
+.IR MR s
+in the same
+manner as that of 
+.BR delta (1).
+In order to delete an 
+.IR MR ,
+precede the 
+.I MR
+number
+with the character 
+.B !
+(see 
+.BR EXAMPLES ).
+If the 
+.I MRlist
+member to be deleted is currently in the list of
+.IR MR s,
+it is removed and changed into a comment line.
+A list of all deleted 
+.IR MR s
+is placed in the comment section
+of the delta commentary and preceded by a comment line stating
+that they were deleted.
+.IP
+If 
+.B \-m
+is not used and the standard input is a terminal,
+the prompt 
+.B MRs?
+is issued on the standard output before
+the standard input is read; if the standard input is not a
+terminal, no prompt is issued.
+The 
+.B MRs?
+prompt always precedes the 
+.B comments?
+prompt
+(see
+.B \-y
+keyletter).
+.IP
+.I MRlist
+members are separated by blanks and/or tab characters.
+An unescaped new-line character terminates the 
+.I MRlist.
+.IP
+Note that if the
+.B v
+flag has a value (see 
+.BR admin (1)),
+it is taken to be the
+name of a program (or shell procedure) that validates
+the correctness of the 
+.I MRlist
+numbers.
+If a non-zero exit status is returned from the 
+.I MRlist
+number
+validation program,
+.B cdc
+terminates and the delta commentary remains unchanged.
+.TP
+\fB\-r\fISID\fR
+Specifies the 
+\fIS\fRCCS \fIID\fRentification string (SID)
+of a delta for which the delta commentary is to be changed.
+.TP
+\fB\-y\fR[\fIcomment\fR]
+Specifies arbitrary text to replace the 
+.I comment
+already existing for the delta specified by the
+.B \-r
+keyletter.
+The previous comment is kept and preceded by a comment
+line stating that the comment was changed. 
+A null 
+.I comment
+has no effect. A comment of more than one word must be enclosed in double
+quotes.	
+.IP
+If
+.B \-y
+is not specified and the standard input is a terminal, the
+prompt 
+.B comments?
+is issued on the standard output before
+the standard input is read.
+If the standard input is not a terminal, no prompt is issued.
+An unescaped new-line character terminates the 
+.I comment
+text.
+.PP
+The exact permissions necessary to modify the SCCS file
+are documented in the
+.I Source Code Control System User's Guide
+in the ZEUS Utilities Manual.
+Simply stated, they are either (1) if you made the delta,
+you can change its delta commentary;  or (2) if you own the
+file and directory you can modify the delta commentary.
+.SH EXAMPLES
+.RS 5n
+\fBcdc \-r1.4
+\-mb176-98765 -yMisspelling s\fI.file
+.RE
+.PP
+adds b176-98765 to the MR list and adds the comment
+"Misspelling"
+to delta 1.4 of s.\fIfile.
+.PP
+.RS 5n
+\fBcdc \-r1.6
+\-m"bl78-12345 !bl77-54321 bl79-00001" \\ 
+.br
+\-y"Big trouble" s.\fIfile
+.RE
+.PP
+adds bl78-12345 and bl79-00001 to the 
+MR list, removes bl77-54321
+from the MR list, and adds the comment 
+"Big trouble"
+to delta 1.6 of s.\fIfile.
+.bp
+.RS 5n
+\fBcdc \-r1.6
+s.\fIfile
+.br
+\fB\s-1MR\s+1s? !bl77-54321 bl78-12345 bl79-00001
+.br
+comments? Big trouble\fR
+.RE
+.PP
+does the same thing.
+.DT
+.SH WARNINGS
+If SCCS file names are supplied to the
+.B cdc
+command via the standard input (
+.B \-
+on the command line), then the
+.B \-m
+and
+.B \-y
+keyletters must also be used.
+.SH FILES
+.TP 10
+x-file (see delta(1))
+.TP
+z-file (see delta(1))
+.PD
+.SH SEE ALSO
+admin(1),
+delta(1),
+get(1),
+help(1),
+prs(1),
+sccsfile(5).
+.br
+.I "Source Code Control System User's Guide\^"
+in the ZEUS Utilities Manual
+.SH DIAGNOSTICS
+Use help(1) for explanations.

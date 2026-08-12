@@ -1,0 +1,20 @@
+.po 1i
+.TH UNSETENV 1C UCB
+.V 08/15/84 17:08:53
+.\" @[$]unsetenv.1C	1.6 08/15/84 17:08:53 - Zilog Inc.
+.ad
+.SH NAME
+unsetenv \- remove an environment variable
+.SH SYNOPSIS
+\fBunsetenv\fI 
+.I name
+.SH DESCRIPTION
+The command 
+.BI unsetenv " name"
+\fRremoves the environment variable
+.I name
+from the list of variables set with the \fBsetenv\fR(1) command.
+.SH SEE ALSO
+csh(1), env(1), printenv(1), setenv(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual.

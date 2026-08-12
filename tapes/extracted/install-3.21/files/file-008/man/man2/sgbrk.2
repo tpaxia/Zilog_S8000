@@ -1,0 +1,99 @@
+.po 1i
+.TH SGBRK 2 Zilog
+.V 08/15/84 17:15:02
+.\" @[$]sgbrk.2	1.13 08/15/84 17:15:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sgbrk \- change the size of a data segment
+.SH SYNOPSIS
+.B char *sgbrk
+.I (addr) 
+.br
+.B char
+.I *addr
+.sp
+.B char *ssgbrk
+.I (segno, incr)
+.br
+.B unsigned
+.I segno, incr
+.SH DESCRIPTION
+These system calls are the segmented versions of the 
+.BR brk (2)
+and
+.BR sbrk (2)
+calls and are not legal for non-segmented users.
+The 
+.B sgbrk
+system call changes the size of a presently known, 
+non-sharable, writable data segment.
+The 
+.I addr
+argument is a segmented address, with the offset equal
+to the desired new size of the data segment.
+The new segment size is rounded up to the next 256 byte boundary past
+the offset given by the caller.
+If  
+.I addr
+is a 0L,
+then
+.B sgbrk 
+returns the current high data address of the program.
+Otherwise,
+.B sgbrk 
+returns a segmented pointer to the new area on a successful
+call, or a -1L if the call failed.
+.PP
+The
+.B ssgbrk
+system call changes the size of a presently known, 
+non-sharable, writable data segment by the given 
+.I increment.
+The user must provide the segment number,
+.I segno.
+A segmented address is returned
+which is a pointer to the start of the requested area. If 
+.I incr 
+is 0, the returned address points to the current end
+of the data segment.
+.PP
+If a segment is sharable with other processes, its size may
+not be changed.
+Additionally, a segment must be writable to change its size.
+This restriction is to prevent alteration of shared text setuid/setgid
+programs.  
+.SH SEE ALSO
+mkseg(2), exec(2), sld(1).
+.SH DIAGNOSTICS
+Both of these calls return a  -1L on an error. Common errors are:
+the segment size exceeding 64K bytes, the program size exceeding the 
+system's limits, or illegal segment number.
+.SH ASSEMBLER
+.PP
+Note that the 
+.B sgbrk
+call is implemented in terms of the brk(2) call.
+.nf
+.na
+	CONSTANT SGBRK	:= 17
+
+	...		!* new break value in rr0 *!
+	clr	rr4
+	sc	#SGBRK
+	...		!* return value in rr4 *!
+	   		!* carry flag set if error *!
+.fi
+.nf
+.na
+
+	CONSTANT SSGBRK	:= 45
+
+	...		!* segment number in r0   *!
+	...		!* increment in r1        *!
+	clr	rr4
+	sc	#SSGBRK
+	...		!* return value in rr4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

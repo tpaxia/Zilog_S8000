@@ -1,0 +1,40 @@
+.po 1i
+.TH MESG 1 Bell
+.V 08/15/84 16:58:33
+.\" @[$]mesg.1	1.5	08/15/84 16:58:33 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mesg \- permit or deny messages
+.SH SYNOPSIS
+.B mesg
+[
+.B n
+] [
+.B y
+]
+.SH DESCRIPTION
+With no arguments,
+.B mesg
+reports the current state without changing it.
+.SH OPTIONS
+.TP
+.B n
+Forbids messages via
+.BR write (1)
+or
+.BR talk (1),
+by revoking non-user write permission on the user's terminal.
+.TP
+.B y
+Reinstates permission.
+.SH FILES
+/dev/tty*
+.br
+/dev
+.SH SEE ALSO
+talk(1),
+write(1).
+.SH DIAGNOSTICS
+Exit status is 0 if messages are receivable,
+1 if not, 2 on error.

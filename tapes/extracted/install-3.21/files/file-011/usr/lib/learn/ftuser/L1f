@@ -1,0 +1,14 @@
+#print
+To display the sorted output, you created a file containing unsorted
+output and then sorted the file. Instead, you can do the same work in
+one step by using a pipe from one program to the next. Connect count
+and sort with the pipe symbol (vertical bar) so that the output from
+count is used as input to sort:   count | sort (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+1g

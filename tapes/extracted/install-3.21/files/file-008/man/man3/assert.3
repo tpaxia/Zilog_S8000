@@ -1,0 +1,44 @@
+.po 1i
+.TH ASSERT 3 Bell
+.V 08/15/84 17:17:00
+.\" @[$]assert.3	1.7	08/15/84 17:17:00 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+assert \- program verification
+.SH SYNOPSIS
+.B #include <assert.h>
+.PP
+.B assert
+(
+.I expression
+)
+.SH DESCRIPTION
+.PP
+.B Assert
+is a macro that indicates
+.I expression
+is expected to be true at this point in the program.
+It causes an
+.BR exit (2)
+with a diagnostic comment to the standard error
+when
+.I expression
+is false (return of 0).
+Compiling with the 
+.BR cc (1)
+preprocessor option
+.SM
+.B \-DNDEBUG
+effectively deletes
+.I assert
+from the program.
+.SH DIAGNOSTICS
+"Assertion failed: file \fIf\fR line \fIn\fR."
+.I F
+is the source file and
+.I n
+the source line number
+of the
+.B assert
+statement.

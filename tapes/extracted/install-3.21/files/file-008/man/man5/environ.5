@@ -1,0 +1,79 @@
+.po 1i
+.TH ENVIRON 5 Bell
+.V 08/15/84 17:34:29
+.\"@[$]environ.5	1.6	08/15/84 17:34:29 - Zilog Inc.
+.ad
+.SH NAME
+environ \- user environment
+.SH SYNOPSIS
+.B extern char **environ;
+.SH DESCRIPTION
+An array of strings called the environment is
+made available by
+.BR exec (2)
+when a process begins.
+These strings have the form name=value.
+.BR csh (1)
+and
+.BR vi (1)
+internalize environment variables and 
+display them via the \fBset\fR command.
+The following names are used by various commands:
+.TP
+PATH
+The sequence of directory prefixes that
+.BR sh (1),
+.BR time (1),
+.BR nice (1),
+etc.,
+apply in searching for a file known by an incomplete path name.
+The prefixes are separated by :.
+.BR login (1)
+sets PATH=:/bin:/usr/bin.
+.BR csh (1)
+uses the variable path.
+.TP
+HOME
+A user's login directory, set by
+.B login
+from the password file
+.BR passwd (5).
+.B csh
+uses the variable \fIhome\fR.
+.TP
+TERM
+The kind of terminal for which output is to be prepared.
+This information is used by commands, such as
+.BR nroff (1)
+that exploit special terminal capabilities.
+.B Login
+sets TERM based on entries found in /etc/ttytype.
+See
+.BR term (7)
+for a list of terminal types.
+.TP
+TZ
+Time zone information.  The format is xxxnzzz, where xxx is the standard
+time zone abbreviation, n is the difference in hours from GMT, and
+zzz is the abbreviation for the daylight savings local time zone,
+if any; for example, PST8PDT.
+.PP
+Further names are placed in the environment by
+the
+.B export
+command and name=value arguments in
+.BR sh (1),
+or by 
+.BR exec (2).
+Do not conflict with certain shell 
+variables that are frequently exported by
+\&.profile files:
+MAIL, PS1, PS2, IFS.
+.SH SEE ALSO
+csh(1),
+login(1),
+sh(1),
+exec(2),
+ttytype(5),
+term(7),
+termlist(7).

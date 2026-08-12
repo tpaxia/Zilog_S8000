@@ -1,0 +1,155 @@
+.po 1i
+.TH ACULIB 3 Zilog
+.V 08/15/84 17:16:54
+.\" @[$]aculib.3	1.6 08/15/84 17:16:54
+.ad
+.fi
+.UC 4
+.SH NAME
+agetent, agetnum, agetflag, agetchar, agetstr,
+getconfig, get_acap, bld_telno \- ACU independent operation routines
+.SH SYNOPSIS
+.nf
+.B agetent(bp, name)
+.B char *bp, *name;
+.PP
+.B agetnum(bp, id)
+.B char *bp, *id;
+.PP
+.B agetflag(bp, id)
+.B char *bp, *id;
+.PP
+.B agetchar(bp, id)
+.B char *bp, *id;
+.PP
+.B agetstr(bp, id, str)
+.B char *bp, *id, *str;
+.PP
+.B char acutype[5],
+\fB     do_num[5],\fR
+\fB     md_addr[20];\fR
+\fBchar IF, TA, PA, LD, EN, RD, RW, RA, AB,\fR
+\fB     RC, RB, RN, RO, RE,\fR
+\fB     SC[20], EC[20];\fR
+.PP
+.B getconfig(acuname, linename)
+.B char *acuname, *linename;
+.PP
+.B get_acap()
+.PP
+.B bld_telno(number, buffer)
+.B char *number, *buffer;
+.fi
+.SH DESCRIPTION
+These functions extract and use information from the ACU capability
+data base,
+.BR acucap (5),
+and the ACU configuration file,
+.BR acutype (5).
+.PP
+.B Agetent
+extracts the entry for ACU
+.I name
+into the buffer at
+.I bp.
+.I Bp
+is a character buffer of size
+1024 and must be passed to all subsequent calls
+to
+.BR agetnum ,
+.BR agetflag ,
+.BR agetchar ,
+and
+.BR agetstr .
+.B Agetent
+returns \-1 if it cannot open the
+.B acucap
+file, 0 if the ACU name given does not have an entry,
+and 1 if all goes well.
+.PP
+.B Agetnum
+gets the numeric value of capability
+.I id,
+returning \-1 if is not given for the ACU.
+.B Agetflag
+returns 1 if the specified capability is present in
+the ACU's entry, 0 if it is not.
+.PP
+.B Agetstr
+gets the string value of capability
+.I id,
+and places it in the buffer
+.I str,
+returning \-1 if not given for the ACU. Otherwise,
+.B agetstr
+returns the length of the string capability in
+.I str.
+It decodes the abbreviations for this field described in
+.BR acucap (5).
+.PP
+.B Agetchar
+gets the character value of capability
+.I id,
+returning \-1 if is not given for the ACU and 0 if the
+capability is a string.
+It decodes the abbreviations for this field described in
+.BR acucap (5).
+.PP
+.B Getconfig
+checks the configuration file /usr/acu/acutype
+to see if there is a PN entry of
+.I acuname
+and if that entry has an MD entry of
+.I linename.
+If so, it means that
+.I acuname
+and
+.I linename
+are physically connected and 
+.B getconfig
+returns 1. Otherwise, it returns 0.
+Also, 
+.B getconfig
+puts the type of ACU (TY entry) into
+.I acutype,
+the dial-out digit (DO entry) into
+.I do_num
+and the modem address string (attached to the MD entry) into
+.I md_addr.
+.PP
+.B Get_acap
+gets the capability data for
+.I acutype
+from /usr/acu/acucap
+and places it in the variables IF, SC, EC, etc.
+.PP
+.B Bld_telno
+processes the user's telephone number string
+.I number.
+It uses data in the variables IF, SC, EC, etc.
+to format the number for transmission to the ACU. 
+.B Bld_telno
+places the correctly formatted number in
+.I buf.
+It will also insert a TA (tandem) character after the
+first character of
+.I number
+if that character matches
+.I do_num
+and the number of digits to be dialed is 8, 11 or 12.
+This means that to dial out of a PBX,
+no special characters are needed in the
+.I number
+passed.
+.SH FILES
+.nf
+/usr/lib/libacu.a		acu library (non-segmented)
+.br
+/usr/lib/slibacu.a		acu library (segmented)
+.br
+/usr/acu/acucap 		capability data base
+.br
+/usr/acu/acutype		configuration file
+.DT
+.SH SEE ALSO
+dial(3), acucap(5), acutype(5)

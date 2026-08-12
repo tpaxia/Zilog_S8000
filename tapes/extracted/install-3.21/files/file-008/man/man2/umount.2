@@ -1,0 +1,84 @@
+.po 1i
+.TH UMOUNT 2 Bell
+.V 08/15/84 17:15:57
+.\" @[$]umount.2	1.4	08/15/84 17:15:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+umount \- unmount a file system
+.SH SYNOPSIS
+.B int umount
+.I (spec)
+.br
+.B char 
+.I *spec;
+.SH DESCRIPTION
+.B Umount
+requests that a previously mounted file system contained on the
+block special device identified by
+.I spec
+be unmounted.
+.I Spec
+is a pointer to a path name.
+After unmounting the file system,
+the directory upon which the file system was 
+mounted reverts to its ordinary
+interpretation.
+.PP
+.B Umount
+may be invoked only by the super-user.
+.SH DIAGNOSTICS
+.B Umount
+will fail if one or more of the following are true:
+.IP
+The process's effective user
+.SM ID
+is not super-user.
+.SM
+\%[EPERM]
+.IP
+.I Spec
+does not exist.
+.SM
+\%[ENXIO]
+.IP
+.I Spec
+is not a block special device.
+.SM
+\%[ENOTBLK]
+.IP
+.I Spec
+is not mounted.
+.SM
+\%[EINVAL]
+.IP
+A file on
+.I spec
+is busy.
+.SM
+\%[EBUSY]
+.IP
+.I Spec
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH SEE ALSO
+mount(1M), mount(2).
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT UMOUNT	:= 22
+
+	...		!* spec in r0 *!
+			!* (segmented: spec in rr0) *!
+	clr	r4
+	sc	#UMOUNT
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.ad
+.fi

@@ -1,0 +1,53 @@
+#
+#Installation script for updating Zeus 3.21
+#If you do not wish all the changes to be installed
+#this script must be edited.
+
+echo "Starting Installation."
+
+cd 3.21.update
+mkdir /tmp/save >& /dev/null
+mkdir /usr/lib/me >& /dev/null
+mv *.me /usr/lib/me
+
+foreach a (cparse scparse codgen scodgen cpp popt spopt libc.a slibc.a)
+cp /lib/$a /tmp/save
+mv $a /lib
+end
+
+foreach a (delta get prs val)
+mv $a /usr/bin
+end
+
+foreach a (cc scc cas sld)
+cp /bin/$a /tmp/save
+mv $a /bin
+end
+
+foreach a (libcurses.a slibcurses.a libscreen.a slibscreen.a lp_nf text_nf)
+cp /usr/lib/$a /tmp/save
+mv $a /usr/lib
+end
+
+cp /usr/sys/sys/LIB1 /tmp/save
+cp /usr/sys/dev/LIB2 /tmp/save
+cp /usr/sys/dev/md.o /tmp/save
+
+
+mv md.o /usr/sys/dev
+mv malloc.o /lib
+mv sys1.o /usr/sys/sys
+
+cd /usr/sys/sys
+ar r LIB1 sys1.o
+
+
+cd /lib
+ar r slibc.a malloc.o
+
+cd /usr/sys/conf
+
+echo "Installation complete."
+echo "Sysgen a new kernel to install the system and reboot."
+
+

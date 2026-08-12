@@ -1,0 +1,112 @@
+.po 1i
+.TH GETGRENT 3 Bell
+.V 08/15/84 17:19:46
+.\" @[$]getgrent.3	1.11	08/15/84 17:19:46 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+getgrent, getgrgid, getgrnam, setgrent, endgrent \- get group file information
+.SH SYNOPSIS
+.nf
+\fB#include <grp.h>
+.PP
+\fB     struct group *getgrent();
+.PP
+\fB     struct group *getgrgid\fR(\fIgid\fR)\fB int \fIgid;\fR
+.PP
+\fB     struct group *getgrnam\fR(\fIname\fR)\fB char *\fIname;\fR
+.PP
+\fB     int setgrent();
+.PP
+\fB     int endgrent();\fR
+.fi
+.SH DESCRIPTION
+Each call to
+.B getgrent,
+.B getgrgid
+and
+.B getgrnam
+reads one or more lines from a single input stream
+opened from the group file.
+The function places the contents of the
+last line read in a structure and returns a pointer to this
+structure.
+.B Getgrent
+reads a single line;
+.B getgrgid
+reads until its argument is matched by the numeric group
+ID field of the last line read;
+.B getgrnam
+reads until its argument string is matched by the name
+field of the last line read.
+.PP
+.B Setgrent
+rewinds the input stream:  subsequent calls to
+.B getgrent,
+.B getgrid,
+or
+.B getgrnam
+start from the beginning of the file.
+.PP
+.B Endgrent
+closes the input stream.
+This can be used to prevent the process from running out
+of file descriptors.
+.PP
+.B Getgrent,
+.B getgrid,
+and
+.B getgrnam
+point to a structure of type
+.I group.
+This is the declaration of
+.I group:
+.RS
+.PP
+struct	group { /* see getgrent(3) */
+.br
+	char	*gr_name;
+.br
+	char	*gr_passwd;
+.br
+	int	gr_gid;
+.br
+	char	**gr_mem;
+.br
+};
+.RE
+.PP
+The members of this structure are:
+.TP
+gr_name
+The group's name.
+.br
+.ns
+.TP
+gr_passwd
+The group's encrypted password.
+.br
+.ns
+.TP
+gr_gid
+The numerical group-ID.
+.br
+.ns
+.TP
+gr_mem
+Null-terminated vector
+of pointers to the individual
+member names.
+.SH FILES
+/etc/group - group file
+.SH SEE ALSO
+getlogin(3),
+getpwent(3),
+group(5).
+.SH DIAGNOSTICS
+A null pointer
+(0) is returned on end of file, search failure, or error.
+.SH LIMITATIONS
+The pointer returned points to a static structure;
+information in this structure must be copied if it is
+to be saved.

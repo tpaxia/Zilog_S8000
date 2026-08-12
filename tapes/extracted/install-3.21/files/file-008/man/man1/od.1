@@ -1,0 +1,98 @@
+.po 1i
+.TH OD 1 Bell
+.V 08/15/84 17:00:26
+.\" @[$]od.1	1.6	08/15/84 17:00:26 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+od, hd  \- octal or hex dump 
+.SH SYNOPSIS
+.B od
+[
+.B \-bcdox
+] [ \fIfile\fR ] [ [
+.B +
+[x]]\fIoffset\fR[
+.BR ". " "]["
+\fBb\fR ] ]
+.br
+.sp 1
+.B hd
+[
+.B \-bcdox
+] [ \fIfile\fR ] [ [
+.B +
+[x]]\fIoffset\fR[
+.BR ". " "]["
+\fBb\fR ] ]
+.SH DESCRIPTION
+.B Od
+dumps
+.I file
+in
+one or more formats
+as
+selected by the first argument.
+If the first argument is missing,
+.B \-o
+is default.
+.PP
+The
+.I file
+argument specifies which file is to be dumped.
+If no file argument is specified,
+the standard input is used.
+.PP
+The offset argument specifies the offset
+in the file where the dump starts.
+This argument is normally interpreted
+as octal bytes by od and hex bytes by hd.
+If the offset is preceded by a \fBx\fR or \fB0x\fR, the offset 
+is interpreted as hex.
+If dot is appended, the offset is interpreted in decimal.
+If \fBb\fR is appended, the offset is interpreted in blocks 
+of 512 bytes.
+If the file argument is omitted, the offset argument must be preceded 
+.RB  +.
+.PP
+Dumping continues until end-of-file.
+.PP
+An asterisk (*) is generated when the data to be displayed
+on the next two or more lines is identical to the line just
+displayed.
+The asterisk is placed in column 1 of the line.
+.PP
+.B Hd
+is the same program as
+.B od
+but with the default dump option of
+.B \-x.
+.SH OPTIONS
+.TP 3
+.B  \-b
+Interpret bytes in octal.
+.TP 3
+.B  \-c
+Interpret bytes in ASCII.
+Certain nongraphic characters appear as C escapes:
+null=\e0,
+backspace=\eb,
+form feed=\ef,
+new line=\en,
+return=\er,
+tab=\et;
+others appear as three-digit octal numbers (for
+.B od)
+and hex numbers (for
+.B hd).
+.TP 3
+.B  \-d
+Interpret words in decimal.
+.TP 3
+.B  \-o
+Interpret words in octal.
+.TP 3
+.B  \-x
+Interpret words in hex. Display addresses in hex.
+.SH SEE ALSO
+adb(1), objdu(1), objhdr(1).

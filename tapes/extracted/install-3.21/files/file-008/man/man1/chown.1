@@ -1,0 +1,48 @@
+.po 1i
+.TH CHOWN 1 Bell
+.V 08/15/84 16:41:49
+.\"@[$]chown.1	1.5	08/15/84 16:41:49 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+chown \- change the owner-name of a file 
+.SH SYNOPSIS
+\fBchown\fI owner file\fR
+.PP
+.SH DESCRIPTION
+.B Chown
+changes the owner of the
+.I files
+to
+.IR owner .
+The owner may be either a decimal user-ID number or
+a login name found in the /etc/passwd file.
+.SH EXAMPLES
+The command:
+.sp
+.RS
+\fBchown \fIbill test.c\fR
+.RE
+.sp
+.PP
+changes the ownership of the 
+file \fItest.c\fR to \fIbill\fR (assuming \fIbill\fR is a 
+valid user-name in the \fI/etc/passwd\fR file).
+.SH FILES
+ /etc/chown
+.br
+ /etc/passwd
+.SH SEE ALSO
+ chown(2), chgrp(1), passwd(5), group(5), chmog(M).
+.PP
+.SH LIMITATIONS
+.PP
+ Only the owner or the super-user should be able to
+change the ownership of a file.
+
+.ad
+.fi
+
+
+
+

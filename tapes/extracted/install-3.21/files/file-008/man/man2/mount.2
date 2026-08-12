@@ -1,0 +1,149 @@
+.po 1i
+.TH MOUNT 2 Bell
+.V 08/15/84 17:14:27
+.\" @[$]mount.2	1.8	08/15/84 17:14:27 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mount, umount \- mount or remove file system
+.SH SYNOPSIS
+.B int mount
+.I (special, directory, rwflag)
+.br
+.B char
+.I *special, *directory;
+.br 
+.B int
+.I  rwflag;
+.PP
+.B int umount
+.I (special)
+.br
+.B char
+.I *special;
+.SH DESCRIPTION
+.B Mount
+announces to the system that a removable file system has
+been mounted on
+the block-structured special file
+.I special.
+From then on, references to
+.I directory
+refer to
+the root file on the newly mounted file system.
+.I Special
+and
+.I directory
+are pointers to the appropriate path names.
+.PP
+.I Directory
+must exist already. 
+.I Directory
+must be a directory (unless the root of the mounted file system
+is not a directory).
+Its old contents
+are inaccessible while the file system
+is mounted.
+.PP
+The
+.I rwflag
+argument determines whether
+the file system can be written on; if it is 0 writing
+is allowed, if nonzero, no writing is done.
+Physically write-protected and magnetic
+tape file systems must be mounted read-only or
+errors will occur when access times are updated,
+whether or not any
+explicit write is attempted.
+.PP
+.B Umount
+announces to the system that the
+.I special
+file is no longer to contain a removable file system.
+The associated file reverts to its ordinary interpretation.
+.SH SEE ALSO
+mount(M), umount(2).
+.SH DIAGNOSTICS
+.B Mount
+will fail if one or more of the following are true:
+.IP
+The effective user
+.SM ID
+is not super-user.
+.SM
+\%[EPERM]
+.IP
+Any of the named directories do not exist.
+.SM
+\%[ENOENT]
+.IP
+A component of a
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+.I Special
+is not a block special device.
+.SM
+\%[ENOTBLK]
+.IP
+The device associated with
+.I special
+does not exist.
+.SM
+\%[ENXIO]
+.IP
+.I Directory
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+.I Special
+or
+.I directory
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.IP
+.I Directory
+is currently mounted on, is someone's current working directory
+or is otherwise busy.
+.SM
+\%[EBUSY]
+.IP
+The device associated with
+.I special
+is currently mounted.
+.SM
+\%[EBUSY]
+.SH RETURN VALUE
+Upon successful completion a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT MOUNT	:= 21
+
+	...		!* special, mode, rwflag in *!
+	   		!* r0, r1, r2 respectively *!
+			!* (segmented: special, mode, rwflag in *!
+			!* rr0, rr2 and r4) *!
+	clr	r4
+	sc	#MOUNT
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+
+
+	CONSTANT UMOUNT	:= 22
+
+	...		!* special in r0	*!
+			!* (segmented: special in rr0) *!
+	clr	r4
+	sc	#UMOUNT
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

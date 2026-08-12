@@ -1,0 +1,67 @@
+.po 1i
+.TH CHDIR 2 Bell
+.V 08/15/84 17:12:34
+.\" @[$]chdir.2	1.8	08/15/84 17:12:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+chdir \- change working directory
+.SH SYNOPSIS
+.B int chdir
+.I (dirname)
+.br
+.B char
+.I  *dirname;
+.SH DESCRIPTION
+.I Dirname
+is the address of the pathname of a directory,
+terminated by a null byte.
+.B Chdir
+causes this directory
+to become the current working directory,
+the starting point for path names not beginning with /.
+.SH SEE ALSO
+cd(1C), chroot(2).
+.SH DIAGNOSTICS
+.B Chdir
+will fail and the current working directory will be unchanged if
+one or more of the following are true:
+.IP
+A component of the
+path name
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+The named directory does not exist.
+.SM
+\%[ENOENT]
+.IP
+Search permission is denied for any component of the
+path name.
+.SM
+\%[EACCES]
+.IP
+.I Path
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT CHDIR	:= 12
+	...		!* non-segmented: dirname in r0	*!
+			!* (if segmented: dirname in rr0) *!
+	clr	r4
+	sc	#CHDIR
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+
+
+.fi
+.ad

@@ -1,0 +1,294 @@
+.po 1i
+.TH LOAD 1 Zilog
+.V 08/15/84 16:56:36
+.\" @[$]load.1	1.13	08/15/84 16:56:37 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+LOAD \- Download to Z8000, Z8 Development Module, or ICP.
+.SH SYNOPSIS
+.B LOAD
+.I file
+.SH DESCRIPTION
+.B LOAD
+takes an executable Z8000 or Z8 load module
+and downloads the text, data, and bss sections
+into a Z8000
+or Z8 Development Module, or into an System 8000 Intelligent
+Communications Processor (ICP) executing from the System 8000
+firmware monitor.   
+The hardware links for the DMs are described in the DM manuals; for the
+ICP, see the System 8000 Hardware Reference Manual, Section 3.3.2.
+The load module's magic number must be N_MAGIC1, 
+X_MAGIC1, or X_MAGIC3 for the DMs; S_MAGIC1 or S_MAGIC3 for the ICP. For
+S_MAGIC3 file types, the text, data, and bss must be contiguous;
+only the stack may reside in a different segment.
+See  \fBa.out\fR(5).
+The execute permission bit is checked to ensure that the load module
+contains no errors.
+.PP
+LOAD determines the load points of the text and data by inspecting 
+the header and the segment table. The segment table
+contains the upper eight bits of each load point; 
+the text, data, and bss sections are loaded only on
+256-byte boundaries.
+The load module
+must be specified to link at location 4600 hex or higher
+if the target system is a nonsegmented Z8000 DM
+or at location 5000 hex or higher if the target system is a segmented
+Z8000 DM.
+These restrictions do not apply if the target system is a
+Z8 DM.
+.PP
+If a Z8 program
+has combined instruction and data areas,
+the data section is downloaded following the code section;
+the data section is considered to be part of program memory.
+If a Z8 program
+has separate I and D areas,
+the data section is not downloaded;
+the data section references external data memory.
+The Z8 bss section references REGISTER memory; 
+LOAD does not download Z8 bss.  
+.PP
+If a file is loaded to a Z8000 DM without error,
+the DM announces the entry point of the program;
+if a file is loaded to a Z8 DM without error,
+the DM monitor prints a prompt.
+To start the program, jump to the
+entry point with the monitor JUMP command.
+If the program executes and terminates normally,
+the exit routine linked into the program
+returns the user to the monitor.
+The Z8 DM provides no exit routine; for details
+on program execution consult the
+.ul
+Z8 Development Module User's Manual.
+.PP
+.B LOAD
+is invoked from the DM monitor.
+On a Z8000 DM,
+lower-case characters can be entered at the terminal, but they are translated
+to uppercase by the monitor to maintain compatibility with Zilog's MCZ/ZDS
+RIO system. Filenames to download must be uppercase; the 
+load module file must
+reside in the current working directory unless the path is uppercase.  
+.PP
+The Z8 DM does not require uppercase input
+and the monitor makes no translation.
+No special care need be taken naming files or running
+the program from the Z8 DM.
+.SH FILES
+a.out	load module
+.SH SEE ALSO
+ld(1), SEND(1), a.out(5)
+.br
+Z8000 Development Module Monitor Program Listing\fR,
+  03-3094
+.br
+Z8000 Development Module Monitor Program Listing Errata\fR,
+  E3-3094
+.br
+Z8 Development Module User's Manual,
+  03-3157
+.br
+ICP 8/02 Hardware Reference Manual, 
+  03-3248
+.SH DIAGNOSTICS
+The DM monitor displays any error messages received from LOAD.
+The error messages are the same as for LOAD in the DM manual.
+.SH "DOWNLOAD PROCEDURE FOR THE Z8000 DM"
+.IP 1. 4
+Install the Zilog Z8000 DM between the terminal and the
+System 8000.
+The line from the System 8000
+attaches to the channel A RS-232C connection of the DM.
+The terminal attaches to channel B of the DM.
+.IP 2. 4
+Power-up the DM and turn on the terminal.
+.IP 3. 4
+Press DM RESET switch.
+The DM monitor prints its < prompt.
+.IP 4. 4
+Press DM NMI switch.
+The DM monitor prints NMI and its < prompt.
+.IP 5. 4
+Enter \fBquit\fR.
+This command allows transparent mode for communication
+with ZEUS.
+.IP 6. 4
+Press the RETURN key again, to get a response from ZEUS.
+Login to the ZEUS system if you aren't already correctly
+logged in.
+.IP 7. 4
+Create a Z8000 program for download.
+The following simple program can be used for a download example:
+.sp
+.nf
+     main()
+     {
+     printf("DOWNLOAD\ OK\\n");
+     }
+.fi
+.IP 8. 4
+Compile, assemble, and link the program.
+The C compiler might be run to do this with a command such as:
+.sp
+.nf
+     cc -o TEST -b 0x4600 test.c
+.fi
+.IP 9. 4
+Press the DM NMI switch to return control to the monitor.
+The DM monitor responds with NMI and its prompt <.
+.IP 10. 4
+Enter
+.sp
+     LOAD TEST
+.sp
+This downloads the program.
+.IP 11. 4
+Wait for the DM monitor to
+print ENTRY\ POINT\ 4DBA and the < prompt.
+Enter
+.sp
+     jump 4dba
+.sp
+This jumps to the entry point of the program.
+.IP 12. 4
+The program executes.   The
+monitor prints DOWNLOAD OK and its prompt <.
+.LP
+At this point, enter other monitor commands or
+go back to ZEUS by entering the \fBquit\fR command. 
+.SH DOWNLOAD PROCEDURE FOR THE Z8 DM
+.IP 1. 4
+Install the Zilog Z8 DM between the terminal and the
+System 8000.
+The line from the System 8000
+attaches to the DM RS-232C connection marked "computer."
+The terminal attaches to the DM connection marked "terminal."
+.IP 2. 4
+Power-up the DM and turn on the terminal.
+.IP 3. 4
+Press DM RESET switch.
+The DM monitor prints its @ prompt.
+.IP 4. 4
+Enter \fBquit\fR.
+This command allows transparent mode for communication
+with ZEUS.
+.IP 5. 4
+Press the RETURN key again, to get a response from ZEUS.
+Login to the ZEUS system if you aren't already correctly
+logged in.
+.IP 6. 4
+Create a Z8 program for download.
+The following simple program can be used for a download example:
+.sp
+.nf
+test module
+
+global
+	p1 procedure
+	entry
+		srp #%10
+	l1:	jr l1
+	end p1
+
+end test
+.fi
+.IP 7. 4
+Assemble and link the program.
+The Z8 cross-assembler and the loader would be run
+with commands such as:
+.sp
+.nf
+     z8as -o test.o test.s
+     ld -o test test.o
+.fi
+.IP 8. 4
+Press DM RESET and MODE switches.
+The monitor prompts @.
+.IP 9. 4
+Download the program with the command:
+.sp
+.nf
+     LOAD test
+.fi
+.IP 10. 4
+Wait for the DM monitor prompt, @.
+Enter
+.nf
+.sp
+     G 0
+.fi
+This jumps to the entry point of the program.
+.IP 11. 4
+The program executes and enters an infinite loop.
+Enter H to return to the monitor.
+.IP 12. 4
+Enter R.
+The register pointer has been set to %10.
+.LP
+At this point, enter other monitor commands or
+enter \fBquit\fR to return to ZEUS.
+.RE
+.DT
+.SH DOWNLOAD PROCEDURE FOR THE ICP 8/02
+.IP 1. 4
+Position the test System 8000 (w/ICP) between the terminal and
+the host System 8000,
+with the terminal connected to port 1 of the test machine,
+and port 0 of the test machine connected to any login port on the host.
+To reverse "receive" and "transmit" on this connection ("transmit"
+on the host must go to "receive" on the test machine), a 
+.I null modem
+type adapter must be used. If ZEUS is to be run on the test machine,
+the login listener on the test's port 0 must be disabled or
+the host/test connection broken. 
+.IP 2. 4
+Power-up the test machine and and turn on the terminal. DO NOT attempt
+to boot ZEUS.  
+.IP 3. 4
+Press "reset" on the test System 8000. The System 8000 monitor prints
+its prompt,
+.B [ .  
+.IP 4. 4
+Enter "Q" (quit). This command allows transparent-mode communication  
+with ZEUS.
+.IP 5. 4
+Press the RETURN key again. If not already logged in, login to ZEUS.   
+.IP 6. 4
+Create a program for download to the System 8000 or the ICP. The
+program may
+be written in any System 8000-supported language; the use of 
+.B C
+is recommended. 
+.IP 7. 4
+Compile and link the program. Refer to the examples in the
+previous download procedures.
+.IP 8. 4
+To download a program:  press the "LOAD" button on the test
+machine and enter
+.sp
+.br
+                     LOAD <NAME>
+.sp
+where <NAME> is the name of the program to download. 
+.IP 9. 4
+Wait for the System 8000 monitor to print
+.B ENTRY POINT XXXX
+and the 
+.B [
+prompt. The program resides in the test machine's segment 0; if  
+it is to be executed by the ICP processor, it must be moved into
+the proper ICP memory segment. For example, segment 0 of ICP0 is the
+same as segment 70 in the System 8000 in which the ICP resides. Enter 
+.sp
+.br
+                     M 0 <70>0 FFFF
+.sp
+to copy all of the test machine's segment 0 into ICP0's segment 0.
+.IP 10. 4
+Bring the ICP out of reset at the entry point of the program and
+begin execution.
+Refer to the System 8000 ICP 8/02 Hardware Reference Manual. 

@@ -1,0 +1,86 @@
+.po 1i
+.TH SEND 1 Zilog
+.V 08/15/84 17:03:43
+.\" @[$]send.1	1.7 08/15/84 17:03:43 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+SEND \- Uploader from the Zilog Z8000 Development Module 
+.SH SYNOPSIS
+.B SEND
+\fIfile start end [entry]\fR
+.SH DESCRIPTION
+.B SEND
+is invoked from the monitor and
+uploads memory from a Zilog Development Module (DM)
+to the ZEUS system.
+.B SEND
+creates a Z8000 memory image in the named file.
+Since the monitor translates lower-case to upper-case characters,
+the file created on the ZEUS system always receives an upper-case name.
+\fIStart, end, \fRand\fI entry \fRare 
+hexadecimal addresses, with no leading 0x.
+See the description of SEND in the DM manual.
+.PP
+The default for \fIentry\fR is \fIstart\fR, but the user should
+either omit \fIentry\fR or supply a reasonable value.
+If \fIentry\fR is omitted, the user must remember the appropriate
+address and jump to it when the program is downloaded again.
+.PP
+The text size in the header of the load module
+accounts for all of the uploaded 
+program since there is no way to discern
+the sizes of the data and bss sections.
+.PP
+The uploaded memory image is assumed to be a complete Z8000 program and
+is created in the a.out(5) load module format.
+If no errors occurred during transmission,
+the file is marked executable.
+An existing file with the same name is overwritten.
+The file is of type N_MAGIC1 (Z8000 executable) and is suitable 
+input to the download program
+.BR LOAD .
+Therefore, the downloaded program can be run or
+changed, uploaded to ZEUS, and then later downloaded again.
+.SH FILES
+load module	(in DM memory)
+.SH SEE ALSO
+ld(1), LOAD(1), a.out(5).
+.br
+Z8000 Development Module Hardware Reference Manual,
+.br
+  03-3080-01
+.br
+Z8000 Development Module Hardware Reference Manual Errata,
+.br
+  03-3080-01
+.SH DIAGNOSTICS
+The monitor displays any error messages received from SEND.
+The error messages are the same as for SEND in the DM manual.
+.SH LIMITATIONS
+\fIstart\fR must be on a 256-byte boundary such as 4600, 4700, 
+4800, and so forth.
+Otherwise, the
+.B SEND 
+program does not upload.
+.SH UPLOAD PROCEDURE
+For uploading a memory image from the Development Module
+to the ZEUS system, the steps are:
+.RS
+.IP 1. 4
+If communicating with ZEUS, press only the DM NMI switch.
+Response is NMI and the prompt <.
+.IP 2. 4
+Upload the program with a command such as:
+.sp
+.nf
+     send save 4600 5000 4dba
+.fi
+.IP 3. 4
+Response is the prompt <.
+On the ZEUS system, the current working directory now contains
+the file named SAVE.
+At this point, enter other monitor commands or
+go back to ZEUS by entering the \fIquit\fR command.
+.RE
+.DT

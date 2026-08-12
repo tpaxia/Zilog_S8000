@@ -1,0 +1,31 @@
+.po 1i
+.TH ISERASE 3 Zilog
+.V 08/15/84 17:20:48
+.\" @[$]iserase.3	1.5 08/15/84 17:20:48 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+iserase - remove a C-ISAM file and any associated audit trail file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBiserase\fI(filename)\fR
+\fBchar\fI *filename;\fR
+.fi
+.SH DESCRIPTION
+.B Iserase
+removes the filename.idx and filename.dat 
+files that comprise the C-ISAM file, as well as any audit trail
+file for the C-ISAM file, if it exists.
+The file should not be open when it is erased.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isaudit(3),
+isbuild(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

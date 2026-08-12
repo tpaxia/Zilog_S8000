@@ -1,0 +1,190 @@
+.po 1i
+.TH DM 3 Zilog
+.V 08/15/84 17:18:06
+.\" @[$]dm.3	1.9	08/15/84 17:18:06 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+abs, atoi, close, creat, exit, getc, getchar, goodmagic, length, longswap, lseek, open, printf, putc, putchar, read, swab, swap, write \- Z8000 development module library 
+.SH SYNOPSIS
+.nf
+\fBabs\fR(\fIi\fR)
+\fBint \fIi;
+.sp
+\fBatoi\fR(\fIs, len, result\fR)
+\fBchar *\fIs;
+\fBint \fIlen;
+\fBint *\fIresult; 
+.sp
+\fBclose\fR(\fIfd\fR)
+\fBint \fIfd;
+.sp
+\fBcreat\fR(\fIname, mode\fR)
+\fBchar *\fIname;
+\fBint \fImode;
+.sp
+\fBgetc \fR(\fIfd\fR)
+\fBint \fIfd;
+.sp
+\fBgetchar\fR(\fI\fR)
+.sp
+\fBgoodmagic\fR(\fImagic\fR)
+\fBint \fImagic;
+.sp
+\fBlength\fR(\fIs\fR)
+\fBchar *\fIs;
+.sp
+\fBlongswap\fR(\fIlptr\fR)
+\fBlong *\fIlptr;
+.sp
+\fBlseek\fR(\fIfd, offset, whence\fR)
+\fBint \fIfd;
+\fBlong \fIoffset;
+\fBint \fIwhence;
+.sp
+\fBopen\fR(\fIname, mode\fR)
+\fBchar *\fIname;
+\fBint \fImode;
+.sp
+\fBprintf\fR(\fIfrmt [ , arg ... ] \fR)
+\fBchar *\fIfrmt;
+.sp
+\fBputc\fR(\fIch, fd\fR)
+\fBchar \fIch;
+\fBint \fIfd;
+.sp
+\fBputchar\fR(\fIc\fR)
+\fBchar \fIc;
+.sp
+\fBread\fR(\fIfd, addr, cnt\fR)
+\fBint \fIfd, cnt;
+\fBchar *\fIaddr;
+.sp
+\fBswab\fR(\fIfrom, to, len\fR)
+\fBint *\fIfrom, *to;
+\fBint \fIlen;
+.sp
+\fBswap\fR(\fIi\fR)
+\fBint \fIi;
+.sp
+\fBint write \fR(\fIfd, addr, cnt\fR)
+\fBint \fIfd, cnt;
+\fBchar *\fIaddr;\fR
+.fi
+.sp 2
+.SH DESCRIPTION
+The file
+.I /usr/lib/slibdm.a
+is a library containing functions for use with the segmented C
+compiler.
+The file
+.I /usr/lib/libdm.a
+is a library containing functions for use with the nonsegmented C
+compiler.
+These routines are set up to enable a program running on a development
+module to open, create, read, write and close files on the host S8000.
+While a program is running on the development module, the
+.BR SYS (3)
+program is run on the S8000 (see
+.BR load (1)).
+The I/O routines in this package 
+communicate with the SYS program to perform
+the functions described.
+A brief description of each routine follows:
+.PP
+.B Abs 
+is used to determine the 
+absolute value of its argument.
+.PP
+.B Atoi
+converts its argument from ascii to integer.
+The result is returned at the address specified by the third argument.
+.PP
+.B Open,
+.B creat, 
+and
+.B close
+are ZEUS-style file access calls to files on the host system.
+The SYS
+program interprets these calls and opens files on behalf of the
+program running on the development module. The arguments to these
+calls are the same as the equivalent ZEUS calls,
+.BR open (2),
+.BR creat (2)
+and
+.BR close (2).
+.PP
+.B Getc, getchar, putc, putchar
+and
+.B printf
+are ZEUS-style standard i/o calls to get and put characters.
+.B Lseek
+performs seeks within files.
+.B Read
+and
+.B write
+are ZEUS-style read and write functions.
+These calls perform i/o by communicating
+with the SYS program on the host. See
+.BR getc (3),
+.BR lseek (3),
+.BR putc (3),
+.BR printf (3)
+.BR read (2)
+and
+.BR write (2)
+for complete explanations.
+.PP
+.B Goodmagic
+determines if the value passed is a valid object module magic number.
+See
+.BR goodmagic (3)
+for complete details.
+.PP
+.B Length
+is passed a null-terminated string. A null is a zero byte.
+It returns the number of
+bytes preceeding the null, or 256 if no null is encountered in the
+first 256 bytes.
+.PP
+.B Longswap, swab
+and
+.B swap
+are byte-swapping routines. See
+.BR swab (3)
+and
+.BR swap (3)
+for complete details.
+.PP
+The loader option
+.B -ldm
+can be used to access the libraries, both segmented and nonsegmented.
+The entry point to a segmented program should be specified
+.B -e start
+for a segmented program,
+.B -e startup
+for a nonsegmented program.
+See
+.BR ld (1)
+and
+.BR sld (1).
+.SH FILES
+/usr/lib/libdm.a    nonsegmented library
+.br
+/usr/lib/slibdm.a   segmented library
+.SH SEE ALSO
+ld(1),
+load(1),
+sld(1),
+close(2),
+creat(2),
+lseek(2),
+open(2),
+read(2),
+write(2),
+getc(3),
+goodmagic(3),
+printf(3),
+putc(3),
+swab(3),
+swap(3).

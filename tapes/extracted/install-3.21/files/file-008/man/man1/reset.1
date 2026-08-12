@@ -1,0 +1,24 @@
+.po 1i
+.TH RESET 1 UCB 
+.V 08/15/84 17:02:31
+.\" @[$]reset.1	1.5	08/15/84 17:02:31 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+reset \- reset terminal modes to default values
+.SH SYNOPSIS
+.B reset<linefeed>
+.SH DESCRIPTION
+.B Reset
+sets the terminal mode bits to the login defaults
+with the erase character set to control-h and 
+the kill character to control-x.
+.PP
+It is most useful for recovering from program errors which
+leave the terminal in an unknown and unusable state.
+Typing <LF> (line feed) to clear any previous inputs,
+and then to enter the reset command is often
+necessary since new-line mapping and character echoing
+may have been turned off.
+.SH SEE ALSO
+stty(1), stty(2), gtty(2).

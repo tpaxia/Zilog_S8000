@@ -1,0 +1,59 @@
+.po 1i
+.TH ONINTR 1C UCB
+.V 08/15/84 17:00:30
+.\"@[$]onintr.1C	1.6	08/15/84 17:00:30 - Zilog Inc.
+.ad
+.SH NAME
+onintr \- regulate response to interrupts in a shell script
+.SH SYNOPSIS
+.B onintr
+[
+.B \-
+] [
+.I arg ...
+]
+.SH DESCRIPTION
+.TP
+.B Onintr
+restores the default action of the shell on interrupts;
+that is, it terminates shell scripts or returns to the terminal command
+input level.
+.TP
+.BR onintr "  \-"
+causes all interrupts to be ignored.
+.TP
+\fBonintr \fIlabel\fR
+causes the shell to execute a \fBgoto \fIlabel\fR when
+an interrupt is received or a child process terminates because
+it was interrupted.
+.PP
+If the shell is running detached and interrupts are
+being ignored, all forms of
+.B onintr
+have no meaning and interrupts
+continue to be ignored by the shell and all invoked commands.
+.PP
+.B "Signal Handling"
+.PP
+The shell normally ignores
+QUIT
+signals.
+The
+INTERRUPT
+and
+QUIT
+signals are ignored for an invoked command if the command is followed
+by &; otherwise, the signals have the values which the shell inherited
+from its parent.
+The shell's handling of interrupts can be controlled by \fBonintr\fR.
+Login shells catch the TERMINATE signal; otherwise this signal
+is passed on to children from the state in the shell's parent.
+Interrupts are not allowed when a login shell is reading the file
+\&.logout.
+.SH SEE ALSO
+continue(1C),
+exit(1C),
+logout(1C),
+nohup(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual.

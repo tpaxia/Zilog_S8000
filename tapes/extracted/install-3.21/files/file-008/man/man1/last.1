@@ -1,0 +1,39 @@
+.po 1i
+.TH LAST 1 UCB
+.V 08/15/84 16:55:24
+.\" @[$]last.1	1.2	08/15/84 16:55:25 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+last \- indicate last logins of users and teletypes
+.SH SYNOPSIS
+.B last
+[ \fIname\fR ... ] [ \fItty\fR ... ]
+.SH DESCRIPTION
+.B Last
+looks in the 
+wtmp file, which records all logins and logouts for information about a user, a
+teletype, or any group of users and teletypes.  Arguments specify names of
+users or teletypes of interest.  Names of teletypes may be given fully or
+abbreviated.  For example 'last 0' is the same as 'last tty0'.  If multiple
+arguments are given, the information which applies to any of the arguments
+is printed.  For example 'last zeus console' would list all "zeus'" sessions
+as well as all sessions on the console terminal.
+.B Last
+will print the sessions of specified users and teletypes, most recent
+first, indicating the times at which the session began, the duration of
+the session, and the teletype which the session took place on.  If the session
+is still continuing or was cut short by a crash,
+.B last
+will indicate this.
+.PP
+.B Last
+with no arguments prints a record of all logins and logouts, in reverse
+order.  If
+.B last
+is interrupted, it indicates how far the search has progressed in
+wtmp.
+.SH FILES
+/usr/adm/wtmp		login data base
+.SH "SEE ALSO"
+ac(1), wtmp(5)

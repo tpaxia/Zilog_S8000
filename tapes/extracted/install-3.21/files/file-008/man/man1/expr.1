@@ -1,0 +1,120 @@
+.po 1i
+.TH EXPR 1 Bell
+.V 08/15/84 16:50:50
+.\" @[$]expr.1	1.8 08/15/84 16:50:50 - Zilog Inc.
+.ad
+.fi 
+.SH NAME
+expr \- evaluate arguments as an expression
+.SH SYNOPSIS
+.B expr
+arg
+.B .\|.\|.
+.SH DESCRIPTION
+The arguments are taken as an expression.
+After evaluation, the result is written on the standard output.
+Each token of the expression is a separate argument.
+.PP
+The operators and keywords are listed here.
+The list is in order of increasing precedence,
+with equal precedence operators grouped.
+.TP
+.B expr | expr
+yields the first
+.B expr
+if it is neither null nor 0; otherwise, yields the second
+.B expr
+.TP
+.B expr & expr
+yields the first
+.B expr
+if neither
+.B expr
+is null or 0; otherwise, yields 0
+.TP
+.B expr
+.I relop expr
+where
+.I relop 
+is one of <, <=, =, !=, >=, or >, it yields 1 if the 
+indicated comparison
+is true, "0" if false.
+The comparison is numeric if both
+.B expr
+are integers, otherwise, it is lexicographic
+.TP
+.BR expr " + " expr
+.TP
+.BR expr " - " expr
+.br
+addition or subtraction of the arguments
+.TP
+.BR expr " * " expr
+.TP
+.BR expr " / " expr
+.TP
+.BR expr " % " expr
+.br
+multiplication, division, or remainder of the arguments
+.TP
+.BR expr " : " expr
+The matching operator compares the string first argument
+with the regular expression second argument;
+regular expression syntax is the same as that of
+.BR ed (1).
+The
+\fB\\(\|.\|.\|.\|\\)\fP
+pattern symbols can be used to select a portion of the
+first argument;
+otherwise,
+the matching operator yields the number of characters 
+matched and returns
+0 on failure
+.TP
+.B substr string start length
+yields the substring of \fBlength\fR 
+characters of \fBstring\fR starting at the \fBstart\fR (numeric
+index, 1 is the first character of \fBstring\fR)
+.TP
+\fBlength string\fR
+.br
+yields the \fBlength\fR in bytes of \fBstring\fR
+.TP
+\fBindex string target\fR
+.br
+yields the index of the first occurrence in \fBstring\fR of any one of
+the characters in \fBtarget\fR.  The characters of \fBtarget\fR are not
+treated as a string; rather, they are treated as individual characters.
+.TP
+.RI ( " expr " )
+parentheses for grouping
+.PP
+Examples:
+.PP
+To add 1 to the shell variable \fIa\fR, enter:
+.IP
+a=\`expr $a + 1\`
+.PP
+To find the filename part (least significant part)
+of the path name stored in variable
+.I a,
+that can contain /:
+.IP
+expr $a : "\&.*/\e(\&.*\e)" "|" $a
+.DT
+.LP
+Note the quoted shell metacharacters.
+.SH SEE ALSO
+csh(1), ed(1), sh(1), test(1)
+.SH DIAGNOSTICS
+.B Expr
+returns the following exit codes:
+.PP
+	0	if the expression is neither null nor 0
+.br
+	1	if the expression
+is null or 0,
+.br
+	2	for invalid expressions
+.SH LIMITATIONS
+\fIsubstr\fR does not follow the system standard of counting from 0.

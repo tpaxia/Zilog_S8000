@@ -1,0 +1,59 @@
+.po 1i
+.TH SETUID 2 Bell 
+.V 08/15/84 17:15:00
+.\"@[$]setuid.2	1.5	08/15/84 17:15:00 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+setuid, setgid \- set user and group ID
+.SH SYNOPSIS
+.B int setuid
+.I (uid)
+.br
+.B int
+.I  uid;
+.PP
+.B int setgid
+.I (gid)
+.br
+.B int
+.I gid;
+.SH DESCRIPTION
+The user ID (group ID) of the current process is set to
+the argument.
+Both the effective and the real ID are set.
+These calls are only permitted to the super-user
+or if the argument is the real ID.
+.SH SEE ALSO
+getuid(2).
+.SH DIAGNOSTICS
+.B Setuid
+will fail if the real user (group)
+.SM ID
+of the calling process is not equal to
+.IR uid " (" gid )
+and its effective user
+.SM ID
+is not super-user.
+.SM
+\%[EPERM]
+.SH RETURN VALUE
+Zero is returned if the user (group) ID is set;
+\-1 is returned otherwise.
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT SETUID := 23
+
+	...	! user ID in r0  !
+	sc	#SETUID
+	...	! return in r4, carry bit set if error !
+
+
+	CONSTANT SETGID := 46
+
+	...	! group ID in r0 !
+	sc 	#SETGID
+	...	! return in r4, carry bit set if error !
+.ad
+.fi

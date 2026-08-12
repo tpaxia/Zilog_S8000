@@ -1,0 +1,61 @@
+.po 1i
+.TH NICE 1 Bell
+.V 08/15/84 16:59:45
+.\" @[$]nice.1	1.8	08/15/84 16:59:45 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+nice, nohup \- run a command at low priority
+.SH SYNOPSIS
+.B nice
+[
+.BI \- number
+]
+\fIcommand [ arguments\fR ]
+.PP
+.B nohup
+\fIcommand [ arguments\fR ]
+.SH DESCRIPTION
+.B Nice
+executes
+.I command
+with low scheduling priority.
+If the
+.I number
+argument is present, the priority is incremented (higher
+numbers mean lower priorities) by that amount up to a limit of 20.
+The default
+.I number
+is 7.
+.PP
+The super-user can run commands with priority higher than normal
+by using a negative priority, for example \-\-10.
+.PP
+.B Nohup
+executes
+.I command
+immune to hangup and terminate signals from the controlling terminal.
+The priority is incremented by 5.
+.B Nohup
+should be invoked from the shell with & to prevent it from responding to
+interrupts by or
+stealing the input from
+the next person who logs in on the same terminal.
+.PP
+.B NOTE:
+The C shell
+executes these commands internally.
+The syntax and features differ somewhat from the
+commands described here, so
+C shell users should refer directly to
+.BR nice (1C),
+and 
+.BR nohup (1C).
+.SH FILES
+nohup.out standard output and standard error file under
+.B nohup
+.SH SEE ALSO
+csh(1), nice (1C), nice(2).
+.SH DIAGNOSTICS
+.B Nice
+returns the exit status of the subject command.

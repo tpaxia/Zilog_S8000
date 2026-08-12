@@ -1,0 +1,74 @@
+.po 1i
+.TH BDIFF 1 Bell
+.V 08/15/84 16:38:28
+.\"@[$]bdiff.1	1.8  08/15/84 16:38:29 - Zilog Inc"
+.SH NAME
+bdiff \- the diff program for very large files
+.SH SYNOPSIS
+.B bdiff
+file1 file2 [n]
+.RB [ \-s ]
+.SH DESCRIPTION
+.B Bdiff\^
+is used in a manner analogous to
+.BR diff (1)
+to find which lines must be changed in two files to bring them
+into agreement.
+Its purpose is to allow processing of files which are too large
+for
+.BR diff .
+.PP
+.B Bdiff\^
+ignores lines common to the beginning of both files,
+splits the remainder of each file into
+.IR n -line
+segments, and invokes
+.B diff\^
+upon corresponding segments.
+The value of
+.I n\^
+is 3500 by default.
+If the optional third argument is given, and it is
+numeric, it is used as the value for
+.IR n .
+This is useful in those cases in which 3500-line segments are
+too large for
+.BR diff ,
+causing it to fail.
+.PP
+If
+.I file1\^
+.RI ( file2 )
+is \fB\-\fR,
+the standard input is read.
+.PP
+The optional
+.B \-s
+(silent) argument specifies that
+no diagnostics are to be printed by
+.B bdiff\^
+(note, however, that this does not suppress possible exclamations by
+.BR diff .
+If both optional arguments are specified, they must appear in the
+order indicated above.
+.PP
+The output of
+.B bdiff\^
+is exactly that of
+.BR diff ,
+with line numbers adjusted to account for the segmenting of the files
+(that is, to make it look as if the files had been processed
+whole).
+.PP
+\fBNote:\fR because of the segmenting of the files,
+.B bdiff\^
+does not necessarily find a
+smallest sufficient set of file differences.
+.SH FILES
+/tmp/bd?????
+.SH SEE ALSO
+diff(1).
+.SH DIAGNOSTICS
+Use
+.BR help (1)
+for explanations.

@@ -1,0 +1,55 @@
+.po 1i
+.TH LEARN 1 Bell
+.V 08/15/84 16:55:56
+.\" @[$]learn.1	1.6	08/15/84 16:55:56 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+learn \- on-line computer-aided instruction 
+.SH SYNOPSIS
+.B learn
+[ \fIsubject\fR [ \fIlesson\fR ] ]
+.SH DESCRIPTION
+.B Learn
+gives practice in the use of ZEUS by providing a number
+of CAI courses on the system.
+To get started, simply type "learn" and follow the instructions.
+The strength of the 
+.B learn
+facility is learning by doing,
+rather than by reading about the system.
+.PP
+To go directly to a specific subject, specify the subject name on the
+command line, or specify both the subject and lesson number.
+The subjects are:
+.IP
+ ftuser (first-time user)
+ files (intro to file usage)
+ morefiles (more detail)
+ editor (line-oriented editor ed)
+ C (programming in C)
+ macros (-ms package for text formatting)
+.PP
+Other subjects can be supplied on the system.
+Each site can prepare and provide local courses that serve a
+particular audience.
+For a local course, the site can install a new directory containing
+lessons for that subject.
+.PP
+For debugging lessons, there are a few additional options.
+If the lesson number is minus (\-), 
+.B learn
+prompts for each lesson.
+Also, the first option to 
+.B learn
+can be \-directory, followed
+by subject and lesson, in which case a lesson script can be exercised
+anywhere.
+.PP
+The special command \fIbye\fR terminates a 
+.B learn
+session prematurely.
+.SH FILES
+/usr/lib/learn and all subdirectories such as subjects
+(ftuser, files, morefiles, etc.)
+and play, which contain subdirectories for individual learn sessions

@@ -1,0 +1,12 @@
+#print
+In your directory space, you now have the count program and the
+two files you created. Try using the ls command to list the names
+of all your files:   ls (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+2

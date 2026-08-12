@@ -1,0 +1,835 @@
+.po 1i
+.TH SLD 1 Zilog
+.V 08/15/84 17:05:00
+.\" @[$]sld.1	1.36 08/15/84 17:05:00 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sld \- segmented Z8000 loader
+.SH SYNOPSIS
+.B sld
+[ \fIoptions\fR ] [ \fIfiles\fR ] ...
+.SH DESCRIPTION  
+All programs 
+can be logically divided into 
+SECTIONS. 
+At the most basic level, programs 
+can be logically sectioned into instructions and storage. Storage can be further
+sectioned into data, block storage, and stack space.
+.sp
+SEGMENTED 
+memory management treats logical program sections
+as relocatable objects whose internal addresses are known only in  
+relation to the segment's logical origin. In a segmented environment,
+the programmer knows addresses of the form 
+`v = (s,o)` 
+where 
+`v` 
+is the
+virtual address specified by a logical segment number 
+`s` 
+and
+an offset 
+`o` 
+within the segment.
+All segments have a logical origin of 
+0x0000 
+and a high address equal
+to the size of the segment - 2. In the ZEUS system, segments may be 
+extended through system calls
+to a high-address of 
+0xFFFE . 
+.sp
+A loader that 
+maps 
+logical sections 
+to 
+logical segments 
+is a segmented loader. A loader
+that allows the programmer to map program sections to arbitrary segments in the 
+range of logical segment numbers is a programmer-oriented segmented 
+loader.
+.sp
+.B sld
+combines several Z8000 object programs into one load module,
+resolving external references and searching libraries.
+In the simplest case, \fBsld\fR combines several Z8000 object files,
+producing an executable load module.
+An object module can also be produced and used as input to a subsequent
+.B sld
+run, in which case the
+.B -r
+option must be given to preserve the relocation bits.
+Unless the 
+.B -o
+option is used to select a different name, the load module produced by 
+\fBsld\fR is
+named \fBa.out\fR.
+If no errors occur during the link,
+the output file is marked executable.
+.sp
+If the 
+.B -M 
+and 
+.B -R 
+options are not used, the 
+argument routines are concatenated in the load module in the order
+specified using the following mapping assignments: for combined I&D,
+segment 0 is the segment-of-origin for text, data, and bss. For separate
+I&D, segment 0 is the segment-of-origin for text; data and bss are
+origined in segment 1.
+In both combined and
+separate I&D, data and bss may be extended into subsequent segments. 
+In separate I&D, data and bss overflow into the first segment number
+greater than the last segment into which the text overflows (or segment
+2 if the text does not overflow). Consider the two following examples: 
+.nf
+.sp
+             Table 1                  Table 2
+
+         segment 0: text          segment 0: text
+         segment 1: data          segment 1: data/bss
+         segment 2: text          segment 2: text
+         segment 3: text          segment 3: text
+         segment 4: data/bss      segment 4: bss
+.fi
+.sp
+In these examples, text occupies three segments. Data and bss occupy two.
+Notice, however, how the distribution of data and bss 
+differs from the
+distribution of text and data/bss. Although text and data/bss must each 
+leapfrog once if text overflows segment 0, bss is always appended to data.
+For these reasons, the following
+will not occur:
+.nf
+.sp
+                         Table 3
+
+                     segment 0: text
+                     segment 1: data/bss
+                     segment 2: text
+                     segment 3: text
+                     segment 4: data
+.fi
+.sp
+If bss follows data in segment 1, data will not be assigned further segments. 
+.sp
+If the \fB-M\fR or \fB-R\fR option is used,
+the range for assignments lies between segment numbers 
+.B 0 
+and 
+.B 127
+inclusive; the ordering of the argument
+routines' sections is left up to the user.
+In the absence of the 
+.B -e
+option, the executable load module's entry point is the
+lowest text address. 
+Programs linked to run under ZEUS specify the symbol 'start' (defined in
+/lib/scrt0.o) as the entry point. See the \fBEXAMPLES\fR section.
+.PP
+Arguments that are libraries are searched once at the point they are 
+encountered in the argument list; 
+routines defining an 
+unresolved external reference are linked.
+The order of modules within libraries is significant.
+If a routine from a library references another routine in the library,
+and the library has not been 
+processed by \fBranlib\fR(1), the referenced
+routine must appear after the referencing routine in the library.
+However, the first member of a library may be 
+`__.SYMDEF`, 
+a 
+dictionary for the library similar to the one produced by ranlib. 
+When present, __.SYMDEF 
+is searched repeatedly to satisfy all possible
+references.
+.PP
+The symbols 
+`_etext`, 
+`_edata`, 
+`_end` 
+and 
+`_stkseg` 
+in assembly language code
+(`etext`, `edata`, `end` and `stkseg` in C programs)
+are reserved and cannot be redefined by the user.
+The symbol `_etext` refers to the first address above the text section;
+the symbol `_edata` refers to the first address above data; 
+the symbol `_end` refers to the first address above data and bss,
+and can be used as a starting location for a dynamic allocation
+area managed by the user.
+The symbol `_stkseg` refers to the stack segment.
+The default mapping assignments for the stack are: for combined I&D,
+segment 0 (in the absence of overflow); for separate I&D, the segment
+following the highest-numbered segment in use.
+The stack grows downward;
+its beginning address is 
+0xFFFE. 
+The above default can be 
+overriden by the 
+.B -Ms 
+or
+.B -z
+options.
+.SH OPTIONS
+Except for
+.BR -l ,
+options appear before file names.
+To link a program to be downloaded
+to a development module, the
+.B -o
+option must be used with an uppercase file name, and the
+.B -b 
+option must be used with a starting address that is 
+0x5000 
+or higher.
+The options are:
+.TP
+.BI -Ap " number"
+Change to 
+.I number 
+the amount of space allocated internally by \fBsld\fR for pass-one
+segment table entries.  By default, \fBsld\fR allocates 
+enough space for
+2000 
+pass-one segment table entries.  If this is not sufficient, \fBsld\fR
+returns an error message suggesting the use of this option.  The maximum
+allowable pass-one segment table entries is 
+16380. 
+Enter 
+.I number 
+in
+decimal. 
+.TP
+.BI -As " number" 
+Change to
+.I number 
+the amount of space allocated internally 
+by \fBsld\fR for the symbol
+table.  By default, \fBsld\fR allocates enough space for
+2000 
+symbols.  If this is not sufficient, \fBsld\fR
+returns an error message suggesting the use of this option.  The maximum
+number of symbols allowed is 
+4090. 
+Enter 
+.I number 
+in decimal.  
+.TP
+.BI -b " address" 
+.TP
+.BI -b section " \fIaddress\fR"
+Note: The \fB-b\fR option applies only to single-segment programs; use
+the \fB-M\fR option for multiple-segment programs. 
+.sp
+Set the bottom address of the program, or of the specified section
+if
+.I section 
+is specified. 
+.I section 
+can be one of
+\fBt\fR, \fBd\fR, or \fBb\fR for text, data, or bss.
+The address can be specified in decimal, hex, or octal using the
+standard C language conventions: a leading zero indicates octal, and
+a leading 0x indicates hex.
+The address specified must be a multiple of 256.
+If no section is selected, the bottom applies to the memory image 
+when the program is combined instruction and data, or to the text section 
+when separate instruction and data. 
+Only one \fB\-t\fR or \fB-b\fR option per section may be specified.
+Errors result if 
+the bottom address forces a section
+to wrap around. If one section overlaps another, the  
+`s_magic` 
+field of the object file's descriptor is marked 
+"overlay".
+See \fBa.out\fR(5). 
+The overlay must be managed by the user; 
+currently, no overlay-management is provided by ZEUS. 
+.TP
+.B -d
+Force definition of common storage
+even if the
+.B -r
+flag is present.
+.TP
+.BI -e " label" 
+Make 
+.I label  
+the entry point to the loaded
+program.
+C program names specified as
+the entry point must have the prepended underbar.
+The lowest text address is the default entry point.
+For programs to be run under ZEUS, the \fB-e\fR option is used to specify
+the symbol 'start' (defined in the C runtime startup routine /lib/scrt0.o)
+as the entry point.
+.TP
+.BI -f " file" 
+Take command arguments from 
+.IR file . 
+Arguments positioned before the \fB-f\fR are processed normally; when the
+argument list in 
+.I file 
+is exhausted, \fBsld\fR resumes processing command arguments
+positioned after 
+.IR file . 
+Arguments in 
+.I file 
+are
+separated with either spaces or newlines. 
+.TP
+.B -i
+Separate program text and data
+sections when the output file is executed. The default
+segments-of-origin are: segment 0 for the text section; segment 1 for
+data and bss. If data/bss occupy multiple segments, they are mapped into
+the lowest numbered segments not occupied by the text section.
+If text occupies two segments, and data/bss three segments, 
+text is mapped into segments 0 and 2; 
+data/bss are mapped into
+segments 1, 3, and 4.  
+.TP
+.BI -l x
+Search the named library.
+This option is an abbreviation for the library name
+/lib/slib\fIx\fR.a,
+where
+.I x
+is a string. `-lxyz` refers to 
+/lib/slibxyz.a.
+If the library is not found in /lib,
+first /usr/lib and then /z/bin/lib are searched.
+A library is searched when its name is encountered,
+so the position of the 
+.B -l
+option is significant; as a rule, it should be the last object in the
+commandline.
+.TP
+.B LOAD MODULE MAPPING: SECTIONS, SEGMENTS, OFFSETS
+.TP
+.BI -M segment " #"  
+.TP
+\fB-M\fI<section><segment #>\fR 
+.TP
+\fB-M\fI<segment #>\fB<:t\fIoffset\fB>\fR 
+.TP
+\fB-M\fI<segment #>\fB<:b\fIoffset\fB>\fR
+.TP
+\fB-M\fI<section><segment #>\fB<:t\fIoffset\fB>< + file \.\.\. +>\fR 
+.TP
+\fB-M\fI<section><segment #>\fB<:b\fIoffset\fB>< + file  \.\.\. +>\fR  
+.TP
+.BI -Ms segment " #" 
+.sp
+For section-to-segment mapping the parameters are:
+.sp
+.nf 
+  \fI<section>\fR == 
+   one of `t`, `d`, `b` for text, data, bss
+       
+  \fI<segment #>\fR == 
+   one of 0 - 127 
+
+  \fB<:t\fIoffset\fR> == 
+   set TOP of section to \fIoffset\fR where \fIoffset\fR 
+   will be ROUNDED DOWN to the nearest 
+   multiple of 256.
+
+  \fB<:b\fIoffset\fR> == 
+   set BOTTOM of section to \fIoffset\fR where \fIoffset\fR 
+   will be ROUNDED UP to the nearest 
+   multiple of 256.
+
+  \fB< + file  \.\.\. +>\fR == 
+   basename (ie: filename at the tail of a path 
+   specification) of files whose sections are to
+   be mapped according to the immediately
+   preceding \fB-M\fR specification. The specification
+   for files delimited by +'s is not overriden by
+   subsequent \fB-M\fR options.
+
+   NOTE: when the  \fB+ \fIfile \fB+\fR  specification is made, the
+   referenced file is specified twice: THE BASENAME ONLY
+   within the \fB+  +\fR and THE FULL PATHNAME (unless local)
+   after the \fB+  +\fR. This is because the FULL PATHNAME is
+   used in processing the commandline; the BASENAME is used
+   by the \fB-M\fR option. 
+
+   EX: \fB+ \fIfile \fB+ \fI/path/path/file\fR 
+
+
+      \fB-M\fI<segment #>\fR  EX: -M46  
+.fi
+.sp
+.B -M46 
+says: the sections for all files appearing after this option
+up to the next   
+.B -M 
+are to be mapped using segment 46 as the segment-of-origin.
+.sp
+.nf
+      \fB-M\fI<section><segment #>\fR  EX: -Mt18  -Md22  -Mb31 
+.fi
+.sp
+.B -Mt18 
+says: Map all text sections appearing after this option
+up to the next
+.B -M
+or
+.B -Mt
+into segment 18. 
+.B -Md22 
+says: map all data sections appearing
+after this option up to the next
+.B -M  
+or
+.B -Md
+into segment 22. Treat 
+.B -Mb31 
+similarly for bss sections. 
+If the 
+.B -i 
+option is NOT also specified,
+the segment-of-origin for the unspecified sections defaults to segment 0; 
+otherwise, text defaults
+to segment 0 and the segment-of-origin for data and bss to segment 1. 
+.sp
+.nf
+      \fB-M\fI<segment #>\fB<:t\fIoffset\fR>   EX:  -M12:t0xE400 
+      \fB-M\fI<segment #>\fB<:t\fIoffset\fR>   EX:  -M16:t0xD79B  
+      \fB-M\fI<segment #>\fB<:b\fIoffset\fR>   EX:  -M106:b0x200 
+      \fB-M\fI<segment #>\fB<:b\fIoffset\fR>   EX:  -M81:b0x239
+.fi
+.sp
+.B -M12:t0xE400 
+says: if the 
+.B -i 
+option is NOT also specified,
+map all sections between this 
+and the first 
+contradicting 
+.B -M 
+into segment 12, with the top (high) address of program memory 
+set at 0xE400. If the 
+.B -i 
+option IS specified, map
+the text into segment 12 and data and bss into 13. 
+If the top of program
+memory occupies an address less than 0xE400, the gap is padded with nulls.  
+.sp
+.B -M16:t0xD79B 
+is conceptually equivalent to the foregoing example, but
+because the specified top address is NOT a multiple of 0x100 (256),
+the specified top address will be ROUNDED DOWN to the closest 0x100-multiple
+(clique) before loading.
+A gap between the ROUNDED DOWN top and actual top will
+be padded.
+.sp
+.B -M106:b0x200 
+says: if the 
+.B -i 
+option is NOT also specified, map all sections
+between this and the first contradicting 
+.B -M 
+into segment 106, with the bottom address of text set at 0x200. If the
+.B -i 
+option IS specified,
+map the text into segment 106 beginning at 0x200 and data into 107 
+beginning at 0x0000. Bss follows data. 
+.sp
+.B -M81:b0x239 
+is conceptually equivalent to the foregoing example, but
+because the specified bottom address is NOT a multiple of 0x100, the
+bottom address for the text section is ROUNDED UP 
+to the nearest clique before loading. 
+.sp
+.nf
+      \fB-M\fI<section><segment #>\fB<:t\fIoffset>\fB<+ file  ... +>\fR 
+
+  EX: -Mt5:t0xEFC1 + module1  module2  module3 + 
+.sp
+      \fB-M\fI<section><segment #>\fB<:b\fIoffset>\fB<+ file  ... +>\fR 
+
+  EX: -Md43:b0x452 + module1  module2  module3 +        
+.fi
+.sp
+NOTE: when a module or modules are mapped to programmer-specified 
+segments, the referenced module(s) 
+appear twice: once within the \fB+  +\fR as a BASENAME, and once
+after the \fB+  +\fR as a FULL PATHNAME. The full pathname is not
+shown in these examples--only the part of the commandline pertinent
+to the \fB-M\fR option. 
+.sp
+.B -Mt5:t0xEFC1 + module1 module2 module3 + 
+says:
+map module1's module2's and module3's text sections (and only those
+module's text sections) into segment 5; 
+the top address of module3's text section is the nearest multiple
+of 0x100 that is LESS THAN 0xEFC1. If
+the 
+.B -i 
+option is NOT also specified, the segment-of-origin for data  
+and bss defaults to segment 0; otherwise to segment 1.
+Any gap between the specified 
+and adjusted top address 
+is padded with nulls.
+.sp
+.B -Md43:b0x452 + module1 module2 module3 + 
+says: map module1's, module2's, and module3's
+bss sections (and only those module's bss sections) into segment 43; the
+bottom address of module3's bss sections is the nearest multiple
+of 0x100 that is GREATER THAN 0x452. If the 
+.B -i 
+option is NOT also specified,
+the segment-of-origin for text and data defaults to segment 0; 
+otherwise, the text defaults to segment
+0 and the segment-of-origin for data and bss to segment 1.  
+.sp
+Consider this example:
+.nf
+.sp
+             sld -i -M5 -Mt4 file.c
+.fi
+.sp
+In combination with the 
+.B -i 
+option 
+.B -M5 
+says: put the text section in
+segment 5 and the data and bss sections in segment 6. However, 
+.B -Mt4 
+says:
+put the text section in segment 4. What occurs? The text section is 
+written to segment 4, the data and bss sections to segment 6. From this
+fact, two rules are deducible: one: multiple 
+.B -M 
+specifications THAT DO NOT UTILIZE THE \fB+  +\fR CONSTRUCT
+override one another without error, with the rightmost of several 
+conflicting specifications taking final precedence; and  two:  once in effect,
+section-to-segment mappings remain in effect until contradicted.     
+When there is a conflict between \fB+  +\fR specifications and \fB-M\fR
+specifications not using the \fB+  +\fR, the \fB+  +\fR specification
+overrides.
+.sp
+.nf
+      \fB-Ms\fI<segment #>\fR  EX: -Ms45
+.sp
+.fi
+.B -Ms45 
+says: put the stack section in segment 45. 
+.TP
+.BI -N "many" 
+.IX
+This option specifies how \fImany\fR of the characters appearing in the name
+of a symbol table entry will be considered by
+.B sld. 
+If 
+.I many 
+is 
+.B l,
+then \fBsld\fR uses the entire long name (the default). If 
+.I many 
+is
+.B s, 
+then 
+.B sld
+uses only the first 8 characters.
+.TP
+.BI -o " name"
+Change the name of the 
+.B sld
+output file to 
+.IR name .
+This option must be used to specify an uppercase file name
+for a load module to be downloaded to the Zilog Z8000 
+Development Module.
+The form of the load module remains the same as described in \fBa.out\fR(5).
+.TP
+.B -O
+Set magic number to 
+`S_MAGIC4` 
+(see \fBa.out\fR(5)). This option tells \fBsld\fR
+that the program in question is to be interpreted as an overlay. 
+.TP
+.B -r
+Generate relocation bits in the output file
+so that it can be used in a subsequent
+.B sld
+run.
+This flag overrides the 
+.B -t
+and
+.B -b
+options.
+It also prevents final definitions from being
+given to common symbols,
+and suppresses the undefined symbol diagnostics.
+.TP
+.BI -R segment# 
+Creates a zero length segment. This option generates a
+zero segment by making an entry in the segment table
+which refers to a segment of size 0.
+.I segment# 
+is a decimal integer, between 0 and 127 (inclusive),  that 
+specifies which segment is to be reserved. 
+.TP
+.B -s
+Strip the output; that is, remove the symbol table
+and relocation bits to save space.
+.TP
+.BI -t " address"
+.TP
+.BI -t section " \fIaddress\fR"
+Note: The 
+.B -t 
+option applies only to single-segment programs; use the 
+.B -M
+option for programs with multiple segments.
+.sp
+Set the highest location of the program or section
+to the hex, octal, or decimal number specified.
+.I section 
+can be one of
+.BR t ,
+.BR  d ,
+or
+.B b
+for text, data, or bss.
+This option is similar to that of
+.B -b
+except a top address is specified instead of a bottom.
+The link location of the program or section is justified so that in 
+most cases the actual top is within 256 bytes of the specified top;
+the gap is padded with nulls.
+The low address of the section or program is always a
+multiple of 256.
+.TP
+.BI -u " symbol" 
+Enter 
+.I symbol
+into the symbol table as undefined. 
+This is useful for linking wholly from a library,
+since initially the symbol
+table is empty and an unresolved reference is needed
+to force the link of the first routine.
+.TP
+.B -w
+Suppress the symbol redefinition warning. This warning is produced
+while searching archives. If an archive contains a module that defines
+a symbol that is already defined, a redefinition warning is produced.
+.TP
+.B -x
+Enter only external and global symbols and 
+do not preserve local symbols in the output symbol table.
+This option saves some space in the output file.
+.TP
+.B -X
+Save local symbols
+except for those whose names begin with L.
+This option is used by
+the C compiler
+to discard internally generated labels while
+retaining symbols local to routines.
+.TP
+.B -z
+This option MUST be used in all System 8000 \fBsld\fR commandlines.
+It is not used in \fBsld\fR commands that download to development
+modules. This option resets
+the default section-to-segment mappings for the System 8000.
+In ZEUS version 3.1 the default "floor" becomes segment 4. That is,
+for combined I&D, text, data, and bss are origined in segment 4; for
+separate I&D, text is origined in 4, data and bss are origined in
+5.
+The stack is allocated segment 63; segments
+64 and 65  are unusable. In ZEUS version 3.2 the floor does
+not change (ie: segment 0 is the first allocated segment), but the stack is
+allocated segment 127; no segments are unusable. See paragraph five of the 
+\fBDESCRIPTION\fR section and the discussion of the \fB-i\fR option.
+.SH EXAMPLES
+.nf
+sld -X -e start -z /lib/scrt0.o file1.o file2.o file3.o  \\ 
+    -o goforit -lc
+.sp
+.fi
+The above example is the standard commandline for producing a load module with 
+combined I&D. This particular example combines three \fB.o\fR files in the
+current working directory, producing load module ./goforit.
+The placement of 
+\fB/lib/scrt0.o\fR is not critical; the position of \fB-lc\fR is.
+.sp
+.nf
+sld -X -e start -z -i /lib/scrt0.o *.o -lc
+.sp
+.fi
+The above example is the standard commandline for producing a load module with 
+the default map for separate I&D. This particular example combines all 
+the \fB.o\fR
+modules in the current working directory, producing ./a.out. 
+.nf
+.sp
+sld -X -e start -z -i -Mt3 -Md4 -Mb5 /lib/scrt0.o  \\ 
+    /z/work/*.o -o bomber -lc
+.sp
+.fi
+Specifying separate I&D,
+the above axample combines all the object modules in the /z/work 
+directory,
+mapping text to segment 3, data to segment 4, and bss to segment 5.
+The output load module is ./bomber.
+.nf
+.sp
+sld -e start -i -z -Md2 data1.o -Md3 data2.o  \\ 
+    -Mt7 -Md8 -Mb9 /lib/scrt0.o obj1.o obj2.o  \\ 
+    obj3.o -lc
+.sp
+.fi
+Specifying separate I&D,  
+the above example loads data module ./data1.o into segment 2, data
+module ./data2.o 
+into segment 3; the text sections of ./obj1.o, ./obj2.o,
+and ./obj3.o into segment 7; the data sections of modules obj1.o, obj2.o,
+and obj3.o into segment 8; the bss sections of modules obj1.o, obj2.o,
+and obj3.o into segment 9. The output load module is ./a.out.
+.sp
+.nf
+sld -i -z -e start -Mt41 -Md42 -Mb43 /lib/scrt0.o  \\ 
+    /z/work/first.o -Mt50 -Md51 -Mb52 + second.o  \\ 
+    third.o fourth.o + /usr/public/second.o  \\ 
+    /z/work/third.o /usr/public/fourth.o  -o artwork -lc
+.sp
+.fi
+Specifying separate I&D, the above example maps the text, data, and bss
+sections of /z/work/first.o into segments 41, 42, and 43, respectively; the
+text, data, and bss sections of 
+/usr/public/second.o, /z/work/third.o, and /usr/public/fourth.o are mapped 
+into segments 50, 51, and 52, respectively. Note the rule that all
+basename specifications occurring within the \fB+  +\fR must also be specified
+outside the \fB+  +\fR as a complete pathname. ONLY the basename can appear
+inside the \fB+  +\fR. The output load module is ./artwork.
+.nf
+.sp
+sld -i -z -e start -Mt6 -Md7 -Mb9 /lib/scrt0.o  \\ 
+    /z2/programs/main.o -Mt2 + mod1.o mod2.o +  \\ 
+    -Mt3 -Md4 -Mb5 /z2/programs/mod1.o  \\ 
+    /z2/programs/mod2.o /z2/programs/mod3.o -lc
+.sp
+.fi
+Specifying separate I&D,
+the above example maps the text section of /z2/programs/main.o into 
+segment 6; the data
+section of main.o into segment 7; the bss section of main.o into segment 9;
+the text sections of /z2/programs/mod1.o and /z2/programs/mod2.o into 
+segment 2; the text section
+of /z2/programs/mod3.o into segment 3; the data sections of mod1.o, mod2.o, and mod3.o
+into segment 4; the bss sections of mod1.o, mod2.o, and mod3.o into
+segment 5. Note 1) that the text sections of mod1.o and mod2.o are first
+mapped to \fB-Mt2\fR and then to \fB-Mt3\fR. As indicated, the
+first mapping assignment prevails because specifications made inside the
+\fB+  +\fR take precedence over conflicting specifications which do not
+use the \fB+  +\fR construct. Note 2) that the conflicting specification
+nevertheless serves to fulfill the rule that basenames appearing within the
+\fB+  +\fR must also appear in full pathname outside them. The output
+load module is ./a.out.  
+.sp
+.nf
+sld -o faith -i -z -e start -Mt5 + mod1.o mod2.o +  \\ 
+    -Mt22 mod1.o mod2.o mod3.o -lc
+.fi
+.sp
+Specifying separate I&D, 
+the text sections of ./mod1.o and ./mod2.o are mapped to section 5 (again, 
+because of the rules of precedence); the text section of ./mod3.o is mapped
+to segment 22; the data and bss sections of mod1.o, mod2.o, and mod3.o
+are mapped to the separate I&D default: segment 1. Because mod1.o, mod2.o,
+and mod3.o are all sought in the current working directory, the
+full pathname does not have to be specified outside the \fB+  +\fR for
+mod1.o and mod2.o--only the basename again. The output load module 
+is ./a.out. 
+.sp
+.nf
+DOWNLOADING TO A DEVELOPMENT MODULE
+.sp
+sld -o DM -M0:b0x5000 *.o
+.sp
+.fi
+This example combines all \fB.o\fR files in the current working directory,
+downloading them to segment 0 of the target machine; the bottom address 
+of the text section 
+is set at 0x5000; the entry point to the output module DM is
+0x5000. 
+.nf
+.sp
+INCREMENTAL LINKS
+.sp
+.fi
+The compiler places uninitialized variables in a derived storage class
+"common". 
+If two or more modules declare common variables with the 
+same name, the linker allocates storage for a single variable with the
+common name, assigning to it the largest storage type declared. 
+Because the linker does not know how many instances of the common
+variable occur until the last module is linked, the relocation of
+common symbols occurs last; common symbols are placed in the highest bss
+segment locations. If the mapping of these symbols is important, the
+\fB-d\fR option can be used to define common symbols as bss; subsequent
+\fB-M\fR specifications bind the symbol to the desired
+segment. However, in this case care must be taken to insure that these symbols
+are not defined in other modules; if they are, a "multiply defined" error 
+is returned.
+.nf
+.sp
+sld -z -i /lib/scrt0.o -e start -Mt11 -Md12 -Mb13  \\   
+    obj1.o -Mt4 -Md5 -Mb6 obj2.o
+.sp
+.fi
+In the above example, common variables declared in obj1.o will be
+relocated to segment 6, not segment 13, because \fB-Mb6\fR redefines the bss
+segment (through the rules of precedence), and common variables are
+mapped to the bss segment with highest precedence.
+In order to map common symbols to selected segments, common symbols
+must first be converted to bss-type storage:
+.nf
+.sp
+sld -r -d obj1.o -o obj1
+
+sld -z -i -e start /lib/scrt0.o -Mt11 -Md12 -Mb13  \\
+    obj1 -Mt4 -Md5 -Mb6 obj2.o
+.fi
+.sp
+The first line above defines common storage in obj1.o as bss-type storage.
+Following this definition, once-common variables in obj1 can be mapped
+to selected segments. For example, if obj1.o contained a single common
+variable \fBi\fR, following the definition of \fBi\fR as bss in the first line
+above, \fBi\fR is mapped to segment 13. There should be no
+variable \fBi\fR in obj2.o; if there is, a "multiply defined" error message 
+will be returned.
+.SH FILES
+.nf
+{ /lib, /usr/lib/, /z/bin/lib } /slib*.a   libraries for -l option 
+a.out           default load module name
+/lib/scrt0.o    C runtime startup routine
+.SH SEE ALSO
+LOAD(1), ar(1), ld(1), ranlib(1), a.out(5), 
+nm(1), objhdr(1), objdu(1)
+.fi
+.SH DIAGNOSTICS
+Any undefined references cause the special symbol `_end` to be reported
+as undefined.
+As a programmer aid, the "redefinition" warning occurs
+if, while searching an archive, a symbol that is already defined is
+defined in an archive member.
+This warning can be suppressed with the
+.B -w
+option. It also does not occur if the symbol name begins with two
+underscores (one underscore in C).
+.SH LIMITATIONS
+The "redefinition" warning should not occur on symbols that occur twice
+within the same archive.
+.sp
+The segment numbers for the section entries in the 
+symbol table may be in error.
+However this information is not being used by \fBsld\fR.
+
+

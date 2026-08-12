@@ -1,0 +1,110 @@
+.po 1i
+.TH PROFIL 2 Bell
+.V 08/15/84 17:14:46
+.\" @[$]profil.2	1.12	08/15/84 17:14:46 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+profil \- execution time profile
+.SH SYNOPSIS
+.B int profil
+.I (buff, bufsiz, offset, scale)
+.br
+.B int sprofil
+.I (segno, buff, bufsiz, offset, scale)
+.br
+.B char
+.I *buff;
+.br
+.B int 
+.I segno, bufsiz, offset, scale;
+.SH DESCRIPTION
+These calls are used to create a buffer of profiling information that
+can tell the user where a program is spending its time.  The
+.BR sprofil (2) 
+call is used only by segmented programs.  The
+.I segno
+is the segment number of the code that is to be profiled.
+If a segmented
+program has many code segments, a separate call to sprofil(2) for
+each segment must be made.  Non-segmented programs must use the
+.BR profil (2) 
+call.
+.PP
+.I Buff
+points to an area of core whose length (in bytes) is given by
+.IR bufsiz.
+For
+.B sprofil
+remember that 
+.I buff
+is a long (segmented) address.
+After the call, the user's program counter (pc)
+is examined each clock tick (60th second);
+.I offset
+is subtracted from it, and the result multiplied by
+.IR scale .
+If the resulting number corresponds to a word
+inside
+.I buff,
+that word is incremented.
+.PP
+The scale is interpreted as an unsigned,
+fixed-point fraction with binary point at the
+left: 0177777(8) gives a 1-1 mapping of pc's to words
+in
+.I buff;
+077777(8) maps each pair of instruction words
+together.
+02(8) maps all instructions onto the beginning of
+.I buff
+(producing a non-interrupting core clock).
+.PP
+Profiling is turned off by giving a
+.I scale
+of 0 or 1.
+It is rendered
+ineffective by giving a
+.I bufsiz
+of 0.
+Profiling is turned off when an
+.B exec
+is executed, but remains on in child and parent both
+after a
+.BR fork .
+Profiling may be turned off if an update in
+.I buff
+would cause a memory fault.
+.SH RETURN VALUE
+0: no error 
+.br
+A -1 is returned by 
+.B sprofile
+if:
+.TP
+-
+The segment number is out of the given range, unused,
+or a data segment [ENDSEG].
+.TP
+-
+more than 10 code segments are being profiled [ENDPROF]
+.SH SEE ALSO
+monitor(3), prof(1), mon.out(5).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT PROFIL := 44
+	
+	...	!* buf in r0, bufsiz in r1, offset in r2, scale in r3 *!
+	sc	#PROFIL
+	...	! return in r4, carry bit set on error !
+	
+	CONSTANT SPROFIL := 52
+	
+	...	!* segno in r0, buff in r1, r2 *!
+		!*   bufsiz in r3, offset in r4, scale in r5 *!
+	sc	#SPROFIL
+	...	! return in r4, carry bit set on error !
+	
+.fi
+.ad

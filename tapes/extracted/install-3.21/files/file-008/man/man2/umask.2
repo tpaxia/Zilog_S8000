@@ -1,0 +1,66 @@
+.po 1i
+.TH UMASK 2 Bell
+.V 08/15/84 17:15:55
+.\"@[$]umask.2	1.6	08/15/84 17:15:55 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+umask \- set file creation mode mask
+.SH SYNOPSIS
+.B int umask
+.I (complmode)
+.br
+.B int
+.I complmode;
+.SH DESCRIPTION
+.B Umask
+sets a mask used whenever a file is created by
+.BR creat (2)
+or
+.BR mknod (2).
+The actual mode (
+.BR chmod (2))
+of the 
+newly created file is the logical
+.I and
+of the given mode and the complement of the argument.
+Only the low-order nine bits of the mask (the protection bits)
+participate.
+In other words, the mask shows the bits to be turned off
+when files are created.
+.PP
+The previous value of the mask is returned by the call.
+The value is initially 0 (no restrictions).
+The mask is inherited by child processes.
+.PP
+The value of
+.I complmode
+is constructed by OR'ing
+together some of the
+following hexadecimal values to produce
+the desired protection:
+.nf
+	0x100	read by owner
+	0x80		write by owner
+	0x40		execute by owner
+	0x20		read by group
+	0x10		write by group
+	0x08		execute by group
+	0x04		read by others
+	0x02		write by others
+	0x01		execute by others
+.fi
+.SH RETURN VALUE
+The previous value of the file mode creation mask is returned.
+.SH SEE ALSO
+mkdir(1), mknod(1), sh(1), chmod(2), creat(2), mknod(2), open(2).
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT UMASK	:= 60
+
+	...		!* complmode in r0	*!
+	sc	#UMASK
+	...		!* return value in r4	*!
+.ad
+.fi

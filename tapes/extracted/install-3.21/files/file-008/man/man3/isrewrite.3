@@ -1,0 +1,65 @@
+.po 1i
+.TH ISREWRITE 3 Zilog
+.V 08/15/84 17:21:11
+.\" @[$]isrewrite.3	1.5 08/15/84 17:21:11 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isrewrite - rewrite a record in a C-ISAM file
+.br
+isrewcurr - rewrite the current record in a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisrewrite\fI(isfd, record)\fR
+\fBint \fIisfd;\fR
+\fBchar \fIrecord[];\fR
+.sp
+\fBisrewcurr\fI(isfd, record)\fR
+\fBint \fIisfd;\fR
+\fBchar \fIrecord[];\fR
+.fi
+.SH DESCRIPTION
+.I Isrewrite
+and
+.I isrewcurr
+change one or more values
+for a C-ISAM record file.
+.I Isrewcurr
+will rewrite the current record (obtained
+after an 
+.I isread
+or 
+.I isstart
+call.)
+.I Isrewrite
+will locate the record and rewrite it.
+.PP
+The buffer pointed to by 
+.I record
+will contain the new
+value for the record.
+The primary key can not be changed.
+.PP
+In order to call 
+.I isrewrite
+the primary key must be unique.
+The value of the primary key in the buffer pointed to by
+.I record
+is used to locate the record.
+.PP
+Changed secondary index values will cause modification of
+the appropriate index files.
+.PP
+These calls will not change the position of the current-record
+pointer.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isdelete(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

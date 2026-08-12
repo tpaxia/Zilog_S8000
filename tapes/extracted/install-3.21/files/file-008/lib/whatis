@@ -1,0 +1,542 @@
+frec (M)              - recover files from a backup tape
+ulimit (2)            - get and set user limits
+.menu (5)               - menu format file
+300, 300s (1)           - handle special functions of DASI terminals
+450 (1)                 - handle special functions of the DASI 450 terminal
+GETTY (M)               - set the modes of a terminal
+INIT (M)                - process control initialization
+INTRO (1)               - introduction to Section 1 commands
+LOAD (1)                - Download to Z8000, Z8 Development Module, or ICP.
+SEND (1)                - Uploader from the Zilog Z8000 Development Module 
+SYS (3)                 - system call relay program 
+a.out (5)               - Z8000 assembler and link editor output
+a64l, l64a (3)          - convert between long and base-64 ASCII
+abort (3)               - generate IOT fault
+abs (3)                 - integer absolute value
+abs, atoi, close, creat, exit, getc, getchar, goodmagic, length, longswap, lseek, open, printf, putc, putchar, read, swab, swap, write (3) - Z8000 development module lary 
+access (2)              - determine accessibility of file
+acct (2)                - turn accounting on or off
+acct (5)                - per-process accounting file format
+acct (M)                - overview of accounting and miscellaneous accounting commands
+acctcms (M)             - command summary from per-process accounting records
+acctcom (M)             - search and print process accounting file(s)
+acctcon (M)             - connect-time accounting
+acctmerg (M)            - merge or add total accounting files
+acctprc (M)             - process accounting
+acctsh (M)              - shell procedures for accounting
+acucap (5)              - ACU capability data base
+acutype (5)             - ACU configuration table
+adb (1)                 - debugger
+adduser (M)             - add a new user to the system
+admin (1)               - create and administer SCCS files
+adventure(6)            
+agetent, agetnum, agetflag, agetchar, agetstr, getconfig, get_acap, bld_telno (3)   - ACU independent operation routines
+alarm (2)               - schedule signal after specified time
+alias (1C)              - substitute a word for a command or command string
+any, anystr, bak, cat, clean_up, curdir, dname, fatal, fdfopen, giveup, imatch, index, lockit, move, patoi, patol, rename, repeat, satoi, seisig1, setsig, sname, strend, substr, trnslat, unlockit, userdir, userexit, username, verify, xalloc, xcreat, xfree, xfreeall, xlink, xmsg, xopen, xpipe, xunlink, xwrite, zero, zeropad (3) - library routines from the Plibrary.
+apropos (1)             - locate commands by keyword lookup
+ar (1)                  - archive and lary maintainer
+ar (5)                  - archive (lary) file format
+arithmetic (6)          - provide drill in number facts
+as (1)                  - PLZ/ASM assembler
+ascii (7)               - map of ASCII character set
+assert (3)              - program verification
+at (1)                  - execute command or shell script file at a later time
+atof, atofs, atofd, _atof, atoi, atol (3)   - convert ASCII to numbers
+awk (1)                 - pattern scanning and processing language
+backgammon (6)          - the game
+banner (1)              - make posters
+basename, dirname (1)   - deliver portions of path names
+bc (1)                  - arbitrary-precision arithmetic language
+bcheck (1)              - b-tree checker for C-ISAM
+bdiff (1)               - the diff program for very large files
+boot  (M)               - secondary bootstrapper
+break (1C)              - C-Shell flow control interrupt statement
+breaksw (1C)            - C-Shell flow control interrupt statement
+brk, k (2)              - change core allocation
+bsearch (3)             - binary search
+cal (1)                 - print calendar
+calendar (1)            - reminder service
+cas (1)                 - invoke assembler
+cat (1)                 - concatenate and print files
+cb (1)                  - C program beautifier
+cc (1)                  - System 8000 C compiler
+cd (1C)                 - change working directory
+cdc (1)                 - change the delta commentary of an SCCS delta
+chdir (2)               - change working directory
+checklist (5)           - default control information for fsck(M)
+chgrp (1)               - change group
+chkdiff (1)             - list differences between versions of a source file
+chkin (1)               - check in file to Zilog Source Control file
+chkout (1)              - check out file from Zilog Source Control (ZSC) file
+chkwhat (1)             - print Zilog Source Control what strings
+chmod (1)               - change mode
+chmod (2)               - change mode of file
+chmog, chog (M)         - change mode, owner and group of a file
+chown (1)               - change the owner-name of a file 
+chown (2)               - change owner and group of a file
+chown, chgrp (M)        - change owner or group
+chroot (2)              - change root directory
+chroot (M)              - change root directory for a command
+clear (1)               - clear terminal screen
+close  (2)              - close a file
+clri (M)                - clear i-node
+cmp (1)                 - compare two files
+code (1)                -  print characters with hex or octal equivalents
+col (1)                 - nroff post-processing filter for printer output
+comb (1)                - combine SCCS deltas
+comm (1)                - select or reject lines common to two sorted files
+continue (1C)           - C Shell flow control statement
+core (5)                - format of core image file
+cp (1)                  - copy a file into another or into a directory
+cpio (1)                - copy file archives in and out
+cpio (5)                - format of cpio archive
+craps (6)               - the game of craps
+crash (M)               - examine system images
+creat  (2)              - create a new file
+cref (1)                - make cross-reference listing
+cron (M)                - clock daemon
+crypt (1)               - encode/decode
+crypt, setkey, encrypt (3)  - DES encryption 
+csh (1)                 - a command interpreter with C-like syntax
+cshrc, cshprofile, login (5)    - setting up an environment at login time
+csplit (1)              - split file according to contextual arguments
+ct (1)                  - call terminal
+ct (4)                  - cartridge tape interface
+ctags (1)               - maintain a tags file for C or Fortran programs
+ctermid (3)             - generate file name for terminal
+ctime, localtime, gmtime, asctime, tzset (3)    - convert date and time to ASCII 
+cu (1)                  - call another ZEUS system
+curses (3)              - screen functions with "optimal" cursor motion
+cuserid (3)             - character login name of the user
+cut (1)                 - cut out selected fields of each line of a file
+cw, checkcw (1)         - prepare constant-width text for troff(1) 
+cxref (1)               - a simple C routine referencing program
+date (1)                - print the date and time
+date (M)                - print and set the date
+datem (M)               - friendly date and time setting
+daytime (1)             - give the time to human-reasonable accuracy
+dc (1)                  - desk calculator
+dcheck (M)              - file system directory consistency check
+dd (1)                  - convert and copy a file
+delta (1)               - make a delta (change) to an SCCS file
+deroff (1)              - remove nroff/troff, tbl, and eqn constructs
+devnm (M)               - device name
+df (M)                  - report number of free disk blocks
+dial (3)                - establish an out-going terminal line connection
+diff (1)                - differential file comparer
+diff3 (1)               - 3-way differential file comparison
+diffmk (1)              - mark differences between files
+dir (5)                 - format of directories
+dircmp (1)              - directory comparison
+disasm, disinit (3)     - disassemble Z8000 instructions 
+dmalias (7)             - Z8000 Development Module protocol
+dog (1)                 - controlled output flow filter for CRT previewing
+down (M)                - take the system down
+dqueuer (M)             - process and remove print queue command requests from  nq
+du (1)                  - summarize disk usage
+dump (M)                - incremental filesystem dump
+dump, ddate (5)         - incremental dump format
+dup, dup2 (2)           - duplicate an open file descriptor
+echo (1)                - echo (print) arguments to the standard output (terminal)
+echo (1C)               - echo (print) arguments to the standard output (terminal) 
+echo2 (1)               - echo (print) arguments to standard error
+ecvt, _ecvt, fcvt, _fcvt, gcvt, _gcvt (3)   - output conversion 
+ed (1)                  - text editor
+edit (1)                - text editor for new or casual users
+end, etext, edata (3)   - last locations in program 
+env (1)                 - set environment for command execution
+environ (5)             - user environment
+environ (7)             - user environment
+eqn, neqn, checkeq  (1) -  typeset mathematics
+error (1)               - analyze and disperse compiler error messages
+ex, edit (1)            - text editor
+execl, execv, execle, execve, execlp, execvp  (2)   - execute a file
+exit (1C)               - exit a shell
+exit (2)                - terminate process
+exp, log, log10, pow, sqrt (3)  - exponential functions 
+expand (1)              - expand tabs to spaces
+expr (1)                - evaluate arguments as an expression
+f\&f (M)                - list filenames and statistics for a filesystem
+fclose, fflush (3)      - close or flush a stream 
+fcntl (2)               - file control
+fcntl (7)               - file control options
+ferror, feof, clearerr, fileno (3)  - stream status inquiries 
+file (1)                - determine file type
+filsys, flblk, ino (5)  - format of file system volume
+find (1)                - find files
+floor, fabs, ceil, fmod (3) - absolute value, floor, ceiling functions 
+flow (1)                - flow analysis of C programs
+fopen, freopen, fdopen (3)  - open a stream 
+foreach (1C)            - C Shell flow control loop initiation
+fork  (2)               - spawn new process
+fortune (6)             - print fortune cookie
+fread, fwrite (3)       - buffered binary input/output 
+frexp, ldexp, modf (3)  - split into mantissa and exponent 
+fsck (M)                - file system consistency check and interactive repair
+fsdb (M)                - file system debugger
+fseek, ftell, rewind (3)    - reposition a stream 
+fwtmp, wtmpfix (M)      - manipulate wtmp records
+gamma (3)               - log gamma function
+get (1)                 - get a version of an SCCS file
+getNAME (1)             - get NAME sections of manual for whatis/apropos data base
+getc, getchar, fgetc, getw (3)  - get character or word from stream 
+getenv (3)              - value for environment name
+getfile (1)             - transfer files from local to remote system
+getgrent, getgrgid, getgrnam, setgrent, endgrent (3)    - get group file information
+getkey, gonormal, goraw, wbackspace, wbackword, wcolon, wforspace, wforword, wgetword, whelp, whighlight, wleft, wmesg, wmvcursor, wpageback, wpagefor, wresscrn, wright, wsavescrn, wscrolb, wscrolf (3) - Screen Interface Lary
+getlogin (3)            - get login name
+getopt (1)              - parse command options
+getopt (3)              - get option letter from argv
+getpass (3)             - read a password
+getpid, (2)             - get process IDs  getpgrp - get group process  \s-1ID\s+1s .br getppid \- get parent process \s-1ID\s+1s
+getpw (3)               - get name from UID
+getpwent, getpwuid, getpwnam, setpwent, endpwent (3)    - get password file entry
+gets (1)                - get a string from standard input
+gets, fgets (3)         - get a string from a stream
+getuid (2)              - get user identity  getgid \- get group identity .br geteuid \- get effective user identity .br getegid \- get effective group identity
+glob (1C)               - print strings on the terminal without spaces
+goodmagic (3)           - determine magic number validity
+gpasswd (1)             - change group password
+greek (1)               - select terminal filter
+greek (7)               - graphics for the extended TTY-37 type-box
+grep, egrep, fgrep (1)  - search a file for a pattern
+group (5)               - group file
+halt (M)                - take the system down
+hangman (6)             - word games
+head (1)                - give first few lines of a stream
+help (1)                - ask for help
+hier (7)                - file system hierarchy
+history (1C)            - print list of previous commands
+hyphen (1)              - find hyphenated words
+hypot, cabs (3M)        - euclidean distance
+icheck (M)              - file system storage consistency check
+icp (4)                 - general Intelligent Communication Processor interface
+icpcntrl (M)            - start and stop ICP's and their protocols
+icpload (M)             - load and configure an ICP 8/02
+id (1)                  - print user and group IDs and names
+if (1C)                 - C Shell flow controlanch statement
+inittab (5)             - control information for init
+install (M)             - install commands
+intro (3)               - introduction to lary functions
+intro, errno (2)        - introduction to system calls and error numbers
+ioctl (2)               - input / output control device
+isaddindex (3)          - add an index to a C-ISAM file
+isalpha, isupper, islower, isdigit, isxdigit, isalnum, isspace , ispunct, isprint, isgraph, iscntrl, isascii (3) - character classification 
+isaudit (3)             - audit trail maintenance for a C-ISAM file
+isbuild (3)             - define a C-ISAM file
+isclose (3)             - close a C-ISAM file
+isdelete, isdelcurr (3) - delete the current record from a C-ISAM file
+isdelindex (3)          - remove an index from a C-ISAM file
+iserase (3)             - remove a C-ISAM file and any associated audit trail file
+isindexinfo (3)         - access a C-ISAM file's directory information
+islock (3)              - read-lock a C-ISAM file
+isopen (3)              - open a C-ISAM file for processing
+isread (3)              - read records from a C-ISAM file
+isrelease (3)           - unlock records in a C-ISAM file
+isrename (3)            - rename a C-ISAM file
+isrewrite (3)           - rewrite a record in a C-ISAM file  isrewcurr - rewrite the current record in a C-ISAM file
+isrio (1)               - determine if terminal is a RIO System
+isstart (3)             - select the current index and record within an C-ISAM file
+isuniqueid (3)          - obtain a unique ID for a C-ISAM file
+isunlock (3)            - unlock a C-ISAM file
+iswrite (3)             - write a record into an C-ISAM file
+itom, madd, msub, mult, mdiv, min, mout, pow, gcd, rpow (3) - multiple precision integer arithmetic
+j0, j1, jn, y0, y1, yn (3M) - bessel functions
+join (1)                - relational database operator
+kdb  (M)                - enable or disable kernel debugger
+kill  (2)               - send signal to a process
+kill (1)                - send a signal to a process
+killall (M)             - kill all active processes
+l3tol, ltol3 (3)        - convert between three-byte integers and long integers
+labelit (M)             - label filesystems
+last (1)                - indicate last logins of users and teletypes
+ld (1)                  - nonsegmented Z8000 and 8-bit loader
+lddbl, ldfloat, ldint, ldlong (3)   - C-ISAM load routines
+learn (1)               - on-line computer-aided instruction 
+leave (1)               - remind you when you have to leave
+lex (1)                 - generate programs for simple lexical tasks
+line (1)                - read one line from the terminal
+link (2)                - link to a file
+link, unlink (M)        - exercise link and unlink system calls
+lint (1)                - a C program checker
+lkdata, unlk (2)        - lock and unlock data against concurrent access
+ln  (1)                 - link a filename to an actual file
+local (1)               - return control to local system
+lock (2)                - lock a process in primary memory
+login  (1)              - sign on to the computer
+logname (1)             - get login name
+logname (3)             - login name of user
+logout (1C)             - terminate the current login session
+look (1)                - find lines in a sorted list
+lorder (1)              - find ordering relation for an object lary
+lp (4)                  - line printer driver
+lp, text (M)            - service line printer spooler print requests 
+lp, text (M)            - service line printer spooler print requests 
+lp, text (M)            - service line printer spooler print requests 
+lpr  (1)                - line printer spooler
+ls  (1)                 - list the contents of a directory
+lsearch (3)             - linear search and update
+lseek (2)               - move read/write pointer
+m4 (1)                  - macro processor
+mail, rmail (1)         - send and receive mail among users
+make (1)                - maintain, update, and regenerate groups of programs
+makekey (M)             - generate encryption key
+makenewfs (M)           - sets the date, removes nonapplicable /dev entries, and constructs and restores filesystems 
+makewhatis (M)          - remake the data base for the whatis and apropos commands
+malloc, free, realloc, calloc (3)   - main memory allocator
+man (1)                 - print sections of this manual
+man (7)                 - macros to nroff or troff manual entry
+md (4)                  - 5.25" Winchester disk
+mdmctl (2)              - configure a port for modem or terminal line.
+me (7)                  - macros for formatting manuscripts using nroff or troff
+mem, kmem  (4)          - memory
+menupath (5)            - menu directory location
+mesg (1)                - permit or deny messages
+mfs (M)                 - mount all file systems  umfs \- unmount all file systems
+mkdir  (1)              - make a directory
+mkfs (M)                - construct a file system
+mkmenu (1)              - menu creation utility
+mkmt (M)                - make special files for magnetic tape devices
+mknod (1)               - build special file
+mknod (2)               - make a directory or a special file
+mknod (M)               - build special file
+mkseg (2)               - make a segment
+mkstr (1)               - create an error message file by massaging C source
+mktape (M)              - make special files for cartridge tape devices
+mktemp (3)              - make a unique file name
+mm (1)                  - print out documents formatted with the MM macros
+mm (7)                  - the MM macro package for formatting documents
+mmchek (1)              - check usage of mm macros and eqn delimiters
+mmt, mvt (1)            - typeset documents, view graphs, and slides
+mnttab (5)              - mounted file system table
+model (M)               - determine the System 8000 model type
+mon.out (5)             - profile information
+monitor (3)             - prepare execution profile
+more, page (1)          - filter for viewing text files on a crt
+motd (5)                - message of the day file
+mount, umount (2)       - mount or remove file system
+mount, umount (M)       - mount and dismount file system
+ms (7)                  - macros for formatting manuscripts using nroff or troff
+mt (4)                  - Zilog streaming magnetic tape interface
+mv  (1)                 - move or rename files and directories
+mv (7)                  - a macro package for making view graphs
+mvdir (M)               - move a directory
+ncheck  (M)             - generate names from i-numbers
+newgrp (1)              - log in to a new group
+news (1)                - print news items
+nice (1C)               - set the priority of a command
+nice (2)                - set program priority
+nice, nohup (1)         - run a command at low priority
+nl (1)                  - line numbering filter
+nlist (3)               - get entries from name list
+nm (1)                  - print name list
+nohup (1C)              - no hang-up on interrupts in a dial-up situation
+nq  (1)                 - print enqueuing program
+null (4)                - data sink
+objdu (1)               - dump for object and load modules
+objhdr (1)              - object module header dump
+objsu (1)               - object module underscore stripper
+od, hd  (1)             - octal or hex dump 
+onintr (1C)             - regulate response to interrupts in a shell script
+open (2)                - open for reading or writing
+pack, pcat, unpack (1)  - compress and expand files
+package (M)             - extract an optional package from a ZEUS release tape.
+passwd (1)              - change login password
+passwd (5)              - password file
+paste (1)               - merge same lines of several files or subsequent lines of one file
+pause (2)               - stop until signal
+perror, deverr, sys_errlist, sys_nerr, errno (3)    - system error messages
+pipe (2)                - create an interprocess channel
+popen, pclose (3)       - initiate I/O to or from a process
+pr (1)                  - format files for printer output
+printenv (1)            - display environment variables
+printf, fprintf, sprintf (3)    - output formatters
+printf, fprintf, sprintf (3X)   - System 3 output formatters
+prof (1)                - display profile data
+profil (2)              - execution time profile
+profile (5)             - set up an environment at login time
+prom (1)                - PROM programming utility
+prs (1)                 - print an SCCS file
+ps (1)                  - report process status
+pstat (M)               - print system facts
+ptrace (2)              - process trace
+ptx (1)                 - generate the permuted index
+putc, putchar, fputc, putw (3)  - put character or word on a stream
+putfile (1)             - transfer files from remote to local system
+putpwent (3)            - write password file entry
+puts, fputs (3)         - put a string on a stream
+pwck, grpck (1)         - password/group file checkers
+pwd (1)                 - print present working directory name
+qsort (3)               - quicker sort
+quiz (6)                - test your knowledge
+quot (M)                - summarize filesystem ownership
+rand, srand (3)         - random number generator
+ranlib (1)              - convert archives to random laries
+rc  (M)                 - "read command" startup control script  rc_csh \- "read command" Cshell multi-user startup script
+read (2)                - read from file
+readsym (3)             - read next symbol from name list
+regcmp (1)              - regular expression compile
+regex, regcmp (3)       - regular expression compile/execute
+regexp (7)              - regular expression compile and match routines
+rehash (1C)             - re-make the hash table of commands
+remote (1)              - transfer control to a remote ZEUS/UNIX system
+remotelines, LCK (5)    - remote line control and lock files
+repeat (1C)             - repeat a command
+reserv, taper   (1)     -  tape drive reserving system
+reservrc, taperrc (M)   - reserv install and remove utility
+reset (1)               - reset terminal modes to default values
+restor (M)              - incremental filesystem restore
+rm, rmdir  (1)          - remove (unlink) files
+rmdel (1)               - remove a delta from an SCCS file
+rmuser (M)              - remove a user from the system
+root, rroot, usr, rusr, tmp, rtmp, z, rz, tardev, dumpdev and resdev(4) 
+rsh (1)                 - restricted shell (command interpreter)
+runacct (M)             - run daily accounting
+sact (1)                - print current SCCS file editing activity
+scanf, fscanf, sscanf (3)   - formatted input conversion
+scc (1)                 - System 8000 segmented C compiler
+sccsdiff (1)            - compare two versions of an SCCS file
+sccsfile (5)            - format of SCCS file
+script (1)              - make a file copy of all terminal interactions
+sdiff (1)               - side-by-side difference program
+sed (1)                 - stream editor
+segmon (segmented monitor) (3)  - prepare execution profile
+set (1C)                - establish or modify a C Shell variable
+setbuf (3)              - assign buffering to a stream
+setenv (1C)             - establish or revise an environment variable
+setlp (M)               - set line printer parameters
+setmnt (M)              - establish mnttab table
+setpgrp (2)             - set process group ID
+setret, longret (3)     - nonlocal goto
+setuid, setgid (2)      - set user and group ID
+sgstat (2)              - get highest segmented code address
+sh (1)                  - shell, the Bourne shell command programming language
+shut (M)                - warns of system shutdown
+signal (2)              - catch or ignore signals
+sin, cos, tan, asin, acos, atan, atan2 (3)  - trigonometric functions 
+sinh, cosh, tanh (3)    - hyperbolic functions
+size (1)                - size of an object file
+sk (2)                  - change the size of a data segment
+sld (1)                 - segmented Z8000 loader
+sleep (1)               - suspend execution for an interval
+sleep (3)               - suspend execution for interval
+slink (1)               - memory binder for downloading object modules.
+smd (4)                 - Storage module disk
+sort (1)                - sort and/or merge files
+source (1C)             - execute commands in a shell script in the current shell
+spell, spellin, spellout (1)    - find spelling errors
+split (1)               - split a file into pieces
+spool (5)               - information for writing backends for the Zeus printer spooler
+sprof (1)               - display profile data
+ssignal, gsignal (3)    - software signals
+stat (7)                - data returned by stat system call
+stat, fstat (2)         - get file status
+stdbl, stfloat, stint, stlong, (3)  - C-ISAM store routines
+stdio (3)               - standard buffered input/output package
+stime (2)               - set time
+str (M)                 - software trouble report input program
+strcat, strncat, strcmp, strncmp, strcpy, strncpy, strlen, strchr, strrchr, strk, strspn, strcspn, strtok, index, rindex (3) - string operations
+strfile (5)             - software trouble report data base
+strings (1)             - print strings in object or other binary file
+strip  (1)              - remove symbols and relocation bits and header (optional)
+strprint (M)            - software trouble report listing program
+stty (1)                - set the options for a terminal
+su  (1)                 - substitute user ID temporarily
+sum (1)                 - sum and count blocks in a file
+swab (3)                - swap bytes
+swap (3)                - swap routines - swap  longswap \- swap routines - swap .br swapsegt \- swap routines - swap
+switch (1C)             - C Shell flow control statement for decision-making
+symscan (3)             - scan name list
+sync (2)                - update super-block
+sync (M)                - update the super block
+sysgen  (M)             -  generate a ZEUS kernel                 
+system (3)              - issue a shell command 
+tabs (1)                - set tabs on a terminal
+tail (1)                - print the last 10 lines of a file
+talk  (1)               -  communicate with another user
+tar  (1)                - tape archiver
+tar (5)                 - tar tape format
+tbl (1)                 - format tables for nroff or troff
+tee (1)                 - pipe fitting
+termcap (5)             - terminal capability data base
+terminal list (7)       - terminal names and codes
+terminals(7)            - conventional names
+test (1)                - evaluate files, strings, and numbers
+tgetent, tgetnum, tgetflag, tgetstr, tgoto, tputs (3)   - terminal independent operation routines
+time (1)                - time a command
+time (1C)               - time a command
+time, ftime (2)         - get date and time
+times (2)               - get process times
+timex (1)               - time a command and generate a system activity report
+tmpfile (3)             - create a temporary file
+tmpnam (3)              - create a name for a temporary file
+touch (1)               - update access and modification times of files
+toupper, tolower, toascii (3)   - character translation 
+tr (1)                  - translate characters
+troff, nroff (1)        - typeset or format text
+true, false (1)         - provide truth values
+tsort (1)               - topological sort
+tty (1)                 - get terminal name
+tty (4)                 - general terminal interface
+ttyconfig (M)           - configure ports for terminal or modem line
+ttyname, isatty, ttyslot (3)    - find name of a terminal
+ttytype (5)             - terminal/types table
+types (5)               - primitive system data types
+types (7)               - primitive system data types
+umask (1C)              - set file-creation mode mask
+umask (2)               - set file creation mode mask
+umount (2)              - unmount a file system
+uname (1)               - print the name of current ZEUS
+uname (2)               - get name of current Zilog system
+unget (1)               - undo a previous get of an SCCS file
+ungetc (3)              - push character back into input stream
+uniq (1)                - report repeated lines in a file
+units (1)               - conversion program
+unlink (2)              - remove directory entry
+unsetenv (1C)           - remove an environment variable
+update (M)              - periodic buffer flush
+upkeep (M)              - directory maintenance
+users (1)               - compact list of users who are on the system
+ustat (2)               - get filesystem statistics
+utime (2)               - set file times
+utmp, wtmp (5)          - login records
+uuclean (M)             - uucp spool directory clean-up
+uucp, uulog, uuname (1) - ZEUS to ZEUS copy
+uustat (1)              - uucp status inquiry and job control
+uusub (M)               - monitor uucp network
+uuto, uupick (1)        - public ZEUS-to-\s-1ZEUS\s+1 file copy
+uux (1)                 - ZEUS-to-ZEUS command execution
+val (1)                 - validate SCCS file
+vi (1)                  - screen oriented (visual) display editor based on ex
+vls (1)                 - "visually" list files and directories
+vnews (1)               - "visually" display the news items
+volcopy (M)             - copy filesystems with label checking
+vtzset (1)              - set up vtz terminal function keys
+wait (1C)               - await completion of process
+wait (2)                - wait for process to terminate
+wall  (M)               - write to all users
+wbz  (M)                -  configure block 0 of a system drive
+wc (1)                  - word count
+what (1)                - identify SCCS files
+whatis (1)              - describe what a command is
+whereis (1)             - locate source, binary, and or manual for program
+which (1)               - locate a program file including aliases and paths (csh only)
+while (1C)              - C Shell flow control statement for loop initiation
+who  (1)                - print the login names of those currently on the system
+whoami (1)              - print effective current user id
+whodo (1)               - print names and process status for current users
+whois (1)               - access the user information database
+whois (5)               - whois database file
+write  (1)              - write to another user
+write (2)               - write on a file
+wump (6)                - the game of hunt-the-wumpus
+xargs (1)               - construct argument list(s) and execute command 
+xq  (1)                 - examine or delete requests from the line printer spooler 
+xq  (M)                 - examine or delete requests from the line printer spooler
+xstr (1)                - extract strings from C programs to implement shared strings
+yacc (1)                - yet another compiler-compiler
+zd (4)                  - Winchester disk
+zmenu (1)               - Zilog menu driver
+zmprint (1)             - menu documentation utility
+zsc (5)                 - Zilog Source Control File conventions

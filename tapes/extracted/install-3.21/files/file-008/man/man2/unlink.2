@@ -1,0 +1,103 @@
+.po 1i
+.TH UNLINK 2 Bell
+.V 08/15/84 17:16:15
+.\"@[$]unlink.2	1.7	08/15/84 17:16:15 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+unlink \- remove directory entry
+.SH SYNOPSIS
+.B int unlink
+.I (file)
+.br
+.B char
+.I *file;
+.SH DESCRIPTION
+.I File
+points to a null-terminated string.
+.B Unlink
+removes the entry for the file pointed to by
+.I file
+from its directory.
+If this entry was the last link to the file,
+the contents of the file are freed and the file is destroyed.
+If, however, the file was open in any process, the actual
+destruction is delayed until it is closed, even though
+the directory entry has disappeared.
+Write permission is not required on the file itself.
+It is illegal to unlink a directory
+(unless you are the super-user).
+.SH SEE ALSO
+rm(1), link(2).
+.SH DIAGNOSTICS
+The named file is unlinked unless one or more of the following are true:
+.IP
+A component of the
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+The named file does not exist.
+.SM
+\%[ENOENT]
+.IP
+Search permission is denied for a component of the
+path prefix.
+.SM
+\%[EACCES]
+.IP
+Write permission is denied on the directory containing the link
+to be removed.
+.SM
+\%[EACCES]
+.IP
+The named file is a directory and the effective user
+.SM ID
+of the process is
+not super-user.
+.SM
+\%[EPERM]
+.IP
+The entry to be unlinked is the mount point for a mounted file system.
+.SM
+\%[EBUSY]
+.IP
+The entry to be unlinked is
+the last link to
+a pure procedure (shared text) file
+that is being executed.
+.SM
+\%[ETXTBSY]
+.IP
+The directory entry to be unlinked is part of a
+read-only file system.
+.SM
+\%[EROFS]
+.IP
+.I File
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.PP
+.SH RETURN VALUE
+Zero is normally returned;
+\-1 indicates that the file does not
+exist, that its directory cannot be written,
+or that the file contains pure procedure text
+that is currently in use.  
+.B Errno
+is set to indicate the reason.
+.SH ASSEMBLER
+.na
+.nf
+    CONSTANT UNLINK	:= 10
+
+    ...		!* filename in r0	*!
+			!* (segmented: filename in r0)	*!
+    clr	r4
+    sc	#UNLINK
+    ...		!* return value in r4, carry flag set if error	*!
+.ad
+.fi
+.sp

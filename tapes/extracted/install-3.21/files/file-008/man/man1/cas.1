@@ -1,0 +1,77 @@
+.po 1i
+.TH CAS 1 Zilog
+.V 09/15/83 10:57:53
+.\" @[$]cas.1	1.16 09/15/83 10:57:53 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cas \- invoke assembler
+.SH SYNOPSIS
+.B cas
+[ 
+.B -dlou 
+] 
+.I file
+.SH DESCRIPTION
+.B Cas
+assembles the named file written in the Z8000 assembly
+language described in the ZEUS Languages/Programming Tools Manual.
+It will not assemble files written in PLZ/ASM assembly language.
+.SH OPTIONS
+.TP
+.B \-d
+Include internal labels in the a.out symbol table.
+.TP
+.B \-l
+Produce a listing containing object code and addresses. For an input
+file        
+.I file.s 
+the listing is produced in file
+.I file.l
+in the current directory.
+.TP
+.BI \-o " objfile"
+.br
+The output of the assembly is left in 
+.IR objfile .
+If this option is omitted, the output is left in the file
+.BR a.out (5).
+.TP
+.B \-u
+Treat all undefined references as externals.
+.SH FILES
+/bin/cas	assembler
+.br
+/tmp/as*	temporary
+.br
+a.out	object
+.SH SEE ALSO
+.nf
+ld(1), sld(1), nm(1), objdu(1), objhdr(1), strip(1), a.out(5),
+.sp
+ZEUS Languages/Programming Tools Manual.
+.fi
+.SH DIAGNOSTICS
+The assembler writes error messages to standard error if
+errors occur during the assembly process.
+If errors prevent further assembly, the assembler aborts,
+closes all files, and writes a message to standard error.
+If the assembler is interrupted during assembly, the assembler
+aborts and closes all files.
+.SH LIMITATIONS
+The following features are not implemented.
+.sp
+- Floating point numbers, constants and conversion operators
+.br  
+  (^F, ^FD, ^FS, .quad, .extend).
+.br
+- Absolute sections and common sections (.asec and .csec).
+.br
+- Program sectioning (.psec) in nonsegmented mode.
+.br
+- The .line directive.
+.br
+- Line continuation with \fB\\\fR.
+.br
+- The unary operators ^B (binary coded decimal) and ^C (one's complement).
+

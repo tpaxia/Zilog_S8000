@@ -1,0 +1,12 @@
+#print
+To directly create a file containing sorted output from your count
+program, you can put piping and redirection together in the same
+command line. Try typing:   count | sort > sortout (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+test -r sortout
+#next
+1h

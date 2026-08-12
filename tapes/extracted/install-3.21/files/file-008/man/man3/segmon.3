@@ -1,0 +1,124 @@
+.po 1i
+.TH SEGMON 3 Zilog
+.V 08/15/84 17:26:12
+.\" @[$]segmon.3	1.3 08/15/84 17:26:12 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+segmon (segmented monitor) \- prepare execution profile
+.SH SYNOPSIS
+.br
+.B struct segs {
+.br
+.B
+     char \fIsegno;
+.br
+.B
+     unsigned \fIhighpc;
+.br
+.B
+     unsigned \fIlowpc; 
+.br
+.B
+}
+.sp
+.B segmon\fI(sbuff,cntsiz)
+.br
+.B
+     struct \fIsegs sbuff[ ];
+.br
+.B
+     int \fIcntsiz;
+.SH DESCRIPTION
+An executable program created by `scc \-p' automatically
+includes calls for
+.B segmon
+with default parameters;
+.B segmon
+needn't be called explicitly except to gain fine control over profiling.
+.PP
+.I Segmon
+is an interface to
+.BR sprofil (2).
+It arranges to record a histogram of periodically sampled
+values of the program counter, and of counts of calls
+of certain functions, in a particular segment.
+.I Sbuff
+is a structure which contains information
+on the segments to be profiled.
+.I Segno
+contains the segment number;
+.I highpc
+and
+.I lowpc 
+are the high and low offsets that are within segment 
+.I segno
+that make up the sample range.
+The lowest address sampled is that of
+.I lowpc
+and the highest is just below
+.IR highpc .
+At most
+.I cntsiz
+call counts can be kept; only calls of functions
+compiled with the profiling option
+.B \-p
+of
+.BR scc (1)
+are recorded.
+.PP
+To profile a program with multiple segments,
+.I sbuff
+must be filled with the segment information that the user requires.
+The user may call
+.BR sgstat(2)
+with the address of sbuff.
+In turn 
+.B sgstat
+will fill 
+.I sbuff
+with information concerning the text segments (\fIlowpc\fR
+is set to 0, \fIhighpc\fR is set to size of the text segment).
+Or the user may define his/her own parameters.
+Note, that the maximum amount
+of text segments that can be profiled is 10.
+In addition to the limit, the 
+.I segno
+after the last used
+.I segno
+must be set to 0xff in order to indicate
+there are no more segments to be profiled.
+Thus if there are 5 segments to be profiled,
+.I sbuff[5].segno
+must be set to 0xff.
+.SH EXAMPLES
+.PP
+An example using sgstat:
+.sp
+	sgstat(sbuff);
+.br
+	...
+.br
+	segmon(sbuff,cntsiz)
+.PP
+To stop execution monitoring and write the results
+to the file
+.BR mon.out (5),
+use
+.sp
+	sbuff[0].segno = 0xff;
+.br
+	segmon(sbuff,0);
+.LP
+then
+.BR sprof (1)
+can be used
+to examine the results.
+.SH FILES
+mon.out
+.SH SEE ALSO
+mon.out(5),
+sgstat(2),
+sprof(1),
+sprofil(2),
+scc(1).

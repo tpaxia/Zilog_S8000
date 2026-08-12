@@ -1,0 +1,41 @@
+# '@[$]reservrc	1.6  05/27/84 10:16:19 - Zilog Inc'
+#
+#reservrc
+#
+# This script creates the directory that the taper queues need
+# It also initializes the permissions on the tape driver
+# devices so that taper can operate properly.
+#
+
+switch ($1)
+	case -i:	
+		if ( -e /usr/spool/taper) then
+			rm -fr /usr/spool/taper
+		endif
+		if (! -e /usr/spool/reserv) then
+			mkdir /usr/spool/reserv
+			/etc/chmog 660 zeus 0 /usr/spool/reserv
+			echo 'Put the following in /etc/rc_csh (near the end):'
+			echo '	/etc/reservrc -i'
+		endif
+		/etc/chmog 000 bin 0 /dev/*ct*
+		if ( -e /dev/rmt0) then
+			/etc/chmog 000 bin 0 /dev/*mt*
+		endif
+		breaksw
+	case -r:
+		if ( -e /usr/spool/reserv) then
+			rm -rf /usr/spool/reserv
+			echo 'Remove the following from /etc/rc_csh (near the end):'
+			echo '	/etc/reservrc -i'
+		endif
+		/etc/chmog 666 bin 0 /dev/*ct*
+		if ( -e /dev/rmt0) then
+			/etc/chmog 666 bin 0 /dev/*mt*
+		endif
+		breaksw
+	default:
+		echo 'usage: reservrc -i or reservrc -r'
+
+endsw
+

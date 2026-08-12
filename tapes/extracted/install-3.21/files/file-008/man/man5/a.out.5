@@ -1,0 +1,594 @@
+.po .1i
+.TH A.OUT 5 ZEUS
+.V 08/15/84 17:32:37
+.\" @[$]a.out.5	1.29 08/15/84 17:32:37 - Zilog Inc.
+.fi
+.ad
+.SH NAME
+a.out \- Z8000 assembler and link editor output
+.SH SYNOPSIS
+.B #include <s.out.h>
+.SH DESCRIPTION
+A.out is the output file produced by the assembler
+.BR cas (1)
+and one of the link editors
+.BR ld (1)
+or
+.BR sld (1).
+.B A.out
+is executable if there are no fatal errors during assembly 
+or unresolved external references during link.
+.B A.out
+is also referred to as
+.B s.out
+in several places to distinguish
+it from the PDP-11 format, from which it departs.
+.sp
+The file 
+.B a.out 
+can be logically divided into three parts; the three
+parts can be physically divided into up to six sections. The three
+parts are the header, the memory image, and the trailer. The
+header includes: the descriptor and the segment table.
+The memory image includes: text and data. The trailer,
+which may be absent, includes: relocation information and
+the symbol table. In order of appearance:
+.PP
+.nf
+.B 1. THE HEADER 
+.PP
+struct s_head {
+	struct s_exec	s_exc;		/* s.out descriptor       */
+	struct segt	segtable[2];	/* nonsegmented seg table */
+};
+.fi
+.ad
+.PP
+This particular header includes
+the \fBa.out\fR descriptor
+and the segment table for a nonsegmented \fBa.out\fR.
+The following is the structure
+of the descriptor: 
+.nf
+.PP
+.B 1.1. The Object Module Descriptor
+.PP
+    struct s_exec {
+        int        s_magic;   /* Magic number                   */
+        long       s_imsize;  /* Size of memory image section   */
+        long       s_bss;     /* Size of block storage sections */
+        unsigned   s_segt;    /* Size of segment table section  */
+        unsigned   s_syms;    /* Size of symbol table section   */
+        long       s_entry;   /* Entry point address            */
+        unsigned   s_flag;    /* Flags word                     */
+        unsigned   s_codesz;  /* 8-bit padded code size         */
+        unsigned   s_unused;  /* Unused                         */
+    };
+.fi
+.sp
+With two exceptions, the sizes of the sections are given in bytes in the
+descriptor. The exceptions are the data section, which is included in
+the memory image, and the relocation information.  
+The size of the descriptor itself 
+is not included. 
+Consider each field in the descriptor in turn, beginning with
+the s_magic field: 
+.nf
+.sp
+/*  Note: Valid z.out magic numbers ( defined in z.out.h ) are :   
+    0xE807, 0xE810, and 0xE811  */
+
+#define     S_MAGIC1    0xE607      /* Segmented combined I & D    */
+#define     S_MAGIC3    0xE611      /* Segmented separate I & D    */
+#define     S_MAGIC4    0xE605      /* Segmented overlay           */
+#define     N_MAGIC1    0xE707      /* Nonsegmented combined I & D */
+#define     N_MAGIC3    0xE711      /* Nonsegmented separate I & D */
+#define     N_MAGIC4    0xE705      /* Nonsegmented overlay        */
+#define     X_MAGIC1    0xE507      /* 8-bit combined I & D        */
+#define     X_MAGIC3    0xE511      /* 8-bit separate I & D        */
+#define     X_MAGIC4    0xE505      /* 8-bit overlay               */
+.fi
+.ad
+.sp
+These s_magic values define the executable memory image. 
+.PP
+The s_imsize 
+field is the size of the memory image (text and data).
+The following
+table gives the general equations for determining the positions of the
+sections, where `0x18` 
+= the origin of the segment table,
+`S`  
+= size of the segment table, 
+`D` 
+= size
+of the data, 
+`T` 
+= size of the text. 
+.nf 
+.sp
+   0x18 + S            = origin of the text section
+   0x18 + S + T        = origin of the data section
+   0x18 + S + T + D    = origin of the relocation info section    
+   0x18 + S + T + D    = origin of symbol table, if no relocation info
+   0x18 + S + 2(T + D) = origin of symbol table, if relocation info
+.fi
+.PP
+The s_bss
+field gives the memory needed for all bss storage. 
+In Z8000 programs, the sum of 
+s_imsize
+and 
+s_bss 
+yields the physical memory requirements for
+loading; the sum of these two numbers 
+divided by 256 and rounded up yields the number of 256-byte
+blocks (called "cliques") required in memory for loading.
+Eight-bit memory-images can be padded for word alignment.
+In this case, the s_imsize field differs from the size of the object
+code and should not be used to determine memory requirements. In 8-bit 
+separate I & D files, the padded code size is contained in the
+s_codesz 
+field. The memory requirement information is given in  
+the 
+segment table. 
+.sp
+The s_segt   
+field is the size of the segment table. The segment table is described
+below.
+.sp
+The s_syms
+field is the size of the symbol table. The symbol table format
+is described below.
+.sp
+The s_entry
+field is the entry point address for the program. The high order word 
+contains the segment number in the standard Z8000 long-segmented address
+format; the low order word is the segmented offset. In a non-segmented
+or 8-bit program, the high order word is 0.
+.sp
+The valid flags in the
+s_flag
+field are:
+.nf
+.PP
+#define     SF_STRIP    0x0001    /* Relocation info has been stripped */
+#define     SF_OPREP    0x0002    /* Reserved for linker usage         */
+#define     SF_Z8       0x0004    /* Z8 program                        */
+#define     SF_Z80      0x0008    /* Z80 program                       */
+#define     SF_SEND     0x0010    /* Module created by SEND            */
+#define     SF_7FSTK    0x0020    /* Stack resides in segment 0x7F     */
+.fi
+.PP
+The other bits are reserved for future expansion and
+should be preserved.
+.sp
+The s_codesz field is used in 8-bit separate I & D files to store
+the padded size of the text memory image.
+.sp
+The s_unused field is reserved for future expansion.
+.nf
+.PP
+.B 1.2. The Segment Table 
+.ad
+.fi
+.PP
+The segment table is an array of structures. There is one entry for
+each segment in the program. In segmented combined I & D and overlay 
+programs there is a maximum
+of 128 such structures; in segmented separate I & D programs there is 
+a maximum of 256.   
+.sp
+In nonsegmented or 8-bit programs, there is one entry in the table.
+.sp
+Each structure in the array of structures has the following definition:
+.nf
+.PP
+    struct segt {
+        char       sg_segno;    /* Segment number              */
+        char       sg_coff;     /* Offset/256 for text section */
+        char       sg_doff;     /* Offset/256 for data section */
+        char       sg_boff;     /* Offset/256 for bss section  */
+        unsigned   sg_code;     /* Size of the text section    */
+        unsigned   sg_data;     /* Size of the data section    */
+        unsigned   sg_bss;      /* Size of the bss section     */
+        int        sg_atr;      /* Attributes, defined below   */
+        long       sg_unused;   /* Unused                      */
+    };
+.ad
+.fi
+.PP
+The segment table array is sorted into increasing order on the logical
+segment number, sg_segno. 
+Text and data sections follow this ordering.
+.sp
+A non-segmented or 8-bit program has one entry; 
+sg_segno = 0.
+.sp
+A segment can contain a maximum of 256 256-byte 
+cliques. 
+All sections begin on clique boundaries. The 
+sg_c/d/boff 
+fields indicate
+the particular clique-offset for the corresponding section. For example,
+if the text section begins at address 0x200 within the segment, it has
+a clique-offset of 0x200/0x100, or 2; 
+sg_coff 
+= 0x02. If the data 
+section begins at
+address 0xE400 within the segment, it has a clique-offset of 0xE400/0x100,
+or 228; 
+sg_doff 
+= 0xE4. The largest offset-value these fields can hold is
+255; 0 is a valid offset.        
+.sp
+The
+sg_code, sg_data,
+and
+sg_bss
+fields give the sizes of the sections. In Z8000 programs, the
+linker pads a section out to the next 256-byte boundary;
+the padding is included in the size.
+The linker ensures that the size divided by 256 and rounded up
+yields the number of 256-byte segments needed to load the program.o
+For example, a separate I & D program
+with 258 bytes of text and 258 bytes of data has the text and data
+spaces padded out to 512 bytes; the program utilizes 4 256-byte cliques.
+.sp
+The
+sg_atr
+field describes the segment attributes. The following flags are defined:
+.nf
+.PP
+#define	 SG_CODE    0x0001    /* Segment contains text                */
+#define	 SG_DATA    0x0002    /* Segment contains data                */ 
+#define	 SG_BSS     0x0004    /* Segment contains bss                 */
+#define	 SG_STACK   0x0008    /* Segment contains the stack           */
+#define	 SG_OCODE   0x0010    /* Text section is offset               */
+#define	 SG_ODATA   0x0020    /* Data section is offset               */
+#define	 SG_OBSS    0x0040    /* Bss section is offset                */
+#define	 SG_BOUND   0x0080    /* Segment number bound to this section */
+.ad
+.fi 
+.PP
+Normally, bss follows data which immediately follows text.
+Any exceptions to this use the offset flags and values.
+In most segmented Z8000 applications, segments hold
+only text or data and bss.
+.sp
+In segmented Z8000 programs the SG_BOUND bit, when set, binds a section
+to a specific segment number.
+.nf
+.PP
+.B 2. THE MEMORY IMAGE
+.PP
+.ad
+.fi
+The memory image contains memory images for each segment defined in the
+segment table.
+The memory image in Z8000 programs is identical to
+the standard UNIX A.OUT file format.
+Data follows code.
+Bss, though not stored, is assumed to follow data.
+(NOTE: Because the bss sections are not stored, bss  
+is not considered part of the memory image defined in the descriptor.)
+If any of the three program sections (text, data, bss) has an offset
+(determined by the 
+attributes 
+field), the corresponding 
+sg_?off 
+field
+is multiplied by 256 and used as the low address for that section 
+(again, 0 is a valid offset). 
+.sp
+In 8-bit programs the memory image contains pad-bytes to
+ensure word-alignment. Pad-bytes are also 
+inserted when two consecutive bytes on a word boundary cannot be
+described as an absolute word (for example, 
+Z8 
+relocatable byte values).
+Pad-bytes are contained in the upper byte of a word value.
+.PP
+.nf
+.B 3. THE TRAILER
+.sp
+.B 3.1.  Relocation Information 
+.PP
+.ad
+.fi
+Each word or padded byte value in the text and data sections contains
+one word of relocation information. This ensures that the text and
+data sections and the relocation sections are the same size. 
+.sp
+This section may not be present if the 
+SF_STRIP 
+bit in the 
+s_flag
+field of the object module descriptor is set. The SF_STRIP bit 
+in 8-bit programs, when set,
+indicates the relocation information
+is not present; the Z8 or Z80 pad-bytes have
+been removed from the text and data memory images.
+.sp
+The relocation word for a Z8000 segmented word is more
+complicated than the PDP-11 or the non-segmented 
+Z8000 relocation word. The relocation information word for 8-bit object files 
+is
+interpreted differently than for Z8000 files. In all cases bit 3 is
+the external reference indicator. The interpretation of the other bits
+depends on the state of the bit:
+.nf
+.PP
+The relocation word is interpreted as follows:
+.sp
+.ne 3v
+Bit 3 = 1: External reference
+.br
+  Bits 2-0:
+.br
+    000    offset part (or other 16 bit value)
+.br
+    001    segment part
+.br
+    010    short segmented address
+.br
+    011    12 bit relative address (CALR)
+.br
+    100    16 bit relative address (LDR, LDAR)
+.br
+.ne 2v
+  Bits 15-4:
+.br
+    Symbol number starting from 0
+.sp
+.ne 3v
+Bit 3 = 0: Resolved reference
+.br
+  Bits 2-1:
+.br
+    00     absolute
+.br
+    01     text reference
+.br
+    10     data reference
+.br
+    11     bss reference
+.br
+.ne 3v
+  Bit 0 = 1: segmented reference
+.br
+    Bits 15-8:
+.br
+	     segment table entry #
+.br
+.ne 2v
+    Bits 6-4:
+.br
+      000    offset part (or other 16 bit value)
+.br
+      001    segment part
+.br
+      010    short segmented address
+.br
+      011    12 bit relative address (CALR)
+.br
+      100    16 bit relative address (LDR, LDAR)
+.br
+.ne 3v
+  Bit 0 = 0: non-segmented reference
+.br
+    Bits 15-4:
+.br
+      unused
+.br
+.ad
+.fi
+.PP
+Note that 12 and 16 bit relative addresses are included.
+If a destination address for a CALR or LDR or LDAR 
+can be resolved at assembly time,
+it will be. These tags reference destinations in other
+modules or in other relocatable sections.
+The PLZ/ASM assembler \fBas\fR(1) does not allow such relative
+references; all references must be resolved at assembly time.
+.sp
+Relocation bits for 8-bit object files:
+.nf
+.PP
+.ne 3v
+Bit 3 = 1: External reference
+.br
+  Bits 2-0:
+.br
+    000    word value
+.br
+    001    byte value
+.br
+    010    high byte of word value
+.br
+    011    low byte of word value
+.br
+.ne 2v
+  Bits 15-4:
+.br
+    Symbol number starting from 0
+.sp
+.ne 3v
+Bit 3 = 0: Resolved reference
+.br
+  Bits 2-0:
+.br
+    000     absolute
+.br
+    010     code reference
+.br
+    100     data reference
+.br
+    110     bss reference
+.br
+  Bits 6-4:
+.br
+    000    word value
+.br
+    001    byte value
+.br
+    010    high byte of word value
+.br
+    011    low byte of word value
+.br
+  Bits 15-7:
+.br
+      unused
+.br
+.ad
+.fi
+.sp
+The high-byte and low-byte relocation bits 
+support the Z8 #HI and #LO operators in PLZ/ASM.
+.nf
+.bp
+.PP
+.B 3.2. The Symbol Table 
+.PP
+.ad
+.fi
+The symbol table is an array of structures 
+(see the discussion of long symbol names below). This section
+need not be present, and will not be if the program was loaded with
+the \fB-s\fR option of \fBld\fR(1) or \fBsld\fR(1)
+or if the symbols and relocation information have been removed by 
+\fBstrip\fR(1).
+A value of 0 in the 
+s_syms 
+field of the object
+module descriptor indicates that this section is not present.
+.sp
+A symbol table entry is defined by the structure:
+.nf
+.PP
+#define	SHORTNAME 8		/* Length of normal sized name   */
+#define	LONGNAME 127		/* Max characters in a long name */
+
+    struct s_nlist {
+        long     sn_value;           /* Value                      */
+        char     sn_type;            /* Type field                 */
+        char     sn_segt;            /* Segment-table entry #      */
+        char     sn_name[SHORTNAME]; /* Symbol name padded with 0s */
+    };
+
+/* These definitions apply to the sn_type field in the
+   symbol table */
+
+#ifndef	N_UNDF		/* s.out.h and z.out.h can be included together 
+			   but z.out.h must preceed s.out.h */
+
+#define	    N_UNDF      0         /* Undefined                        */
+#define	    N_ABS       0x01      /* Absolute                         */
+#define	    N_DATA      0x03      /* Data symbol                      */
+#define	    N_BSS       0x04      /* Bss symbol                       */
+#define	    N_TYPE      0x1F      /* Mask for type                    */
+#define	    N_REG       0x14      /* Register name                    */
+#define	    N_FN        0x1F      /* File name                        */
+#define	    N_EXT       0x20      /* External bit, or'ed in           */
+#endif
+
+#define	    N_CODE      0x02      /* Text symbol                      */
+#define	    N_SN        0x1E      /* Section name                     */
+#define       N_SEG       0x40      /* Segmented bit, OR'd in           */
+#define       LONGBIT     0x80      /* In sn_name[0], marks long symbol */
+#define       LONGMASK    0x007F    /* Strip off LONGBIT                */
+.fi
+.PP
+The name field supports names of any length less-than-or-equal-to 
+127. If the first
+character of the name is normal ascii (high-order bit = 0), the
+identifier is eight characters or less. If the high-order bit of the
+name is set, the low-order 7 bits are taken to be the length of the
+identifier including the length byte. When an identifier is longer 
+than 8 characters, the extra
+characters immediately follow the name's eighth character. To insure 
+that an integral number of symbol table entries are filled,
+the last symbol table entry into which the long name overflows is	 
+padded-out to structure-end with zeros.  
+.sp
+When declaring a structure suitable for reading in one symbol up to
+the longest name possible, a nested structure of the following definition 
+is recommended:
+.nf
+.PP
+            struct {
+                     struct sn_nlist bol;
+                     char longname[128];
+            } sym;
+
+References are then of the form:
+
+            x = sym.bol.sn_value;
+            c = sym.bol.sn_name[42];
+.PP
+.ad
+.fi
+.PP
+If a symbol's type is undefined external, and the value field is non-zero,
+the symbol is interpreted by the loaders 
+.B ld
+and
+.B sld
+as the name of a block of common storage whose size is indicated by the
+value of the symbol.
+.sp
+The value of a word in the text or data sections that does not reference
+an undefined external symbol appears in
+memory when the file is executed. If a word in the text or data sections
+references an undefined external symbol (indicated by the
+relocation information for that word), the value of the word stored
+in the file is an offset from the associated external symbol. When 
+processing defines the external symbol,
+the value of the symbol will be added into the word in the file.
+.PP
+.nf
+.B 4. USAGE
+.PP
+.ad
+.fi
+The      
+.B a.out
+format defines object files that run on the ZEUS system and 
+programs that are to be downloaded to target hardware.
+When an \fBa.out\fR file is loaded into memory by ZEUS for execution,
+three physical segments are set up: text, data (which includes bss),
+and a stack.
+The text segment begins at 0 in the image; the header is not loaded.
+.sp
+A magic number in the descriptor of N_MAGIC1
+indicates that the text segment is not to be write-protected and shared.
+The data segment immediately follows the text segment. 
+.bp
+If the magic number is N_MAGIC3, the text segment is write-protected and
+shared; the text and data space are separated; the text and
+data sections both begin at location 0 in their segments. 
+.sp
+If the magic number is 
+N_MAGIC4, 
+the text segment is overlaid on an
+existing 
+(N_MAGIC3 or N_MAGIC4) 
+text segment; the existing data segment
+is preserved. 
+.sp
+For segmented files, the above holds true; however, there can be more
+than one segment in each category (text, data, bss).
+.sp
+The 
+stack 
+originates at 
+0xFFFE 
+and grows downward. 
+The stack is automatically extended as
+required through faults. Data segments are only extended as requested
+by
+.BR brk (2) 
+or
+.BR sgbrk (2). 
+.SH SEE ALSO
+as(1), cas(1), ld(1), sld(1), objhdr(1), objdu(1), nm(1).

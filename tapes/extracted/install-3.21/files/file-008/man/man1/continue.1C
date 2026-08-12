@@ -1,0 +1,48 @@
+.po 1i
+.TH CONTINUE 1C UCB
+.V 08/15/84 16:42:29
+.\"@[$]continue.1C	1.7	08/15/84 16:42:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+continue \- C Shell flow control statement
+.SH SYNOPSIS
+.B continue
+.SH DESCRIPTION
+.B Continue
+execution of the nearest enclosing
+.B while
+or
+.B foreach.
+The rest of the commands on the current line are executed.
+.SH EXAMPLE
+.RS
+.nf
+# test
+while ( 1 )
+	echo -n "enter x:"
+	set x=`gets`
+
+	if ( $x == 'a' ) then
+		echo "it continued"
+		continue
+	endif
+
+	echo "it didnt continue"
+	exit
+end
+.fi
+.RE
+.PP
+This shell script prompts for input and sets the variable
+\fIx\fR to whatever is input at the terminal. If the
+input is "\fBa\fR" the \fBcontinue\fR statement moves
+control of the program back to the \fBwhile\fR statement
+at the top and the process repeats. 
+.PP
+If the input is not the letter "\fBa\fR" control drops
+through the loop and \fBexit\fRs.
+.SH SEE ALSO
+foreach(1C), while(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

@@ -1,0 +1,85 @@
+# Region map: start end kind [label]
+#   kind = code | word | byte | string | msg
+#     msg  = word length prefix followed by that many text bytes (routine 0x050c)
+#     string = plain NUL-terminated text
+# This overrides tools/trace.py, which only knows what control flow reaches.
+# Anything not listed and not reached by the tracer falls back to .word data.
+
+0x0000 0x0008 ptr     reset_psa       # Z8001 reset: reserved, FCW, PC seg, PC offset
+0x0008 0x0024 string  msg_copyright
+0x0024 0x0056 msg     msg_banner
+0x0056 0x0070 ptr     rom_entry_vec   # monitor entry-point table
+
+0x01b2 0x01c2 byte    cmd_letters     # command letters, searched backwards by CPDRB
+0x01c2 0x01e0 ptr     cmd_dispatch    # handler address per command letter
+
+0x01f4 0x0202 byte    ctrlchar_init   # copied to 0x43f2: editing/flow-control chars
+0x0202 0x020e byte    sio_init_chb    # 11 bytes -> SIO0 channel B control (console)
+0x020e 0x0218 byte    sio_init_cha    #  9 bytes -> SIO0 channel A control
+0x022e 0x0250 msg     msg_uninit_vec
+0x0250 0x02e0 ptr     psa_template    # copied to 0x4400, installed via LDCTL PSAPOFF
+0x02e0 0x02f0 word
+0x02f0 0x02f4 byte    baud_table      # CTC time constant per console baud DIP setting
+
+0x0d42 0x0d5e msg     msg_bad_load_addr
+0x0d5e 0x0d6e msg     msg_cksum_error
+0x0d6e 0x0d84 msg     msg_file_write_error
+0x0d84 0x0d98 msg     msg_open_file_error
+0x0d98 0x0da2 msg     msg_abort
+0x0da2 0x0dae string  msg_entry_point
+0x0dae 0x0dba msg     msg_break_at
+0x0dba 0x0dc2 msg     msg_nmi
+
+0x1214 0x1234 msg     msg_boot_winchester
+0x1234 0x1248 msg     msg_boot_tape
+0x1248 0x126c msg     msg_boot_smd
+0x126c 0x1290 msg     msg_boot_mini_winchester
+
+# The image ends with filler, not content.  The 26 zero bytes align the last
+# routine up to a 256-byte boundary; everything above that is erased EPROM and
+# is supplied by the build, so the source can grow into it.
+0x32e6 0x3300 fill
+0x3300 0x4000 blank
+
+# Code the tracer cannot reach because the entry address is only known at run
+# time.  Each range decodes with no undefined opcodes and its last instruction
+# ends exactly on the boundary; tools/trace.py:linear() rechecks both on every
+# build, so a wrong boundary fails loudly rather than emitting nonsense.
+0x15a8 0x1c2e code    # second such block: r11=0x15a8, r13=0x1c2e set at 0x159e
+0x1c2e 0x21a2 code
+0x2292 0x2bd8 code    # its two 8-byte printable runs (0x2ae4, 0x2b98) were
+                      # checked and are instruction bytes, not text
+0x2bf2 0x3210 code    # relocated to 0xf000 by the routine at 0x2bd8
+0x3210 0x3214 word    # (the blob's own data follows its code)
+0x3214 0x3220 string  msg_boot_file      # file the boot loader opens
+0x3220 0x3224 string  msg_boot_prompt
+0x3224 0x3230 msg     msg_smc_error
+0x3230 0x323c msg     msg_wdc_error
+0x323c 0x3248 msg     msg_mdc_error
+0x3248 0x325e msg     msg_illegal_boot_device
+0x325e 0x32cc code    # relocated to 0xf800 by the routine at 0x32cc
+
+# Power-up diagnostic text.  "POWER UP DIAGNOSTICS" is NUL-terminated and its
+# terminator doubles as the high byte of the next message's length word; the
+# rest is the usual length-prefixed chain, ending exactly on 0x1402.
+0x132c 0x1340 string  msg_powerup_diag
+0x1340 0x1356 msg     msg_active_peripherals
+0x1356 0x1360 msg     msg_complete
+0x1360 0x137c msg     msg_invalid_switch_code
+# Board names printed under "ACTIVE PERIPHERALS:"
+0x137c 0x1382 msg     name_ecc
+0x1382 0x1388 msg     name_wdc
+0x1388 0x138e msg     name_mdc
+0x138e 0x1394 msg     name_smc
+0x1394 0x139a msg     name_mtc
+0x139a 0x13a0 msg     name_tcc
+0x13a0 0x13a6 msg     name_ssb
+0x13a6 0x13ac msg     name_icp
+0x13ac 0x13b2 msg     name_fpp
+0x13b2 0x13c0 msg     msg_error_number
+0x13c0 0x13d2 msg     msg_fatal_error
+0x13d2 0x13de msg     msg_segmented
+0x13de 0x13ee msg     msg_non_segmented
+0x13ee 0x13f8 msg     msg_jumpers
+0x13f8 0x1402 msg     msg_maxseg
+0x1402 0x148e word    diag_tables

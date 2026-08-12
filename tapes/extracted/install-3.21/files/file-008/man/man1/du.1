@@ -1,0 +1,64 @@
+.po 1i
+.TH DU 1 Bell
+.V 08/15/84 16:47:42
+.\" @[$]du.1	1.8  08/15/84 16:47:43 - Zilog Inc
+.ad
+.fi
+.SH NAME
+du \- summarize disk usage
+.SH SYNOPSIS
+.B du
+[
+.B \-ars
+] [ \fIfiles\fR ]
+.SH DESCRIPTION
+.B Du\^
+gives the number of blocks contained in all files
+and (recursively) directories within each directory and
+file
+specified by
+the
+.I names\^
+argument.
+The block count includes the indirect blocks
+of the file.
+If
+.I names\^
+is missing,
+.B .
+is used.
+.PP
+Absence of an option causes an entry to be generated for
+each directory only.
+.B Du\^
+is normally silent about directories that cannot be read,
+files that cannot be opened, etc.
+.PP
+A file with two or more links is only counted once.
+.SH OPTIONS
+.TP
+.B \-a
+Cause an entry to be generated for each file.
+.TP
+.B \-r
+Cause
+.B du\^
+to generate messages in cases where files and directories
+cannot be opened or read.
+.TP
+.B \-s
+Cause only the grand total (for each of the specified
+.IR names )
+to be given.
+.SH LIMITATIONS
+If the
+.B \-a
+option is not used, non-directories given as arguments
+are not listed.
+.sp
+If there are too many distinct linked files,
+.B du\^
+will count the excess files more than once.
+.sp
+Files with holes in them will get an incorrect block count.
+.sp

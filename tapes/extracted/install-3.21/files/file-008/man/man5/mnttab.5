@@ -1,0 +1,43 @@
+.po 1i
+.TH MNTTAB 5 Bell
+.V 08/15/84 17:34:51
+.\" @[$]mnttab.5	1.5 08/15/84 17:34:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mnttab \- mounted file system table
+.SH SYNOPSIS
+.tr _\(ul
+.nf
+\fBstruct mnttab {
+	char	mt_dev[10];
+	char	mt_filsys[10];
+	short	mt_ro_flg;
+	time_t	mt_time;
+};\fR
+.fi
+.SH DESCRIPTION
+.I Mnttab\^
+resides in directory
+.I /etc
+and contains a table of devices mounted by the
+.BR mount (M)
+command.
+.PP
+Each entry is 26 bytes in length.
+The first 10 bytes are the null-padded name of where the
+\fIspecial file\fR is mounted;
+the next 10 bytes represent the null-padded root name of
+the mounted special file;
+the remaining 6 bytes contain the mounted \fIspecial file\fR's
+read/write permissions and date it was mounted.
+.PP
+The maximum number of entries in
+.I mnttab\^
+is based on the system parameter
+.B Nmount
+located in
+the kernel,
+which defines the number of allowable mounted special files.
+.SH SEE ALSO
+mount(M).

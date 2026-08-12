@@ -1,0 +1,983 @@
+.po 1i
+.TH PWB 3 Zilog
+.V 08/15/84 17:23:57
+.\" @[$]pwb.3	1.6 08/15/84 17:23:57 - Zilog Inc. 
+.ad 
+.fi 
+.SH NAME
+any, anystr, balbrk, cat, clean_up, curdir, dname, fatal, fdfopen, giveup, imatch, index, lockit, move, patoi, patol, rename, repeat, satoi, seisig1, setsig, sname, strend, substr, trnslat, unlockit, userdir, userexit, username, verify, xalloc, xcreat, xfree, xfreeall, xlink, xmsg, xopen, xpipe, xunlink, xwrite, zero, zeropad \- library routines from the PWB library.
+.SH SYNOPSIS
+.nf
+\fBany\fI (c,str)\fR
+.br
+\fBchar\fI c, \(**str;\fR
+.PP
+\fBanystr\fI (str1,str2)\fR
+.br
+\fBchar\fI \(**str1, \(**str2;\fR
+.PP
+\fBbalbrk\fI (str,open,clos,end)\fR
+.br
+\fBchar\fI \(**str, \(**open, \(**clos, \(**end;\fR
+.PP
+\fBchar \(**cat\fI (dest,source1,source2,source3...sourcen,0)\fR
+.br
+\fBchar \(**dest, \fI \(**source1, \(**source2, \(**source3, \(**sourcen;\fR
+.PP
+\fBclean_up()\fR
+.PP
+\fBcurdir\fI (path)\fR
+.br
+\fBchar\fI \(**path;\fR
+.PP
+\fBchar\fI \(**dname(pathname)\fR
+.br
+\fBchar\fI \(**pathname;\fR
+.PP
+\fBfatal\fI (msg)\fR
+.br
+\fBchar\fI \(**msg;\fR
+.PP
+\fBFILE\fI \(**fdfopen(fd,mode)\fR
+.br
+\fBint\fI fd,mode;\fR
+.PP
+\fBgiveup\fI (dump)\fR
+.br
+\fBint\fI dump;\fR
+.PP
+\fBimatch\fI (prefix,str)\fR
+.br
+\fBchar\fI \(**prefix, \(**str;\fR
+.PP
+\fBindex\fI (str1,str2)\fR
+.br
+\fBchar\fI \(**str1, \(**str2;\fR
+.PP
+\fBlockit\fI (lockfile,count,pid)\fR
+.br
+\fBchar\fI \(**lockfile;\fR
+.br
+\fBunsigned\fI count,pid;\fR
+.PP
+\fBchar \(**move\fI(a,b,n)\fR
+.br
+\fBchar\fI \(**a, \(**b;\fR
+.br
+\fBunsigned\fI n;\fR
+.PP
+\fBpatoi\fI (str)\fR
+.br
+\fBchar\fI \(**str;\fR
+.PP
+\fBlong patol\fI (str)\fR
+.br
+\fBchar\fI \(**str;\fR
+.PP
+\fBrename\fI (oldname,newname)\fR
+.br
+\fBchar\fI \(**oldname, \(**newname;\fR
+.PP
+\fBchar \(**repeat\fI (result,str,repfac)\fR
+.br
+\fBchar\fI \(**result, \(**str;\fR
+.br
+\fBunsigned\fI repfac;\fR
+.PP
+\fBchar \(**satoi\fI (str,ip)\fR
+.br
+\fBchar\fI \(**str;\fR
+.br
+\fBint\fI \(**ip;\fR
+.PP
+\fBsetsig1()\fR
+.PP
+\fBsetsig()\fR
+.PP
+\fBchar \(**sname\fI (str)\fR
+.br
+\fBchar\fI \(**str;\fR
+.PP
+\fBchar \(**strend\fI (str)\fR
+.br
+\fBchar\fI \(**str;\fR
+.PP
+\fBchar \(**substr\fI (str,result,origin,len)\fR
+.br
+\fBchar\fI \(**str, \(**result;\fR
+.br
+\fBint\fI origin;\fR
+.br
+\fBunsigned\fI len;\fR
+.PP
+\fBchar \(**trnslat\fI (str,old,new,result)\fR
+.br
+\fBchar\fI \(**str, \(**old, \(**new, \(**result;\fR
+.PP
+\fBunlockit\fI (lockfile,pid)\fR
+.br
+\fBchar\fI \(**lockfile;\fR
+.br
+\fBunsigned\fI pid;\fR
+.PP
+\fBchar\fI \(**userdir(uid)\fR
+.br
+\fBint\fI uid;\fR
+.PP
+\fBuserexit \fI(code)\fR
+.br
+\fBint\fI code;\fR
+.PP
+\fBchar \(**username\fI (uid)\fR
+.br
+\fBint\fI uid;\fR
+.PP
+\fBchar \(**verify\fI (str1,str2)\fR
+.br
+\fBchar\fI \(**str1, \(**str2;\fR
+.PP
+\fBxalloc\fI (size)\fR
+.br
+\fBunsigned\fI size;\fR
+.PP
+\fBxcreat\fI (name,mode)\fR
+.br
+\fBchar\fI \(**name;\fR
+.br
+\fBint\fI mode;\fR
+.PP
+\fBxfree\fI (ptr)\fR
+.br
+\fBchar\fI \(**ptr;\fR
+.PP
+\fBxfreeall()\fR
+.PP
+\fBxlink\fI (f1,f2)\fR
+.br
+\fBchar\fI \(**f1, \(**f2;\fR
+.PP
+\fBxmsg\fI (file,\fIfunc)\fR
+.br
+\fBchar\fI \(**file, \(**func;\fR
+.PP
+\fBxopen(\fIname, mode)
+.br
+\fBchar \fI*name;
+.br
+\fBint \fI mode;
+.PP
+\fBxpipe\fI (t)\fR
+.br
+\fBint\fI \(**t;\fR
+.PP
+\fBxunlink\fI (f)\fR
+.br
+\fBchar\fI \(**f;\fR
+.PP
+\fBxwrite\fI (fildes,buffer,nbytes)\fR
+.br
+\fBint\fI fildes;\fR
+.br
+\fBchar\fI \(**buffer;\fR
+.br
+\fBint\fI nbytes;\fR
+.PP
+\fBchar \(**zero\fI(ptr,cnt)\fR
+.br
+\fBchar\fI \(**ptr;\fR
+.br
+\fBint\fI cnt;\fR
+.PP
+\fBchar \(**zeropad\fI(str)\fR
+.br
+\fBchar\fI \(**str;\fR
+.fi
+.SH DESCRIPTION
+.TP
+.B Any
+returns a 1 if character 
+.I c
+is equal to any character in the string
+.IR str ;
+else returns 0.
+.TP
+.B Anystr
+returns the offset (in 
+.I str1
+) of
+the first character matched from 
+.IR str2.
+If no character matches -1 is returned.
+.TP
+.B Balbrk
+finds the offset, in string 
+.IR str,
+of the first of the
+characters in the string 
+.I end
+occurring outside of a 
+.I "balanced string."
+A balanced string contains matched occurrences of any character
+in the string 
+.I open
+and the corresponding character in
+the string 
+.I clos.
+Balanced strings may be nested.
+In addition to the characters in 
+.I end,
+the null character
+is implicitly an 
+.I end
+character.
+Unmatched members of 
+.I open
+or 
+.I clos
+result in an
+error return (a value of -1 is returned).
+.sp
+.nf
+   
+.I Example 1:
+.sp
+      s = "a[bc=2]=3";
+      o = "({[";
+      c = ")}]";
+      e = "=";
+.sp
+   balbrk(s,o,c,e) returns 7.
+.sp
+   
+.I Example 2:
+.sp
+      s = "a[bc=2=3";
+.sp
+   with o,c, and e as in Example 1, balbrk(s,o,c,e) returns -1.
+.fi
+.TP
+.I Cat
+concatenates strings.
+First, string 
+.I source1
+is copied to string 
+.I dest.
+Then subsequent 
+.B sourcek
+strings are concatenated (by
+copying) onto the end of 
+.I dest.
+The space for 
+.I dest
+must be allocated by the caller (i.e.
+.I dest
+is taken to be the address of an area of memory
+large enough to hold the result).
+The address of the result (i.e., 
+.I dest
+) is returned.
+.TP
+.B Repeat
+copies
+the string 
+.I str
+to the string 
+.I result.
+Then 
+.I str
+is copied 
+.I repfac
+-1 times onto the end
+of 
+.I result.
+As with 
+.B cat()
+(see above), allocation of space for 
+.I result
+is the caller\'s responsibility.
+.I Result
+is returned.
+.TP
+.B Satoi
+is similar to 
+.B patoi
+(see below), except
+that the integer value is stored through the integer pointer
+.I ip,
+and a pointer to the first non-numeric character
+encountered is returned.
+.TP
+.B Sname
+returns a pointer to the "simple" name of path
+name 
+.I str;
+i.e., a pointer to the first character after
+the last "/" in 
+.I str.
+If 
+.I str
+does not contain a "/", a pointer to the original
+string is returned.
+.TP
+.B Strend
+returns a pointer to the end (null byte) of
+the string 
+.I str.
+.TP
+.B Trnslat
+copies string 
+.I str
+to string 
+.I result
+replacing any
+character found in string 
+.I old
+with the corresponding
+character from string 
+.I new; result
+is returned.
+.TP
+.B Zero
+sets to zero the area of memory 
+.I cnt
+bytes long, starting
+at address 
+.I ptr;
+.I ptr
+is returned.
+.TP
+.B Zeropad
+replaces initial blanks with "0" characters in string 
+.I str;
+.I str
+is returned.
+.TP
+.B Dname
+returns a pointer to the name of the directory that contains
+the file pointed to by 
+.I pathname.
+.B Dname
+is the complement of 
+.B sname()
+(see above).
+If 
+.I pathname
+is a simple name (e.g. "file"), a pointer
+to "." is returned.
+If 
+.I pathname
+is "/zeus", a pointer to "/" is returned.
+If 
+.I pathname
+is "/bin/who", a pointer to "/bin" is returned, etc.
+The string pointed to by 
+.I pathname
+is modified by 
+.B dname;
+pathname
+is returned.
+.TP
+.B Imatch
+returns 1
+if string 
+.I prefix
+is a prefix of string 
+.I str;
+else returns 0.
+.TP
+.B Index
+returns the offset of the first occurrence of 
+.I str2
+in
+.I str1
+if string 
+.I str2
+is a substring of string 
+.I str1,
+otherwise -1 is returned.
+.TP
+.B Patol
+converts an ASCII string to a long integer.
+The string 
+.I str
+is taken to be a string of decimal digits;
+the numeric value represented by 
+.I str
+is returned.
+Converts positive numbers only.
+Returns -1 if a non-numeric character is encountered.
+.TP
+.B Move
+copies the first 
+.I n
+characters from string 
+.I a
+to
+string 
+.I b.
+.TP
+.B Patoi
+converts an ASCII string to an integer.
+The string 
+.I str
+is taken to be a string of decimal digits;
+the numeric value represented by 
+.I str
+is returned.
+Converts positive numbers only.
+Returns -1 if a non-numeric character is encountered.
+.TP
+.B Substr
+copies at most 
+.I len
+characters from the string 
+.I str
+starting at 
+.I str[origin]
+to the string pointed to by
+.I result.
+Sufficient space must exist for that string; 
+.I result
+is returned.
+There is 
+.I "no checking"
+for the reasonableness of the arguments.
+The copying of 
+.I str
+to 
+.I result
+stops if either the
+specified number (i.e., 
+.I len,
+which is taken as an unsigned
+integer) of characters have been copied, or if the end of 
+.I str
+(i.e., a null byte) is found.
+A large value of 
+.I len
+(e.g., -1) will usually cause all
+of 
+.I str
+to be copied.
+.TP
+.B Verify
+checks to see
+if string 
+.I str1
+contains any characters not in string
+.I str2.
+It returns the offset of the first such character
+in 
+.I str1;
+else returns -1.
+.SH Error Handling Routines
+The 
+.I error
+set of subroutines consist of a general-purpose
+error handling routine called 
+.B fatal(),
+and general-purpose
+signal-setting and signal-catching routines called 
+.B setsig()
+and 
+.B setsig1(),
+respectively.
+There are also two additional routines called 
+.B clean_up
+and 
+.B userexit,
+which may be called by 
+.B fatal
+or 
+.B setsig1.
+Default versions of these two additional routines are supplied
+in the library.
+Users may define their own 
+.B clean_up
+and 
+.B userexit
+routines.
+.PP
+The 
+.I include
+file, 
+.I /usr/include/fatal.h
+contains definitions
+needed to use 
+.B fatal.
+These definitions are:
+.sp
+.nf
+   extern int   Fflags;
+   extern char  *Ffile;
+   extern int   Fvalue;
+   extern int   (*Ffunc)();
+   extern ret_buf   Fjmp[10];
+.sp
+   # define FTLMSG   0100000
+   # define FTLCLN    040000
+   # define FTLFUNC   020000
+   # define FTLACT       077
+   # define FTLJMP        02
+   # define FTLEXIT       01
+   # define FTLRET         0
+.sp
+   # define FSAVE(val)  SAVE(Fflags,old_Fflags): Fflags = val;
+   # define FRSTR()     RSTR(Fflags,old_Fflags);
+.fi
+.TP
+.B Clean_up
+is a default 
+.B clean_up
+routine provided to resolve
+external references.
+It simply returns.
+User-supplied 
+.B clean_up
+routines are often used for
+removing temporary files, etc.
+.TP
+.B Fatal
+is
+a general-purpose error handler.
+Typically, low-level subroutines that detect error conditions
+(an open or create routine, for example) return as a value
+a call of 
+.B fatal
+with an appropriate message string.
+For example:
+.sp
+.nf
+     return(fatal("can\'t do it"));
+.fi
+.PP
+Higher-level routines control the execution of 
+.B fatal
+via the global 
+.I Fflags.
+The macros FSAVE() and FRSTR() in "/usr/include/fatal.h" can be used by
+higher-level subroutines to save and restore the 
+.I Fflags
+value.
+.PP
+The argument to 
+.B fatal
+is a pointer to a message string.
+The action of 
+.B fatal
+is driven completely from the
+.I Fflags
+variable, which is interpreted as explained
+below.
+.PP
+The FTLMSG bit controls the writing of the message on file
+descriptor 2.
+The message is preceded by the string "ERROR:", unless the
+global character pointer 
+.I Ffile
+is non-zero, in which
+case the message is preceded by a string equivalent to:
+.sp
+.nf
+   s = sprintf(space, "ERROR [%s]:", Ffile);
+.fi
+.PP
+A new-line character is written after the user-supplied message.
+.PP
+If the FTLCLN bit is on, 
+.B clean_up
+is called with an
+argument of 0 (see above).
+.PP
+If the FTLFUNC bit is on, the function pointed to by the global
+function pointer 
+.I Ffunc
+is called with the user-supplied
+message pointer as an argument.
+This feature can be used to log these messages.
+.PP
+The FTLACT bits determine how 
+.I fatal
+should return.
+If the FTLJMP bit is one, 
+.B longret(Fjmp)
+(see 
+.BR setret(3))
+is called.
+If the FTLEXIT bit is one, the value of 
+.I userexit(1)
+is
+passed as an argument to 
+.BR exit(2)
+(see below).
+If none of the FTLACT bits is on (the default value for 
+.I Fflags
+is 0), the global variable 
+.I Fvalue
+(initialized to -1) is returned.
+.PP
+If all 
+.B fatal
+globals have their default values, 
+.B fatal
+simply returns -1.
+.TP
+.B Setsig
+sets signals. 
+All signals not already ignored or caught are made 
+to be caught by the signal catching routine 
+.B setsig1.
+.TP
+.B Setsig1
+catches signals set by setsig1. If a signal other than
+.I hangup
+.I interrupt
+or 
+.I quit
+is caught, 
+a "user-oriented" 
+.BR help(1) 
+message is printed on file descriptor 2.
+If
+.I hangup,
+.I interrupt,
+or
+.I quit 
+is caught, subsequent occurrences
+of that signal will be ignored.
+Termination is similar to the 
+.I FTLCLN 
+and 
+.I FTLEXIT 
+options of
+.B fatal,
+in that 
+.B clean_up(\fIsig\fB)\fR
+(where \fIsig\fR
+is the signal number) and 
+.BR exit (userexit(1))
+are called.
+.sp
+If the file "dump.core" exists in the current directory, the
+IOT signal is set to 0 and 
+.BR abort(3) 
+is called to produce
+a core dump (after calling 
+.B clean_up,
+but before calling
+.BR userexit),
+.TP
+.B Userexit(\fIcode\fB)\fR
+is
+a default 
+.B userexit
+routine provided to resolve
+external references.
+It returns the value of 
+.I code.
+User-supplied 
+.B userexit
+routines are often used for
+logging usage statistics.
+.PP
+.SH System Call Interface Routines
+.PP
+These routines provide interfaces to system
+calls.
+In addition,
+the routines process
+error conditions and call 
+.B fatal.
+.TP
+.B Curdir
+places the complete pathname of the current directory in string
+.I path.
+It returns a 0 on success, non-zero on failure.
+On successful a return, the current directory is the same as
+it was on entry; on failure return, the current directory
+is not known.
+.TP
+.B Fdfopen
+provides a file-descriptor interface to the
+Section 3 input/output routines.
+The first argument is a file descriptor (from 
+.BR open(2),
+.BR creat(2),
+or 
+.BR pipe(2))
+and the second is the read/write
+mode (0 or 1, respectively).
+A 
+.I file pointer
+(see 
+.BR fopen(3))
+is returned on success, and NULL on failure (typically, because
+there are no file structures available).
+.TP
+.B Giveup
+changes directory to "/" if argument is 0,
+.br
+sets IOT signal to system default (0), and
+.br
+calls
+.BR abort(3).
+.br
+.IP
+Thus, if 
+.B giveup
+is called with a 0 argument, and the
+file "/core" is not writable (or if the file "/core" doesn\'t
+exist, and the directory "/" is not writable), no core dump
+will be produced.
+.TP
+.B Lockit
+is
+a process semaphore implemented with files; typically, used
+to establish exclusive use of a resource (usually a file).
+The file\'s name is 
+.I lockfile.
+.B Lockit
+tries 
+.I count
+times to create \fIlockfile\fR
+mode 444.
+It sleeps 10 seconds between tries.
+If 
+.I lockfile
+is created, the number 
+.I pid
+(typically,
+the process ID of the current process) is written (in binary;
+i.e., as two bytes) into 
+.I lockfile,
+and 0 is returned.
+If 
+.I lockfile
+exists and hasn\'t been modified within
+the last 60 seconds, and if it is either empty, or if its first
+two bytes, interpreted as a binary number, are 
+not the
+process ID of any existing process, 
+.I lockfile
+is removed
+and 
+.B lockit
+tries again to make 
+.I lockfile.
+After 
+.I count
+tries, or if the reason for the creation
+of 
+.I lockfile
+failing is something other than EACCES (see
+.BR INTRO(2)), 
+.B lockit
+returns -1.
+See also 
+.BR unlockit,
+below.
+.TP
+.B Rename
+renames 
+.I oldname
+to be 
+.I newname;
+it can be thought
+of as:
+.sp
+.nf
+   mv oldname newname
+.fi
+.sp
+It calls 
+.B xlink
+(see below).
+.TP
+.B Unlockit
+is meant to be used to remove a 
+.I lockfile
+created by 
+.B lockit.
+It verifies that the 
+.I pid
+specified is contained in the
+first two bytes of the named 
+.I lockfile,
+and then removes
+the 
+.I lockfile.
+If the 
+.I pids
+match, and the file is successfully removed,
+.B unlockit
+returns 0; otherwise, -1 is returned.
+.TP
+.B Userdir
+returns user\'s login directory name.
+The argument must be an integer user ID.
+.B Userdir
+returns a pointer to the login directory on success, 0 on
+failure.
+It remembers its argument and the returned login directory
+name for subsequent calls.
+.TP
+.B Username
+returns user\'s login name.
+The argument must be an integer user ID.
+.B Username
+returns a pointer to the login name on success, a pointer
+to the string representation of the user ID on failure.
+.BR Logname(3) 
+is an alternative to this routine.
+.TP
+.B "Xalloc, xfree, xfreeall"
+handle the allocation and freeing
+of memory.
+.B Xalloc
+and 
+.B xfree
+are used in the same way
+as 
+.BR malloc(3) 
+and 
+.BR free(3).
+The function 
+.B xfreeall()
+frees all memory allocated by
+.B xalloc
+(it calls 
+.BR brk(2)).
+.B Xalloc
+returns the address of the allocated area on
+success, and the value of 
+.B fatal
+on failure.
+.B Xfree
+and 
+.B xfreeall
+don\'t return anything.
+.B Xalloc
+uses a "first fit" strategy.
+.B Xfree
+always coalesces continuous free blocks.
+.B Xalloc
+always allocates 2-byte words.
+.B Xalloc
+actually allocates one more word than the amount
+requested.
+The extra word (the first word of the allocated block) contains
+the size (in bytes) of the entire block.
+This size is used by 
+.B xfree
+to identify continuous
+blocks, and is used by 
+.B xalloc
+to implement the first
+fit strategy.
+Bad things will happen if that first (size) word is overwritten.
+Worse things happen if 
+.B xfree
+is called with a garbage
+argument.
+.TP
+.B Xcreat
+is used in the same way as 
+.BR creat(2).
+.B Xcreat
+requires write permission in the pertinent
+directory in 
+.I all
+cases, and the created file is guaranteed
+to have the specified 
+.I mode
+and be owned by the effective
+user.
+.B Xcreat
+does this by first unlinking the file
+to be created);
+.B xcreat
+returns a file descriptor on success, and the
+value of 
+.B fatal
+on failure.
+.TP
+.B Xlink
+is used in the same way as 
+.BR link(2).
+It is an interface to 
+.B link
+that handles all error
+conditions.
+It returns 0 on success, and the value of 
+.B fatal
+on failure.
+.TP
+.B Xmsg
+is used by the other 
+.I x
+-routines to generate
+an error message based on 
+.I errno
+(see 
+.BR INTRO(2)).
+It calls 
+.B fatal
+with the appropriate error message.
+The second argument is a pointer to the ceiling function\'s
+name (a string).
+There are predefined messages for the most common errors.
+Other errors cause a message like:
+.nf
+.sp
+str = sprintf(space, "error = %d, function = %s",
+errno, funcname)
+.fi
+.sp
+to be passed to 
+.I fatal.
+.TP
+.B Xopen
+is used in the same way as 
+.BR open(2).
+It is an interface to 
+.BR open(2) 
+that handles all error
+conditions.
+It returns a file descriptor on success, and the value of
+.B fatal
+on failure.
+.TP
+.B Xpipe
+is used in the same way as 
+.BR pipe(2).
+It is an interface to 
+.B pipe
+that handles all error
+conditions.
+It returns 0 on success, and the value of 
+.B fatal
+on
+failure.
+.TP
+.B Xunlink
+is used in the same way as 
+.BR unlink(2).
+It is an interface to 
+.B unlink
+that handles all error
+conditions.
+It returns 0 on success, and the value of 
+.B fatal
+on failure.
+.TP
+.B Xwrite
+is used in the same way as 
+.BR write(2).
+It is an interface to 
+.BR write(2) 
+that handles
+all error conditions.
+It returns the number of bytes written on success, and the
+value of 
+.B fatal
+on failure.

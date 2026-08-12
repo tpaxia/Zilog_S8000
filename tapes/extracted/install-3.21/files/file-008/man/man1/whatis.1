@@ -1,0 +1,31 @@
+.po 1i
+.TH WHATIS 1 UCB
+.V 08/15/84 17:10:16
+.\" @[$]whatis.1	1.7	08/15/84 17:10:16 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+whatis \- describe what a command is
+.SH SYNOPSIS
+.B whatis
+name ...
+.SH DESCRIPTION
+.B Whatis
+looks up a given command and gives the header line from the manual
+section.
+You can then run the 
+.BR man (1)
+command to get more information.
+If the line starts "name(section) ..." you can do
+\&"man section name" to get the documentation for it.
+.SH EXAMPLE
+.RS
+.sp
+     % whatis wc
+     wc (1)                  - word count
+.RE
+.SH FILES
+.DT
+/usr/lib/whatis	Data base
+.SH SEE ALSO
+apropos(1), makewhatis(1).

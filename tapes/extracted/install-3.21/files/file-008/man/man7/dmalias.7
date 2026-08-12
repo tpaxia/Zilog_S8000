@@ -1,0 +1,20 @@
+.po 1i
+.TH DMALIAS 7 Zilog
+.V 08/15/84 17:37:19
+.\" @[$]dmalias.7	1.4 08/15/84 17:37:20 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+dmalias \- Z8000 Development Module protocol
+.SH SYNOPSIS
+.B source /usr/pub/dmalias
+.SH DESCRIPTION
+This cshell script is required for proper handshaking between
+a Z8000 Development Module and the shell.
+Prior to a LOAD or SEND command, 
+this script should be sourced so that the cshell
+will correctly accept the 'load' command from the development
+module.
+.SH SEE ALSO
+load(1),
+send(1).

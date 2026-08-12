@@ -1,0 +1,212 @@
+.po 1i
+.TH DC 1 Bell
+.V 08/15/84 16:45:34
+.\" @[$]dc.1	1.8	08/15/84 16:45:34 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+dc \- desk calculator
+.SH SYNOPSIS
+.B dc
+[ \fIfile \fR]
+.SH DESCRIPTION
+.B Dc
+is an arbitrary precision arithmetic package.
+Ordinarily it operates on decimal integers,
+but one may specify an input base, output base,
+and a number of fractional digits to be maintained.
+The overall structure of
+.B dc
+is
+a stacking (reverse Polish) calculator.
+If an argument is given,
+input is taken from that file until its end,
+then from the standard input.
+The following constructions are recognized:
+.TP
+.B  c
+All values on the stack are popped.
+.TP
+.B  d
+The top value on the stack is duplicated.
+.TP
+.B  f
+All values on the stack and in registers are printed.
+.TP
+.B  i
+The top value on the stack is popped and used as the
+number radix for further input.
+.TP
+.B  I
+Pushes the input base on the top of the stack.
+.TP
+.B  k
+The top of the stack is popped, and that value is used as
+a non-negative scale factor:
+the appropriate number of places
+are printed on output,
+and maintained during multiplication, division, and exponentiation.
+The interaction of scale factor,
+input base, and output base will be reasonable if all are changed
+together.
+.TP
+.BI l x
+The value in register
+.I x
+is pushed on the stack.
+The register
+.I x
+is not altered.
+All registers start with zero value.
+If the
+.B l
+is capitalized,
+register
+.I x
+is treated as a stack and its top value is popped onto the main stack.
+.TP
+.B  o
+The top value on the stack is popped and used as the
+number radix for further output.
+.TP
+.B O
+Pushes the output base on the top of the stack.
+.TP
+.B  p
+The top value on the stack is printed.
+The top value remains unchanged.
+.B P
+interprets the top of the stack as an ascii string,
+removes it, and prints it.
+.TP
+.B  q
+Exits the program.
+If executing a string, the recursion level is
+popped by two.
+If
+.B q
+is capitalized, the top value on the stack is popped
+and the string execution level is popped by that value.
+.TP
+.BI s x
+The
+top of the stack is popped and stored into
+a register named
+.I x,
+where
+.I x
+may be any character.
+If
+the
+.B s
+is capitalized,
+.I x
+is treated as a stack and the value is pushed on it.
+.TP
+.B  v
+Replaces the top element on the stack by its square root.
+Any existing fractional part of the argument is taken
+into account, but otherwise the scale factor is ignored.
+.TP
+.B  x
+Treats the top element of the stack as a character string
+and executes it as a string of dc commands.
+.TP
+.B  X
+Replaces the number on the top of the stack with its scale factor.
+.TP
+.B  z
+The stack level is pushed onto the stack.
+.TP
+.B  Z
+Replaces the number on the top of the stack with its length.
+.HP 6
+number
+.br
+The value of the number is pushed on the stack.
+A number is an unbroken string of the digits 0-9.
+It may be preceded by an underscore ( _ ) to input a
+negative number.
+Numbers may contain decimal points.
+.HP 6
++  \- /  *  %  ^
+.br
+The
+top two values on the stack are added
+(+),
+subtracted
+(\-),
+multiplied (*),
+divided (/),
+remaindered (%),
+or exponentiated (^).
+The two entries are popped off the stack;
+the result is pushed on the stack in their place.
+Any fractional part of an exponent is ignored.
+.TP
+.B  "[ ... ]"
+Puts the bracketed ascii string onto the top of the stack.
+.HP 6
+.I  "<x  >x  =x"
+.br
+The
+top two elements of the stack are popped and compared.
+Register
+.I x
+is executed if they obey the stated
+relation.
+.TP
+.B  !
+Interprets the rest of the line as a ZEUS command.
+.TP
+.B  ?
+A line of input is taken from the input source (usually the terminal)
+and executed.
+.TP
+.B "; :"
+Are used by 
+.B bc
+for array operations.
+.SH EXAMPLES
+.RS
+$ dc
+ 2.05
+ 156.35
+ + p      (add and print the answer)
+ 158.40
+ 2.05
+ + p
+ 160.45
+ 6
+ * p      (multiply and print the answer)
+ 962.70
+ 14
+ / p      (divide and print the answer)
+ 68
+.RE
+.sp
+An example which prints the first ten values of n! is
+.sp
+.RS
+[la1+dsa*pla10>y]sy
+0sa1
+lyx
+.RE
+.SH SEE ALSO
+\fBbc\fR(1), which is a preprocessor for
+.B dc
+providing infix notation and a C-like syntax
+which implements functions and reasonable control
+structures for programs.
+.SH DIAGNOSTICS
+`x is unimplemented' where x is an octal number.
+.sp
+`stack empty' for not enough elements on the stack to do what was asked.
+.sp
+`Out of space' when the free list is exhausted (too many digits).
+.sp
+`Out of headers' for too many numbers being kept around.
+.sp
+`Out of pushdown' for too many items on the stack.
+.sp
+`Nesting Depth' for too many levels of nested execution.

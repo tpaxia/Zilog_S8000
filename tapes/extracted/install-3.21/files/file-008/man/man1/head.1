@@ -1,0 +1,24 @@
+.po 1i
+.TH HEAD 1 UCB
+.V 08/15/84 16:54:12
+.\" @[$]head.1	1.5	08/15/84 16:54:12 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+head \- give first few lines of a stream
+.SH SYNOPSIS
+.B head
+[
+.BI \- count
+] [
+.I file ...
+]
+.SH DESCRIPTION
+This filter gives the first
+.I count
+lines of each of the specified files, or of the standard input.
+If
+.I count
+is omitted it defaults to 10.
+.SH SEE\ ALSO
+cat(1), dog(1), more(1), tail(1).

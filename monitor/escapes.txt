@@ -1,0 +1,8 @@
+# Instructions GNU as re-encodes differently from the original Zilog assembler.
+# Emitted as raw .word so the rebuild stays byte-exact.
+#
+# SRLB/SLLB take a signed 16-bit count word, but only its low byte is used for
+# a byte operand.  The ROM sign-extends (0xfffc = -4); gas emits 0x00fc and
+# rejects the sign-extended form as out of range.  Same instruction either way.
+0x0084   # srlb rl3,#4
+0x149e   # srlb rl0,#6

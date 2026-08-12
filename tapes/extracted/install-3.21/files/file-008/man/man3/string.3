@@ -1,0 +1,219 @@
+.po 1i
+.TH STRING 3 Bell
+.V 08/15/84 17:27:17
+.\" @[$]string.3	1.11	08/15/84 17:27:17 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+strcat, strncat, strcmp, strncmp, strcpy, strncpy, strlen, strchr, strrchr, strpbrk, strspn, strcspn, strtok, index, rindex \- string operations
+.SH SYNOPSIS
+.nf
+\fBchar \fI\(**strcat (s1, s2)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.PP
+\fBchar\fI \(**strncat (s1, s2, n)\fR
+.br
+\fBchar\fI \(**s1, \(**s2;\fR
+.br
+\fBint\fI n;\fR
+.PP
+\fBint strcmp \fI(s1, s2)\fR
+.br
+\fB
+char \fI\(**s1, \(**s2;\fR
+.PP
+\fBint strncmp \fI(s1, s2, n)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.br
+\fBint \fIn;\fR
+.PP
+\fBchar \fI\(**strcpy (s1, s2)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.PP
+\fBchar\fI \(**strncpy (s1, s2, n)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.br
+\fBint \fIn;\fR
+.PP
+\fBint strlen \fI(s)\fR
+.br
+\fBchar \fI\(**s;\fR
+.PP
+\fBchar\fI \(**strchr (s, c)\fR
+.br
+\fBchar \fI\(**s, c;\fR
+.PP
+\fBchar\fI \(**strrchr (s, c)\fR
+.br
+\fBchar \fI\(**s, c;\fR
+.PP
+\fBchar \fI\(**strpbrk (s1, s2)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.PP
+\fBint strspn \fI(s1, s2)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.PP
+\fBint strcspn \fI(s1, s2)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.PP
+\fBchar\fI \(**strtok (s1, s2)\fR
+.br
+\fBchar \fI\(**s1, \(**s2;\fR
+.PP
+\fBchar\fI *index(s, c)\fR
+.br
+\fBchar\fI *s, c;\fR
+.PP
+\fBchar *rindex\fI(s, c)\fR
+.br
+\fBchar\fI *s;\fR
+.fi
+.SH DESCRIPTION
+These functions operate on null-terminated strings.
+They do not check for overflow of any receiving string.
+.PP
+.B Strcat
+appends a copy of string
+.I s2
+to the end of string
+.IR s1 .
+.B Strncat
+copies at most
+.I n
+characters.
+Both return a pointer to the null-terminated result.
+.PP
+.B Strcmp
+compares its arguments and returns an integer
+greater than, equal to, or less than 0,
+according as
+.I s1
+is lexicographically greater than, equal to, or
+less than
+.IR s2 .
+.B Strncmp
+makes the same comparison but looks at at most
+.I n
+characters.
+.PP
+.B Strcpy
+copies string
+.I s2
+to
+.IR s1 ,
+stopping after the null character has been moved.
+.B Strncpy
+copies exactly
+.I n
+characters,
+truncating or null-padding
+.IR s2 ;
+the target may not be null-terminated if the length
+of
+.I s2
+is
+.I n
+or more.
+Both return
+.IR s1 .
+.PP
+.B Strlen
+returns the number of non-null characters in
+.IR s .
+.PP
+.B Strchr
+.RB ( strrchr )
+returns a pointer to the first (last)
+occurrence of character 
+.I c
+in string
+.IR s ,
+or
+.SM
+.B
+NULL
+if
+.I c
+does not occur in the string.
+The null character terminating a string is considered to
+be part of the string.
+.PP
+.B Strpbrk
+returns a pointer to the first occurrence in string
+.I s1
+of any character from string
+.IR s2 ,
+or
+.SM
+.B
+NULL
+if no character from
+.I s2
+exists in
+.IR s1 .
+.PP
+.B Strspn
+.RB ( strcspn )
+returns the length of the initial segment of string
+.I s1
+which consists entirely of characters from (not from) string
+.IR s2 .
+.PP
+.B Strtok
+considers the string
+.I s1
+to consist of a sequence of zero or more text tokens separated
+by spans of one or more characters from the separator string
+.IR s2 .
+The first call (with pointer
+.I s1
+specified) returns a pointer to the first character of the first
+token, and will have written a
+.SM
+.B
+NULL
+character into
+.I s1
+immediately following the returned token.  Subsequent calls
+with zero for the first argument, will work through the string
+.I s1
+in this way until no tokens remain.
+The separator string
+.I s2
+may be different from call to call.
+When no token remains in
+.IR s1 ,
+a
+.SM
+.B
+NULL
+is returned.
+.PP
+.I Index
+.RI ( rindex )
+returns a pointer to the first (last)
+occurrence of character 
+.I c
+in string
+.I s,
+or zero if
+.I c
+does not occur in  the string.
+.SH LIMITATIONS
+.B Strcmp
+uses native character comparison, which is signed
+on
+.SM PDP\*S-11s,
+unsigned on other machines.
+.PP
+All string movement is performed character by character starting
+at the left.
+Thus overlapping moves toward the left will work as expected,
+but overlapping moves to the right may yield surprises.

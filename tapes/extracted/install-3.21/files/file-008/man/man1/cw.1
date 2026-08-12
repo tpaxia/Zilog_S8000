@@ -1,0 +1,441 @@
+.po 1i
+.TH CW 1 Bell 
+.V 10/07/83 10:44:31
+.\" @[$]cw.1	1.13  10/07/83 10:44:31  - Zilog Inc.   
+.ad 
+.fi
+.SH NAME
+cw, checkcw \- prepare constant-width text for \fBtroff\fR(1) 
+.SH SYNOPSIS
+.B cw
+[
+.B +t 
+] [
+.B -d 
+] [
+.BI -f n 
+] [
+.BI -l xx 
+] [
+.BI -r xx 
+] [
+.B -t  
+] [ \fIfiles\fR ]
+.PP
+.B checkcw
+[
+.BI -l xx
+] [
+.BI -r xx
+] \fIfiles\fR
+.SH DESCRIPTION
+.B Cw
+is a preprocessor for
+.B troff 
+.ad b
+input files that contain text to be typeset in the constant-width
+(CW)
+font.
+.PP
+Text typeset with the
+CW
+.ad b
+font resembles the output of terminals
+and line printers.
+This font is used to typeset examples of programs and other computer
+output used in manuals, programming texts, etc.
+It has been designed to be quite distinctive (but not overly obtrusive)
+when used together with the Times Roman font.
+.PP
+Because the
+CW
+font contains a non-standard set of characters, and text
+typeset with it requires different character and inter-word spacing
+than is provided by standard fonts, documents that use the
+CW
+font must be preprocessed
+by
+.BR cw .
+.PP
+The
+CW
+font contains the 94 printing
+ASCII
+characters:
+.sp
+.nf
+     abcdefghijklmnopqrstuvwxyz
+     ABCDEFGHIJKLMNOPQRSTUVWXYZ
+     0123456789
+     !$%&()`'*+@.,/:;=?[]|-_^~"<>{}#\ 
+.fi
+.sp
+plus eight non-\s-1ASCII\s+1
+characters represented by four-character
+\fBtroff\fR names (in some cases attaching these names to
+"non-standard" graphics), as follows:
+.br
+.ne 10
+.PP
+.RS
+.if t .ig }}
+.TS
+r1 c1 l0
+r c i .
+Character	Symbol	Troff Name
+_
+"Cents" sign	\(ct	\e(ct
+\s-1EBCDIC\s+1 "not" sign	\(no	\e(no
+Left arrow	\(<-	\e(<-
+Right arrow	\(->	\e(->
+Down arrow	\(da	\e(da
+Vertical single quote	\(fm	\e(fm
+Control-shift indicator	\(dg	\e(dg
+Visible space indicator	\(sq	\e(sq
+Hyphen	\(hy	\e(hy
+.TE
+.}}
+.if n .ig }}
+.TS
+rI1 cI1 lI0
+r c i .
+Character\^	Symbol	Troff Name
+_
+"Cents" sign	%\(ct%	%\%%(ct%
+\s-1EBCDIC\s+1 ``not'' sign	%\(no%	%\%%(no%
+Left arrow	%\(<-%	%\%%(<-%
+Right arrow	%\(->%	%\%%(->%
+Down arrow	%\(da%	%\%%(da%
+Vertical single quote	%\(fm%	%\%%(fm%
+Control-shift indicator	%\(dg%	%\%%(dg%
+Visible space indicator	%\(sq%	%\%%(sq%
+Hyphen	%\(hy%	%\%%(hy%
+.TE
+.}}
+.RE
+.PP
+The hyphen is a synonym for
+the unadorned minus sign
+.RB ( - ).
+Certain versions of
+.B cw
+recognize two additional names:
+.CD -t
+.if t %\e(ua%
+.if n \e(ua
+for an up arrow and
+.if t %\e(lh%
+.CD +t
+.if n \e(lh
+for a diagonal left-up (home) arrow.
+.PP
+\fBCw\fR recognizes five request lines, as well as user-defined
+delimiters.
+The request lines look like
+.B troff 
+macro requests; 
+.B cw 
+copies entire lines to its output.
+Thus they can be defined by the user as \fBtroff\fR macros;
+in fact, the .CW and .CN macros should be so defined (see
+.B HINTS
+below).
+.PP
+.ad b
+The five requests are:
+.TP
+.B .CW
+Start of text is to be set in the
+CW
+font;
+.CW
+causes a break; it
+can take precisely the same options, in precisely the same format,
+available on the
+.B cw
+command line.
+.TP
+.B .CN
+End of text to be set in the
+CW
+font;
+.CN
+causes a break; it
+can take the same options
+available on the
+.B cw
+command line.
+.TP
+.B .CD
+Change delimiters and/or settings of other options;
+takes the same options
+that are available on the
+.B cw
+command line.
+.TP
+.BI .CP "\*S \^arg1 \^arg2 \^arg3 " ... " \^argn\^
+All the
+arguments (which are delimited like
+.B troff 
+macro arguments) are concatenated, with the odd-numbered arguments
+set in the
+CW
+font and the even-numbered ones in the prevailing font.
+.TP
+.BI .PC "\*S \^arg1 \^arg2 \^arg3 " ... " \^argn\^
+Same as .CP, except that the even-numbered (rather than odd-numbered) arguments are
+set in the
+CW
+font.
+.PP
+The .CW and .CN requests are meant to bracket text
+(e.g., a program fragment) that is typeset in the
+CW
+font "as is."\ 
+Normally,
+.B cw
+operates in the transparent mode.
+In that mode, except for the .CD request and the nine special
+four-character names listed in the table above, every character
+between .CW and .CN request lines stands for itself.
+In particular,
+.B cw
+produces periods
+.RB ( . )
+and apostrophes
+.RB ( ' )
+at the beginning of lines; backslashes
+.if t (\)
+.if n (\e)
+and ligatures (fi, ff, etc.)
+are "hidden" from
+.B troff 
+The transparent mode can be turned off (see below), in which case
+normal
+.B troff
+rules apply.
+In any case,
+.B cw\^
+hides from the \fIuser\fR the effect of the font changes generated
+by the .CW and .CN requests.
+.PP
+The only purpose of the .CD request is to allow the changing
+of various options besides those at the beginning of a document.
+.PP
+The user can also define delimiters.
+The left and right delimiters perform the same function
+as the .CW\|/.CN requests; they are meant
+to enclose
+.SM CW
+words or phrases in running text (see the example under
+.SM
+.B LIMITATIONS\^
+below).
+\fBCw\fR treats text enclosed by delimiters in the same manner as text
+bracketed by .CW\|/.CN pairs; however, 
+for aesthetic reasons,
+spaces in text bracketed by .CW\|/.CN pairs have the same width as any
+other
+.SM CW
+character.
+Spaces between delimiters
+are half as wide; they
+have the same width as spaces in the prevailing
+text (but are
+.I not\^
+adjustable).
+.PP
+Delimiters have no special meaning inside .CW\|/.CN pairs.
+.PP
+The options are:
+.TP
+.B +t
+Turn transparent mode on
+(this is the initial default).
+.TP
+.B -d
+Print current option settings on file descriptor 2
+in the form of
+.B troff 
+comment lines.
+This option is intended for debugging.
+.TP
+.BI -f n\^
+The
+.SM CW
+font is mounted in font position
+.IR n ;
+acceptable values for
+.I n\^
+are 1, 2, and 3
+(default is 3, replacing the bold font).
+This option is only useful at the beginning of a document.
+.TP
+.BI -l xx\^
+The one- or two-character string
+.I xx\^
+becomes the left delimiter;
+if
+.I xx\^
+is omitted,
+the left delimiter becomes undefined,
+which it is initially.
+.TP
+.BI -r xx\^
+Same for the right delimiter.
+The left and right delimiters can (but need not) be different.
+.TP
+.B -t
+Turn transparent mode off.
+.PP
+.B Cw
+reads the standard input when no
+.I files
+are specified, so it can be used as a filter.
+Typical usage is:
+.sp
+.nf
+.CW -t
+     \fBcw\fI files\fR | \fBtroff\fR ...
+.CN +t
+.sp
+.fi
+.B Checkcw
+checks that left and right delimiters, as well as the .CW\|/.CN
+pairs, are properly balanced.
+It prints out all offending lines.
+.SH HINTS
+Typical definitions of the .CW and .CN macros intended to
+be used with the
+.BR mm (7)
+macro package:
+.if n .ig }}
+.CW
+.de CW
+.DS I
+.ps 9
+.vs 10.5p
+.ta 16m/3u 32m/3u 48m/3u 64m/3u 80m/3u 96m/3u ...
+..
+.de CN
+.ta 0.5i 1i 1.5i 2i 2.5i 3i 3.5i 4i 4.5i 5i 5.5i 6i
+.vs
+.ps
+.DE
+..
+.CN
+.}}
+.if t .ig }}
+.PP
+.RS
+.nf
+\&.de CW
+\&.DS I
+\&.ps 9
+\&.vs 10.5p
+\&.ta 16m/3u 32m/3u 48m/3u 64m/3u 80m/3u 96m/3u ...
+\&..
+\&.de CN
+\&.ta .5i 1i 1.5i 2i 2.5i 3i ...
+\&.vs
+\&.ps
+\&.DE
+\&..
+.fi
+.RE
+.PP
+.}}
+.PP
+At the very least, the .CW macro should invoke the
+.B troff 
+no-fill (.nf) mode.
+.PP
+In running text, the
+CW
+font should be set in the same point size as the rest of the text.
+In displayed matter
+it can be set one point smaller than the prevailing point size.
+When the
+CW
+font is set in 9-point,
+there are 12 characters per inch.
+.PP
+Documents that contain
+CW
+text may also contain tables and/or equations.
+If this is the case, the order of preprocessing should be:
+.BR cw ,
+.BR tbl ,
+and
+.BR eqn .
+Usually, the tables contained in such documents do not contain
+CW
+text, although it is possible
+to have elements of the table set in the
+CW
+font. 
+Care must be taken to insure that
+.BR tbl (1)
+format information is not modified by
+.BR cw .
+Attempts to set equations in the
+CW
+font are likely to be neither
+pleasing nor successful.
+.PP
+In the
+CW
+font,
+overstriking is most easily accomplished with backspaces.
+Because spaces (and, therefore backspaces) are half as wide between
+delimiters as inside .CW\|/.CN pairs, two
+backspaces are required for each overstrike between delimiters.
+.SH FILES
+/usr/lib/font/ft\s-1CW\s+1\ \ \ \ 
+CW
+font-width table
+.SH SEE ALSO
+eqn(1),
+mmt(1),
+tbl(1),
+troff(1),
+mm(7),
+mv(7).
+.SH WARNINGS
+If text preprocessed by
+.B cw
+is to make any sense, it must
+be set on a typesetter equipped with the
+CW
+font or on the
+MHCC
+STARE
+facility;
+on the latter, the
+CW
+font appears as bold, but with the proper
+CW
+spacing.
+.SH LIMITATIONS 
+Periods (.) and backslashes
+(\\) should not be used as delimiters.
+.br
+Certain
+CW
+characters don't concatenate gracefully
+with certain Times Roman characters, e.g., a
+CW
+ampersand (&)
+followed by a Times Roman comma(,);
+in such cases, judicious use of
+.B troff 
+half- and quarter-spaces
+.if t (\| and \^)
+.if n (\e| and \e^)
+is most salutary,
+e.g., use
+.if t _&_\^,
+.if n _&_\e^,
+(rather than _&_,)
+to obtain &\^,
+(assuming that _ is used for both delimiters).

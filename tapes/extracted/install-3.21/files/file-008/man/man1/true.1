@@ -1,0 +1,48 @@
+.po 1i
+.TH TRUE 1 Bell
+.V 08/15/84 17:08:29
+.\" @[$]true.1	1.9	08/15/84 17:08:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+true, false \- provide truth values
+.SH SYNOPSIS
+.B true
+.PP
+.B false
+.SH DESCRIPTION
+\fITrue\fR returns status indicating success.
+\fIFalse\fR returns status indicating failure.
+They are typically used in input to the C Shell, 
+.BR  csh (1)
+or the Bourne Shell, 
+.BR  sh (1).
+.SH EXAMPLES
+Here are some examples:
+.PP
+for sh(1):
+.sp
+	while true
+.br
+	do
+.br
+		command
+.br
+	done
+.PP
+for csh(1):
+.sp
+	#
+.br
+	while( { true } )
+.br
+		command
+.br
+	end
+.SH SEE ALSO
+csh(1), sh(1)
+.SH DIAGNOSTICS
+.B True
+has exit status zero,
+.B false
+nonzero.

@@ -1,0 +1,79 @@
+.po 1i
+.TH ENVIRON 7 Bell
+.V 08/15/84 17:37:21
+.\" @[$]environ.7	1.4	08/15/84 17:37:21 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+environ \- user environment
+.SH DESCRIPTION
+An array of strings called the "environment" is
+made available by
+.BR exec (2)
+when a process begins.
+By convention, these strings have the form
+\fIname\fR=\fIvalue\fR.
+The following names are used by various commands:
+.TP
+.B HOME
+Name of the user's login directory, set by
+.BR login (1)
+from the password file
+.BR passwd (5).
+.TP
+.B PATH
+The sequence of directory prefixes that
+.BR sh (1),
+.BR time (1),
+.BR nice (1),
+.BR nohup (1),
+etc.,
+apply in searching for a file known by an incomplete path name.
+The prefixes are separated by colons "\ :\ ".
+.sp
+.BR Login (1)
+sets
+.IR PATH \=:/bin:/usr/bin .
+.TP
+.B TERM
+The kind of terminal for which output is to be prepared.
+This is used by commands, such as
+.BR vi (1)
+which can exploit special capabilities of that terminal.
+.TP
+.B TZ
+Time zone information. The format is
+.I " xxxnzzz "
+where
+.I xxx
+is standard local time zone abbreviation,
+.I n
+is the difference in hours from \fBGMT\fR, and
+.I zzz
+is the abbreviation for the daylight-saving local time zone,
+if any;
+for example,
+.BR EST5EDT .
+.PP
+Further names can be placed in the environment by
+the
+.B export
+command and \fIname\fR=\fIvalue\fR arguments in
+.BR sh (1),
+or by
+.BR exec (2).
+.SH SEE ALSO
+env(1),
+login(1),
+sh(1),
+exec(2),
+getenv(3),
+profile(5),
+term(7).
+.SH LIMITATIONS
+Avoid conflict with certain shell variables that are
+frequently exported by \fI.profile\fR files:
+.IR MAIL ,
+.IR PS1 ,
+.IR PS2 ,
+.IR IFS .

@@ -1,0 +1,62 @@
+.po 1i
+.TH MENUPATH 5 ZILOG
+.V 08/15/84 17:34:45
+.\" $W" 08/15/84 17:34:45 - Zilog Inc.
+.ad 
+.fi
+.SH NAME
+menupath
+\- menu directory location
+.SH DESCRIPTION
+For an overview of the menu system see \fBmkmenu\fR(1).
+.sp
+\fBmkmenu\fR(1) creates a menu specifications file of the format described 
+in \fB.menu\fR(5); the specifications file
+is created in one of four
+possible locations. \fBzmenu\fR(1) drives the menu; it is invoked 
+with a command of the form
+\fBzmenu \fImenuname\fR where \fBmenuname\fR is the menu specifications file
+to be displayed.
+\fBzmenu\fR searches for \fImenuname\fR 
+using a search list. The search list is interrogated in this order: 
+1) does an environment variable exist of the name \fIMENUPATH\fR? If so, its
+value is assumed to be a directory path where \fImenuname\fR resides. If
+MENUPATH does not exist, 2) does ~/.menupath exist?  
+If so, and if readable, its contents are
+assumed to be a directory path where \fImenuname\fR resides. If not, 3) does
+/etc/menupath exist? If so, and
+if readable, its contents are assumed to be a directory path 
+where \fImenuname\fR
+resides. If not, 4) \fBzmenu\fR searches for \fImenuname\fR in the 
+invoker's \fIHOME\fR directory.
+.sp
+The search list pointers must be set prior to invoking \fBzmenu\fR; the
+directory in which \fBmkmenu\fR seats the specifications file must be
+the directory pointed to by the first search list pointer \fBzmenu\fR finds. 
+~/.menupath is the user search path; /etc/menupath is
+the global search path.
+.sp
+.SH WARNING
+If two or more
+of the available path-specifiers exist simultaneously, \fBmkmenu\fR gives
+the option of
+where to place \fImenuname\fR. It is possible, then, to seat
+a \fImenuname\fR in a directory which is not first in \fBzmenu\fR's
+search list. In this event, \fBzmenu\fR aborts without finding \fImenuname\fR. 
+.sp
+Either 1) make certain only one path-specifier exists at a
+time or 2) devise a script to make-and-remake the various path-specifiers
+so the currently desired path-specifier is first in the search list 
+at the time
+\fBzmenu\fR is invoked. 
+In this way, several menu directories, each presumably
+serving a unique function, are possible.
+.SH FILES
+.nf
+~/.menupath     user menu-search path             
+/etc/menupath   global menu-search path
+ .menu          default menu file
+.fi
+.SH SEE ALSO
+zmenu(1), mkmenu(1), setenv(1), dotmenu(5)
+

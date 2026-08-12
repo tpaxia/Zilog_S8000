@@ -1,0 +1,60 @@
+.po 1i
+.TH ZD 4 Zilog
+.V 08/15/84 17:32:13
+.\" @[$]zd.4	1.9	08/15/84 17:32:13 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+zd \- Winchester disk
+.SH DESCRIPTION
+The 
+.B zd
+device provides the interface to disk drives.
+Two sizes of drives are currently supported:
+24 MB (mega bytes) and 32 MB.
+.PP
+The files
+.I "zd0 ... zdF"
+refer to sections of disk drive 0.
+The files
+.I "zd10 ... zd1F"
+refer to drive 1 etc.
+This allows a large disk to be broken up
+into more manageable pieces.
+.PP
+The
+.B zd
+files access the disk via the system's normal 
+buffering mechanism and can be read and written 
+without regard to physical disk records.
+There is also a raw interface that provides for 
+direct transmission between the disk and the 
+user's read or write buffer.
+A single read or write call results in exactly one I/O 
+operation and therefore raw I/O is considerably more 
+efficient when many words are transmitted.
+The names of the raw files begin with
+.B rzd
+and end with a number which selects the same disk
+section as the corresponding
+.B zd
+file.
+.PP
+In raw I/O the buffer must begin on a word boundary.
+.SH FILES
+/dev/zd*
+.br
+/dev/rzd*
+.SH LIMITATIONS
+In raw I/O
+.B read
+and
+.BR write (2)
+truncate file offsets to 512-byte block boundaries, and
+.B write
+scribbles on the tail of incomplete blocks.
+Thus, in programs that are likely to access raw devices,
+.B read, write
+and
+.BR lseek (2)
+should always deal in 512-byte multiples.

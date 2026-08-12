@@ -1,0 +1,646 @@
+.po 1i
+.TH SCREEN 3 Zilog
+.V  08/15/84 17:25:52
+.\" @[$]screen.3	1.11 08/15/84 17:25:52 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+getkey, gonormal, goraw, wbackspace, wbackword, wcolon, wforspace, wforword, wgetword, whelp, whighlight, wleft, wmesg, wmvcursor, wpageback, wpagefor, wresscrn, wright, wsavescrn, wscrolb, wscrolf \- Screen Interface Library
+.SH SYNOPSIS
+.nf
+\fB#include <curses.h>\fR
+\fB#include <screen.h>\fR
+.sp
+\fBgetkey\fI()\fR
+.sp
+\fBgonormal\fI()\fR
+.sp
+\fBgoraw\fI()\fR
+.sp
+\fBwbackspace\fI(win, top, bottom)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     int\fI top, bottom;\fR
+\fRor\fR
+\fBbackspace\fI(top, bottom)\fR
+\fB     int\fI top, bottom;\fR
+.sp
+\fBwbackword\fI(win, top, bottom)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     int\fI top, bottom;\fR
+\fRor\fR
+\fBbackword\fI(top, bottom)\fR
+\fB     int\fI top, bottom;\fR
+.sp
+\fBwcolon\fI(win)\fR
+\fB     WINDOW \fI*win;\fR
+\fRor\fR
+\fBcolon\fI()\fR
+.sp
+\fBwforspace\fI(win, top, bottom)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     int\fI top, bottom;\fR
+\fRor\fR
+\fBforspace\fI(top, bottom)\fR
+\fB     int\fI top, bottom;\fR
+.sp
+\fBwforword\fI(win, top, bottom)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     int\fI top, bottom;\fR
+\fRor\fR
+\fBforword\fI(top, bottom)\fR
+\fB     int\fI top, bottom;\fR
+.sp
+\fBwgetword\fI(win, str)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     char \fI*str;\fR
+\fRor\fR
+\fBgetword\fI(str)\fR
+\fB     char \fI*str;\fR
+.sp
+\fBwhelp\fI(win, file)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     char \fI*file;\fR
+\fRor\fR
+\fBhelp\fI(file)\fR
+\fB     char \fI*file;\fR
+.sp
+\fBwhighlight\fI(win, flag)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     int\fI flag;\fR
+\fRor\fR
+\fBhighlight\fI(flag)\fR
+\fB     int\fI flag;\fR
+.sp
+\fBwleft\fI(win, top, bottom)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     int\fI top, bottom;\fR
+\fRor\fR
+\fBleft\fI(top, bottom)\fR
+\fB     int\fI top, bottom;\fR
+.sp
+\fBwmesg\fI(win, str, data)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     char \fI*str;\fR
+\fB     char \fI*data;\fR
+\fRor\fR
+\fBmesg\fI(str, data)\fR
+\fB     char \fI*str;\fR
+\fB     char \fI*data;\fR
+.sp
+\fBwmvcursor\fI(win, c, top, bottom)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     char c;\fR
+\fB     int\fI top, bottom;\fR
+\fRor\fR
+\fBmvcursor\fI(c, top, bottom)\fR
+\fB     char c;\fR
+\fB     int\fI top, bottom;\fR
+.sp
+\fBwpageback\fI(win)\fR
+\fB     WINDOW \fI*win;\fR
+\fRor\fR
+\fBpageback\fI()\fR
+.sp
+\fBwpagefor\fI(win, fp, top)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     FILE \fI*fp;\fR
+\fB     int\fI top;\fR
+\fRor\fR
+\fBpagefor\fI(fp, top)\fR
+\fB     FILE \fI*fp;\fR
+\fB     int\fI top;\fR
+.sp
+\fBwresscrn\fI(win)\fR
+\fB     WINDOW \fI*win;\fR
+\fRor\fR
+\fBresscrn\fI()\fR
+.sp
+\fBwright\fI(win, top, bottom)\fR
+\fB     WINDOW \fI*win;\fR
+\fB     int\fI top, bottom;\fR
+\fRor\fR
+\fBright\fI(top, bottom)\fR
+\fB     int\fI top, bottom;\fR
+.sp
+\fBwsavescrn\fI(win)\fR
+\fB     WINDOW \fI*win;\fR
+\fRor\fR
+\fBsavescrn\fI()\fR
+.sp
+\fBwscrolb\fI(win)\fR
+\fB     WINDOW \fI*win;\fR
+\fRor\fR
+\fBscrolb\fI()\fR
+.sp
+\fBwscrolf\fI(win)\fR
+\fB     WINDOW \fI*win;\fR
+\fRor\fR
+\fBscrolf\fI()\fR
+.fi
+.SH DESCRIPTION
+.PP
+The Screen Interface Library is designed to aid the programmer
+in writing "screen-oriented" or "display" programs. 
+This set of routines uses the terminal capability data base 
+(/etc/termcap) for terminal independence and the "Curses" 
+library (/usr/lib/libcurses.a for nonsegmented programs
+and /usr/lib/slibcurses.a for segmented programs)
+for screen updating functions.
+.PP
+The major features of the library include terminal setup, 
+cursor manipulation using the arrow keys, single character input, 
+"highlighting" of the cursored item, paging, scrolling, saving 
+and restoring displays, obtaining the word on which the cursor 
+lies, handling "help" files, and general "last line" handling.
+Programmers familiar with the "Curses" library will recognize the
+"window-orientation" of these routines so that displays are not 
+limited to the standard terminal screen.
+.PP
+When using the Screen Interface Library, the user program must 
+include the header file:
+.RS
+.IP
+#include <curses.h>
+.br
+#include <screen.h>
+.RE
+.PP
+The command lines for nonsegmented and segmented C compilation are:
+.RS
+.IP
+cc file.c -lscreen -lcurses -ltermlib
+.br
+scc file.c -lscreen -lcurses -ltermlib
+.RE
+.PP
+The remainder of this section contains descriptions of the
+routines available in the Screen Interface Library. 
+If applicable, there are two calling sequences
+available (one for a "window" and one for "stdscr"):
+.sp 2
+.IP
+getkey()
+.RS
+.IP
+This routine gets a single character input from the keyboard. 
+If any of the arrow keys is typed, the standard definition 
+found in /usr/include/screen.h (i.e. LEFT, DOWN, UP, 
+and RIGHT) is returned.
+The following list contains the aliases for the arrow keys:
+.RS
+.IP
+left - h, CTRL-h, backspace
+.IP
+down - j, CTRL-j
+.IP
+up - k, CTRL-k
+.IP
+right - l, CTRL-l, space
+.RE
+.IP
+Alternatively, if none of the arrow keys is typed, 
+the character typed is returned.
+In addition, if a carriage return is typed, the 
+character "\\r" is returned.
+This is because some terminals generate a "line feed" 
+or "\\n" character for the down arrow; therefore, a 
+distinction must be made between the RETURN key (which 
+is "mapped" to "line feed") and the down arrow key.
+.RE
+.sp 2
+.IP
+gonormal()
+.RS
+.IP
+This routine resets standard output back to its "normal" mode and resets
+"_rawmode" back to FALSE (=0).
+.RE
+.IP
+goraw()
+.RS
+.IP
+This routine sets standard output for CBREAK mode; in addition, it
+sets the "Curses" flag, "_rawmode" to TRUE (=1).
+.RE
+.sp 2
+.IP
+wbackspace(win, top, bottom)
+.br
+WINDOW      *win;
+.br
+int         top, bottom;
+.br
+.sp
+or
+.sp
+backspace(top, bottom)
+.br
+int         top, bottom;
+.br
+.RS
+.IP
+This routine moves the cursor to the left until a space 
+is reached on the display.
+If the cursor is at the leftmost position of the "top" line, 
+the cursor is "wrapped around" to the
+last word of the rightmost column.
+.RE
+.sp 2
+.IP
+wbackword(win, top, bottom)
+.br
+WINDOW      *win;
+.br
+int         top, bottom;
+.br
+.sp
+or
+.sp
+backword(top, bottom)
+.br
+int         top, bottom;
+.br
+.RS
+.IP
+This routine moves the cursor to the beginning of the 
+previous word (to the left) on the display. 
+If the cursor is at the leftmost position of the "top" line, 
+the cursor is "wrapped around" to the last word of the 
+rightmost column.
+.RE
+.IP
+wcolon(win)
+.br
+WINDOW      *win;
+.br
+.sp
+or
+.sp
+colon()
+.br
+.RS
+.IP
+This routine handles the "colon" commands (the colon 
+is echoed on the last line of "win"). 
+A character followed by a carriage return is the expected 
+typein;  the routine returns the character typed.
+.RE
+.sp 2
+.IP
+wforspace(win, top, bottom)
+.br
+WINDOW      *win;
+.br
+int         top, bottom;
+.br
+.sp
+or
+.sp
+forspace(top, bottom)
+.br
+int         top, bottom;
+.br
+.RS
+.IP
+This routine moves the cursor to the right until a space 
+is reached on the display.
+If the cursor is at the "bottom" line of the rightmost 
+column, the cursor is "wrapped around" to the "top"
+of the leftmost column.
+.RE
+.sp 2
+.IP
+wforword(win, top, bottom)
+.br
+WINDOW      *win;
+.br
+int         top, bottom;
+.br
+.sp
+or
+.sp
+forword(top, bottom)
+.br
+int         top, bottom;
+.br
+.RS
+.IP
+This routine moves the cursor to the beginning of the 
+next word (to the right) on the display. 
+If the cursor is at the "bottom" line of the rightmost 
+column, the cursor is "wrapped around" to the "top"
+of the leftmost column.
+.RE
+.IP
+wgetword(win, str)
+.br
+WINDOW      *win;
+.br
+char        *str;
+.br
+.sp
+or
+.sp
+getword(str)
+.br
+char        *str;
+.br
+.RS
+.IP
+This routine gets a word from the display and puts the 
+string in "str";  if the word is "highlighted" in the display,
+the "standout" mode bit in each character is masked out 
+and returned in "str".
+.RE
+.sp 2
+.IP
+whelp(win, file)
+.br
+WINDOW      *win;
+.br
+char        *file;
+.br
+.sp
+or
+.sp
+help(file)
+.br
+char        *file;
+.br
+.RS
+.IP
+This routine opens the given help file, "file", and 
+displays its contents;  following the display, the original 
+screen is restored.
+If the help file cannot be opened or if there was a problem 
+restoring the original screen, the routine returns ERR; 
+otherwise, the routine returns OK.
+.RE
+.sp 2
+.IP
+whighlight(win, flag)
+.br
+WINDOW      *win;
+.br
+int         flag;
+.br
+.sp
+or
+.sp
+highlight(flag)
+.br
+.RS
+.IP
+This routine puts the word at the current cursor position 
+in "standout" mode (thus, "highlighting" the word) if "flag" is TRUE. 
+If "flag" is FALSE, "standout" mode is turned off for the 
+word at the current position.
+.RE
+.IP
+wleft(win, top, bottom)
+.br
+WINDOW      *win;
+.br
+int         top, bottom;
+.br
+.sp
+or
+.sp
+left(top, bottom)
+.br
+int         top, bottom;
+.br
+.RS
+.IP
+This routine moves the cursor one position to the left.
+If the cursor is at the leftmost position of the "top" line, 
+the cursor is "wrapped around" to the
+last word of the rightmost column.
+.RE
+.sp 2
+.IP
+wmesg(win, str, data)
+.br
+WINDOW      *win;
+.br
+char        *str;
+.br
+char        *data;
+.br
+.sp
+or
+.sp
+mesg(str, data)
+.br
+char        *str;
+.br
+char        *data;
+.br
+.RS
+.IP
+This routine outputs the "printf"-formatted message, "str", 
+on the last line of "win" or "stdscr". 
+It is noted here that a "newline" or "\\n" is not required 
+since the message is output on the last line
+of the window.
+Any additional data to be output (for example, for a "%s" in "mesg"),
+is stored in the variable, "data". 
+If there is no additional data (that is, "str" is a simple 
+informational message), "data" should contain NULL. 
+After outputting the message, the cursor is returned
+to the current position.
+.RE
+.IP
+wmvcursor(win, c, top, bottom)
+.br
+WINDOW      *win;
+.br
+char        c;
+.br
+int         top, bottom;
+.br
+.sp
+or
+.sp
+mvcursor(c, top, bottom)
+.br
+char        c;
+.br
+int         top, bottom;
+.br
+.RS
+.IP
+This routine uses the given character, "c", to move the 
+cursor appropriately about "win" within the display limits 
+of the "top" and "bottom" line.  
+The valid values for "c" (and therefore, valid
+cursor movements) are DOWN, UP, FORWARD (or WORD) or BACKWARD 
+as defined in /usr/include/screen.h (see APPENDIX B). 
+If the "bottom" line limit is exceeded, the cursor will 
+be moved to the "top" of the next column to the right or 
+to the "top" of the leftmost column; therefore, there
+is cursor "wraparound". 
+After the movement is performed, the routine returns OK.
+If "c" represents an invalid cursor movement,
+the routine returns the value ERR.
+If the global flag, "hilite", is set, "highlighting" of the 
+word at the current cursor position is handled automatically.
+.RE
+.sp 2
+.IP
+wpageback(win)
+.br
+WINDOW      *win;
+.br
+.sp
+or
+.sp
+pageback()
+.br
+.RS
+.IP
+This routine outputs the previous "page" of the file
+associated with the pointer, "fp"; 
+this has not been implemented yet.
+.RE
+.IP
+wpagefor(win, fp, top)
+.br
+WINDOW      *win;
+.br
+FILE        *fp;
+.br
+int         top;
+.br
+.sp
+or
+.sp
+pagefor(fp, top)
+.br
+FILE        *fp;
+.br
+int         top;
+.br
+.RS
+.IP
+This routine outputs a page of the file associated 
+with the pointer, "fp". 
+If the number of lines in "win" is exceeded, the prompt
+.RS
+.IP
+Type ^f for next page
+.RE
+.IP
+is output. 
+If "^f" is not typed, the routine returns; otherwise, 
+the next "page" of data is output.
+.RE
+.sp 2
+.IP
+wresscrn(win)
+.br
+WINDOW      *win;
+.br
+.sp
+or
+.sp
+resscrn()
+.br
+.RS
+.IP
+This routine tests the global flag, "scrnflg" (set to 
+TRUE in "wsavescrn") and checks whether the contents of 
+the WINDOW "scrn" will fit on "win".
+If so, the contents of "scrn" is overwritten onto "win" and the 
+routine returns OK; otherwise, the routine returns ERR.
+.RE
+.sp 2
+.IP
+wright(win, top, bottom)
+.br
+WINDOW      *win;
+.br
+int         top, bottom;
+.br
+.sp
+or
+.sp
+right(top, bottom)
+.br
+int         top, bottom;
+.br
+.RS
+.IP
+This routine moves the cursor one position to the right.
+If the cursor is at the "bottom" line of the rightmost column, 
+the cursor is "wrapped around" to the "top"
+of the leftmost column.
+.RE
+.IP
+wsavescrn(win)
+.br
+WINDOW      *win;
+.br
+.sp
+or
+.sp
+savescrn()
+.br
+.RS
+.IP
+This routine saves the contents of "win" in the global 
+WINDOW, "scrn" (found in /usr/include/screen.h),
+which is allocated memory in this routine.
+If there is a problem with the allocation, this routine returns ERR.
+Otherwise, the global flag "scrnflg" is set to TRUE, 
+the contents of "win" is saved, and the routine returns OK.
+.RE
+.sp 2
+.IP
+wscrolb(win)
+.br
+WINDOW      *win;
+.br
+.sp
+or
+.sp
+scrolb()
+.br
+.RS
+.IP
+This routine performs scrolling backward on "win"; 
+this has not been implemented yet.
+.RE
+.sp 2
+.IP
+wscrolf(win)
+.br
+WINDOW      *win;
+.br
+.sp
+or
+.sp
+scrolf()
+.br
+.RS
+.IP
+This routine performs scrolling forward on "win"; 
+this has not been implemented yet.
+.RE
+.SH FILES
+/usr/lib/libscreen.a	/usr/lib/slibscreen.a
+.SH SEE ALSO
+vls(1),
+vnews(1),
+termcap(3),
+curses(3).
+.sp
+"Screen Updating and Cursor Movement Optimization",
+"The Screen Interface Library"
+in the Zeus Languages / Programming Tools Manual
+.SH LIMITATIONS
+Routines wscrolf (or scrolf), wscrolb (or scrolb) and wpageback
+(or pageback) have not been implemented yet.
+.sp
+The termcap capabilities, "kl, kd, ku, kr and kh", are not recognized
+by the Screen Interface Library at the present time.

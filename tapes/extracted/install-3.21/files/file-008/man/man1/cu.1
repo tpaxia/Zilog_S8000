@@ -1,0 +1,242 @@
+.po 1i
+.TH CU 1 Bell
+.V 08/15/84 16:43:57
+.\" @[$]cu.1	1.18 08/15/84 16:43:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cu \- call another \s-1ZEUS\s+1 system
+.SH SYNOPSIS
+.B cu
+.RB [ \-s \fIspeed\fR\|]
+.RB [ \-a \fIacu\fR\|]
+.RB [ \-l \fIline\fR\|]
+.RB [ \-h \|]
+.RB [ \-o \(bv \-e \|]
+.I telno \(bv
+.B dir
+.SH DESCRIPTION
+.B Cu\^
+calls up another \s-1ZEUS\s+1 system,
+a terminal,
+or possibly a non-\s-1ZEUS\s+1 system.
+It manages an interactive conversation with possible
+transfers of
+.SM ASCII
+files.
+.PP
+.B Cu
+tries each line listed in the file
+/usr/lib/uucp/L-devices
+until it finds an available line with appropriate
+attributes or runs out of entries.
+The \fIL-devices\fR file must be set up using:
+.sp
+.RS
+\fICONNECTION line call-unit speed\fR
+.RE
+.sp
+where \fIconnection\fR is either \fBDIR\fR (for
+a direct connection to another system) or \fBACU\fR 
+(where the
+line is connected to an ACU).
+\fILine\fR is the tty line making the connection.  The
+form of \fIline\fR is \fBtty\fR\fIX\fR where \fIX\fR is the
+tty number.
+\fICall-unit\fR is the automatic call unit associated with line (e.g.
+acu0).
+Hardwired (directly connected) lines have the number '0' in this field.
+\fISpeed\fR is the baud rate for the connection.
+300 baud is the default.
+.PP
+After making the connection,
+.B cu
+runs as two processes:
+the
+.I transmit
+process reads data from standard input and,
+except for those beginning with
+.BR ~ ,
+passes all lines to the remote system.
+The
+.I receive
+process accepts data from the remote system and,
+except for those beginning with
+.BR ~ ,
+passes all lines to standard output.
+Normally, an automatic \s-1DC\s+1\&3/\s-1DC\s+1\&1 protocol is 
+used to control input from the remote 
+system so the buffer is not overrun.
+Lines beginning with \fI~\fR have special meanings.
+.PP
+The
+.I transmit
+process interprets the following:
+.TP 20
+.B ~.
+Terminate the conversation.  (Warning - It is best to logoff from the
+remote system BEFORE terminating.)
+.TP
+.B ~!
+Escape to an interactive shell on the local system. 
+The shell is taken from the SHELL environment  variable. 
+If it is not set, /bin/sh is used.
+.TP
+.BI ~! cmd\|.\|.\|.
+Run
+.I cmd
+on the local system. 
+The shell to be used is taken from the SHELL environment variable. 
+If it is not set, /bin/sh is used.
+.TP
+.BI ~$ cmd\|.\|.\|.
+Run
+.I cmd
+locally and send its output to the remote system.
+.TP
+\&\fB~%take\fR \|\fIfrom\fR \|[ \|\fIto\fR \|]
+Copy file
+.I from
+(on the remote system) to file
+.I to
+on the local system.
+If
+.I to
+is omitted, the
+.I from
+argument is used in both places.
+.TP
+\&\fB~%put\fR \|\fIfrom\fR \|[ \|\fIto\fR \|]
+Copy file
+.I from
+(on local system) to file
+.I to
+on remote system.
+If
+.I to
+is omitted, the
+.I from
+argument is used in both places.
+.TP
+.BR ~~ .\|.\|.
+Send the line
+.BR ~ ".\|.\|."
+to the remote system.
+.TP
+.BR ~%nostop
+Turn off the \s-1DC\s+1\&3/\s-1DC\s+1\&1
+input control protocol for the remainder of the session.
+This is useful in case the remote system is one which does
+not respond properly to the \s-1DC\s+1\&3 and \s-1DC\s+1\&1 characters.
+.PP
+The
+.I receive
+process normally copies data from the remote system to 
+its standard output.
+A line from the remote system that begins with \fB~>\fR initiates
+an output diversion to a file.
+The complete sequence is:
+.PP
+.RS
+\&\fB~>\fR\^[\^\fB>\fR\^]\^\fB:\fR\^\|\fIfile\fR
+.br
+zero or more lines to be written to
+.I file
+.br
+.B ~>
+.RE
+.PP
+Data from the remote system is diverted (or appended, if the
+.B >>
+redirection symbol is used) to file.
+The trailing \fB~>\fR terminates the diversion.
+.PP
+The use of
+.B ~%put
+requires
+.BR stty (1)
+and
+.BR cat (1)
+on the remote side.
+It also requires that the current erase and kill characters 
+on the remote system be identical to the current ones on the 
+local system.
+Backslashes are inserted at appropriate places.
+.PP
+The use of
+.B ~%take
+requires the existence of
+.BR echo (1)
+and
+.BR cat (1)
+on the remote system.
+Also,
+.B stty tabs
+mode should be set on the remote system if
+tabs are to be copied without expansion.
+.SH OPTIONS
+.TP
+\fB\-e\fR(\fB\-o\fR)
+Designate that even (or odd) parity is to be
+generated for data sent to the remote system.
+.TP
+.B \-h
+Emulate local echo, supporting calls to other computer
+systems which expect terminals to be in half-duplex mode.
+.TP
+.B \-a\fIacu\fR 
+Specify a device name for the ACU. This overrides searching for the
+first available \s-1ACU\s+1 with the right speed.
+.TP
+.B \-l\fIline\fR
+Specify a device name for the communications line device.
+This overrides searching for
+the first available line with the right speed.
+.TP
+\fB\-s\fIspeed\fR
+Give the transmission speed (110, 150, 300, 1200, 4800, 9600);
+300 is the default value.  Most of our modems restrict us to
+choose between 300 and 1200.  Directly connected lines may
+be set to other speeds.
+.TP
+.I telno
+is the telephone number.
+Character sequences to dial using the 
+Hayes Microcomputer Products modems as well as
+the Ven-Tel 212 Plus modem
+may be included in \fItelno\fR.
+.TP
+.B dir
+Must be used for directly connected lines, and implies a
+null \s-1ACU\s+1.
+When 
+.B dir
+is specified the
+.B \-l
+option must also be specified.
+.SH EXAMPLES
+To call another system on a direct line, 
+you first must know the terminal name and the default 
+speed for the line used. 
+Then (assuming that the direct line is tty3) type:
+.sp
+.ti +6
+.B cu -ltty3 dir
+.SH FILES
+/usr/lib/uucp/L-devices
+.br
+/usr/spool/uucp/\s-1LCK\s+1..(tty-device)
+.br
+/dev/null
+.SH SEE ALSO
+cat(1), echo(1), stty(1), uucp(1), tty(4).
+.SH DIAGNOSTICS
+Exit code is zero for normal exit,
+non-zero (various values) otherwise.
+.SH LIMITATIONS
+There is an artificial slowing of transmission by
+.B cu
+during the
+.B ~%put
+operation so that loss of data is unlikely.
+.br

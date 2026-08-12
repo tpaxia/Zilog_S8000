@@ -1,0 +1,182 @@
+.po 1i
+.TH GREP 1 Bell
+.V 08/15/84 16:54:01
+.\" @[$]grep.1	1.7  08/15/84 16:54:01 - Zilog Inc
+.ad
+.fi
+.SH NAME
+grep, egrep, fgrep \- search a file for a pattern
+.SH SYNOPSIS
+.B grep
+.I " [ options ] expression [ files ] "
+.PP
+.B egrep
+.I " [ options ] [ expression ] [ files ] "
+.PP
+.B fgrep
+.I " [ options ] [ strings ] [ files ] "
+.SH DESCRIPTION
+Commands of the
+.B grep\^
+family search the input
+.I files\^
+(standard input default) for lines matching a pattern.
+Normally, each line found is copied to the standard output.
+.B Grep\^
+patterns are limited regular
+.IR expression s
+in the style of
+.BR ed (1);
+it uses a compact non-deterministic algorithm.
+.B Egrep\^
+patterns are full regular
+.IR expression s;
+it uses a fast deterministic algorithm that
+sometimes needs exponential space.
+.B Fgrep\^
+patterns are fixed
+.IR strings ;
+it is fast and compact.
+.PP
+In all cases, the file name is output if there is more than
+one input file.
+Care should be taken when using the characters
+.BR $ ,
+.BR * ,
+.BR [ ,
+.BR ^ ,
+\(bv,
+.BR ( ,
+.BR ) ,
+and
+.B \e
+in
+.IR expression ,
+because they are also meaningful to the shell.
+It is safest to enclose the entire
+.I expression\^
+argument in single quotes
+.BR \&\|\(fm \|.\|.\|.\| \(fm .
+.PP
+.B Fgrep\^
+searches for lines that contain one of the
+.I strings\^
+separated by new-lines.
+.PP
+.B Egrep\^
+accepts regular expressions as in
+.BR ed (1),
+except for
+.B \e(
+and
+.BR \e) ,
+with the addition of:
+.PP
+.PD 0
+.TP 6
+1.
+A regular expression followed by
+.B +
+matches one or more occurrences of the regular
+expression.
+.TP
+2.
+A regular expression followed by
+.B ?
+matches 0 or 1 occurrences of the regular expression.
+.TP
+3.
+Two regular expressions separated by \(bv or
+by a
+new-line match strings that are matched by either.
+.TP
+4.
+A regular expression may be enclosed in parentheses
+.B (\|)
+for grouping.
+.PD
+.PP
+The order of precedence of operators is
+.BR [\|] ,
+then
+.BR \(**\|?\|+ ,
+then concatenation, then \(bv and new-line.
+.SH OPTIONS
+.TP
+.B \-b
+Each line is preceded by the block number
+on which it was found.
+This is sometimes useful in locating
+disk block numbers by context.
+.TP
+.B \-c
+Only a count of matching lines is printed.
+.TP
+.BI \-e " expression\^"
+Same as a simple
+.I expression\^
+argument,
+but useful when the
+.I expression\^
+begins with a
+.B \-
+(does not work with
+.BR grep ).
+.TP
+.BI \-f " file\^"
+The regular
+.I expression\^
+.RG ( egrep )
+or
+.I strings\^
+list
+.RI ( fgrep )
+is taken from the
+.IR file .
+.TP
+.B \-h
+Do not print filename headers with output lines.
+.TP
+.B \-l
+Only the names of files with matching lines are listed (once),
+separated by new-lines.
+.TP
+.B \-n
+Each line is preceded by
+its relative line number in the file.
+.TP
+.B \-s
+The error messages produced for
+nonexistent or unreadable files
+are suppressed
+.RI ( grep\^
+only).
+.TP
+.B \-v
+All lines but those matching
+are printed.
+.TP
+.B \-x
+(Exact) only lines matched in their entirety are printed
+.RI ( fgrep\^
+only).
+.SH SEE ALSO
+csh(1),
+ed(1),
+sed(1),
+sh(1).
+.SH DIAGNOSTICS
+Exit status is 0 if any matches are found,
+1 if none, 2 for syntax errors or inaccessible files.
+.SH LIMITATIONS
+Ideally there should be only one
+.BR grep ,
+but we don't know a single algorithm that spans a wide enough
+range of space-time tradeoffs.
+.sp
+Lines are limited to 256 characters; longer lines are truncated.
+.sp
+.B Egrep\^
+does not recognize ranges, such as
+.BR [a\-z] ,
+in character classes.

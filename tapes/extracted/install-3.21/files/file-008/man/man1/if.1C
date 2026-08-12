@@ -1,0 +1,51 @@
+.po 1i
+.TH IF 1C UCB
+.V 08/15/84 16:54:42
+.\"@[$]if.1C	1.7	08/15/84 16:54:42 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+if \- C Shell flow control branch statement
+.SH SYNOPSIS
+\fBif \fI( expression.1 ) \fBthen
+.in +5m
+\fIcommand.1\fR
+.in -5m
+\fBelse if \fI (expression.2)\fB then
+.in +5m
+\fIcommand.2\fR
+.in -5m
+\fBelse\fR
+.in +5m
+\fIcommand.3\fR
+.in -5m
+\fBendif\fR
+.SH DESCRIPTION
+.PP
+If 
+\fIexpression.1\fR is true,
+\fIcommand.1\fR is executed.
+\fICommand.1\fR must be a simple command, not a pipeline, a command
+list or a command list within parentheses.
+If \fIexpression.1\fR  is not true, the \fIelse if\fR
+condition is tested, and if \fIexpression.2\fR is true, the commands
+in \fIcommand.2\fR to the second 
+else are executed, etc.
+Any number of
+.B else-if
+pairs are possible; only one
+.B endif
+is needed.
+The
+.B else
+part is likewise optional.
+The words
+.B else
+and
+.B endif
+must appear at the beginning of input lines.
+.SH SEE ALSO
+foreach(1C), 
+while(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual.

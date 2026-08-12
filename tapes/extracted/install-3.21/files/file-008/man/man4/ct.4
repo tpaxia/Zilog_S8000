@@ -1,0 +1,183 @@
+.po 1i
+.TH CT 4 Zilog
+.V 08/15/84 17:30:27
+.\" @[$]ct.4	1.11 08/15/84 17:30:27 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ct \- cartridge tape interface
+.SH DESCRIPTION
+The files
+.BR ct0 ,
+.BR ct1 ,\ ...
+refer to the cartridge tape units.
+The files
+.BR ct0 ,
+.BR ct1 ,\ ...
+are normal-rewind on close, and the files
+.BR nct0 ,
+.BR nct1 ,\ ...
+are no-rewind on close.  When opened for reading or writing, the
+tape is assumed to be in the desired position.
+If the tape was open for writing, an end-of-file is written,
+and the next four feet of tape are erased (indicating end-of-tape).
+If the tape is not to be rewound, the tape is backspaced to after
+the filemark.
+.PP
+Exiting a program which has opened a tape device automatically closes
+the device, even if there is no explicit close of the device.
+If the tape was opened for writing, an end-of-file is written
+at the current location, and the next four feet of tape are erased.
+Therefore, one should not del out of programs 
+which have opened a tape device
+for writing unless
+truncation is desired.
+It is generally desirable
+to be at the end of the tape upon close of the tape device
+if it was opened for writing.
+.PP
+The
+.B ct
+files allow reads and writes of arbitrary length.
+Seeks are also supported. These files are intended to allow tape files
+to be accessed similarly to other files to a certain extent.
+.PP
+The files
+.BR rct0 ,
+.BR rct1 ,\ ...
+refer to the raw interface.
+These are useful to read and write long records 
+on the ZEUS system.
+.BR Tar (1),
+for example, uses the raw interface.
+The rest of this discussion continues to refer to the raw device names.
+Except that seeks are not supported on the raw device, the
+nonraw device can be accessed similarly by dropping the r from the
+device name.
+.PP
+The cartridge tape unit has the capability of accessing each of the
+four tracks on a tape individually. The files
+.BR rct0a ,\ ...,\  rct0d ,\  rct1a ,\ ...
+refer to the individual tracks on a tape.
+.PP
+The lowest three bits of the minor device number
+select the tape track to be used.  The next two
+bits specify the drive.  
+If Bit 7 is on, the tape is not rewound
+on close.
+The minor device number has no necessary connection
+with the file name.
+.PP
+The name of the raw tape device is
+.RI rct n ,
+where
+.I n
+is the drive number.
+A leading
+.I n
+(for example, nrct0) specifies the no-rewind device, and
+a trailing letter in the range a-d indicates single-track operation.
+.PP
+Each
+.B read
+or
+.B write
+call to a raw tape device reads or writes the next record on the tape.
+In the write case, the record has the same length as the
+buffer given.
+During a read, the record size is passed
+back as the number of bytes read, provided it is not greater
+than the buffer size.
+If the record is long, the extra data is skipped over
+without notification.
+The buffer must begin on a word boundary.
+Writes can be of any length.  The buffer length for
+reads must be even; if the record is shorter, the
+actual length (even or odd) will be returned.
+Seeks are ignored on the raw device.
+A zero count is returned when a tape mark is read.
+When the no-rewind device is closed and reopened,
+the tape head is positioned at the beginning
+of the next tape file.
+.PP
+There are several 
+.BR ioctl (2)
+system calls that apply to the cartridge tape drive.
+The calls reference an open /dev/*ct* special file.
+The syntax of the calls is: 
+.sp
+.nf
+                \fBioctl(\fIfd, REQUEST, count\fR);
+.fi
+.sp
+.I fd
+is a valid file descriptor of a /dev/*ct* file.
+.br
+\fIREQUEST\fR is one of the following requests.
+.br
+\fICount\fR applies to certain of the requests below.
+.sp
+.B CTIOBF 
+\- Skips forward the number of tape blocks specified 
+in the count field.
+This command will not skip over file marks or past the end-of-tape mark.
+The tape blocks can be any size.
+.sp
+.B CTIOBR 
+\- Skips backward the specified number of tape blocks.
+This command will not skip back over file marks or before the 
+beginning-of-tape mark.
+The tape blocks can be of any size.
+.sp
+.B CTIOFF 
+\- Skips forward the number of files (determined 
+by file marks) specified in the count field.
+The tape is positioned at the beginning of the next file.
+The tape will not skip past the end-of-tape mark.
+.sp
+.B CTIOFR
+\- Skips backward the number of files (determined
+by file marks) specified in the count field.
+The tape is positioned at the beginning of the appropriate file.
+The tape will not skip past the beginning-of-tape mark.
+.sp
+.B CTIOFM
+\- Writes a file mark at the current position.
+This command does not take a count.
+.sp
+.B CTIORWT
+\- Rewind the tape.  Leave the tape positioned at the 
+load point.
+This command does not take a count.
+.sp
+.B CTIOGAP
+\- Write the specified number of gaps.
+.sp
+.B CTIOSB
+\- Seek to a record.
+The count field contains the record number relative to the beginning of
+the file of where to position the tape.
+.PP
+.B ioctl
+returns the number of blocks or files skipped,
+or -1 if an end of data or end of media error has occurred.
+.SH FILES
+/dev/rct?,
+.br
+/dev/nrct?,
+.br
+/dev/ct?,
+.br
+/dev/nct?
+.br
+/dev/rct?[a-d],
+.br
+/dev/nrct?[a-d],
+.br
+/dev/ct?[a-d],
+.br
+/dev/nct?[a-d]
+.SH SEE ALSO
+dd(1),
+tar(1),
+ioctl(2).

@@ -1,0 +1,120 @@
+.po 1i
+.TH ACCT 2 Bell
+.V 08/15/84 17:12:23
+.\" @[$]acct.2	1.11	08/15/84 17:12:23 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+acct \- turn accounting on or off
+.SH SYNOPSIS
+.B int acct(
+.I file)
+.br
+.B char
+.I *file;
+.SH DESCRIPTION
+The system is prepared to write a record
+in an accounting
+.I file
+for each process as it terminates.
+This
+call, with a pointer to a
+null-terminated string naming an existing file
+as argument, turns on accounting;
+records for each terminating process are appended to
+.IR file .
+An argument of 0 
+(0L for segmented programs) causes accounting to be turned off.
+Termination can be caused by one of two things: an
+.B exit
+call or a signal; see
+.BR exit (2)
+and 
+.BR signal (2).
+The file must exist and
+the effective user
+.SM ID
+of the calling process must be super-user to use this call.
+.PP
+It is erroneous to turn on accounting when it is already on.
+.PP
+The accounting file format is given in
+.BR acct (5).
+.SH DIAGNOSTICS
+.PP
+.B Acct
+will fail if one or more of the following are true:
+.IP
+The effective user
+.SM ID
+of the calling process is not super-user.
+.SM
+\%[EPERM]
+.IP
+An attempt is being made to enable 
+accounting when it is already enabled.
+.SM
+\%[EBUSY]
+.IP
+A component of the path prefix is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+One or more components of the accounting file's path name do not exist.
+.SM
+\%[ENOENT]
+.IP
+A component of the
+path prefix
+denies search permission.
+.SM
+\%[EACCES]
+.IP
+The file named by
+.I file
+is not an ordinary file.
+.SM
+\%[EACCES]
+.IP
+.I Mode
+permission is denied for the named accounting file.
+.SM
+\%[EACCES]
+.IP
+The named file is a directory.
+.SM
+\%[EISDIR]
+.IP
+The named file resides on a read-only file system.
+.SM
+\%[EROFS]
+.IP
+.I File
+points to an illegal address.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion, a value of 0 is returned. Otherwise, a
+value of \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH LIMITATIONS
+No accounting is produced for programs running
+when a crash occurs.
+Nonterminating programs are never
+accounted for.
+.SH SEE ALSO
+acct(5), sa(1).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT ACCT	:= 51
+
+	...		!* filename in r0 *!
+	...		!* (if segmented: filename in rr0) *!
+	clr	r4
+	sc	#ACCT
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

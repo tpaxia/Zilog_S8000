@@ -1,0 +1,48 @@
+.po 1i
+.TH GAMMA 3 Bell
+.V 08/15/84 17:19:38
+.\" @[$]gamma.3	1.7 08/15/84 17:19:38 - Zilog Inc
+.ad
+.fi
+.SH NAME
+gamma \- log gamma function
+.SH SYNOPSIS
+.B #include <math.h>
+.br
+.B extern int signgam;
+.PP
+.B double gamma (x)
+.br
+\fB    double x;\fR
+.SH DESCRIPTION
+.I Gamma\^
+returns
+.IR (GAMMA) .
+The sign of 
+.I (GAMMA)
+is returned in the external integer
+.IR signgam .
+The following C program fragment might be
+used to calculate
+.I gamma
+.PP
+.RS
+.nf
+y \|= \|gamma \|(x);
+if \|(y \|> \|88.0)
+{
+	perror \|("progname"\|);
+	exit \|(1\|);
+}
+y \|= \|exp \|(y) \|\(** \|signgam;
+.fi
+.RE
+.SH DIAGNOSTICS
+For negative integer arguments, a huge value is returned,
+and
+.I errno\^
+is set to
+.SM
+.BR EDOM
+(see INTRO(2)).
+

@@ -1,0 +1,138 @@
+.po 1i
+.TH CREF 1 Bell
+.V 08/15/84 16:42:48
+.\" @[$]cref.1	1.7	08/15/84 16:42:48 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cref \- make cross-reference listing
+.SH SYNOPSIS
+.B cref
+[
+.B \-ilnostux123
+] \fIfiles\fR
+.SH DESCRIPTION
+.B Cref\^
+makes a cross-reference listing
+of C programs;
+.I files\^
+are searched for symbols
+in the appropriate syntax.
+.PP
+The output report is in four columns:
+.PP
+.PD 0
+.RS
+.TP 4
+1.
+symbol;
+.TP
+2.
+file name;
+.TP
+3.
+see below;
+.TP
+4.
+text as it appears in the file.
+.RE
+.PD
+.PP
+.B Cref\^
+uses either an
+.I ignore\^
+file or an
+.I only\^
+file.
+.I Ignore\^
+and
+.I only\^
+files are lists of symbols separated by new-lines.
+All symbols in an
+.I ignore\^
+file are ignored in columns 1 and 3 of the output.
+If an
+.I only\^
+file is given, only symbols in that file will appear in column 1.
+Only one of these options may be given.
+C keywords are ignored.
+.PP
+In C the current symbol is the current function name.
+This file is created and is
+.I not\^
+removed at the end of the process.
+.SH OPTIONS
+.TP
+.B i
+The next argument is taken to be an \fIignore\fR file (see
+.SM
+.I FILES\^
+below).
+.TP
+.B l
+Put line number in column 3 (instead of current symbol).
+.TP
+.B n
+Omit column 4 (no context).
+.TP
+.B o
+The next argument is taken to be an \fIonly\fR file.
+.TP
+.B s
+Current symbol in column 3 (default).
+.TP
+.B t
+Causes the next available argument to be used as the
+name of the intermediate file (instead of the temporary file
+.BR /tmp/crt??\^ ).
+.TP
+.B u
+print only symbols that occur exactly once.
+.TP
+.B x
+Print only C external symbols.
+.TP
+.B 1
+Sort output on column 1 (default).
+.TP
+.B 2
+Sort output on column 2.
+.TP
+.B 3
+Sort output on column 3.
+.RE
+.PD
+.SH FILES
+.PD 0
+.TP 1.5i
+/tmp/crt??
+temporaries
+.TP
+/usr/lib/cref/cign
+default C
+.I ignore\^
+file
+.TP
+/usr/lib/cref/ctab
+grammar table for C files
+.TP
+/usr/lib/cref/crpost
+post-processor
+.TP
+/usr/lib/cref/upost
+post-processor for
+.B \-u
+option
+.PD
+.SH SEE ALSO
+cc(1),
+sort(1),
+.SH LIMITATIONS
+.B Cref\^
+inserts an
+.SM ASCII
+.SM
+.B DEL
+character into the intermediate file
+after the eighth character of each name that is eight or more
+characters long in the source file.

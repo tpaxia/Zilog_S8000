@@ -1,0 +1,151 @@
+.po 1i
+.TH DATE M Bell
+.V 08/15/84 17:39:26
+.\" @[$]date.M	1.5	08/15/84 17:39:26 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+date \- print and set the date
+.SH SYNOPSIS
+.B date
+[
+.B -u
+]
+[
+.I mmddhhmm[yy] 
+]
+[ \fB+\fIformat\fR
+]
+.SH DESCRIPTION
+If the 
+.B -u 
+option is given, GMT time is printed.
+.PP
+If no argument is given,
+or if the argument begins with \fB+\fP,
+the current date and time are printed.
+Otherwise, the current date is set.
+The first
+.I mm
+is the month number;\fR
+.I dd
+is the day number in the month;\fR
+.I hh
+is the hour number (24 hour system);\fR
+the second
+.I mm
+is the minute number;\fR
+.I yy
+is the last 2 digits of the year number and is optional.
+For example:
+.PP
+.RS
+date\| 10080045
+.RE
+.PP
+sets the date to Oct 8, 12:45 \s-1AM\s+1.
+The current year is the default if no year is mentioned.
+The system operates in \s-1GMT\s0.
+.B Date
+takes care of the conversion to and from
+local standard and daylight time.
+.PP
+If the argument begins with \fB+\fP,
+the output of
+.B date
+is under the control of the user.
+The format for the output is similar to that of
+the first argument to
+.BR printf (3).
+All output fields are of fixed size (zero padded
+if necessary).
+Each field descriptor is preceded by \fB%\fP
+and will be replaced in the output by
+its corresponding value.
+A single \fB%\fP is encoded by \fB%%\fP.
+All other
+characters are copied to the output without change.
+The string is always terminated with a new-line character.
+.PP
+Field Descriptors:
+.RS
+.PD 0
+.TP 5
+.B  n
+insert a new-line character
+.TP 5
+.B  t
+insert a tab character
+.TP 5
+.B  m
+month of year \- 01 to 12
+.TP 5
+.B  d
+day of month \- 01 to 31
+.TP 5
+.B  y
+last 2 digits of year \- 00 to 99
+.TP 5
+.B D
+date as mm/dd/yy
+.TP 5
+.B  H
+hour \- 00 to 23
+.TP 5
+.B  M
+minute \- 00 to 59
+.TP 5
+.B  S
+second \- 00 to 59
+.TP 5
+.B T
+time as \s-1HH:MM:SS\s+1
+.TP 5
+.B  j
+Julian date \- 001 to 366
+.TP 5
+.B  w
+day of week \- Sunday = 0
+.TP 5
+.B  a
+abbreviated weekday \- Sun to Sat
+.TP 5
+.B  h
+abbreviated month \- Jan to Dec
+.TP 5
+.B  r
+time in
+.SM AM/PM 
+notation
+.RE
+.ne 8
+.SH EXAMPLE
+.RS
+date\| \(fm+DATE: %m/%d/%y%nTIME: %H:%M:%S\(fm
+.RE
+.PP
+would generate as output:
+.PP
+.RS
+DATE: 08/01/76
+.br
+TIME: 14:45:05
+.RE
+.SH FILES
+/bin/date	the program
+.sp
+/usr/adm/wtmp	to record time-setting
+.sp
+/dev/kmem
+.SH SEE ALSO
+date(1),
+time(2),
+ctime(3),
+utmp(5)
+.SH DIAGNOSTICS
+\fINo permission\fR if you aren't the super-user and you try
+to change the date.
+.sp
+\fIbad conversion\fR if the date set is syntactically incorrect.
+.sp
+\fIbad format character\fR if the field descriptor is not recognizable.

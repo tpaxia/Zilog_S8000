@@ -1,0 +1,77 @@
+.po 1i
+.TH MP 3 Bell
+.V 08/15/84 17:21:50
+.\" @[$]mp.3	1.5 08/15/84 17:21:50 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+itom, madd, msub, mult, mdiv, min, mout, pow, gcd, rpow \- multiple precision integer arithmetic
+.SH SYNOPSIS
+.nf
+\fBtypedef struct { int \fIlen; \fBshort \fI*val; } \fBmint;\fR
+.PP
+\fBmadd\fI(a, b, c)\fR
+\fBmsub\fI(a, b, c)\fR
+\fBmult\fI(a, b, c)\fR
+\fBmdiv\fI(a, b, q, r)\fR
+\fBmin\fI(a)\fR
+\fBmout\fI(a)\fR
+\fBpow\fI(a, b, m, c)\fR
+\fBgcd\fI(a, b, c)\fR
+\fBrpow\fI(a, b, c)\fR
+\fBmsqrt\fI(a, b, r)\fR
+\fBmint \fI*a, *b, *c, *m, *q, *r;\fR
+.sp
+\fBsdiv\fI(a, n, q, r)\fR
+\fBmint \fI*a, *q;\fR
+\fBint \fIn;\fR
+\fBshort \fI*r;\fR
+.sp
+\fBmint \fI*itom(n)\fR
+\fBint \fIn;\fR
+.fi
+.SH DESCRIPTION
+These routines perform arithmetic on integers of arbitrary length.
+The integers are stored using the defined type
+.BR mint.
+Pointers to a
+.B mint
+should be initialized using the function
+.BR itom ,
+which sets the initial value to
+.IR n .
+After that, space is managed automatically by the routines.
+.PP
+.BR madd , " msub" , " mult" ,
+assign to their third arguments the sum, difference, and
+product, respectively, of their first two arguments.
+.B mdiv
+assigns the quotient and remainder, respectively,
+to its third and fourth arguments.
+.B sdiv
+is like
+.B mdiv
+except that the divisor is an ordinary integer.
+.B msqrt
+produces the square root and remainder of its first argument.
+.B rpow
+calculates
+.I a
+raised to the power
+.IR b ,
+while
+.B pow
+calculates this reduced modulo
+.IR m .
+.BR min " and " mout
+do decimal input and output.
+.PP
+The functions are obtained with the loader option
+.BR -lmp .
+.SH FILES
+/usr/lib/libmp.a
+.br
+/usr/lib/slibmp.a
+.SH DIAGNOSTICS
+Illegal operations and running out of memory
+produce messages and core images.

@@ -1,0 +1,45 @@
+.po 1i
+.TH ISST 3 Zilog
+.V 08/15/84 17:21:13
+.\" @[$]isst.3	1.5 08/15/84 17:21:13 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+stdbl, stfloat, stint, stlong, \- C-ISAM store routines
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBstdbl(d, p)
+\fBdouble d;
+\fBchar  *p;
+.sp
+\fBstfloat(f, p)
+\fBfloat  f;
+\fBchar  *p;
+.sp
+\fBstint(i, p)
+\fBint i;
+\fBchar  *p;
+.sp
+\fBstlong(l, p)
+\fBlong l;
+\fBchar *p;\fR
+.fi
+.SH DESCRIPTION
+These routines store a numeric value into a byte string.
+The byte field need not be word-alligned.
+The parameter 
+.I p
+points to the byte string.  
+.PP
+They can only be used with C-ISAM.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isld(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

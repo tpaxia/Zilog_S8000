@@ -1,0 +1,60 @@
+.po 1i
+.TH CLOSE 2 Bell
+.V 08/15/84 17:12:46
+.\"@[$]close.2	1.5	08/15/84 17:12:46 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+close  \- close a file
+.SH SYNOPSIS
+.B int close
+.I (fildes)
+.br
+.B int
+.I fildes;
+.SH DESCRIPTION
+Given
+a file descriptor such as returned from an
+.BR open (2),
+.BR creat (2),
+.BR dup (2),
+or
+.BR pipe (2)
+call,
+.B close
+closes the associated file.
+A close of all files is automatic on
+.B exit,
+but since
+there is a limit on the number of open files per process,
+.B close
+is necessary for programs that deal with many files.
+.PP
+Files are closed upon termination of a process, and
+certain file descriptors can be closed by
+.BR exec (2)
+(\fBioctl\fR (2)).
+.SH SEE ALSO
+creat(2), dup(2), open(2), pipe(2), exec(2), fcntl(2), ioctl(2).
+.SH DIAGNOSTICS
+.B Close
+will fail if
+.I fildes
+is not a valid open file descriptor.
+\%[EBADF]
+.SH RETURN VALUE
+Zero is returned if a file is closed;
+\-1 is returned for an unknown file descriptor and
+.I errno
+is set to indicate the error.
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT CLOSE	:= 6
+	...		!* fildes in r0	*!
+	clr	r4
+	sc	#CLOSE
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

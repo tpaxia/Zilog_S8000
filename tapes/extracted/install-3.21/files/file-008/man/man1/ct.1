@@ -1,0 +1,143 @@
+.po 1i
+.TH CT 1 Bell  
+.V 08/15/84 16:43:40
+.\" @[$]ct.1	1.12  08/15/84 16:43:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ct \- call terminal
+.SH SYNOPSIS
+.B ct
+[
+.B \-h
+] [
+.BI \-s speed  
+] [
+.B \-v   
+] [
+.B \-V
+] [
+\fB\-w\fIn   
+] \fItelno\fR 
+.SH DESCRIPTION
+.B Ct\^
+dials the phone number of a modem that is attached
+to a terminal, and spawns a
+.BR login (1)
+process for that terminal.
+.I Telno\^
+is the telephone number,
+with auto-dialer dependent characters at the appropriate places for delays
+and dial initiation.
+.PP
+.B Ct\^
+determines which dialers are associated with
+lines set to the appropriate speed by
+examining the file
+/usr/lib/uucp/L-devices.
+Lines in the L-devices file have the form
+.sp
+.nf
+.I 	type line call-unit speed
+.fi
+.PP
+where \fItype\fR is \fBACU\fR (for Automatic Calling Unit, not used
+by \fBct\fR) or \fBDIR\fR (directly connected lines).
+.I Line
+is the tty line to be used; \fIcall-unit\fR is an ACU device, or \fB0\fR
+for direct lines.
+.I Speed
+is the baud rate.
+.PP
+If all such available dialers are busy,
+.B ct\^
+will ask if it should wait for
+a line to become free, and if so, how many minutes
+it should wait
+before it gives up.
+.B Ct\^
+will try to open
+the dialers
+at one minute intervals until
+the specified limit is exceeded.
+The dialogue may be overridden by
+specifying the
+.BI \-w n\^
+option, where
+.I n\^
+is the maximum number of minutes
+that
+.B ct\^
+is
+to wait for a line.
+.PP
+Normally,
+.B ct\^
+hangs up the current line so the
+line can answer the incoming call.
+The
+.B \-h
+option will prevent this action.
+If the
+.B \-v
+option is used,
+.B ct\^
+will send a running narrative
+to standard error.
+.PP
+The data transmission rate may be set with the
+.B \-s
+option, where
+.I speed\^
+is expressed in baud.
+The default rate is 300.
+.PP
+The destination terminal must be attached
+to a modem that can answer the telephone.
+.PP
+The port is disconnected if the user does not respond to the
+ZEUS login:
+request within one minute.
+.SH OPTIONS
+.PP
+.PD 0
+.TP 8
+.BI \-h\^    
+Keep 
+.B ct\^
+from hanging up the current line.    
+.sp
+.TP 8
+.BI \-s speed\^
+Sets the data transmission rate to the baud value specified by
+.I speed\^.
+The default is 300.
+.sp
+.TP 8
+.BI \-v\^
+Send a running narrative to standard error.
+.sp
+.TP 8
+.BI \-V\^
+To be used when
+.B ct
+is dialing on a Ven-Tel auto-dialer.
+.I Telno
+is expanded to '^M^M<K\fItelno\fR>^M'.
+.sp
+.TP 8
+.BI \-w n\^
+By default, 
+.B ct\^
+queries the user for the amount of time over which it should make attempts
+(at one minute intervals) to contact dialers whose lines are busy.  
+This option overrides that dialogue and sets
+`n` as the maximum period over which to repeat attempts to make contact. 
+.SH FILES
+/usr/lib/uucp/L-devices
+.SH "SEE ALSO"
+cu(1),
+login(1),
+getty(M).
+.sp
+The operator's manual for the auto-dialer used on your system.

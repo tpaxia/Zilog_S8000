@@ -1,0 +1,12 @@
+#print
+Your count program counts down from 10 to 1 before saying hello. Now
+that you have saved the output in a file, try sorting the output by
+typing:   sort out (RETURN)
+and then:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+1f

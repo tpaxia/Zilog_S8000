@@ -1,0 +1,84 @@
+.po 1i
+.TH ACUTYPE 5 Zilog
+.V 08/15/84 17:33:53
+.\" @[$]acutype.5	1.4 08/15/84 17:33:53 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+acutype \- ACU configuration table
+.SH SYNOPSIS
+.B /usr/acu/acutype
+.SH DESCRIPTION
+.B Acutype
+contains data reflecting the physical configuration of ACUs
+and modems. It contains entries with the following format:
+.nf
+
+.ce
+<entry_type>=<entry_data>:<comment>
+
+.fi
+The valid entry types and the order in which they are specified are:
+.nf
+
+     PN - device name for this ACU
+     TY - ACU type, to be used to search /usr/acu/acucap
+     DO - dial-out character for PBX
+     MD - modem addresses associated with this ACU;
+          they are of the form <device>.<modem_address>
+
+.fi
+Each entry occupies a single line in the file and may
+include a comment separated by a colon ':'.
+For each PN entry, there must be one TY entry and may be one
+DO entry. There is one MD entry per physical modem that the ACU
+may address.
+.PP
+The <modem_address> portion of MD entries is different for
+every manufacturer. It consists of any characters needed by the
+particular ACU to access the modem indicated.
+.PP
+A sample /usr/acu/acutype might look like this:
+.nf
+
+     PN=acu0
+     TY=r8:UDS RM-801 type ACU
+     DO=9: dial-out for Rolm PBX
+     MD=tty5.4A:modem on port tty5 (bank 0, 301 type)
+     MD=tty6.4B:modem on port tty6 (bank 0, 301 type)
+     MD=tty7.4C:modem on port tty7 (bank 0, 301 type)
+     MD=tty10.0D:modem on port tty5 (bank 0, non-301 type)
+     MD=x25.0E:modem for X.25 on ICP
+     MD=tty42.0F:modem on ICP #0 port #2
+
+     PN=acu1
+     TY=rv:Racal-Vadic 811
+     MD=tty45:single modem on ICP #0 port #5 (an ITH device)
+.fi
+.PP
+The first ACU (PN=acu0) may be used with multiple modems. Therefore,
+each modem to which the ACU may connect has an MD entry.
+Also, this unit may dial out through a PBX, hence an entry
+for the dial-out character (DO).  Whether it actually dials out
+through the PBX will be determined by the telephone number
+sent to the dialing software. The MD entries show the particular
+character strings that the ACU must receive in order to address the
+particular modem; e.g. it must send the string "4C" to address
+the modem connected to tty7.
+.PP
+Note that two modems are physically attached to ports on an ICP.
+One is for the X.25 protocol and the other for an Intelligent
+Terminal Handler device.
+.PP
+In the entry for the second ACU (PN=acu1),
+DO is not specified, indicating that this line
+is probably connected to an external telephone line
+and not through a PBX.  Also, since the MD entry has no
+<modem_address>, this ACU is attached to a single modem for
+which no address is required by the ACU.
+.SH FILES
+.nf
+/usr/acu/acutype
+/usr/acu/acucap
+.SH SEE ALSO
+aculib(3), dial(3), acucap(5)

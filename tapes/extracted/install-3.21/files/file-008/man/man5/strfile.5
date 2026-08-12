@@ -1,0 +1,36 @@
+.po 1i
+.TH STRFILE 5 Zilog
+.V 08/15/84 17:35:39
+.\"@[$]strfile.5	1.3	08/15/84 17:35:39 - Zilog Inc.
+.ad
+.SH NAME
+strfile \- software trouble report data base
+.SH DESCRIPTION
+\fIstrfile\fR contains the following information on software trouble
+reports:
+.br
+{status}
+.br
+{suspense date}
+.br
+{internally assigned sequence number}
+.br
+{title}
+.br
+{submission date}
+.br
+{program affected}
+.br
+{priority}
+.br
+{assignee}
+.br
+{action required at suspense date}
+.PP
+This is an ASCII file with the free-form fields separated by colon.
+To make sorts and selections easier suspense 
+dates are of the form MM/DD/YY.
+.SH FILES
+/etc/strfile
+.SH SEE ALSO
+str(M).

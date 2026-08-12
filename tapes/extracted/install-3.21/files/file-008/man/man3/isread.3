@@ -1,0 +1,81 @@
+.po 1i
+.TH ISREAD 3 Zilog
+.V 08/15/84 17:21:03
+.\" @[$]isread.3	1.5 08/15/84 17:21:03 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isread - read records from a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisread\fI(isfd, buffer, mode)\fR
+\fBint \fIisfd;\fR
+\fBchar \fIbuffer[];\fR
+\fBint \fImode;\fR
+.fi
+.SH DESCRIPTION
+.B Isread
+reads records sequentially or randomly 
+as indicated by the mode parameter.
+.PP
+When sequential processing is desired, 
+.I mode
+indicates that the current (ISCURR), first 
+(ISFIRST), last (ISLAST), next (ISNEXT), or previous 
+(ISPREV) record is to be read.
+The result will be read into the buffer.
+.PP
+When random selection is desired, 
+.I mode
+indicates
+that the record to be returned has a value that is equal
+to (ISEQUAL), greater than (ISGREAT), or greater than or 
+equal to (ISGTEQ) the specified search value.
+The search value is placed in the 
+.I buffer
+array in
+the correct byte positions for the key, as defined in the
+index's keydesc when the index was created.
+.B Isread
+will fill in the buffer with the results
+of the search.
+.PP
+If manual locking was specified when the file was opened, 
+the record can be read-locked before being read,
+by adding the value ISLOCK to the mode.
+The record will remain locked until unlocked with the 
+.B isrelease
+call.
+.PP
+Following 
+.B isopen
+or 
+.B isbuild
+calls or an 
+.B isstart
+call to the start of a file, either 
+.B isnext
+or 
+.B iscurr
+will give the first record.
+.SH LIMITATIONS
+.B Isread
+can not be used for partial string searches.
+To do this, 
+.B Isstart
+must be used.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isbuild(3),
+islock(3),
+isopen(3),
+isrelease(3),
+isstart(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

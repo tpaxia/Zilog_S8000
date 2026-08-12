@@ -1,0 +1,28 @@
+.po 1i
+.TH DATE 1 Bell
+.V 08/15/84 16:45:30
+.\" @[$]date.1	1.8 08/15/84 16:45:30 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+date \- print the date and time
+.SH SYNOPSIS
+.B date
+[ -u ]
+.SH DESCRIPTION
+The current date and time are printed, including the day of week,
+month, day of month, time (hh:mm:ss), time zone, and year.
+.PP
+If the -u option is given, GMT time is printed.
+.SH EXAMPLE
+.RS
+\fB% date\fR
+.br
+\fRThu Nov 11 14:44:32 PST 1982\fR
+.RE
+.br
+.SH SEE ALSO
+time(2),
+ctime(3),
+datem(M).
+.br

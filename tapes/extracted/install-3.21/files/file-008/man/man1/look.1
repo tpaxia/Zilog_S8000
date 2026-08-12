@@ -1,0 +1,46 @@
+.po 1i
+.TH LOOK 1 Bell
+.V 08/15/84 16:57:04
+.\" @[$]look.1	1.6	08/15/84 16:57:04 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+look \- find lines in a sorted list
+.SH SYNOPSIS
+.B look
+[
+.B \-df
+] \fIstring\fR [ \fIfile\fR ]
+.SH DESCRIPTION
+.B Look
+consults a sorted
+.I file
+and prints all lines that begin with
+.IR string .
+It uses binary search.
+If no
+.I file
+is specified,
+.I /usr/dict/words
+is assumed with collating sequence
+.B \-df.
+.SH OPTIONS
+.PP
+The options 
+.B \-d
+and
+.B \-f
+affect comparisons as in
+.BR  sort (1):
+.TP
+.B  \-d
+Dictionary order:
+only letters, digits, tabs, and blanks are compared.
+.TP 4
+.B  \-f
+Fold.
+Uppercase letters compare equal to lowercase.
+.SH FILES
+/usr/dict/words
+.SH SEE ALSO
+sort(1), grep(1).

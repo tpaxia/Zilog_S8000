@@ -1,0 +1,170 @@
+.po 1i
+.TH NL 1 Zilog
+.V 08/15/84 16:59:50 
+.\" @[$]nl.1	1.11 08/15/84 16:59:50 - Zilog Inc. 
+.ad
+.fi
+.SH NAME
+nl \- line numbering filter
+.SH SYNOPSIS
+.B nl
+.in +3m
+[ \fB\-b\fItype\fR]
+.br
+[ \fB\-f\fItype\fR]
+.br
+[ \fB\-h\fItype\fR]
+.br
+[ \fB\-i\fIincr\fR]
+.br
+[ \fB\-l\fInum\fR]
+.br
+[ \fB\-n\fIformat\fR]
+.br
+[ \fB\-p \fR]
+.br
+[ \fB\-s\fIsep\fR]
+.br
+[ \fB\-v\fIstart#\fR]
+.br
+[ \fB\-w\fIwidth\fR]
+.br
+\fIfile\fR
+.in -5m
+.SH DESCRIPTION
+.B Nl\^
+reads lines from the named \fIfile\fP or from 
+standard input if no \fIfile\fP is named and
+reproduces the lines on the standard output (unless redirected).
+Lines are numbered on the left in accordance with
+the command options in effect.
+.PP
+.B Nl\^
+views the text it reads in terms of logical pages.
+Line numbering is reset at the start
+of each logical page.
+A logical page consists of a
+header, a body, and a footer section.
+Empty sections are valid.
+.PP
+Different line numbering options
+are independently available
+for header, body, and footer
+(e.g. no numbering of header and footer
+lines while numbering blank lines
+only in the body).
+.PP
+The start of logical page sections is signaled by input
+lines containing nothing but the following character(s):
+.br
+.RS 10
+.TP 15
+.I Line contents\^
+.I Start of\^
+.TP
+\e:\e:\e:
+header
+.TP
+\e:\e:
+body
+.TP
+\e:
+footer
+.sp
+.RE
+Unless signaled otherwise,
+.B nl\^
+assumes the text being read is in a single logical page body.
+.PP
+Command options may appear in any order and
+may be intermingled with an optional file name.
+Only one file may be named.
+.SH OPTIONS
+.TP 10
+.BI \-b type\^
+Specifies which logical page body lines are to be numbered.
+Recognized \fItypes\fP and their meaning are:
+.BR a ,
+number all lines;
+.BR t ,
+number lines with printable text only;
+.BR n ,
+no line numbering;
+.BI p string\^\fR,\fP
+number only lines that contain the regular expression
+specified in
+.IR string .
+The default \fItype\fP for the logical page body is
+.B t
+(text lines numbered).
+.TP 10
+.BI \-f type\^
+Same as
+.BI \-b type\^
+except for footer.
+The default for a logical page footer is \fBn\fP (no lines numbered).
+.TP 10
+.BI \-h type\^
+Same as
+.BI \-b type\^
+except for the header.
+The default \fItype\fP for a logical page header is \fBn\fP
+(no lines numbered).
+.TP 10
+.BI \-i incr\^
+.I Incr\^
+is the increment value used to number logical page lines.
+The default is
+.BR 1 .
+.TP 10
+.BI \-l num\^
+.I Num\^
+is the number of blank lines to be considered one line.
+For example,
+.B \-l2
+results in only the second adjacent blank
+being numbered (if the appropriate
+.BR \-ha ,
+.BR \-ba ,
+and/or
+.B \-fa
+option is set).
+The default is
+.BR 1 .
+.TP 10
+.BI \-n format\^
+.I Format\^
+is the line numbering format.
+Recognized values are:
+.BR ln ,
+left justified, leading zeroes suppressed;
+.BR rn ,
+right justified, leading zeroes suppressed;
+.BR rz ,
+right justified, leading zeroes kept.
+The default \fIformat\fP is \fBrn\fR (right justified).
+.TP 10
+.B \-p
+Do not restart numbering at logical page delimiters.
+.TP 10
+.BI \-s sep\^
+.I Sep\^
+is the character(s) used in separating the line number
+and the corresponding text line.
+The default \fIsep\fP is a tab.
+.TP 10
+.BI \-v start#\^
+.I Start#\^
+is the initial value used to 
+number logical page lines.
+The default is
+.BR 1 .
+.TP 10
+.BI \-w width\^
+.I Width\^
+is the number of characters
+to be used for the line number.
+T default \fIwidth\fP is
+.BR 6 .
+.SH SEE ALSO
+nroff(1), pr(1).

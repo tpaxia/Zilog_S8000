@@ -1,0 +1,104 @@
+.po 1i
+.TH KILL 2 Bell
+.V 08/15/84 17:13:42
+.\"@[$]kill.2	1.7	08/15/84 17:13:42 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+kill  \- send signal to a process
+.SH SYNOPSIS
+.B int kill
+.I (pid, sig)
+.br
+.B int
+.I pid, sig;
+.SH DESCRIPTION
+.B Kill
+sends the signal
+.I (sig)
+to the process or group of processes specified by the
+the process ID
+.I (pid).
+See
+.BR signal (2)
+for a list of signals.
+If
+.I sig
+is 0 (the null signal),
+error checking is performed but no signal is actually sent.
+This can be used to check the validity of
+.I pid.
+.PP
+The sending and receiving processes must
+have the same effective user ID (unless the process is sending to
+itself), otherwise
+this call is restricted to the super-user.
+.PP
+If the process number is 0,
+the signal is sent to all other processes in the
+sender's process group (
+.BR tty (4)).
+.PP
+If the process number is \-1, and the user is not the super-user,
+the signal is sent to all other processes in the
+sender's process group excluding
+.I process 0
+and 
+.I process 1.
+.PP
+If the process number is \-1, and the user is the super-user,
+the signal is broadcast universally
+except to processes 0 and 1, the scheduler
+and initialization processes, (
+.BR init (M)).
+If
+.I pid
+is negative but not \-1,
+.I sig
+will be sent to all processes whose process group
+.SM ID
+is equal to the absolute value of
+.IR pid .
+Processes can send signals to themselves.
+.SH DIAGNOSTICS
+.PP
+.B Kill
+will fail and no signal will be 
+sent if one or more of the following are true:
+.IP
+.I Sig
+is not a valid signal number.
+.SM
+\%[EINVAL]
+.IP
+No process can be found corresponding to that specified by
+.IR pid .
+.SM
+\%[ESRCH]
+.IP
+The sending process is not sending to itself, its effective user
+.SM ID
+is not super-user, and its effective user
+.SM ID
+does not match the real user
+.SM ID
+of the receiving process.
+.SM
+\%[EPERM]
+.SH RETURN VALUE
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH SEE ALSO
+kill(1), getpid(2), setpgrp(2), signal(2).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT KILL	:= 37
+
+	...	    !* process ID in r0, signal in r1 *!
+	clr	r4
+	sc	#KILL
+	...	    !* return value in r4 *
+	   	    !* carry flag set if error *!

@@ -1,0 +1,48 @@
+.po 1i
+.TH TTYNAME 3 Bell
+.V 08/15/84 17:29:52
+.\" @[$]ttyname.3	1.5	08/15/84 17:29:52 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ttyname, isatty, ttyslot \- find name of a terminal
+.SH SYNOPSIS
+.B char *ttyname\fI(fildes)
+.PP
+.B isatty\fI(fildes)
+.PP
+.B ttyslot()
+.SH DESCRIPTION
+.B Ttyname
+returns a pointer to the null-terminated path name
+of the terminal device associated with file descriptor
+.IR fildes .
+.PP
+.B Isatty
+returns 1 if
+.I fildes
+is associated with a terminal device, 0 otherwise.
+.PP
+.B Ttyslot
+returns the number of the slot in the
+.BR utmp (5)
+file for the control terminal of the
+current process.
+.SH FILES
+/dev/*
+.br
+/etc/utmp
+.SH SEE ALSO
+ioctl(2),
+utmp(5).
+.SH DIAGNOSTICS
+.B Ttyname
+returns a null pointer (0) if
+.I fildes
+does not describe a terminal device in directory /dev.
+.PP
+.B Ttyslot
+returns -1 if the slot is not found.
+.SH LIMITATIONS
+The return value points to static data
+whose content is overwritten by each call.

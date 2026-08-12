@@ -1,0 +1,33 @@
+.po 1i
+.TH UNAME 1 Bell
+.V 08/15/84 17:08:40
+.\" @[$]uname.1	1.7 08/15/84 17:08:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+uname \- print the name of current ZEUS
+.SH SYNOPSIS
+\fBuname\fR [\fB\-anrsv\fR]
+.SH DESCRIPTION
+.B Uname\^
+prints the current system name of ZEUS on the standard output file.
+It is mainly useful to determine what system one is using.
+.SH OPTIONS
+.TP
+.B \-a
+print all the available information.
+.TP
+.B \-n
+print the nodename (name that the system is known by
+to a communications network).
+.TP
+.B \-r
+print the operating system release.
+.TP
+.B \-s
+print the system name (default).
+.TP
+.B \-v
+print the operating system version.
+.SH SEE ALSO
+uname(2).

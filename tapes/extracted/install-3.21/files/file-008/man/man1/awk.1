@@ -1,0 +1,282 @@
+.po 1i
+.TH AWK 1  Bell
+.V 08/15/84 16:37:23
+.\" @[$]awk.1	1.17 08/15/84 16:37:23 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+awk \- pattern scanning and processing language
+.SH SYNOPSIS
+\fBawk\fR [ \fB\-F\fIcharacter\fR ] [ '\fIpattern { action }\fR' ] 
+.br
+[ \fIinput_file\fR ] ...
+.br
+     or
+.br
+\fBawk\fR [ \fB\-F\fIcharacter\fR ] [ \fB-f\fR \fIpatterns_file\fR ] 
+.br
+[ \fIinput_file\fR ] ...
+.SH DESCRIPTION
+.ad
+.B Awk
+scans each named \fIinput_file\fR for lines that contain patterns matching 
+user-specified patterns. The user provides these either in 
+1) a pattern-action statement given on the command line or 2) a set
+of pattern-action statements specified in a \fIpatterns_file\fR. When a line in 
+\fIinput_file\fR contains a pattern matching the pattern in the pattern-action
+statement, the corresponding action in the pattern-action statement is 
+performed. 
+.sp
+\fIInput_files\fR are read in the order entered. If no 
+\fIinput_files\fR are specified, standard (keyboard) input is fetched and 
+compared against the pattern-action statements provided on the command
+line or in \fIpatterns_file\fR.
+If standard input is to be interspersed with \fIinput_files\fR, a \fB-\fR
+is specified on the command line where input should now be expected from
+the keyboard. Entering a control-D to terminate the passing of data from
+standard input results in lines-for-comparison being accepted from the
+next \fIinput_file\fR, if one is specified. 
+.sp
+A line-for-comparison is made up of fields separated by white-space (blanks
+and tabs).
+The fields are denoted $1, $2, ... $\fIn\fR. $0 refers to the entire line.
+The (default) white-space delimiter can be changed in one of two
+ways. The first is with the \fB-F\fIcharacter\fR command line option,
+where \fIcharacter\fR is the field delimiter to be used in place of 
+white-space. The second is with the special \fBFS\fR (Field Separator)
+directive, which provides the same function within a \fIpatterns_file\fR.
+The latter is discussed later.
+.sp
+A pattern-action statement has the form
+.nf
+.sp
+     \fIpattern { action }\fR
+.sp
+.fi
+A missing { \fIaction\fR } means print the line; a missing \fIpattern\fR 
+results in the  
+given action being performed for every line in \fIinput_file\fR.
+.sp
+An \fIaction\fR is a sequence of statements.
+A statement can be one of the following:
+.PP
+.nf
+.na
+   >  if ( conditional ) statement [ else statement ]
+   >  while ( conditional ) statement
+   >  for ( expression ; conditional ; expression ) statement
+   >  break
+   >  continue
+   >  { [ statement ] ... }
+   >  variable = expression
+   >  print [ expression-list ] [ >expression ]
+   >  printf format [ , expression-list ] [ >expression ]
+   >  next	# skip remaining patterns on this input line 
+   >  exit	# skip the rest of the input
+.ad
+.fi
+.PP
+Statements are terminated by
+semicolons, new-lines or right braces.
+An empty expression-list stands for the whole line.
+Expressions take on string or numeric values as appropriate,
+and are built using the operators
++, \-, *, /, %,  and concatenation (indicated by a blank).
+The C operators ++, \-\-, +=, \-=, *=, /=, and %=
+are also available in expressions.
+Variables may be scalars, array elements
+(denoted
+x[i])
+or strings.
+Variables are initialized to the null string.
+Array subscripts may be any string,
+not necessarily numeric;
+this allows for a form of associative memory.
+String constants are quoted "...".
+.PP
+The 
+.B print
+statement prints its arguments to standard output
+(or to the file represented by
+.I expression
+if
+.RI > expression
+is present,
+for example,
+.I expression
+might be $1)
+separated by the current output field separator,
+and terminated by the output record separator.
+The
+.B printf
+statement formats its expression list according to \fIformat\fR
+(see
+.BR printf (3)).
+.PP
+The built-in function
+.B length
+returns the length of its argument
+(where the argument is interpreted as a string)
+or of the whole line if no argument is given.
+There are also built-in functions
+.B exp,
+.B log,
+.B sqrt,
+and
+.BR int .
+The last truncates its argument to an integer.
+.BR Substr(s,\ m,\ n)
+returns the 
+.IR n -character
+substring of
+.I s
+that begins at position
+.IR m.
+The function
+.BR sprintf(fmt,\ expr,\ expr,\ ...)
+formats the expressions
+according to the
+.BR printf (3)
+format given by
+.I fmt
+and returns the resulting string.
+.PP
+Patterns are arbitrary Boolean combinations
+(!, \(or\(or, &&, and parentheses) of 
+regular expressions and
+relational expressions.
+Regular expressions must be surrounded
+by slashes in the same manner as with 
+\fBegrep\fR (see \fBgrep\fR(1)).
+Isolated regular expressions
+in a pattern apply to the entire line.
+Regular expressions may also occur in
+relational expressions.
+.PP
+A pattern consists of two patterns separated by a comma.
+In this case, the action is performed for all lines
+between the first occurrence of the first pattern
+and the next occurrence of the second.
+.PP
+.na
+.nf
+A relational expression is one of the following:
+.PP
+.nf
+	expression matchop regular-expression
+	expression relop expression
+.PP
+.ad
+.fi
+where a relop is any of the six C relational operators,
+and a matchop is either ~ (for contains)
+or !~ (for does not contain).
+A conditional is an arithmetic expression,
+a relational expression,
+or a Boolean combination
+of these.
+.PP
+The special patterns
+BEGIN { \fIaction\fR } 
+and
+END { \fIaction\fR }
+transfer control to \fIaction\fR before and after the first and last lines of
+\fIinput_file\fR are scanned. 
+.PP
+Some other character beside the white-space characters may be specified
+as the \fIinput_file\fR field delimiter by beginning the 
+\fIpatterns_file\fR with
+.PP
+	BEGIN { FS = "\fIcharacter\fR" }
+.PP
+where \fIcharacter\fR is any character desired to be used as the field  
+delimiter.
+The field delimiter can also be specified using the
+\fB\-F\fIcharacter\fR
+command line option.
+.PP
+Other variable names with special meanings
+include NF, the number of fields in the current record;
+NR, the ordinal number of the current record;
+FILENAME, the name of the current input file;
+OFS, the output field separator (default blank);
+ORS, the output record separator (default newline);
+and
+OFMT, the output format for numbers (default "%.6g").
+.PP
+.SH EXAMPLES
+.PP
+Print lines longer than 72 characters:
+.PP
+.nf
+	\fBlength > 72\fR
+.fi
+.PP
+Print first two fields in opposite order:
+.PP
+.nf
+	\fB{ print $2, $1 }\fR
+.fi
+.PP
+Add up first column, print sum and average:
+.PP
+.na
+.nf
+		\fB{ s += $1 }
+	END	{ print "sum is", s, " average is", s/NR }\fR
+.fi
+.ad
+.PP
+Print fields in reverse order:
+.PP
+.na
+.nf
+	\fB{ for (i = NF; i > 0; \-\-i) print $i }\fR
+.fi
+.ad
+.PP
+Print all lines between start/stop pairs:
+.PP
+.nf
+	\fB/start/, /stop/\fR
+.fi
+.PP
+Print all lines whose first field is different from previous one:
+.PP
+.na
+.nf
+	\fB$1 != prev { print; prev = $1 }\fR
+.fi
+.ad
+.SH SEE ALSO
+.PP
+lex(1), sed(1).
+.br
+\fIAwk \- A Pattern Scanning and Processing Language\fR
+in the ZEUS Utilities Manual. 
+.SH LIMITATIONS
+There are no explicit conversions between numbers and strings.
+To force an expression to be treated as a number add 0 to it;
+to force it to be treated as a string concatenate ""
+to it.
+.PP
+When a set of pattern-actions appears on the command line as 
+\fIpattern {action}\fR 
+it is generally necessary to enclose it in single quotes
+to prevent interpretation of special characters by the shell.
+.PP
+For example:
+.IP
+awk '{print $2,$1}' test
+.PP
+will print the first two fields of each entry in
+.I test
+in reverse order.
+.IP
+awk {print $2,$1} test
+.PP
+or
+.IP
+awk "{print $2,$1}" test
+.PP
+will not.

@@ -1,0 +1,3395 @@
+/Volumes/ZeusFS/s8000_root/etc/init
+  magic  : e707  (Nonsegmented executable, nonsegmented)
+  imsize : 0x2ea4   bss: 0x686   entry: 0x0   flag: 0x1  (STRIP)
+  segt   : 0x10 (1 entry)   syms: 0x0 (0)
+  seg[0] segno=00 code=0x2732  data=0x772   bss=0x686    off(c/d/b)=0/0/0  atr=CODE|DATA|BSS
+    code 0x0000 .. 0x2732  (0x2732)
+    data 0x2732 .. 0x2ea4  (0x772)
+    bss  0x2ea4 .. 0x352a  (0x686)
+
+0000:  e80b           .word   #%e80b ;RST
+0002:  434f           .word   #%434f ;RST FCW
+0004:  5052           .word   #%5052 ;RST PC
+0006:  2e20           ldb     @r2,rh0
+0008:  3139 3831      ld      r9,r3(#%3831)
+000c:  205a           ldb     rl2,@r5
+000e:  494c 4f47      xor     r12,%4f47(r4)
+0012:  2049           ldb     rl1,@r4
+0014:  4e43           .word   #%4e43
+0016:  2e00           .word   #%2e00
+0018:  21f7           ld      r7,@r15
+001a:  76f6 0002      lda     pr6,%0002(r15)
+001e:  2162           ld      r2,@r6
+0020:  4d28 fffe      clr     %fffe(r2)
+0024:  a165           ld      r5,r6
+0026:  9200           subl    rr0,rr0
+0028:  bb54 0106      cpir    r0,@r5,r1,eq/z
+002c:  8b25           cp      r5,r2
+002e:  e701           jr      c/ult,%0032
+0030:  ab51           dec     r5,2
+0032:  6f05 2ea4      ld      %2ea4,r5
+0036:  5f00 0042      call    %0042
+003a:  a127           ld      r7,r2
+003c:  5f00 1f96      call    %1f96
+0040:  7f01           sc      #%01                   ; SYS exit (#1)
+0042:  abf7           dec     r15,8
+0044:  1df6           ldl     @r15,rr6
+0046:  0b07 0001      cp      r7,#%0001
+004a:  e230           jr      le,%00ac
+004c:  a162           ld      r2,r6
+004e:  6123 0002      ld      r3,%0002(r2)
+0052:  0c31 3939      cpb     @r3,#%39
+0056:  ea05           jr      gt,%0062
+0058:  6163 0002      ld      r3,%0002(r6)
+005c:  0c31 3131      cpb     @r3,#%31
+0060:  e909           jr      ge,%0074
+0062:  2107 282a      ld      r7,#%282a              ; 282a "init: invalid state
+"
+0066:  2106 2c5a      ld      r6,#%2c5a              ; 2c5a =0x0000 [........]
+006a:  5f00 133a      call    %133a
+006e:  bd72           ldk     r7,2
+0070:  5f00 1f9c      call    %1f9c
+0074:  61f2 0000      ld      r2,%0000(r15)
+0078:  6123 0002      ld      r3,%0002(r2)
+007c:  203c           ldb     rl4,@r3
+007e:  b140           extsb   r4
+0080:  0304 0030      sub     r4,#%0030
+0084:  8144           add     r4,r4
+0086:  6146 27ae      ld      r6,%27ae(r4)
+008a:  bd71           ldk     r7,1
+008c:  5f00 2622      call    %2622
+0090:  8d24           test    r2
+0092:  e609           jr      eq/z,%00a6
+0094:  2107 2840      ld      r7,#%2840              ; 2840 "init: permission denied
+"
+0098:  2106 2c5a      ld      r6,#%2c5a              ; 2c5a =0x0000 [........]
+009c:  5f00 133a      call    %133a
+00a0:  bd72           ldk     r7,2
+00a2:  5f00 1f9c      call    %1f9c
+00a6:  8377           sub     r7,r7
+00a8:  5f00 1f9c      call    %1f9c
+00ac:  5f00 260a      call    %260a
+00b0:  0b02 0001      cp      r2,#%0001
+00b4:  e609           jr      eq/z,%00c8
+00b6:  2107 285a      ld      r7,#%285a              ; 285a "usage: init state
+"
+00ba:  2106 2c5a      ld      r6,#%2c5a              ; 2c5a =0x0000 [........]
+00be:  5f00 133a      call    %133a
+00c2:  bd72           ldk     r7,2
+00c4:  5f00 1f9c      call    %1f9c
+00c8:  bd71           ldk     r7,1
+00ca:  2106 0a62      ld      r6,#%0a62              ; a62 =0xabf3 [../...`.]
+00ce:  5f00 2678      call    %2678
+00d2:  daf1           calr    %0af2
+00d4:  4df8 0004      clr     %0004(r15)
+00d8:  61f7 0004      ld      r7,%0004(r15)
+00dc:  5f00 25ac      call    %25ac
+00e0:  69f0 0004      inc     %0004(r15),1
+00e4:  4df1 0004 000a cp      %0004(r15),#%000a
+00ea:  e2f6           jr      le,%00d8
+00ec:  e806           jr      %00fa
+00ee:  bd72           ldk     r7,2
+00f0:  2106 286e      ld      r6,#%286e              ; 286e "no memory, malloc failed"
+00f4:  2105 2888      ld      r5,#%2888              ; 2888 =0x0000 [../dev/c]
+00f8:  da8b           calr    %0be4
+00fa:  6107 27d0      ld      r7,%27d0               ; [27d0]=0x0100 [....'.'.]
+00fe:  5f00 20d4      call    %20d4
+0102:  6f02 3100      ld      %3100,r2
+0106:  8d24           test    r2
+0108:  e6f2           jr      eq/z,%00ee
+010a:  2107 288a      ld      r7,#%288a              ; 288a "/dev/console"
+010e:  5f00 0e28      call    %0e28
+0112:  6ff2 0006      ld      %0006(r15),r2
+0116:  6107 27d8      ld      r7,%27d8               ; [27d8]=0x2800 [(.(.(...]
+011a:  a974           inc     r7,5
+011c:  a126           ld      r6,r2
+011e:  5f00 24d8      call    %24d8
+0122:  4d05 2ea4 27d4 ld      %2ea4,#%27d4
+0128:  61f2 0000      ld      r2,%0000(r15)
+012c:  2123           ld      r3,@r2
+012e:  0c31 6d6d      cpb     @r3,#%6d
+0132:  ee06           jr      ne/nz,%0140
+0134:  4c05 278c 3232 ldb     %278c,#%32             ; [278c]=0x3100 [1.INIT  ]
+013a:  e802           jr      %0140
+013c:  df68           calr    %026e
+013e:  dec9           calr    %03ae
+0140:  600a 278c      ldb     rl2,%278c              ; [278c]=0x3100 [1.INIT  ]
+0144:  6e0a 2793      ldb     %2793,rl2              ; [2793]"    "
+0148:  61f7 0000      ld      r7,%0000(r15)
+014c:  2173           ld      r3,@r7
+014e:  a137           ld      r7,r3
+0150:  2106 278e      ld      r6,#%278e              ; 278e "INIT     "
+0154:  5f00 24d8      call    %24d8
+0158:  4d08 27cc      clr     %27cc                  ; [27cc]=0x0000 [........]
+015c:  4d04 27ca      test    %27ca                  ; [27ca]=0x0001 [........]
+0160:  e6ed           jr      eq/z,%013c
+0162:  4d08 27ca      clr     %27ca                  ; [27ca]=0x0001 [........]
+0166:  ddd0           calr    %05c8
+0168:  4c01 278c 3232 cpb     %278c,#%32             ; [278c]=0x3100 [1.INIT  ]
+016e:  ee25           jr      ne/nz,%01ba
+0170:  4c01 2798 3131 cpb     %2798,#%31             ; [2798]=0x3000 [0.......]
+0176:  ee21           jr      ne/nz,%01ba
+0178:  2107 2898      ld      r7,#%2898              ; 2898 =0x636f [co..co..]
+017c:  dbde           calr    %09c2
+017e:  a125           ld      r5,r2
+0180:  1904 0006      mult    rr4,#%0006
+0184:  6154 2ea6      ld      r4,%2ea6(r5)
+0188:  8d42           neg     r4
+018a:  6ff4 0006      ld      %0006(r15),r4
+018e:  a147           ld      r7,r4
+0190:  bd6f           ldk     r6,15
+0192:  5f00 2622      call    %2622
+0196:  bd71           ldk     r7,1
+0198:  5f00 200a      call    %200a
+019c:  2107 289c      ld      r7,#%289c              ; 289c =0x636f [co..no m]
+01a0:  dbf0           calr    %09c2
+01a2:  a125           ld      r5,r2
+01a4:  1904 0006      mult    rr4,#%0006
+01a8:  6154 2ea6      ld      r4,%2ea6(r5)
+01ac:  8d42           neg     r4
+01ae:  6ff4 0006      ld      %0006(r15),r4
+01b2:  a147           ld      r7,r4
+01b4:  bd69           ldk     r6,9
+01b6:  5f00 2622      call    %2622
+01ba:  600a 278c      ldb     rl2,%278c              ; [278c]=0x3100 [1.INIT  ]
+01be:  b120           extsb   r2
+01c0:  0302 0030      sub     r2,#%0030
+01c4:  8122           add     r2,r2
+01c6:  0102 279a      add     r2,#%279a
+01ca:  600a 278c      ldb     rl2,%278c              ; [278c]=0x3100 [1.INIT  ]
+01ce:  b120           extsb   r2
+01d0:  0302 0030      sub     r2,#%0030
+01d4:  8122           add     r2,r2
+01d6:  6920 279a      inc     %279a(r2),1
+01da:  deef           calr    %03fe
+01dc:  e8bd           jr      %0158
+01de:  abf9           dec     r15,10
+01e0:  2ff7           ld      @r15,r7
+01e2:  a176           ld      r6,r7
+01e4:  5f00 24fe      call    %24fe
+01e8:  a920           inc     r2,1
+01ea:  6ff2 0002      ld      %0002(r15),r2
+01ee:  4102 27d2      add     r2,%27d2               ; [27d2]=0x0000 [..'.'.(.]
+01f2:  4b02 27d0      cp      r2,%27d0               ; [27d0]=0x0100 [....'.'.]
+01f6:  e327           jr      ule,%0246
+01f8:  6102 27d0      ld      r2,%27d0               ; [27d0]=0x0100 [....'.'.]
+01fc:  0102 0100      add     r2,#%0100
+0200:  6f02 27d0      ld      %27d0,r2               ; [27d0]=0x0100 [....'.'.]
+0204:  6102 3100      ld      r2,%3100
+0208:  6ff2 0006      ld      %0006(r15),r2
+020c:  6107 3100      ld      r7,%3100
+0210:  6106 27d0      ld      r6,%27d0               ; [27d0]=0x0100 [....'.'.]
+0214:  5f00 22fc      call    %22fc
+0218:  6f02 3100      ld      %3100,r2
+021c:  8d24           test    r2
+021e:  ee13           jr      ne/nz,%0246
+0220:  61f2 0006      ld      r2,%0006(r15)
+0224:  6f02 3100      ld      %3100,r2
+0228:  6103 27d0      ld      r3,%27d0               ; [27d0]=0x0100 [....'.'.]
+022c:  0303 0100      sub     r3,#%0100
+0230:  6f03 27d0      ld      %27d0,r3               ; [27d0]=0x0100 [....'.'.]
+0234:  8377           sub     r7,r7
+0236:  2106 28a0      ld      r6,#%28a0              ; 28a0 "no memory, malloc failed"
+023a:  2105 28ba      ld      r5,#%28ba              ; 28ba =0x0000 [..exec .]
+023e:  db2e           calr    %0be4
+0240:  2102 ffff      ld      r2,#%ffff
+0244:  e812           jr      %026a
+0246:  6107 3100      ld      r7,%3100
+024a:  4107 27d2      add     r7,%27d2               ; [27d2]=0x0000 [..'.'.(.]
+024e:  61f6 0000      ld      r6,%0000(r15)
+0252:  5f00 24d8      call    %24d8
+0256:  6102 27d2      ld      r2,%27d2               ; [27d2]=0x0000 [..'.'.(.]
+025a:  6ff2 0004      ld      %0004(r15),r2
+025e:  6103 27d2      ld      r3,%27d2               ; [27d2]=0x0000 [..'.'.(.]
+0262:  41f3 0002      add     r3,%0002(r15)
+0266:  6f03 27d2      ld      %27d2,r3               ; [27d2]=0x0000 [..'.'.(.]
+026a:  a9f9           inc     r15,10
+026c:  9e08           ret
+026e:  abf1           dec     r15,2
+0270:  4df8 0000      clr     %0000(r15)
+0274:  e844           jr      %02fe
+0276:  61f5 0000      ld      r5,%0000(r15)
+027a:  1904 0006      mult    rr4,#%0006
+027e:  4d54 2ea6      test    %2ea6(r5)
+0282:  ee3b           jr      ne/nz,%02fa
+0284:  61f5 0000      ld      r5,%0000(r15)
+0288:  1904 0006      mult    rr4,#%0006
+028c:  4d51 2eaa ffff cp      %2eaa(r5),#%ffff
+0292:  e633           jr      eq/z,%02fa
+0294:  61f3 0000      ld      r3,%0000(r15)
+0298:  1902 0006      mult    rr2,#%0006
+029c:  6132 2eaa      ld      r2,%2eaa(r3)
+02a0:  6103 3100      ld      r3,%3100
+02a4:  8123           add     r3,r2
+02a6:  0c31 3a3a      cpb     @r3,#%3a
+02aa:  ee18           jr      ne/nz,%02dc
+02ac:  61f5 0000      ld      r5,%0000(r15)
+02b0:  1904 0006      mult    rr4,#%0006
+02b4:  6107 3100      ld      r7,%3100
+02b8:  4157 2eaa      add     r7,%2eaa(r5)
+02bc:  a971           inc     r7,2
+02be:  dfda           calr    %030c
+02c0:  61f5 0000      ld      r5,%0000(r15)
+02c4:  1904 0006      mult    rr4,#%0006
+02c8:  6f52 2ea6      ld      %2ea6(r5),r2
+02cc:  61f3 0000      ld      r3,%0000(r15)
+02d0:  1902 0006      mult    rr2,#%0006
+02d4:  4d35 2eaa ffff ld      %2eaa(r3),#%ffff
+02da:  e80f           jr      %02fa
+02dc:  61f3 0000      ld      r3,%0000(r15)
+02e0:  1902 0006      mult    rr2,#%0006
+02e4:  6107 3100      ld      r7,%3100
+02e8:  4137 2eaa      add     r7,%2eaa(r3)
+02ec:  dff1           calr    %030c
+02ee:  61f5 0000      ld      r5,%0000(r15)
+02f2:  1904 0006      mult    rr4,#%0006
+02f6:  6f52 2ea6      ld      %2ea6(r5),r2
+02fa:  69f0 0000      inc     %0000(r15),1
+02fe:  61f2 0000      ld      r2,%0000(r15)
+0302:  4b02 27ce      cp      r2,%27ce               ; [27ce]=0x0000 [......'.]
+0306:  e1b7           jr      lt,%0276
+0308:  a9f1           inc     r15,2
+030a:  9e08           ret
+030c:  030f 0108      sub     r15,#%0108
+0310:  2ff7           ld      @r15,r7
+0312:  76f7 0006      lda     pr7,%0006(r15)
+0316:  2106 28bc      ld      r6,#%28bc              ; 28bc "exec "
+031a:  5f00 24d8      call    %24d8
+031e:  76f7 0006      lda     pr7,%0006(r15)
+0322:  61f6 0000      ld      r6,%0000(r15)
+0326:  5f00 247a      call    %247a
+032a:  5f00 25f6      call    %25f6
+032e:  6ff2 0002      ld      %0002(r15),r2
+0332:  0b02 ffff      cp      r2,#%ffff
+0336:  e603           jr      eq/z,%033e
+0338:  8d24           test    r2
+033a:  e609           jr      eq/z,%034e
+033c:  e833           jr      %03a4
+033e:  8377           sub     r7,r7
+0340:  2106 28c2      ld      r6,#%28c2              ; 28c2 "fork failed for:"
+0344:  61f5 0000      ld      r5,%0000(r15)
+0348:  dbb3           calr    %0be4
+034a:  8322           sub     r2,r2
+034c:  e82d           jr      %03a8
+034e:  4df8 0004      clr     %0004(r15)
+0352:  61f7 0004      ld      r7,%0004(r15)
+0356:  5f00 25ac      call    %25ac
+035a:  69f0 0004      inc     %0004(r15),1
+035e:  4df1 0004 000a cp      %0004(r15),#%000a
+0364:  e2f6           jr      le,%0352
+0366:  2107 28d4      ld      r7,#%28d4              ; 28d4 =0x2f00 [/./bin/s]
+036a:  8366           sub     r6,r6
+036c:  5f00 2644      call    %2644
+0370:  8377           sub     r7,r7
+0372:  5f00 25c8      call    %25c8
+0376:  8377           sub     r7,r7
+0378:  5f00 25c8      call    %25c8
+037c:  dbf1           calr    %0b9c
+037e:  5f00 2668      call    %2668
+0382:  76f4 0006      lda     pr4,%0006(r15)
+0386:  2106 28de      ld      r6,#%28de              ; 28de =0x7368 [sh..-c..]
+038a:  2105 28e2      ld      r5,#%28e2              ; 28e2 =0x2d63 [-c..exec]
+038e:  2107 28d6      ld      r7,#%28d6              ; 28d6 "/bin/sh"
+0392:  8333           sub     r3,r3
+0394:  5f00 25d6      call    %25d6
+0398:  bd71           ldk     r7,1
+039a:  2106 28e6      ld      r6,#%28e6              ; 28e6 "exec failed for:"
+039e:  61f5 0000      ld      r5,%0000(r15)
+03a2:  dbe0           calr    %0be4
+03a4:  61f2 0002      ld      r2,%0002(r15)
+03a8:  010f 0108      add     r15,#%0108
+03ac:  9e08           ret
+03ae:  abf7           dec     r15,8
+03b0:  e80c           jr      %03ca
+03b2:  4d04 27ca      test    %27ca                  ; [27ca]=0x0001 [........]
+03b6:  ee12           jr      ne/nz,%03dc
+03b8:  4d04 27cc      test    %27cc                  ; [27cc]=0x0000 [........]
+03bc:  ee0f           jr      ne/nz,%03dc
+03be:  bd72           ldk     r7,2
+03c0:  2106 28f8      ld      r6,#%28f8              ; 28f8 "no processes running"
+03c4:  2105 290e      ld      r5,#%290e              ; 290e =0x0000 [..exec .]
+03c8:  dbf3           calr    %0be4
+03ca:  76f7 0000      lda     pr7,%0000(r15)
+03ce:  5f00 2702      call    %2702
+03d2:  6ff2 0002      ld      %0002(r15),r2
+03d6:  0b02 ffff      cp      r2,#%ffff
+03da:  e6eb           jr      eq/z,%03b2
+03dc:  61f7 0002      ld      r7,%0002(r15)
+03e0:  dd2c           calr    %098a
+03e2:  6ff2 0004      ld      %0004(r15),r2
+03e6:  0b02 ffff      cp      r2,#%ffff
+03ea:  e605           jr      eq/z,%03f6
+03ec:  a123           ld      r3,r2
+03ee:  1902 0006      mult    rr2,#%0006
+03f2:  4d38 2ea6      clr     %2ea6(r3)
+03f6:  61f2 0002      ld      r2,%0002(r15)
+03fa:  a9f7           inc     r15,8
+03fc:  9e08           ret
+03fe:  030f 0070      sub     r15,#%0070
+0402:  4cf5 006d 2020 ldb     %006d(r15),#%20
+0408:  4cf8 006f      clrb    %006f(r15)
+040c:  76f7 0000      lda     pr7,%0000(r15)
+0410:  2106 2910      ld      r6,#%2910              ; 2910 "exec "
+0414:  5f00 24d8      call    %24d8
+0418:  76f7 0000      lda     pr7,%0000(r15)
+041c:  2106 2916      ld      r6,#%2916              ; 2916 "/etc/rc "
+0420:  5f00 247a      call    %247a
+0424:  76f7 0000      lda     pr7,%0000(r15)
+0428:  2106 2920      ld      r6,#%2920              ; 2920 " < /dev/console > /dev/c"
+042c:  5f00 247a      call    %247a
+0430:  76f7 0000      lda     pr7,%0000(r15)
+0434:  5f00 24fe      call    %24fe
+0438:  6ff2 006a      ld      %006a(r15),r2
+043c:  76f3 0000      lda     pr3,%0000(r15)
+0440:  8123           add     r3,r2
+0442:  60fc 006d      ldb     rl4,%006d(r15)
+0446:  2e3c           ldb     @r3,rl4
+0448:  69f0 006a      inc     %006a(r15),1
+044c:  61f2 006a      ld      r2,%006a(r15)
+0450:  76f3 0000      lda     pr3,%0000(r15)
+0454:  8123           add     r3,r2
+0456:  600c 278c      ldb     rl4,%278c              ; [278c]=0x3100 [1.INIT  ]
+045a:  2e3c           ldb     @r3,rl4
+045c:  69f0 006a      inc     %006a(r15),1
+0460:  4d01 27cc 0001 cp      %27cc,#%0001           ; [27cc]=0x0000 [........]
+0466:  ee09           jr      ne/nz,%047a
+0468:  61f2 006a      ld      r2,%006a(r15)
+046c:  76f3 0000      lda     pr3,%0000(r15)
+0470:  8123           add     r3,r2
+0472:  0c35 7878      ldb     @r3,#%78
+0476:  69f0 006a      inc     %006a(r15),1
+047a:  61f2 006a      ld      r2,%006a(r15)
+047e:  76f3 0000      lda     pr3,%0000(r15)
+0482:  8123           add     r3,r2
+0484:  60fc 006d      ldb     rl4,%006d(r15)
+0488:  2e3c           ldb     @r3,rl4
+048a:  69f0 006a      inc     %006a(r15),1
+048e:  61f2 006a      ld      r2,%006a(r15)
+0492:  76f3 0000      lda     pr3,%0000(r15)
+0496:  8123           add     r3,r2
+0498:  60fc 006f      ldb     rl4,%006f(r15)
+049c:  2e3c           ldb     @r3,rl4
+049e:  69f0 006a      inc     %006a(r15),1
+04a2:  600b 278c      ldb     rl3,%278c              ; [278c]=0x3100 [1.INIT  ]
+04a6:  b130           extsb   r3
+04a8:  0303 0030      sub     r3,#%0030
+04ac:  8133           add     r3,r3
+04ae:  6137 279a      ld      r7,%279a(r3)
+04b2:  ab70           dec     r7,1
+04b4:  76f6 0064      lda     pr6,%0064(r15)
+04b8:  dbe1           calr    %0cf8
+04ba:  76f7 0000      lda     pr7,%0000(r15)
+04be:  76f6 0064      lda     pr6,%0064(r15)
+04c2:  5f00 247a      call    %247a
+04c6:  76f7 0000      lda     pr7,%0000(r15)
+04ca:  5f00 24fe      call    %24fe
+04ce:  6ff2 006a      ld      %006a(r15),r2
+04d2:  76f3 0000      lda     pr3,%0000(r15)
+04d6:  8123           add     r3,r2
+04d8:  60fc 006d      ldb     rl4,%006d(r15)
+04dc:  2e3c           ldb     @r3,rl4
+04de:  69f0 006a      inc     %006a(r15),1
+04e2:  61f2 006a      ld      r2,%006a(r15)
+04e6:  76f3 0000      lda     pr3,%0000(r15)
+04ea:  8123           add     r3,r2
+04ec:  600c 2798      ldb     rl4,%2798              ; [2798]=0x3000 [0.......]
+04f0:  2e3c           ldb     @r3,rl4
+04f2:  69f0 006a      inc     %006a(r15),1
+04f6:  61f2 006a      ld      r2,%006a(r15)
+04fa:  76f3 0000      lda     pr3,%0000(r15)
+04fe:  8123           add     r3,r2
+0500:  60fc 006f      ldb     rl4,%006f(r15)
+0504:  2e3c           ldb     @r3,rl4
+0506:  69f0 006a      inc     %006a(r15),1
+050a:  e809           jr      %051e
+050c:  8377           sub     r7,r7
+050e:  2106 2944      ld      r6,#%2944              ; 2944 "fork failed for: RC"
+0512:  2105 2958      ld      r5,#%2958              ; 2958 =0x0000 [.././bin]
+0516:  dc9a           calr    %0be4
+0518:  bd72           ldk     r7,2
+051a:  5f00 200a      call    %200a
+051e:  5f00 25f6      call    %25f6
+0522:  6f02 30fe      ld      %30fe,r2
+0526:  0b02 ffff      cp      r2,#%ffff
+052a:  e6f0           jr      eq/z,%050c
+052c:  8d24           test    r2
+052e:  ee2b           jr      ne/nz,%0586
+0530:  4df8 006a      clr     %006a(r15)
+0534:  61f7 006a      ld      r7,%006a(r15)
+0538:  5f00 25ac      call    %25ac
+053c:  69f0 006a      inc     %006a(r15),1
+0540:  4df1 006a 000a cp      %006a(r15),#%000a
+0546:  e2f6           jr      le,%0534
+0548:  2107 295a      ld      r7,#%295a              ; 295a =0x2f00 [/./bin/s]
+054c:  8366           sub     r6,r6
+054e:  5f00 2644      call    %2644
+0552:  8377           sub     r7,r7
+0554:  5f00 25c8      call    %25c8
+0558:  8377           sub     r7,r7
+055a:  5f00 25c8      call    %25c8
+055e:  dce2           calr    %0b9c
+0560:  5f00 2668      call    %2668
+0564:  76f4 0000      lda     pr4,%0000(r15)
+0568:  2106 2964      ld      r6,#%2964              ; 2964 =0x5243 [RC..-c..]
+056c:  2105 2968      ld      r5,#%2968              ; 2968 =0x2d63 [-c..exec]
+0570:  2107 295c      ld      r7,#%295c              ; 295c "/bin/sh"
+0574:  8333           sub     r3,r3
+0576:  5f00 25d6      call    %25d6
+057a:  bd71           ldk     r7,1
+057c:  2106 296c      ld      r6,#%296c              ; 296c "exec failed for: RC"
+0580:  2105 2980      ld      r5,#%2980              ; 2980 =0x0000 [../etc/i]
+0584:  dcd1           calr    %0be4
+0586:  dd27           calr    %0b3a
+0588:  4d04 27cc      test    %27cc                  ; [27cc]=0x0000 [........]
+058c:  ee09           jr      ne/nz,%05a0
+058e:  bd7e           ldk     r7,14
+0590:  2106 0ac4      ld      r6,#%0ac4              ; ac4 =0xabf5 [..v...!.]
+0594:  5f00 2678      call    %2678
+0598:  2107 0e10      ld      r7,#%0e10              ; e10 =0x1d6a [.j!.*...]
+059c:  5f00 255e      call    %255e
+05a0:  d0fa           calr    %03ae
+05a2:  4b02 30fe      cp      r2,%30fe
+05a6:  e603           jr      eq/z,%05ae
+05a8:  4d04 27ca      test    %27ca                  ; [27ca]=0x0001 [........]
+05ac:  e6f9           jr      eq/z,%05a0
+05ae:  4d04 27cc      test    %27cc                  ; [27cc]=0x0000 [........]
+05b2:  ee07           jr      ne/nz,%05c2
+05b4:  8377           sub     r7,r7
+05b6:  5f00 255e      call    %255e
+05ba:  bd7e           ldk     r7,14
+05bc:  bd61           ldk     r6,1
+05be:  5f00 2678      call    %2678
+05c2:  010f 0070      add     r15,#%0070
+05c6:  9e08           ret
+05c8:  030f 021a      sub     r15,#%021a
+05cc:  4df8 020e      clr     %020e(r15)
+05d0:  e809           jr      %05e4
+05d2:  61f5 020e      ld      r5,%020e(r15)
+05d6:  1904 0006      mult    rr4,#%0006
+05da:  4d55 2eaa ffff ld      %2eaa(r5),#%ffff
+05e0:  69f0 020e      inc     %020e(r15),1
+05e4:  61f2 020e      ld      r2,%020e(r15)
+05e8:  4b02 27ce      cp      r2,%27ce               ; [27ce]=0x0000 [......'.]
+05ec:  e1f2           jr      lt,%05d2
+05ee:  4d08 27d2      clr     %27d2                  ; [27d2]=0x0000 [..'.'.(.]
+05f2:  e806           jr      %0600
+05f4:  bd72           ldk     r7,2
+05f6:  2106 2992      ld      r6,#%2992              ; 2992 "inittab open failed"
+05fa:  2105 29a6      ld      r5,#%29a6              ; 29a6 =0x0000 [..RC ove]
+05fe:  dd0e           calr    %0be4
+0600:  2107 2982      ld      r7,#%2982              ; 2982 "/etc/inittab"
+0604:  2106 2990      ld      r6,#%2990              ; 2990 =0x7200 [r.initta]
+0608:  5f00 1384      call    %1384
+060c:  6ff2 0000      ld      %0000(r15),r2
+0610:  8d24           test    r2
+0612:  e6f0           jr      eq/z,%05f4
+0614:  4d08 27ca      clr     %27ca                  ; [27ca]=0x0001 [........]
+0618:  61f2 0000      ld      r2,%0000(r15)
+061c:  6b20 0002      dec     %0002(r2),1
+0620:  6123 0002      ld      r3,%0002(r2)
+0624:  0b03 0000      cp      r3,#%0000
+0628:  5e09 0962      jp      ge,%0962
+062c:  61f7 0000      ld      r7,%0000(r15)
+0630:  5f00 1ada      call    %1ada
+0634:  5e08 0970      jp      %0970
+0638:  4df1 0212 000a cp      %0212(r15),#%000a
+063e:  e6ec           jr      eq/z,%0618
+0640:  600a 278c      ldb     rl2,%278c              ; [278c]=0x3100 [1.INIT  ]
+0644:  b120           extsb   r2
+0646:  4bf2 0212      cp      r2,%0212(r15)
+064a:  ee18           jr      ne/nz,%067c
+064c:  61f2 0000      ld      r2,%0000(r15)
+0650:  6b20 0002      dec     %0002(r2),1
+0654:  6123 0002      ld      r3,%0002(r2)
+0658:  0b03 0000      cp      r3,#%0000
+065c:  e905           jr      ge,%0668
+065e:  61f7 0000      ld      r7,%0000(r15)
+0662:  5f00 1ada      call    %1ada
+0666:  e807           jr      %0676
+0668:  61f2 0000      ld      r2,%0000(r15)
+066c:  2920           inc     @r2,1
+066e:  2123           ld      r3,@r2
+0670:  ab30           dec     r3,1
+0672:  203a           ldb     rl2,@r3
+0674:  8222           subb    rh2,rh2
+0676:  0b02 003a      cp      r2,#%003a
+067a:  e623           jr      eq/z,%06c2
+067c:  61f2 0000      ld      r2,%0000(r15)
+0680:  6b20 0002      dec     %0002(r2),1
+0684:  6123 0002      ld      r3,%0002(r2)
+0688:  0b03 0000      cp      r3,#%0000
+068c:  e905           jr      ge,%0698
+068e:  61f7 0000      ld      r7,%0000(r15)
+0692:  5f00 1ada      call    %1ada
+0696:  e807           jr      %06a6
+0698:  61f2 0000      ld      r2,%0000(r15)
+069c:  2920           inc     @r2,1
+069e:  2123           ld      r3,@r2
+06a0:  ab30           dec     r3,1
+06a2:  203a           ldb     rl2,@r3
+06a4:  8222           subb    rh2,rh2
+06a6:  6ff2 0214      ld      %0214(r15),r2
+06aa:  0b02 ffff      cp      r2,#%ffff
+06ae:  e603           jr      eq/z,%06b6
+06b0:  0b02 000a      cp      r2,#%000a
+06b4:  eee3           jr      ne/nz,%067c
+06b6:  4df1 0214 ffff cp      %0214(r15),#%ffff
+06bc:  eead           jr      ne/nz,%0618
+06be:  5e08 097c      jp      %097c
+06c2:  61f2 0000      ld      r2,%0000(r15)
+06c6:  6b20 0002      dec     %0002(r2),1
+06ca:  6123 0002      ld      r3,%0002(r2)
+06ce:  0b03 0000      cp      r3,#%0000
+06d2:  e905           jr      ge,%06de
+06d4:  61f7 0000      ld      r7,%0000(r15)
+06d8:  5f00 1ada      call    %1ada
+06dc:  e807           jr      %06ec
+06de:  61f2 0000      ld      r2,%0000(r15)
+06e2:  2920           inc     @r2,1
+06e4:  2123           ld      r3,@r2
+06e6:  ab30           dec     r3,1
+06e8:  203a           ldb     rl2,@r3
+06ea:  8222           subb    rh2,rh2
+06ec:  6efa 0218      ldb     %0218(r15),rl2
+06f0:  0a0a ffff      cpb     rl2,#%ff
+06f4:  5e06 097c      jp      eq/z,%097c
+06f8:  0a0a 0a0a      cpb     rl2,#%0a
+06fc:  e68d           jr      eq/z,%0618
+06fe:  61f2 0000      ld      r2,%0000(r15)
+0702:  6b20 0002      dec     %0002(r2),1
+0706:  6123 0002      ld      r3,%0002(r2)
+070a:  0b03 0000      cp      r3,#%0000
+070e:  e905           jr      ge,%071a
+0710:  61f7 0000      ld      r7,%0000(r15)
+0714:  5f00 1ada      call    %1ada
+0718:  e807           jr      %0728
+071a:  61f2 0000      ld      r2,%0000(r15)
+071e:  2920           inc     @r2,1
+0720:  2123           ld      r3,@r2
+0722:  ab30           dec     r3,1
+0724:  203a           ldb     rl2,@r3
+0726:  8222           subb    rh2,rh2
+0728:  6efa 0219      ldb     %0219(r15),rl2
+072c:  0a0a ffff      cpb     rl2,#%ff
+0730:  5e06 097c      jp      eq/z,%097c
+0734:  0a0a 0a0a      cpb     rl2,#%0a
+0738:  5e06 0618      jp      eq/z,%0618
+073c:  61f2 0000      ld      r2,%0000(r15)
+0740:  6b20 0002      dec     %0002(r2),1
+0744:  6123 0002      ld      r3,%0002(r2)
+0748:  0b03 0000      cp      r3,#%0000
+074c:  e905           jr      ge,%0758
+074e:  61f7 0000      ld      r7,%0000(r15)
+0752:  5f00 1ada      call    %1ada
+0756:  e807           jr      %0766
+0758:  61f2 0000      ld      r2,%0000(r15)
+075c:  2920           inc     @r2,1
+075e:  2123           ld      r3,@r2
+0760:  ab30           dec     r3,1
+0762:  203a           ldb     rl2,@r3
+0764:  8222           subb    rh2,rh2
+0766:  0b02 003a      cp      r2,#%003a
+076a:  e624           jr      eq/z,%07b4
+076c:  61f2 0000      ld      r2,%0000(r15)
+0770:  6b20 0002      dec     %0002(r2),1
+0774:  6123 0002      ld      r3,%0002(r2)
+0778:  0b03 0000      cp      r3,#%0000
+077c:  e905           jr      ge,%0788
+077e:  61f7 0000      ld      r7,%0000(r15)
+0782:  5f00 1ada      call    %1ada
+0786:  e807           jr      %0796
+0788:  61f2 0000      ld      r2,%0000(r15)
+078c:  2920           inc     @r2,1
+078e:  2123           ld      r3,@r2
+0790:  ab30           dec     r3,1
+0792:  203a           ldb     rl2,@r3
+0794:  8222           subb    rh2,rh2
+0796:  6ff2 0214      ld      %0214(r15),r2
+079a:  0b02 ffff      cp      r2,#%ffff
+079e:  e603           jr      eq/z,%07a6
+07a0:  0b02 000a      cp      r2,#%000a
+07a4:  eee3           jr      ne/nz,%076c
+07a6:  4df1 0214 ffff cp      %0214(r15),#%ffff
+07ac:  5e0e 0618      jp      ne/nz,%0618
+07b0:  5e08 097c      jp      %097c
+07b4:  76f2 0204      lda     pr2,%0204(r15)
+07b8:  6ff2 020a      ld      %020a(r15),r2
+07bc:  e80b           jr      %07d4
+07be:  61f3 020a      ld      r3,%020a(r15)
+07c2:  0c31 ffff      cpb     @r3,#%ff
+07c6:  e621           jr      eq/z,%080a
+07c8:  a132           ld      r2,r3
+07ca:  0c21 0a0a      cpb     @r2,#%0a
+07ce:  e61d           jr      eq/z,%080a
+07d0:  69f0 020a      inc     %020a(r15),1
+07d4:  61f2 0000      ld      r2,%0000(r15)
+07d8:  6b20 0002      dec     %0002(r2),1
+07dc:  6123 0002      ld      r3,%0002(r2)
+07e0:  0b03 0000      cp      r3,#%0000
+07e4:  e905           jr      ge,%07f0
+07e6:  61f7 0000      ld      r7,%0000(r15)
+07ea:  5f00 1ada      call    %1ada
+07ee:  e807           jr      %07fe
+07f0:  61f2 0000      ld      r2,%0000(r15)
+07f4:  2920           inc     @r2,1
+07f6:  2123           ld      r3,@r2
+07f8:  ab30           dec     r3,1
+07fa:  203a           ldb     rl2,@r3
+07fc:  8222           subb    rh2,rh2
+07fe:  61f3 020a      ld      r3,%020a(r15)
+0802:  2e3a           ldb     @r3,rl2
+0804:  0a0a 3a3a      cpb     rl2,#%3a
+0808:  eeda           jr      ne/nz,%07be
+080a:  61f2 020a      ld      r2,%020a(r15)
+080e:  0c21 ffff      cpb     @r2,#%ff
+0812:  5e06 097c      jp      eq/z,%097c
+0816:  0c21 0a0a      cpb     @r2,#%0a
+081a:  5e06 0618      jp      eq/z,%0618
+081e:  0c28           clrb    @r2
+0820:  76f3 0104      lda     pr3,%0104(r15)
+0824:  6ff3 020a      ld      %020a(r15),r3
+0828:  e807           jr      %0838
+082a:  61f3 020a      ld      r3,%020a(r15)
+082e:  0c31 0a0a      cpb     @r3,#%0a
+0832:  e61d           jr      eq/z,%086e
+0834:  69f0 020a      inc     %020a(r15),1
+0838:  61f2 0000      ld      r2,%0000(r15)
+083c:  6b20 0002      dec     %0002(r2),1
+0840:  6123 0002      ld      r3,%0002(r2)
+0844:  0b03 0000      cp      r3,#%0000
+0848:  e905           jr      ge,%0854
+084a:  61f7 0000      ld      r7,%0000(r15)
+084e:  5f00 1ada      call    %1ada
+0852:  e807           jr      %0862
+0854:  61f2 0000      ld      r2,%0000(r15)
+0858:  2920           inc     @r2,1
+085a:  2123           ld      r3,@r2
+085c:  ab30           dec     r3,1
+085e:  203a           ldb     rl2,@r3
+0860:  8222           subb    rh2,rh2
+0862:  61f3 020a      ld      r3,%020a(r15)
+0866:  2e3a           ldb     @r3,rl2
+0868:  0a0a ffff      cpb     rl2,#%ff
+086c:  eede           jr      ne/nz,%082a
+086e:  61f2 020a      ld      r2,%020a(r15)
+0872:  0c28           clrb    @r2
+0874:  76f7 0218      lda     pr7,%0218(r15)
+0878:  df5c           calr    %09c2
+087a:  6ff2 020c      ld      %020c(r15),r2
+087e:  76f7 0204      lda     pr7,%0204(r15)
+0882:  2106 006f      ld      r6,#%006f              ; 6f =0x725f [r_...a..]
+0886:  5f00 2516      call    %2516
+088a:  8d24           test    r2
+088c:  ee25           jr      ne/nz,%08d8
+088e:  4cf4 0104      testb   %0104(r15)
+0892:  e622           jr      eq/z,%08d8
+0894:  76f7 0204      lda     pr7,%0204(r15)
+0898:  2106 0063      ld      r6,#%0063              ; 63 =0x0728 [.(*!.,Z_]
+089c:  5f00 2516      call    %2516
+08a0:  8d24           test    r2
+08a2:  e603           jr      eq/z,%08aa
+08a4:  76f7 0104      lda     pr7,%0104(r15)
+08a8:  e810           jr      %08ca
+08aa:  4cf5 0002 3a3a ldb     %0002(r15),#%3a
+08b0:  4cf5 0003 2020 ldb     %0003(r15),#%20
+08b6:  4cf8 0004      clrb    %0004(r15)
+08ba:  76f7 0002      lda     pr7,%0002(r15)
+08be:  76f6 0104      lda     pr6,%0104(r15)
+08c2:  5f00 247a      call    %247a
+08c6:  76f7 0002      lda     pr7,%0002(r15)
+08ca:  d377           calr    %01de
+08cc:  61f5 020c      ld      r5,%020c(r15)
+08d0:  1904 0006      mult    rr4,#%0006
+08d4:  6f52 2eaa      ld      %2eaa(r5),r2
+08d8:  4df8 0210      clr     %0210(r15)
+08dc:  76f2 0204      lda     pr2,%0204(r15)
+08e0:  6ff2 0216      ld      %0216(r15),r2
+08e4:  e81a           jr      %091a
+08e6:  61f3 020c      ld      r3,%020c(r15)
+08ea:  1902 0006      mult    rr2,#%0006
+08ee:  4d31 2ea6 0000 cp      %2ea6(r3),#%0000
+08f4:  e210           jr      le,%0916
+08f6:  4df4 0210      test    %0210(r15)
+08fa:  e603           jr      eq/z,%0902
+08fc:  bd71           ldk     r7,1
+08fe:  5f00 200a      call    %200a
+0902:  61f3 020c      ld      r3,%020c(r15)
+0906:  1902 0006      mult    rr2,#%0006
+090a:  6137 2ea6      ld      r7,%2ea6(r3)
+090e:  8d72           neg     r7
+0910:  bd69           ldk     r6,9
+0912:  5f00 2622      call    %2622
+0916:  69f0 0216      inc     %0216(r15),1
+091a:  61f2 0216      ld      r2,%0216(r15)
+091e:  0c24           testb   @r2
+0920:  5e06 0618      jp      eq/z,%0618
+0924:  202c           ldb     rl4,@r2
+0926:  b140           extsb   r4
+0928:  a143           ld      r3,r4
+092a:  0b04 006b      cp      r4,#%006b
+092e:  e6db           jr      eq/z,%08e6
+0930:  0b04 0074      cp      r4,#%0074
+0934:  eef0           jr      ne/nz,%0916
+0936:  61f5 020c      ld      r5,%020c(r15)
+093a:  1904 0006      mult    rr4,#%0006
+093e:  4d51 2ea6 0000 cp      %2ea6(r5),#%0000
+0944:  e2e8           jr      le,%0916
+0946:  61f5 020c      ld      r5,%020c(r15)
+094a:  1904 0006      mult    rr4,#%0006
+094e:  6157 2ea6      ld      r7,%2ea6(r5)
+0952:  8d72           neg     r7
+0954:  bd6f           ldk     r6,15
+0956:  5f00 2622      call    %2622
+095a:  4df5 0210 0001 ld      %0210(r15),#%0001
+0960:  e8da           jr      %0916
+0962:  61f2 0000      ld      r2,%0000(r15)
+0966:  2920           inc     @r2,1
+0968:  2123           ld      r3,@r2
+096a:  ab30           dec     r3,1
+096c:  203a           ldb     rl2,@r3
+096e:  8222           subb    rh2,rh2
+0970:  6ff2 0212      ld      %0212(r15),r2
+0974:  0b02 ffff      cp      r2,#%ffff
+0978:  5e0e 0638      jp      ne/nz,%0638
+097c:  61f7 0000      ld      r7,%0000(r15)
+0980:  5f00 1d6a      call    %1d6a
+0984:  010f 021a      add     r15,#%021a
+0988:  9e08           ret
+098a:  abf5           dec     r15,6
+098c:  2ff7           ld      @r15,r7
+098e:  4df8 0002      clr     %0002(r15)
+0992:  e80e           jr      %09b0
+0994:  61f5 0002      ld      r5,%0002(r15)
+0998:  1904 0006      mult    rr4,#%0006
+099c:  6153 2ea6      ld      r3,%2ea6(r5)
+09a0:  4bf3 0000      cp      r3,%0000(r15)
+09a4:  ee03           jr      ne/nz,%09ac
+09a6:  61f2 0002      ld      r2,%0002(r15)
+09aa:  e809           jr      %09be
+09ac:  69f0 0002      inc     %0002(r15),1
+09b0:  61f2 0002      ld      r2,%0002(r15)
+09b4:  4b02 27ce      cp      r2,%27ce               ; [27ce]=0x0000 [......'.]
+09b8:  e1ed           jr      lt,%0994
+09ba:  2102 ffff      ld      r2,#%ffff
+09be:  a9f5           inc     r15,6
+09c0:  9e08           ret
+09c2:  abf5           dec     r15,6
+09c4:  2ff7           ld      @r15,r7
+09c6:  4df8 0002      clr     %0002(r15)
+09ca:  e81c           jr      %0a04
+09cc:  61f5 0002      ld      r5,%0002(r15)
+09d0:  1904 0006      mult    rr4,#%0006
+09d4:  605b 2ea8      ldb     rl3,%2ea8(r5)
+09d8:  61f4 0000      ld      r4,%0000(r15)
+09dc:  204d           ldb     rl5,@r4
+09de:  8adb           cpb     rl3,rl5
+09e0:  ee0f           jr      ne/nz,%0a00
+09e2:  61f7 0002      ld      r7,%0002(r15)
+09e6:  1906 0006      mult    rr6,#%0006
+09ea:  0107 2ea8      add     r7,#%2ea8
+09ee:  607d 0001      ldb     rl5,%0001(r7)
+09f2:  604e 0001      ldb     rl6,%0001(r4)
+09f6:  8aed           cpb     rl5,rl6
+09f8:  ee03           jr      ne/nz,%0a00
+09fa:  61f2 0002      ld      r2,%0002(r15)
+09fe:  e82f           jr      %0a5e
+0a00:  69f0 0002      inc     %0002(r15),1
+0a04:  61f2 0002      ld      r2,%0002(r15)
+0a08:  4b02 27ce      cp      r2,%27ce               ; [27ce]=0x0000 [......'.]
+0a0c:  e1df           jr      lt,%09cc
+0a0e:  6103 27ce      ld      r3,%27ce               ; [27ce]=0x0000 [......'.]
+0a12:  1902 0006      mult    rr2,#%0006
+0a16:  61f2 0000      ld      r2,%0000(r15)
+0a1a:  202c           ldb     rl4,@r2
+0a1c:  6e3c 2ea8      ldb     %2ea8(r3),rl4
+0a20:  61f2 0000      ld      r2,%0000(r15)
+0a24:  6107 27ce      ld      r7,%27ce               ; [27ce]=0x0000 [......'.]
+0a28:  1906 0006      mult    rr6,#%0006
+0a2c:  0107 2ea8      add     r7,#%2ea8
+0a30:  602b 0001      ldb     rl3,%0001(r2)
+0a34:  6e7b 0001      ldb     %0001(r7),rl3
+0a38:  6107 27ce      ld      r7,%27ce               ; [27ce]=0x0000 [......'.]
+0a3c:  1906 0006      mult    rr6,#%0006
+0a40:  4d78 2ea6      clr     %2ea6(r7)
+0a44:  6107 27ce      ld      r7,%27ce               ; [27ce]=0x0000 [......'.]
+0a48:  1906 0006      mult    rr6,#%0006
+0a4c:  4d75 2eaa ffff ld      %2eaa(r7),#%ffff
+0a52:  6102 27ce      ld      r2,%27ce               ; [27ce]=0x0000 [......'.]
+0a56:  6ff2 0004      ld      %0004(r15),r2
+0a5a:  6900 27ce      inc     %27ce,1                ; [27ce]=0x0000 [......'.]
+0a5e:  a9f5           inc     r15,6
+0a60:  9e08           ret
+0a62:  abf3           dec     r15,4
+0a64:  2ff7           ld      @r15,r7
+0a66:  dfbb           calr    %0af2
+0a68:  600a 278c      ldb     rl2,%278c              ; [278c]=0x3100 [1.INIT  ]
+0a6c:  6e0a 2798      ldb     %2798,rl2              ; [2798]=0x3000 [0.......]
+0a70:  4d05 27ca 0001 ld      %27ca,#%0001           ; [27ca]=0x0001 [........]
+0a76:  61f3 0000      ld      r3,%0000(r15)
+0a7a:  0b03 0001      cp      r3,#%0001
+0a7e:  e611           jr      eq/z,%0aa2
+0a80:  0b03 0002      cp      r3,#%0002
+0a84:  e61d           jr      eq/z,%0ac0
+0a86:  4df5 0002 0001 ld      %0002(r15),#%0001
+0a8c:  61f2 0002      ld      r2,%0002(r15)
+0a90:  8122           add     r2,r2
+0a92:  6123 27ae      ld      r3,%27ae(r2)
+0a96:  4bf3 0000      cp      r3,%0000(r15)
+0a9a:  e60c           jr      eq/z,%0ab4
+0a9c:  69f0 0002      inc     %0002(r15),1
+0aa0:  e8f5           jr      %0a8c
+0aa2:  bd71           ldk     r7,1
+0aa4:  2106 0a62      ld      r6,#%0a62              ; a62 =0xabf3 [../...`.]
+0aa8:  5f00 2678      call    %2678
+0aac:  4c05 278c 3131 ldb     %278c,#%31             ; [278c]=0x3100 [1.INIT  ]
+0ab2:  e806           jr      %0ac0
+0ab4:  61f2 0002      ld      r2,%0002(r15)
+0ab8:  0102 0030      add     r2,#%0030
+0abc:  6e0a 278c      ldb     %278c,rl2              ; [278c]=0x3100 [1.INIT  ]
+0ac0:  a9f3           inc     r15,4
+0ac2:  9e08           ret
+0ac4:  abf5           dec     r15,6
+0ac6:  76f6 0000      lda     pr6,%0000(r15)
+0aca:  2107 0e10      ld      r7,#%0e10              ; e10 =0x1d6a [.j!.*...]
+0ace:  deec           calr    %0cf8
+0ad0:  76f5 0000      lda     pr5,%0000(r15)
+0ad4:  2106 29a8      ld      r6,#%29a8              ; 29a8 "RC over time limit of:"
+0ad8:  8377           sub     r7,r7
+0ada:  df7c           calr    %0be4
+0adc:  6107 30fe      ld      r7,%30fe
+0ae0:  8d72           neg     r7
+0ae2:  bd69           ldk     r6,9
+0ae4:  5f00 2622      call    %2622
+0ae8:  4d05 27cc 0001 ld      %27cc,#%0001           ; [27cc]=0x0000 [........]
+0aee:  a9f5           inc     r15,6
+0af0:  9e08           ret
+0af2:  abf1           dec     r15,2
+0af4:  4df8 0000      clr     %0000(r15)
+0af8:  61f2 0000      ld      r2,%0000(r15)
+0afc:  8122           add     r2,r2
+0afe:  6127 27c2      ld      r7,%27c2(r2)
+0b02:  bd61           ldk     r6,1
+0b04:  5f00 2678      call    %2678
+0b08:  69f0 0000      inc     %0000(r15),1
+0b0c:  4df1 0000 0003 cp      %0000(r15),#%0003
+0b12:  e2f2           jr      le,%0af8
+0b14:  4df5 0000 0001 ld      %0000(r15),#%0001
+0b1a:  61f2 0000      ld      r2,%0000(r15)
+0b1e:  8122           add     r2,r2
+0b20:  6127 27ae      ld      r7,%27ae(r2)
+0b24:  bd61           ldk     r6,1
+0b26:  5f00 2678      call    %2678
+0b2a:  69f0 0000      inc     %0000(r15),1
+0b2e:  4df1 0000 0009 cp      %0000(r15),#%0009
+0b34:  e2f2           jr      le,%0b1a
+0b36:  a9f1           inc     r15,2
+0b38:  9e08           ret
+0b3a:  abf1           dec     r15,2
+0b3c:  6107 27c2      ld      r7,%27c2               ; [27c2]=0x0002 [........]
+0b40:  2106 0a62      ld      r6,#%0a62              ; a62 =0xabf3 [../...`.]
+0b44:  5f00 2678      call    %2678
+0b48:  4df5 0000 0001 ld      %0000(r15),#%0001
+0b4e:  61f2 0000      ld      r2,%0000(r15)
+0b52:  8122           add     r2,r2
+0b54:  6127 27c2      ld      r7,%27c2(r2)
+0b58:  bd61           ldk     r6,1
+0b5a:  5f00 2678      call    %2678
+0b5e:  69f0 0000      inc     %0000(r15),1
+0b62:  4df1 0000 0003 cp      %0000(r15),#%0003
+0b68:  e2f2           jr      le,%0b4e
+0b6a:  bd71           ldk     r7,1
+0b6c:  2106 0a62      ld      r6,#%0a62              ; a62 =0xabf3 [../...`.]
+0b70:  5f00 2678      call    %2678
+0b74:  4df5 0000 0001 ld      %0000(r15),#%0001
+0b7a:  61f2 0000      ld      r2,%0000(r15)
+0b7e:  8122           add     r2,r2
+0b80:  6127 27ae      ld      r7,%27ae(r2)
+0b84:  2106 0a62      ld      r6,#%0a62              ; a62 =0xabf3 [../...`.]
+0b88:  5f00 2678      call    %2678
+0b8c:  69f0 0000      inc     %0000(r15),1
+0b90:  4df1 0000 0009 cp      %0000(r15),#%0009
+0b96:  e2f1           jr      le,%0b7a
+0b98:  a9f1           inc     r15,2
+0b9a:  9e08           ret
+0b9c:  abf1           dec     r15,2
+0b9e:  4df8 0000      clr     %0000(r15)
+0ba2:  61f2 0000      ld      r2,%0000(r15)
+0ba6:  8122           add     r2,r2
+0ba8:  6127 27c2      ld      r7,%27c2(r2)
+0bac:  8366           sub     r6,r6
+0bae:  5f00 2678      call    %2678
+0bb2:  69f0 0000      inc     %0000(r15),1
+0bb6:  4df1 0000 0003 cp      %0000(r15),#%0003
+0bbc:  e2f2           jr      le,%0ba2
+0bbe:  4df5 0000 0001 ld      %0000(r15),#%0001
+0bc4:  61f2 0000      ld      r2,%0000(r15)
+0bc8:  8122           add     r2,r2
+0bca:  6127 27ae      ld      r7,%27ae(r2)
+0bce:  8366           sub     r6,r6
+0bd0:  5f00 2678      call    %2678
+0bd4:  69f0 0000      inc     %0000(r15),1
+0bd8:  4df1 0000 0009 cp      %0000(r15),#%0009
+0bde:  e2f2           jr      le,%0bc4
+0be0:  a9f1           inc     r15,2
+0be2:  9e08           ret
+0be4:  abf9           dec     r15,10
+0be6:  1cf9 0502      ldm     @r15,r5,#3
+0bea:  2107 29c0      ld      r7,#%29c0              ; 29c0 "/dev/console"
+0bee:  2106 29ce      ld      r6,#%29ce              ; 29ce =0x6100 [a.init: ]
+0bf2:  5f00 1384      call    %1384
+0bf6:  6ff2 0006      ld      %0006(r15),r2
+0bfa:  8d24           test    r2
+0bfc:  e62e           jr      eq/z,%0c5a
+0bfe:  a127           ld      r7,r2
+0c00:  8366           sub     r6,r6
+0c02:  5f00 1bbc      call    %1bbc
+0c06:  2107 29d0      ld      r7,#%29d0              ; 29d0 "init: "
+0c0a:  61f6 0006      ld      r6,%0006(r15)
+0c0e:  5f00 133a      call    %133a
+0c12:  61f7 0002      ld      r7,%0002(r15)
+0c16:  61f6 0006      ld      r6,%0006(r15)
+0c1a:  5f00 133a      call    %133a
+0c1e:  61f7 0000      ld      r7,%0000(r15)
+0c22:  61f6 0006      ld      r6,%0006(r15)
+0c26:  5f00 133a      call    %133a
+0c2a:  61f2 0006      ld      r2,%0006(r15)
+0c2e:  6b20 0002      dec     %0002(r2),1
+0c32:  6123 0002      ld      r3,%0002(r2)
+0c36:  0b03 0000      cp      r3,#%0000
+0c3a:  e906           jr      ge,%0c48
+0c3c:  bd7a           ldk     r7,10
+0c3e:  61f6 0006      ld      r6,%0006(r15)
+0c42:  5f00 1c0e      call    %1c0e
+0c46:  e809           jr      %0c5a
+0c48:  61f2 0006      ld      r2,%0006(r15)
+0c4c:  2920           inc     @r2,1
+0c4e:  2123           ld      r3,@r2
+0c50:  ab30           dec     r3,1
+0c52:  0c35 0a0a      ldb     @r3,#%0a
+0c56:  ca0a           ldb     rl2,#%0a
+0c58:  8222           subb    rh2,rh2
+0c5a:  61f2 0004      ld      r2,%0004(r15)
+0c5e:  2103 2a98      ld      r3,#%2a98              ; 2a98 =0x0000 [........]
+0c62:  2104 0003      ld      r4,#%0003              ; 3 "OPR. 1981 ZILOG INC."
+0c66:  bb34 0426      cpir    r2,@r3,r4,eq/z
+0c6a:  ee44           jr      ne/nz,%0cf4
+0c6c:  8144           add     r4,r4
+0c6e:  8d42           neg     r4
+0c70:  6142 2aa2      ld      r2,%2aa2(r4)
+0c74:  1e28           jp      @rr2
+0c76:  bd72           ldk     r7,2
+0c78:  5f00 1f9c      call    %1f9c
+0c7c:  4df4 0006      test    %0006(r15)
+0c80:  e612           jr      eq/z,%0ca6
+0c82:  2107 29d8      ld      r7,#%29d8              ; 29d8 "trying default shell
+"
+0c86:  61f6 0006      ld      r6,%0006(r15)
+0c8a:  5f00 133a      call    %133a
+0c8e:  2107 29ee      ld      r7,#%29ee              ; 29ee "/bin/sh < /dev/console >"
+0c92:  61f6 0006      ld      r6,%0006(r15)
+0c96:  5f00 133a      call    %133a
+0c9a:  2107 2a1a      ld      r7,#%2a1a              ; 2a1a =0x0a00 [../bin/s]
+0c9e:  61f6 0006      ld      r6,%0006(r15)
+0ca2:  5f00 133a      call    %133a
+0ca6:  2107 2a1c      ld      r7,#%2a1c              ; 2a1c "/bin/sh < /dev/console >"
+0caa:  d4d0           calr    %030c
+0cac:  6ff2 0008      ld      %0008(r15),r2
+0cb0:  8d24           test    r2
+0cb2:  ee06           jr      ne/nz,%0cc0
+0cb4:  bd71           ldk     r7,1
+0cb6:  2106 2a48      ld      r6,#%2a48              ; 2a48 "exec failed for: final d"
+0cba:  2105 2a6e      ld      r5,#%2a6e              ; 2a6e =0x0000 [..WARNIN]
+0cbe:  d06e           calr    %0be4
+0cc0:  4d08 27ca      clr     %27ca                  ; [27ca]=0x0001 [........]
+0cc4:  d0c6           calr    %0b3a
+0cc6:  d48d           calr    %03ae
+0cc8:  4bf2 0008      cp      r2,%0008(r15)
+0ccc:  e603           jr      eq/z,%0cd4
+0cce:  4d04 27ca      test    %27ca                  ; [27ca]=0x0001 [........]
+0cd2:  e6f9           jr      eq/z,%0cc6
+0cd4:  4d04 27ca      test    %27ca                  ; [27ca]=0x0001 [........]
+0cd8:  e609           jr      eq/z,%0cec
+0cda:  4df4 0006      test    %0006(r15)
+0cde:  e606           jr      eq/z,%0cec
+0ce0:  2107 2a70      ld      r7,#%2a70              ; 2a70 "WARNING: default shell n"
+0ce4:  61f6 0006      ld      r6,%0006(r15)
+0ce8:  5f00 133a      call    %133a
+0cec:  61f7 0006      ld      r7,%0006(r15)
+0cf0:  5f00 1d6a      call    %1d6a
+0cf4:  a9f9           inc     r15,10
+0cf6:  9e08           ret
+0cf8:  abfb           dec     r15,12
+0cfa:  1df6           ldl     @r15,rr6
+0cfc:  4df8 0004      clr     %0004(r15)
+0d00:  6ff7 000a      ld      %000a(r15),r7
+0d04:  0b07 0000      cp      r7,#%0000
+0d08:  e903           jr      ge,%0d10
+0d0a:  8d72           neg     r7
+0d0c:  6ff7 0002      ld      %0002(r15),r7
+0d10:  61f3 0002      ld      r3,%0002(r15)
+0d14:  b12a           exts    rr2
+0d16:  1b02 000a      div     rr2,#%000a
+0d1a:  0102 0030      add     r2,#%0030
+0d1e:  61f3 0004      ld      r3,%0004(r15)
+0d22:  61f4 0000      ld      r4,%0000(r15)
+0d26:  8134           add     r4,r3
+0d28:  2e4a           ldb     @r4,rl2
+0d2a:  69f0 0004      inc     %0004(r15),1
+0d2e:  61f3 0002      ld      r3,%0002(r15)
+0d32:  b12a           exts    rr2
+0d34:  1b02 000a      div     rr2,#%000a
+0d38:  6ff3 0002      ld      %0002(r15),r3
+0d3c:  0b03 0000      cp      r3,#%0000
+0d40:  eae7           jr      gt,%0d10
+0d42:  4df1 000a 0000 cp      %000a(r15),#%0000
+0d48:  e909           jr      ge,%0d5c
+0d4a:  61f2 0004      ld      r2,%0004(r15)
+0d4e:  61f3 0000      ld      r3,%0000(r15)
+0d52:  8123           add     r3,r2
+0d54:  0c35 2d2d      ldb     @r3,#%2d
+0d58:  69f0 0004      inc     %0004(r15),1
+0d5c:  61f2 0004      ld      r2,%0004(r15)
+0d60:  61f3 0000      ld      r3,%0000(r15)
+0d64:  8123           add     r3,r2
+0d66:  0c38           clrb    @r3
+0d68:  4df8 0004      clr     %0004(r15)
+0d6c:  61f7 0000      ld      r7,%0000(r15)
+0d70:  5f00 24fe      call    %24fe
+0d74:  ab20           dec     r2,1
+0d76:  6ff2 0008      ld      %0008(r15),r2
+0d7a:  e81f           jr      %0dba
+0d7c:  61f2 0004      ld      r2,%0004(r15)
+0d80:  61f3 0000      ld      r3,%0000(r15)
+0d84:  8123           add     r3,r2
+0d86:  203c           ldb     rl4,@r3
+0d88:  b140           extsb   r4
+0d8a:  6ff4 0006      ld      %0006(r15),r4
+0d8e:  61f3 0008      ld      r3,%0008(r15)
+0d92:  61f4 0000      ld      r4,%0000(r15)
+0d96:  8134           add     r4,r3
+0d98:  61f5 0000      ld      r5,%0000(r15)
+0d9c:  8125           add     r5,r2
+0d9e:  204e           ldb     rl6,@r4
+0da0:  2e5e           ldb     @r5,rl6
+0da2:  61f3 0008      ld      r3,%0008(r15)
+0da6:  61f4 0000      ld      r4,%0000(r15)
+0daa:  8134           add     r4,r3
+0dac:  60fd 0007      ldb     rl5,%0007(r15)
+0db0:  2e4d           ldb     @r4,rl5
+0db2:  69f0 0004      inc     %0004(r15),1
+0db6:  6bf0 0008      dec     %0008(r15),1
+0dba:  61f2 0004      ld      r2,%0004(r15)
+0dbe:  4bf2 0008      cp      r2,%0008(r15)
+0dc2:  e1dc           jr      lt,%0d7c
+0dc4:  a9fb           inc     r15,12
+0dc6:  9e08           ret
+0dc8:  abf5           dec     r15,6
+0dca:  2ff7           ld      @r15,r7
+0dcc:  2107 2ac0      ld      r7,#%2ac0              ; 2ac0 "/etc/ttytype"
+0dd0:  2106 2ace      ld      r6,#%2ace              ; 2ace =0x7200 [r.%s%s..]
+0dd4:  5f00 1384      call    %1384
+0dd8:  6ff2 0002      ld      %0002(r15),r2
+0ddc:  8d24           test    r2
+0dde:  e61c           jr      eq/z,%0e18
+0de0:  61f7 0002      ld      r7,%0002(r15)
+0de4:  2106 2ad0      ld      r6,#%2ad0              ; 2ad0 "%s%s"
+0de8:  2105 2aa4      ld      r5,#%2aa4              ; 2aa4 =0x0000 [........]
+0dec:  2104 2aac      ld      r4,#%2aac              ; 2aac =0x0000 [........]
+0df0:  5f00 13d8      call    %13d8
+0df4:  0b02 ffff      cp      r2,#%ffff
+0df8:  e60f           jr      eq/z,%0e18
+0dfa:  61f7 0000      ld      r7,%0000(r15)
+0dfe:  2106 2aac      ld      r6,#%2aac              ; 2aac =0x0000 [........]
+0e02:  5f00 24aa      call    %24aa
+0e06:  8d24           test    r2
+0e08:  eeeb           jr      ne/nz,%0de0
+0e0a:  61f7 0002      ld      r7,%0002(r15)
+0e0e:  5f00 1d6a      call    %1d6a
+0e12:  2102 2aa4      ld      r2,#%2aa4              ; 2aa4 =0x0000 [........]
+0e16:  e806           jr      %0e24
+0e18:  61f7 0002      ld      r7,%0002(r15)
+0e1c:  5f00 1d6a      call    %1d6a
+0e20:  2102 2ad6      ld      r2,#%2ad6              ; 2ad6 =0x756e [un..cl..]
+0e24:  a9f5           inc     r15,6
+0e26:  9e08           ret
+0e28:  abf5           dec     r15,6
+0e2a:  2ff7           ld      @r15,r7
+0e2c:  2106 002f      ld      r6,#%002f              ; 2f =0x01ab [..Qo..._]
+0e30:  5f00 253e      call    %253e
+0e34:  a920           inc     r2,1
+0e36:  6ff2 0002      ld      %0002(r15),r2
+0e3a:  a127           ld      r7,r2
+0e3c:  d03b           calr    %0dc8
+0e3e:  a9f5           inc     r15,6
+0e40:  9e08           ret
+0e42:  030f 046c      sub     r15,#%046c
+0e46:  2ff7           ld      @r15,r7
+0e48:  76f7 0002      lda     pr7,%0002(r15)
+0e4c:  61f6 0000      ld      r6,%0000(r15)
+0e50:  5f00 0e8c      call    %0e8c
+0e54:  0b02 0000      cp      r2,#%0000
+0e58:  e214           jr      le,%0e82
+0e5a:  76f2 0402      lda     pr2,%0402(r15)
+0e5e:  6ff2 0466      ld      %0466(r15),r2
+0e62:  76f6 0466      lda     pr6,%0466(r15)
+0e66:  2107 2ada      ld      r7,#%2ada              ; 2ada =0x636c [cl......]
+0e6a:  5f00 121c      call    %121c
+0e6e:  6ff2 0468      ld      %0468(r15),r2
+0e72:  8d24           test    r2
+0e74:  ee03           jr      ne/nz,%0e7c
+0e76:  2102 2ade      ld      r2,#%2ade              ; 2ade =0x0a00 [........]
+0e7a:  e805           jr      %0e86
+0e7c:  61f2 0468      ld      r2,%0468(r15)
+0e80:  e802           jr      %0e86
+0e82:  2102 2ae0      ld      r2,#%2ae0              ; 2ae0 =0x0a00 [......TE]
+0e86:  010f 046c      add     r15,#%046c
+0e8a:  9e08           ret
+0e8c:  030f 041a      sub     r15,#%041a
+0e90:  5cf9 0b03 0412 ldm     %0412(r15),r11,#4
+0e96:  1df6           ldl     @r15,rr6
+0e98:  bdc0           ldk     r12,0
+0e9a:  a1cb           ld      r11,r12
+0e9c:  6f07 2ae2      ld      %2ae2,r7               ; [2ae2]=0x0000 [....TERM]
+0ea0:  4df8 040e      clr     %040e(r15)
+0ea4:  2107 2ae6      ld      r7,#%2ae6              ; 2ae6 "TERMCAP"
+0ea8:  5f00 1fa6      call    %1fa6
+0eac:  a12e           ld      r14,r2
+0eae:  8d24           test    r2
+0eb0:  e624           jr      eq/z,%0efa
+0eb2:  0ce4           testb   @r14
+0eb4:  e622           jr      eq/z,%0efa
+0eb6:  0ce1 2f2f      cpb     @r14,#%2f
+0eba:  e619           jr      eq/z,%0eee
+0ebc:  2107 2aee      ld      r7,#%2aee              ; 2aee "TERM"
+0ec0:  5f00 1fa6      call    %1fa6
+0ec4:  6ff2 040c      ld      %040c(r15),r2
+0ec8:  8d24           test    r2
+0eca:  e607           jr      eq/z,%0eda
+0ecc:  61f7 0000      ld      r7,%0000(r15)
+0ed0:  a126           ld      r6,r2
+0ed2:  5f00 24aa      call    %24aa
+0ed6:  8d24           test    r2
+0ed8:  ee07           jr      ne/nz,%0ee8
+0eda:  61f7 0002      ld      r7,%0002(r15)
+0ede:  a1e6           ld      r6,r14
+0ee0:  5f00 24d8      call    %24d8
+0ee4:  df99           calr    %0fb4
+0ee6:  e860           jr      %0fa8
+0ee8:  2107 2af3      ld      r7,#%2af3              ; 2af3 "/etc/termcap"
+0eec:  e801           jr      %0ef0
+0eee:  a1e7           ld      r7,r14
+0ef0:  8366           sub     r6,r6
+0ef2:  5f00 2644      call    %2644
+0ef6:  6ff2 040e      ld      %040e(r15),r2
+0efa:  4df4 040e      test    %040e(r15)
+0efe:  ee07           jr      ne/nz,%0f0e
+0f00:  2107 2b00      ld      r7,#%2b00              ; 2b00 "/etc/termcap"
+0f04:  8366           sub     r6,r6
+0f06:  5f00 2644      call    %2644
+0f0a:  6ff2 040e      ld      %040e(r15),r2
+0f0e:  4df1 040e 0000 cp      %040e(r15),#%0000
+0f14:  e903           jr      ge,%0f1c
+0f16:  2102 ffff      ld      r2,#%ffff
+0f1a:  e846           jr      %0fa8
+0f1c:  61fe 0002      ld      r14,%0002(r15)
+0f20:  8bbc           cp      r12,r11
+0f22:  ee13           jr      ne/nz,%0f4a
+0f24:  76f6 000c      lda     pr6,%000c(r15)
+0f28:  61f7 040e      ld      r7,%040e(r15)
+0f2c:  2105 0400      ld      r5,#%0400              ; 400 =0x0070 [.pL..m  ]
+0f30:  5f00 2658      call    %2658
+0f34:  a12b           ld      r11,r2
+0f36:  0b02 0000      cp      r2,#%0000
+0f3a:  ea06           jr      gt,%0f48
+0f3c:  61f7 040e      ld      r7,%040e(r15)
+0f40:  5f00 25ac      call    %25ac
+0f44:  8322           sub     r2,r2
+0f46:  e830           jr      %0fa8
+0f48:  bdc0           ldk     r12,0
+0f4a:  76f2 000c      lda     pr2,%000c(r15)
+0f4e:  81c2           add     r2,r12
+0f50:  202b           ldb     rl3,@r2
+0f52:  b130           extsb   r3
+0f54:  a13d           ld      r13,r3
+0f56:  a9c0           inc     r12,1
+0f58:  0b03 000a      cp      r3,#%000a
+0f5c:  ee09           jr      ne/nz,%0f70
+0f5e:  4bfe 0002      cp      r14,%0002(r15)
+0f62:  e313           jr      ule,%0f8a
+0f64:  4ce1 ffff 5c5c cpb     %ffff(r14),#%5c
+0f6a:  ee0f           jr      ne/nz,%0f8a
+0f6c:  abe0           dec     r14,1
+0f6e:  e8d8           jr      %0f20
+0f70:  61f2 0002      ld      r2,%0002(r15)
+0f74:  0102 0400      add     r2,#%0400
+0f78:  8b2e           cp      r14,r2
+0f7a:  e712           jr      c/ult,%0fa0
+0f7c:  bd72           ldk     r7,2
+0f7e:  2106 2b0d      ld      r6,#%2b0d              ; 2b0d "Termcap entry too long
+"
+0f82:  2105 0017      ld      r5,#%0017              ; 17 =0x0021 [.!.v...!]
+0f86:  5f00 2712      call    %2712
+0f8a:  0ce8           clrb    @r14
+0f8c:  61f7 0000      ld      r7,%0000(r15)
+0f90:  df6e           calr    %10b6
+0f92:  8d24           test    r2
+0f94:  e6c3           jr      eq/z,%0f1c
+0f96:  61f7 040e      ld      r7,%040e(r15)
+0f9a:  5f00 25ac      call    %25ac
+0f9e:  e8a2           jr      %0ee4
+0fa0:  a1d2           ld      r2,r13
+0fa2:  2eea           ldb     @r14,rl2
+0fa4:  a9e0           inc     r14,1
+0fa6:  e8bc           jr      %0f20
+0fa8:  5cf1 0b03 0412 ldm     r11,%0412(r15),#4
+0fae:  010f 041a      add     r15,#%041a
+0fb2:  9e08           ret
+0fb4:  030f 041e      sub     r15,#%041e
+0fb8:  5cf9 0d01 041a ldm     %041a(r15),r13,#2
+0fbe:  6102 2ae2      ld      r2,%2ae2               ; [2ae2]=0x0000 [....TERM]
+0fc2:  6ff2 0414      ld      %0414(r15),r2
+0fc6:  6107 2ae2      ld      r7,%2ae2               ; [2ae2]=0x0000 [....TERM]
+0fca:  5f00 24fe      call    %24fe
+0fce:  4102 2ae2      add     r2,%2ae2               ; [2ae2]=0x0000 [....TERM]
+0fd2:  ab21           dec     r2,2
+0fd4:  a12e           ld      r14,r2
+0fd6:  abe0           dec     r14,1
+0fd8:  20ea           ldb     rl2,@r14
+0fda:  0a0a 3a3a      cpb     rl2,#%3a
+0fde:  e60c           jr      eq/z,%0ff8
+0fe0:  4b0e 2ae2      cp      r14,%2ae2              ; [2ae2]=0x0000 [....TERM]
+0fe4:  eff8           jr      nc/uge,%0fd6
+0fe6:  bd72           ldk     r7,2
+0fe8:  2106 2b25      ld      r6,#%2b25              ; 2b25 "Bad termcap entry
+"
+0fec:  2105 0012      ld      r5,#%0012              ; 12 " INC."
+0ff0:  5f00 2712      call    %2712
+0ff4:  8322           sub     r2,r2
+0ff6:  e859           jr      %10aa
+0ff8:  a9e0           inc     r14,1
+0ffa:  0ce1 7474      cpb     @r14,#%74
+0ffe:  ee54           jr      ne/nz,%10a8
+1000:  4ce1 0001 6363 cpb     %0001(r14),#%63
+1006:  ee50           jr      ne/nz,%10a8
+1008:  76f7 0004      lda     pr7,%0004(r15)
+100c:  76e6 0003      lda     pr6,%0003(r14)
+1010:  5f00 24d8      call    %24d8
+1014:  76f2 0004      lda     pr2,%0004(r15)
+1018:  a12d           ld      r13,r2
+101a:  e804           jr      %1024
+101c:  0cd1 3a3a      cpb     @r13,#%3a
+1020:  e603           jr      eq/z,%1028
+1022:  a9d0           inc     r13,1
+1024:  8dd4           test    r13
+1026:  eefa           jr      ne/nz,%101c
+1028:  0cd8           clrb    @r13
+102a:  6900 2ae4      inc     %2ae4,1                ; [2ae4]=0x0000 [..TERMCA]
+102e:  4d01 2ae4 0020 cp      %2ae4,#%0020           ; [2ae4]=0x0000 [..TERMCA]
+1034:  e204           jr      le,%103e
+1036:  bd72           ldk     r7,2
+1038:  2106 2b38      ld      r6,#%2b38              ; 2b38 "Infinite tc= loop
+"
+103c:  e8d7           jr      %0fec
+103e:  76f7 0014      lda     pr7,%0014(r15)
+1042:  76f6 0004      lda     pr6,%0004(r15)
+1046:  d0de           calr    %0e8c
+1048:  0b02 0001      cp      r2,#%0001
+104c:  eed3           jr      ne/nz,%0ff4
+104e:  76f2 0014      lda     pr2,%0014(r15)
+1052:  a12d           ld      r13,r2
+1054:  e801           jr      %1058
+1056:  a9d0           inc     r13,1
+1058:  0cd1 3a3a      cpb     @r13,#%3a
+105c:  eefc           jr      ne/nz,%1056
+105e:  a1d7           ld      r7,r13
+1060:  5f00 24fe      call    %24fe
+1064:  a1e3           ld      r3,r14
+1066:  43f3 0414      sub     r3,%0414(r15)
+106a:  8123           add     r3,r2
+106c:  6ff3 0416      ld      %0416(r15),r3
+1070:  0b03 0400      cp      r3,#%0400
+1074:  e210           jr      le,%1096
+1076:  bd72           ldk     r7,2
+1078:  2106 2b4b      ld      r6,#%2b4b              ; 2b4b "Termcap entry too long
+"
+107c:  2105 0017      ld      r5,#%0017              ; 17 =0x0021 [.!.v...!]
+1080:  5f00 2712      call    %2712
+1084:  a1e2           ld      r2,r14
+1086:  4302 2ae2      sub     r2,%2ae2               ; [2ae2]=0x0000 [....TERM]
+108a:  a123           ld      r3,r2
+108c:  8d32           neg     r3
+108e:  0103 0400      add     r3,#%0400
+1092:  81d3           add     r3,r13
+1094:  0c38           clrb    @r3
+1096:  76d6 0001      lda     pr6,%0001(r13)
+109a:  a1e7           ld      r7,r14
+109c:  5f00 24d8      call    %24d8
+10a0:  61f2 0414      ld      r2,%0414(r15)
+10a4:  6f02 2ae2      ld      %2ae2,r2               ; [2ae2]=0x0000 [....TERM]
+10a8:  bd21           ldk     r2,1
+10aa:  5cf1 0d01 041a ldm     r13,%041a(r15),#2
+10b0:  010f 041e      add     r15,#%041e
+10b4:  9e08           ret
+10b6:  abfb           dec     r15,12
+10b8:  2ff7           ld      @r15,r7
+10ba:  6103 2ae2      ld      r3,%2ae2               ; [2ae2]=0x0000 [....TERM]
+10be:  0c31 2323      cpb     @r3,#%23
+10c2:  ee25           jr      ne/nz,%110e
+10c4:  8322           sub     r2,r2
+10c6:  e826           jr      %1114
+10c8:  203a           ldb     rl2,@r3
+10ca:  0a1a           cpb     rl2,@r1
+10cc:  ee04           jr      ne/nz,%10d6
+10ce:  a930           inc     r3,1
+10d0:  a910           inc     r1,1
+10d2:  0c14           testb   @r1
+10d4:  eef9           jr      ne/nz,%10c8
+10d6:  0c14           testb   @r1
+10d8:  ee0a           jr      ne/nz,%10ee
+10da:  0c31 7c7c      cpb     @r3,#%7c
+10de:  e605           jr      eq/z,%10ea
+10e0:  0c31 3a3a      cpb     @r3,#%3a
+10e4:  e602           jr      eq/z,%10ea
+10e6:  0c34           testb   @r3
+10e8:  ee02           jr      ne/nz,%10ee
+10ea:  bd21           ldk     r2,1
+10ec:  e813           jr      %1114
+10ee:  0c34           testb   @r3
+10f0:  e608           jr      eq/z,%1102
+10f2:  0c31 3a3a      cpb     @r3,#%3a
+10f6:  e605           jr      eq/z,%1102
+10f8:  0c31 7c7c      cpb     @r3,#%7c
+10fc:  e602           jr      eq/z,%1102
+10fe:  a930           inc     r3,1
+1100:  e8f6           jr      %10ee
+1102:  0c34           testb   @r3
+1104:  e6df           jr      eq/z,%10c4
+1106:  0c31 3a3a      cpb     @r3,#%3a
+110a:  e6dc           jr      eq/z,%10c4
+110c:  a930           inc     r3,1
+110e:  61f1 0000      ld      r1,%0000(r15)
+1112:  e8df           jr      %10d2
+1114:  a9fb           inc     r15,12
+1116:  9e08           ret
+1118:  abf5           dec     r15,6
+111a:  6ffe 0004      ld      %0004(r15),r14
+111e:  a17e           ld      r14,r7
+1120:  e804           jr      %112a
+1122:  0ce1 3a3a      cpb     @r14,#%3a
+1126:  e603           jr      eq/z,%112e
+1128:  a9e0           inc     r14,1
+112a:  0ce4           testb   @r14
+112c:  eefa           jr      ne/nz,%1122
+112e:  0ce1 3a3a      cpb     @r14,#%3a
+1132:  ee01           jr      ne/nz,%1136
+1134:  a9e0           inc     r14,1
+1136:  a1e2           ld      r2,r14
+1138:  61fe 0004      ld      r14,%0004(r15)
+113c:  a9f5           inc     r15,6
+113e:  9e08           ret
+1140:  abff           dec     r15,16
+1142:  5cf9 0c02 000a ldm     %000a(r15),r12,#3
+1148:  2ff7           ld      @r15,r7
+114a:  610c 2ae2      ld      r12,%2ae2              ; [2ae2]=0x0000 [....TERM]
+114e:  a1c7           ld      r7,r12
+1150:  d01d           calr    %1118
+1152:  a12c           ld      r12,r2
+1154:  0cc4           testb   @r12
+1156:  ee03           jr      ne/nz,%115e
+1158:  2102 ffff      ld      r2,#%ffff
+115c:  e830           jr      %11be
+115e:  a1c2           ld      r2,r12
+1160:  a9c0           inc     r12,1
+1162:  202b           ldb     rl3,@r2
+1164:  61f2 0000      ld      r2,%0000(r15)
+1168:  202c           ldb     rl4,@r2
+116a:  8acb           cpb     rl3,rl4
+116c:  eef0           jr      ne/nz,%114e
+116e:  0cc4           testb   @r12
+1170:  e6ee           jr      eq/z,%114e
+1172:  602b 0001      ldb     rl3,%0001(r2)
+1176:  a1c4           ld      r4,r12
+1178:  a9c0           inc     r12,1
+117a:  204d           ldb     rl5,@r4
+117c:  8adb           cpb     rl3,rl5
+117e:  eee7           jr      ne/nz,%114e
+1180:  0cc1 4040      cpb     @r12,#%40
+1184:  e6e9           jr      eq/z,%1158
+1186:  0cc1 2323      cpb     @r12,#%23
+118a:  eee1           jr      ne/nz,%114e
+118c:  a9c0           inc     r12,1
+118e:  bdda           ldk     r13,10
+1190:  0cc1 3030      cpb     @r12,#%30
+1194:  ee01           jr      ne/nz,%1198
+1196:  bdd8           ldk     r13,8
+1198:  bde0           ldk     r14,0
+119a:  e809           jr      %11ae
+119c:  a1e3           ld      r3,r14
+119e:  99d2           mult    rr2,r13
+11a0:  a13e           ld      r14,r3
+11a2:  20ca           ldb     rl2,@r12
+11a4:  b120           extsb   r2
+11a6:  0302 0030      sub     r2,#%0030
+11aa:  812e           add     r14,r2
+11ac:  a9c0           inc     r12,1
+11ae:  20ca           ldb     rl2,@r12
+11b0:  b120           extsb   r2
+11b2:  602b 2d9b      ldb     rl3,%2d9b(r2)
+11b6:  b130           extsb   r3
+11b8:  a732           bit     r3,2
+11ba:  eef0           jr      ne/nz,%119c
+11bc:  a1e2           ld      r2,r14
+11be:  5cf1 0c02 000a ldm     r12,%000a(r15),#3
+11c4:  a9ff           inc     r15,16
+11c6:  9e08           ret
+11c8:  abf7           dec     r15,8
+11ca:  6ffe 0006      ld      %0006(r15),r14
+11ce:  2ff7           ld      @r15,r7
+11d0:  610e 2ae2      ld      r14,%2ae2              ; [2ae2]=0x0000 [....TERM]
+11d4:  a1e7           ld      r7,r14
+11d6:  d060           calr    %1118
+11d8:  a12e           ld      r14,r2
+11da:  0ce4           testb   @r14
+11dc:  e61a           jr      eq/z,%1212
+11de:  a9e0           inc     r14,1
+11e0:  202b           ldb     rl3,@r2
+11e2:  61f2 0000      ld      r2,%0000(r15)
+11e6:  202c           ldb     rl4,@r2
+11e8:  8acb           cpb     rl3,rl4
+11ea:  eef4           jr      ne/nz,%11d4
+11ec:  0ce4           testb   @r14
+11ee:  e6f2           jr      eq/z,%11d4
+11f0:  602b 0001      ldb     rl3,%0001(r2)
+11f4:  a1e4           ld      r4,r14
+11f6:  a9e0           inc     r14,1
+11f8:  204d           ldb     rl5,@r4
+11fa:  8adb           cpb     rl3,rl5
+11fc:  eeeb           jr      ne/nz,%11d4
+11fe:  0ce4           testb   @r14
+1200:  e603           jr      eq/z,%1208
+1202:  0ce1 3a3a      cpb     @r14,#%3a
+1206:  ee02           jr      ne/nz,%120c
+1208:  bd21           ldk     r2,1
+120a:  e804           jr      %1214
+120c:  0ce1 4040      cpb     @r14,#%40
+1210:  eee1           jr      ne/nz,%11d4
+1212:  8322           sub     r2,r2
+1214:  61fe 0006      ld      r14,%0006(r15)
+1218:  a9f7           inc     r15,8
+121a:  9e08           ret
+121c:  abf9           dec     r15,10
+121e:  6ffe 0008      ld      %0008(r15),r14
+1222:  1df6           ldl     @r15,rr6
+1224:  610e 2ae2      ld      r14,%2ae2              ; [2ae2]=0x0000 [....TERM]
+1228:  a1e7           ld      r7,r14
+122a:  d08a           calr    %1118
+122c:  a12e           ld      r14,r2
+122e:  0ce4           testb   @r14
+1230:  ee02           jr      ne/nz,%1236
+1232:  8322           sub     r2,r2
+1234:  e81c           jr      %126e
+1236:  a1e2           ld      r2,r14
+1238:  a9e0           inc     r14,1
+123a:  202b           ldb     rl3,@r2
+123c:  61f2 0002      ld      r2,%0002(r15)
+1240:  202c           ldb     rl4,@r2
+1242:  8acb           cpb     rl3,rl4
+1244:  eef1           jr      ne/nz,%1228
+1246:  0ce4           testb   @r14
+1248:  e6ef           jr      eq/z,%1228
+124a:  602b 0001      ldb     rl3,%0001(r2)
+124e:  a1e4           ld      r4,r14
+1250:  a9e0           inc     r14,1
+1252:  204d           ldb     rl5,@r4
+1254:  8adb           cpb     rl3,rl5
+1256:  eee8           jr      ne/nz,%1228
+1258:  0ce1 4040      cpb     @r14,#%40
+125c:  e6ea           jr      eq/z,%1232
+125e:  0ce1 3d3d      cpb     @r14,#%3d
+1262:  eee2           jr      ne/nz,%1228
+1264:  a9e0           inc     r14,1
+1266:  a1e7           ld      r7,r14
+1268:  61f6 0000      ld      r6,%0000(r15)
+126c:  dffc           calr    %1276
+126e:  61fe 0008      ld      r14,%0008(r15)
+1272:  a9f9           inc     r15,10
+1274:  9e08           ret
+1276:  030f 0016      sub     r15,#%0016
+127a:  5cf9 0b01 000e ldm     %000e(r15),r11,#2
+1280:  2ff6           ld      @r15,r6
+1282:  a171           ld      r1,r7
+1284:  a167           ld      r7,r6
+1286:  2175           ld      r5,@r7
+1288:  e844           jr      %1312
+128a:  210b 2b63      ld      r11,#%2b63             ; 2b63 =0x451b [E.^^\\::]
+128e:  201b           ldb     rl3,@r1
+1290:  b130           extsb   r3
+1292:  a13c           ld      r12,r3
+1294:  a910           inc     r1,1
+1296:  a1b3           ld      r3,r11
+1298:  a9b0           inc     r11,1
+129a:  203c           ldb     rl4,@r3
+129c:  b140           extsb   r4
+129e:  8b4c           cp      r12,r4
+12a0:  ee16           jr      ne/nz,%12ce
+12a2:  20bb           ldb     rl3,@r11
+12a4:  b130           extsb   r3
+12a6:  a13c           ld      r12,r3
+12a8:  a9b0           inc     r11,1
+12aa:  e830           jr      %130c
+12ac:  0b0c 003a      cp      r12,#%003a
+12b0:  e637           jr      eq/z,%1320
+12b2:  a1c2           ld      r2,r12
+12b4:  0b0c 005c      cp      r12,#%005c
+12b8:  e6e8           jr      eq/z,%128a
+12ba:  0b0c 005e      cp      r12,#%005e
+12be:  ee26           jr      ne/nz,%130c
+12c0:  201b           ldb     rl3,@r1
+12c2:  b130           extsb   r3
+12c4:  0703 001f      and     r3,#%001f
+12c8:  a13c           ld      r12,r3
+12ca:  a910           inc     r1,1
+12cc:  e81f           jr      %130c
+12ce:  a9b0           inc     r11,1
+12d0:  0cb4           testb   @r11
+12d2:  eee1           jr      ne/nz,%1296
+12d4:  60cb 2d9b      ldb     rl3,%2d9b(r12)
+12d8:  b130           extsb   r3
+12da:  a732           bit     r3,2
+12dc:  e617           jr      eq/z,%130c
+12de:  030c 0030      sub     r12,#%0030
+12e2:  4df5 000a 0002 ld      %000a(r15),#%0002
+12e8:  b3c9 0003      sla     r12,#3
+12ec:  201b           ldb     rl3,@r1
+12ee:  b130           extsb   r3
+12f0:  0303 0030      sub     r3,#%0030
+12f4:  853c           or      r12,r3
+12f6:  a910           inc     r1,1
+12f8:  6bf0 000a      dec     %000a(r15),1
+12fc:  e607           jr      eq/z,%130c
+12fe:  201b           ldb     rl3,@r1
+1300:  b130           extsb   r3
+1302:  603c 2d9b      ldb     rl4,%2d9b(r3)
+1306:  b140           extsb   r4
+1308:  a742           bit     r4,2
+130a:  eeee           jr      ne/nz,%12e8
+130c:  a1c2           ld      r2,r12
+130e:  2e5a           ldb     @r5,rl2
+1310:  a950           inc     r5,1
+1312:  a112           ld      r2,r1
+1314:  a910           inc     r1,1
+1316:  202b           ldb     rl3,@r2
+1318:  b130           extsb   r3
+131a:  a13c           ld      r12,r3
+131c:  8d34           test    r3
+131e:  eec6           jr      ne/nz,%12ac
+1320:  0c58           clrb    @r5
+1322:  a950           inc     r5,1
+1324:  61f2 0000      ld      r2,%0000(r15)
+1328:  2121           ld      r1,@r2
+132a:  2f25           ld      @r2,r5
+132c:  a112           ld      r2,r1
+132e:  5cf1 0b01 000e ldm     r11,%000e(r15),#2
+1334:  010f 0016      add     r15,#%0016
+1338:  9e08           ret
+133a:  abfd           dec     r15,14
+133c:  5cf9 0b03 0006 ldm     %0006(r15),r11,#4
+1342:  a16d           ld      r13,r6
+1344:  a17e           ld      r14,r7
+1346:  e811           jr      %136a
+1348:  6bd0 0002      dec     %0002(r13),1
+134c:  4dd1 0002 0000 cp      %0002(r13),#%0000
+1352:  e905           jr      ge,%135e
+1354:  a1b7           ld      r7,r11
+1356:  a1d6           ld      r6,r13
+1358:  5f00 1c0e      call    %1c0e
+135c:  e805           jr      %1368
+135e:  a1b2           ld      r2,r11
+1360:  21d3           ld      r3,@r13
+1362:  29d0           inc     @r13,1
+1364:  2e3a           ldb     @r3,rl2
+1366:  8222           subb    rh2,rh2
+1368:  a12c           ld      r12,r2
+136a:  a1e2           ld      r2,r14
+136c:  a9e0           inc     r14,1
+136e:  202b           ldb     rl3,@r2
+1370:  b130           extsb   r3
+1372:  a13b           ld      r11,r3
+1374:  8d34           test    r3
+1376:  eee8           jr      ne/nz,%1348
+1378:  a1c2           ld      r2,r12
+137a:  5cf1 0b03 0006 ldm     r11,%0006(r15),#4
+1380:  a9fd           inc     r15,14
+1382:  9e08           ret
+1384:  abf7           dec     r15,8
+1386:  1df6           ldl     @r15,rr6
+1388:  5f00 1f68      call    %1f68
+138c:  6ff2 0006      ld      %0006(r15),r2
+1390:  61f7 0002      ld      r7,%0002(r15)
+1394:  61f6 0000      ld      r6,%0000(r15)
+1398:  a125           ld      r5,r2
+139a:  5f00 1dea      call    %1dea
+139e:  a9f7           inc     r15,8
+13a0:  9e08           ret
+13a2:  030f 0018      sub     r15,#%0018
+13a6:  1cf9 0205      ldm     @r15,r2,#6
+13aa:  6ff6 000c      ld      %000c(r15),r6
+13ae:  6ff5 000e      ld      %000e(r15),r5
+13b2:  6ff4 0010      ld      %0010(r15),r4
+13b6:  6ff3 0012      ld      %0012(r15),r3
+13ba:  6ff2 0014      ld      %0014(r15),r2
+13be:  76f5 000c      lda     pr5,%000c(r15)
+13c2:  76f4 001a      lda     pr4,%001a(r15)
+13c6:  2107 2c4a      ld      r7,#%2c4a              ; 2c4a =0x3302 [3...3...]
+13ca:  61f6 000a      ld      r6,%000a(r15)
+13ce:  5f00 147e      call    %147e
+13d2:  010f 0018      add     r15,#%0018
+13d6:  9e08           ret
+13d8:  030f 0018      sub     r15,#%0018
+13dc:  1cf9 0205      ldm     @r15,r2,#6
+13e0:  6ff5 000c      ld      %000c(r15),r5
+13e4:  6ff4 000e      ld      %000e(r15),r4
+13e8:  6ff3 0010      ld      %0010(r15),r3
+13ec:  6ff2 0012      ld      %0012(r15),r2
+13f0:  61f0 001a      ld      r0,%001a(r15)
+13f4:  6ff0 0014      ld      %0014(r15),r0
+13f8:  76f5 000c      lda     pr5,%000c(r15)
+13fc:  76f4 001c      lda     pr4,%001c(r15)
+1400:  5f00 147e      call    %147e
+1404:  010f 0018      add     r15,#%0018
+1408:  9e08           ret
+140a:  030f 0022      sub     r15,#%0022
+140e:  6ffe 0020      ld      %0020(r15),r14
+1412:  1cf9 0204      ldm     @r15,r2,#5
+1416:  a17e           ld      r14,r7
+1418:  4cf5 0012 4141 ldb     %0012(r15),#%41
+141e:  6ff7 0010      ld      %0010(r15),r7
+1422:  6ff7 000c      ld      %000c(r15),r7
+1426:  4df8 000e      clr     %000e(r15)
+142a:  e802           jr      %1430
+142c:  69f0 000e      inc     %000e(r15),1
+1430:  a1e2           ld      r2,r14
+1432:  a9e0           inc     r14,1
+1434:  0c24           testb   @r2
+1436:  eefa           jr      ne/nz,%142c
+1438:  61f2 0006      ld      r2,%0006(r15)
+143c:  6ff2 0014      ld      %0014(r15),r2
+1440:  61f3 0004      ld      r3,%0004(r15)
+1444:  6ff3 0016      ld      %0016(r15),r3
+1448:  61f4 0002      ld      r4,%0002(r15)
+144c:  6ff4 0018      ld      %0018(r15),r4
+1450:  61f5 0000      ld      r5,%0000(r15)
+1454:  6ff5 001a      ld      %001a(r15),r5
+1458:  61f6 0024      ld      r6,%0024(r15)
+145c:  6ff6 001c      ld      %001c(r15),r6
+1460:  76f7 000c      lda     pr7,%000c(r15)
+1464:  76f5 0014      lda     pr5,%0014(r15)
+1468:  76f4 0026      lda     pr4,%0026(r15)
+146c:  61f6 0008      ld      r6,%0008(r15)
+1470:  5f00 147e      call    %147e
+1474:  61fe 0020      ld      r14,%0020(r15)
+1478:  010f 0022      add     r15,#%0022
+147c:  9e08           ret
+147e:  030f 001e      sub     r15,#%001e
+1482:  5cf9 0c02 0018 ldm     %0018(r15),r12,#3
+1488:  1cf9 0403      ldm     @r15,r4,#4
+148c:  a15d           ld      r13,r5
+148e:  a16e           ld      r14,r6
+1490:  4df8 0008      clr     %0008(r15)
+1494:  4df8 0010      clr     %0010(r15)
+1498:  4df8 0014      clr     %0014(r15)
+149c:  5e08 15fe      jp      %15fe
+14a0:  8144           add     r4,r4
+14a2:  8d42           neg     r4
+14a4:  6142 2c08      ld      r2,%2c08(r4)
+14a8:  1e28           jp      @rr2
+14aa:  a1e2           ld      r2,r14
+14ac:  a9e0           inc     r14,1
+14ae:  202b           ldb     rl3,@r2
+14b0:  b130           extsb   r3
+14b2:  a13c           ld      r12,r3
+14b4:  0b03 0025      cp      r3,#%0025
+14b8:  5e06 1618      jp      eq/z,%1618
+14bc:  4df8 000e      clr     %000e(r15)
+14c0:  0b03 002a      cp      r3,#%002a
+14c4:  e60c           jr      eq/z,%14de
+14c6:  6ffd 000e      ld      %000e(r15),r13
+14ca:  a9d1           inc     r13,2
+14cc:  69f0 0014      inc     %0014(r15),1
+14d0:  4df1 0014 0005 cp      %0014(r15),#%0005
+14d6:  ee07           jr      ne/nz,%14e6
+14d8:  61fd 0000      ld      r13,%0000(r15)
+14dc:  e804           jr      %14e6
+14de:  20ea           ldb     rl2,@r14
+14e0:  b120           extsb   r2
+14e2:  a12c           ld      r12,r2
+14e4:  a9e0           inc     r14,1
+14e6:  4df8 000a      clr     %000a(r15)
+14ea:  4df5 0012 0001 ld      %0012(r15),#%0001
+14f0:  e80d           jr      %150c
+14f2:  61f3 000a      ld      r3,%000a(r15)
+14f6:  1902 000a      mult    rr2,#%000a
+14fa:  81c3           add     r3,r12
+14fc:  0303 0030      sub     r3,#%0030
+1500:  6ff3 000a      ld      %000a(r15),r3
+1504:  20ea           ldb     rl2,@r14
+1506:  b120           extsb   r2
+1508:  a12c           ld      r12,r2
+150a:  a9e0           inc     r14,1
+150c:  60ca 2d9b      ldb     rl2,%2d9b(r12)
+1510:  b120           extsb   r2
+1512:  a722           bit     r2,2
+1514:  eeee           jr      ne/nz,%14f2
+1516:  4df4 000a      test    %000a(r15)
+151a:  ee03           jr      ne/nz,%1522
+151c:  4df5 000a 7530 ld      %000a(r15),#%7530
+1522:  0b0c 006c      cp      r12,#%006c
+1526:  ee08           jr      ne/nz,%1538
+1528:  20ea           ldb     rl2,@r14
+152a:  b120           extsb   r2
+152c:  a12c           ld      r12,r2
+152e:  a9e0           inc     r14,1
+1530:  4df5 0012 0002 ld      %0012(r15),#%0002
+1536:  e810           jr      %1558
+1538:  0b0c 0068      cp      r12,#%0068
+153c:  ee07           jr      ne/nz,%154c
+153e:  4df8 0012      clr     %0012(r15)
+1542:  20ea           ldb     rl2,@r14
+1544:  b120           extsb   r2
+1546:  a12c           ld      r12,r2
+1548:  a9e0           inc     r14,1
+154a:  e806           jr      %1558
+154c:  0b0c 005b      cp      r12,#%005b
+1550:  ee03           jr      ne/nz,%1558
+1552:  a1e7           ld      r7,r14
+1554:  dd98           calr    %1a26
+1556:  a12e           ld      r14,r2
+1558:  60ca 2d9b      ldb     rl2,%2d9b(r12)
+155c:  b120           extsb   r2
+155e:  a720           bit     r2,0
+1560:  e607           jr      eq/z,%1570
+1562:  a1c7           ld      r7,r12
+1564:  5f00 2458      call    %2458
+1568:  a12c           ld      r12,r2
+156a:  4df5 0012 0002 ld      %0012(r15),#%0002
+1570:  8dc4           test    r12
+1572:  ee03           jr      ne/nz,%157a
+1574:  2102 ffff      ld      r2,#%ffff
+1578:  e873           jr      %1660
+157a:  76f2 0010      lda     pr2,%0010(r15)
+157e:  a1c6           ld      r6,r12
+1580:  61f5 000a      ld      r5,%000a(r15)
+1584:  61f4 0012      ld      r4,%0012(r15)
+1588:  61f3 0006      ld      r3,%0006(r15)
+158c:  61f7 000e      ld      r7,%000e(r15)
+1590:  df93           calr    %166c
+1592:  8d24           test    r2
+1594:  e605           jr      eq/z,%15a0
+1596:  4df4 000e      test    %000e(r15)
+159a:  e602           jr      eq/z,%15a0
+159c:  69f0 0008      inc     %0008(r15),1
+15a0:  4df4 0010      test    %0010(r15)
+15a4:  e62c           jr      eq/z,%15fe
+15a6:  4df4 0008      test    %0008(r15)
+15aa:  e6e4           jr      eq/z,%1574
+15ac:  e857           jr      %165c
+15ae:  61f2 0006      ld      r2,%0006(r15)
+15b2:  6b20 0002      dec     %0002(r2),1
+15b6:  6123 0002      ld      r3,%0002(r2)
+15ba:  0b03 0000      cp      r3,#%0000
+15be:  e905           jr      ge,%15ca
+15c0:  61f7 0006      ld      r7,%0006(r15)
+15c4:  5f00 1ada      call    %1ada
+15c8:  e807           jr      %15d8
+15ca:  61f2 0006      ld      r2,%0006(r15)
+15ce:  2920           inc     @r2,1
+15d0:  2123           ld      r3,@r2
+15d2:  ab30           dec     r3,1
+15d4:  203a           ldb     rl2,@r3
+15d6:  8222           subb    rh2,rh2
+15d8:  6ff2 000c      ld      %000c(r15),r2
+15dc:  0b02 0020      cp      r2,#%0020
+15e0:  e6e6           jr      eq/z,%15ae
+15e2:  0b02 0009      cp      r2,#%0009
+15e6:  e6e3           jr      eq/z,%15ae
+15e8:  0b02 000a      cp      r2,#%000a
+15ec:  e6e0           jr      eq/z,%15ae
+15ee:  0b02 ffff      cp      r2,#%ffff
+15f2:  e605           jr      eq/z,%15fe
+15f4:  a127           ld      r7,r2
+15f6:  61f6 0006      ld      r6,%0006(r15)
+15fa:  5f00 1a84      call    %1a84
+15fe:  20eb           ldb     rl3,@r14
+1600:  b130           extsb   r3
+1602:  a13c           ld      r12,r3
+1604:  a132           ld      r2,r3
+1606:  a9e0           inc     r14,1
+1608:  2103 2bf6      ld      r3,#%2bf6              ; 2bf6 =0x0000 [....... ]
+160c:  2104 0005      ld      r4,#%0005              ; 5 "R. 1981 ZILOG INC."
+1610:  bb34 0426      cpir    r2,@r3,r4,eq/z
+1614:  5e06 14a0      jp      eq/z,%14a0
+1618:  61f2 0006      ld      r2,%0006(r15)
+161c:  6b20 0002      dec     %0002(r2),1
+1620:  6123 0002      ld      r3,%0002(r2)
+1624:  0b03 0000      cp      r3,#%0000
+1628:  e905           jr      ge,%1634
+162a:  61f7 0006      ld      r7,%0006(r15)
+162e:  5f00 1ada      call    %1ada
+1632:  e807           jr      %1642
+1634:  61f2 0006      ld      r2,%0006(r15)
+1638:  2920           inc     @r2,1
+163a:  2123           ld      r3,@r2
+163c:  ab30           dec     r3,1
+163e:  203a           ldb     rl2,@r3
+1640:  8222           subb    rh2,rh2
+1642:  6ff2 000c      ld      %000c(r15),r2
+1646:  4bfc 000c      cp      r12,%000c(r15)
+164a:  e6d9           jr      eq/z,%15fe
+164c:  0b02 ffff      cp      r2,#%ffff
+1650:  e691           jr      eq/z,%1574
+1652:  a127           ld      r7,r2
+1654:  61f6 0006      ld      r6,%0006(r15)
+1658:  5f00 1a84      call    %1a84
+165c:  61f2 0008      ld      r2,%0008(r15)
+1660:  5cf1 0c02 0018 ldm     r12,%0018(r15),#3
+1666:  010f 001e      add     r15,#%001e
+166a:  9e08           ret
+166c:  030f 001c      sub     r15,#%001c
+1670:  5cf9 0d01 0018 ldm     %0018(r15),r13,#2
+1676:  1cf9 0205      ldm     @r15,r2,#6
+167a:  4df8 0010      clr     %0010(r15)
+167e:  0b06 0063      cp      r6,#%0063
+1682:  e607           jr      eq/z,%1692
+1684:  0b06 0073      cp      r6,#%0073
+1688:  e604           jr      eq/z,%1692
+168a:  4df1 0008 005b cp      %0008(r15),#%005b
+1690:  ee14           jr      ne/nz,%16ba
+1692:  4df4 000a      test    %000a(r15)
+1696:  e605           jr      eq/z,%16a2
+1698:  61f7 000a      ld      r7,%000a(r15)
+169c:  2176           ld      r6,@r7
+169e:  a167           ld      r7,r6
+16a0:  e801           jr      %16a4
+16a2:  8377           sub     r7,r7
+16a4:  61f6 0008      ld      r6,%0008(r15)
+16a8:  61f5 0006      ld      r5,%0006(r15)
+16ac:  61f4 0002      ld      r4,%0002(r15)
+16b0:  61f3 0000      ld      r3,%0000(r15)
+16b4:  dedc           calr    %18fe
+16b6:  5e08 18f2      jp      %18f2
+16ba:  4df1 0008 0065 cp      %0008(r15),#%0065
+16c0:  e604           jr      eq/z,%16ca
+16c2:  4df1 0008 0066 cp      %0008(r15),#%0066
+16c8:  ee0e           jr      ne/nz,%16e6
+16ca:  61f7 000a      ld      r7,%000a(r15)
+16ce:  61f6 0006      ld      r6,%0006(r15)
+16d2:  61f5 0004      ld      r5,%0004(r15)
+16d6:  61f4 0002      ld      r4,%0002(r15)
+16da:  61f3 0000      ld      r3,%0000(r15)
+16de:  5f00 1a82      call    %1a82
+16e2:  5e08 18f2      jp      %18f2
+16e6:  9222           subl    rr2,rr2
+16e8:  5df2 0012      ldl     %0012(r15),rr2
+16ec:  bdda           ldk     r13,10
+16ee:  4df1 0008 006f cp      %0008(r15),#%006f
+16f4:  ee02           jr      ne/nz,%16fa
+16f6:  bdd8           ldk     r13,8
+16f8:  e806           jr      %1706
+16fa:  4df1 0008 0078 cp      %0008(r15),#%0078
+1700:  ee02           jr      ne/nz,%1706
+1702:  210d 0010      ld      r13,#%0010             ; 10 "OG INC."
+1706:  4df8 000c      clr     %000c(r15)
+170a:  61f2 0002      ld      r2,%0002(r15)
+170e:  6b20 0002      dec     %0002(r2),1
+1712:  6123 0002      ld      r3,%0002(r2)
+1716:  0b03 0000      cp      r3,#%0000
+171a:  e905           jr      ge,%1726
+171c:  61f7 0002      ld      r7,%0002(r15)
+1720:  5f00 1ada      call    %1ada
+1724:  e807           jr      %1734
+1726:  61f2 0002      ld      r2,%0002(r15)
+172a:  2920           inc     @r2,1
+172c:  2123           ld      r3,@r2
+172e:  ab30           dec     r3,1
+1730:  203a           ldb     rl2,@r3
+1732:  8222           subb    rh2,rh2
+1734:  a12e           ld      r14,r2
+1736:  0b02 0020      cp      r2,#%0020
+173a:  e6e7           jr      eq/z,%170a
+173c:  0b02 0009      cp      r2,#%0009
+1740:  e6e4           jr      eq/z,%170a
+1742:  0b02 000a      cp      r2,#%000a
+1746:  e6e1           jr      eq/z,%170a
+1748:  0b02 002d      cp      r2,#%002d
+174c:  ee30           jr      ne/nz,%17ae
+174e:  69f0 000c      inc     %000c(r15),1
+1752:  61f2 0002      ld      r2,%0002(r15)
+1756:  6b20 0002      dec     %0002(r2),1
+175a:  6123 0002      ld      r3,%0002(r2)
+175e:  0b03 0000      cp      r3,#%0000
+1762:  e905           jr      ge,%176e
+1764:  61f7 0002      ld      r7,%0002(r15)
+1768:  5f00 1ada      call    %1ada
+176c:  e807           jr      %177c
+176e:  61f2 0002      ld      r2,%0002(r15)
+1772:  2920           inc     @r2,1
+1774:  2123           ld      r3,@r2
+1776:  ab30           dec     r3,1
+1778:  203a           ldb     rl2,@r3
+177a:  8222           subb    rh2,rh2
+177c:  a12e           ld      r14,r2
+177e:  6bf0 0006      dec     %0006(r15),1
+1782:  e830           jr      %17e4
+1784:  4df4 000c      test    %000c(r15)
+1788:  e605           jr      eq/z,%1794
+178a:  9222           subl    rr2,rr2
+178c:  52f2 0012      subl    rr2,%0012(r15)
+1790:  5df2 0012      ldl     %0012(r15),rr2
+1794:  0b0e ffff      cp      r14,#%ffff
+1798:  5e06 18a2      jp      eq/z,%18a2
+179c:  a1e7           ld      r7,r14
+179e:  61f6 0002      ld      r6,%0002(r15)
+17a2:  5f00 1a84      call    %1a84
+17a6:  61f2 0000      ld      r2,%0000(r15)
+17aa:  0d28           clr     @r2
+17ac:  e87e           jr      %18aa
+17ae:  0b0e 002b      cp      r14,#%002b
+17b2:  ee18           jr      ne/nz,%17e4
+17b4:  6bf0 0006      dec     %0006(r15),1
+17b8:  61f2 0002      ld      r2,%0002(r15)
+17bc:  6b20 0002      dec     %0002(r2),1
+17c0:  6123 0002      ld      r3,%0002(r2)
+17c4:  0b03 0000      cp      r3,#%0000
+17c8:  e905           jr      ge,%17d4
+17ca:  61f7 0002      ld      r7,%0002(r15)
+17ce:  5f00 1ada      call    %1ada
+17d2:  e807           jr      %17e2
+17d4:  61f2 0002      ld      r2,%0002(r15)
+17d8:  2920           inc     @r2,1
+17da:  2123           ld      r3,@r2
+17dc:  ab30           dec     r3,1
+17de:  203a           ldb     rl2,@r3
+17e0:  8222           subb    rh2,rh2
+17e2:  a12e           ld      r14,r2
+17e4:  6bf0 0006      dec     %0006(r15),1
+17e8:  4df1 0006 0000 cp      %0006(r15),#%0000
+17ee:  e1ca           jr      lt,%1784
+17f0:  60ea 2d9b      ldb     rl2,%2d9b(r14)
+17f4:  b120           extsb   r2
+17f6:  a722           bit     r2,2
+17f8:  ee0f           jr      ne/nz,%1818
+17fa:  0b0d 0010      cp      r13,#%0010
+17fe:  eec2           jr      ne/nz,%1784
+1800:  0b0e 0061      cp      r14,#%0061
+1804:  e103           jr      lt,%180c
+1806:  0b0e 0066      cp      r14,#%0066
+180a:  e206           jr      le,%1818
+180c:  0b0e 0041      cp      r14,#%0041
+1810:  e1b9           jr      lt,%1784
+1812:  0b0e 0046      cp      r14,#%0046
+1816:  eab6           jr      gt,%1784
+1818:  4df5 0010 0001 ld      %0010(r15),#%0001
+181e:  0b0d 0008      cp      r13,#%0008
+1822:  ee05           jr      ne/nz,%182e
+1824:  54f2 0012      ldl     rr2,%0012(r15)
+1828:  b32d 0003      slal    rr2,#3
+182c:  e810           jr      %184e
+182e:  0b0d 000a      cp      r13,#%000a
+1832:  ee09           jr      ne/nz,%1846
+1834:  54f2 0012      ldl     rr2,%0012(r15)
+1838:  b32d 0002      slal    rr2,#2
+183c:  56f2 0012      addl    rr2,%0012(r15)
+1840:  b32d 0001      slal    rr2,#1
+1844:  e804           jr      %184e
+1846:  54f2 0012      ldl     rr2,%0012(r15)
+184a:  b32d 0004      slal    rr2,#4
+184e:  5df2 0012      ldl     %0012(r15),rr2
+1852:  6ffe 000e      ld      %000e(r15),r14
+1856:  0b0e 0030      cp      r14,#%0030
+185a:  e106           jr      lt,%1868
+185c:  0b0e 0039      cp      r14,#%0039
+1860:  ea03           jr      gt,%1868
+1862:  030e 0030      sub     r14,#%0030
+1866:  e80b           jr      %187e
+1868:  0b0e 0061      cp      r14,#%0061
+186c:  e106           jr      lt,%187a
+186e:  0b0e 0066      cp      r14,#%0066
+1872:  ea03           jr      gt,%187a
+1874:  030e 0057      sub     r14,#%0057
+1878:  e802           jr      %187e
+187a:  030e 0037      sub     r14,#%0037
+187e:  a1e3           ld      r3,r14
+1880:  b12a           exts    rr2
+1882:  56f2 0012      addl    rr2,%0012(r15)
+1886:  5df2 0012      ldl     %0012(r15),rr2
+188a:  61fe 000e      ld      r14,%000e(r15)
+188e:  61f2 0002      ld      r2,%0002(r15)
+1892:  6b20 0002      dec     %0002(r2),1
+1896:  6123 0002      ld      r3,%0002(r2)
+189a:  0b03 0000      cp      r3,#%0000
+189e:  e99a           jr      ge,%17d4
+18a0:  e894           jr      %17ca
+18a2:  61f2 0000      ld      r2,%0000(r15)
+18a6:  0d25 0001      ld      @r2,#%0001
+18aa:  4df4 000a      test    %000a(r15)
+18ae:  e620           jr      eq/z,%18f0
+18b0:  61f2 0004      ld      r2,%0004(r15)
+18b4:  2103 2c0a      ld      r3,#%2c0a              ; 2c0a =0x0000 [........]
+18b8:  2104 0003      ld      r4,#%0003              ; 3 "OPR. 1981 ZILOG INC."
+18bc:  bb34 0426      cpir    r2,@r3,r4,eq/z
+18c0:  ee14           jr      ne/nz,%18ea
+18c2:  8144           add     r4,r4
+18c4:  8d42           neg     r4
+18c6:  6142 2c14      ld      r2,%2c14(r4)
+18ca:  1e28           jp      @rr2
+18cc:  61f3 000a      ld      r3,%000a(r15)
+18d0:  2134           ld      r4,@r3
+18d2:  61f5 0014      ld      r5,%0014(r15)
+18d6:  2f45           ld      @r4,r5
+18d8:  e808           jr      %18ea
+18da:  bd21           ldk     r2,1
+18dc:  e80a           jr      %18f2
+18de:  61f3 000a      ld      r3,%000a(r15)
+18e2:  2134           ld      r4,@r3
+18e4:  54f6 0012      ldl     rr6,%0012(r15)
+18e8:  1d46           ldl     @r4,rr6
+18ea:  4df4 0010      test    %0010(r15)
+18ee:  eef5           jr      ne/nz,%18da
+18f0:  8322           sub     r2,r2
+18f2:  5cf1 0d01 0018 ldm     r13,%0018(r15),#2
+18f8:  010f 001c      add     r15,#%001c
+18fc:  9e08           ret
+18fe:  030f 0016      sub     r15,#%0016
+1902:  5cf9 0b03 000e ldm     %000e(r15),r11,#4
+1908:  1cf9 0303      ldm     @r15,r3,#4
+190c:  a14d           ld      r13,r4
+190e:  a17e           ld      r14,r7
+1910:  a132           ld      r2,r3
+1912:  0d28           clr     @r2
+1914:  a1eb           ld      r11,r14
+1916:  0b06 0063      cp      r6,#%0063
+191a:  ee06           jr      ne/nz,%1928
+191c:  0b05 7530      cp      r5,#%7530
+1920:  ee03           jr      ne/nz,%1928
+1922:  4df5 0004 0001 ld      %0004(r15),#%0001
+1928:  4df8 000a      clr     %000a(r15)
+192c:  4df1 0006 0073 cp      %0006(r15),#%0073
+1932:  ee03           jr      ne/nz,%193a
+1934:  4df5 000a 0001 ld      %000a(r15),#%0001
+193a:  6bd0 0002      dec     %0002(r13),1
+193e:  4dd1 0002 0000 cp      %0002(r13),#%0000
+1944:  e904           jr      ge,%194e
+1946:  a1d7           ld      r7,r13
+1948:  5f00 1ada      call    %1ada
+194c:  e805           jr      %1958
+194e:  21d2           ld      r2,@r13
+1950:  29d0           inc     @r13,1
+1952:  202b           ldb     rl3,@r2
+1954:  8233           subb    rh3,rh3
+1956:  a132           ld      r2,r3
+1958:  a12c           ld      r12,r2
+195a:  602b 2b76      ldb     rl3,%2b76(r2)
+195e:  b130           extsb   r3
+1960:  47f3 000a      and     r3,%000a(r15)
+1964:  e603           jr      eq/z,%196c
+1966:  0b0c ffff      cp      r12,#%ffff
+196a:  eee7           jr      ne/nz,%193a
+196c:  4df5 000a 0001 ld      %000a(r15),#%0001
+1972:  4df1 0006 0063 cp      %0006(r15),#%0063
+1978:  ee03           jr      ne/nz,%1980
+197a:  4df8 000a      clr     %000a(r15)
+197e:  e82a           jr      %19d4
+1980:  4df1 0006 005b cp      %0006(r15),#%005b
+1986:  ee26           jr      ne/nz,%19d4
+1988:  4df5 000a 0002 ld      %000a(r15),#%0002
+198e:  e822           jr      %19d4
+1990:  60ca 2b76      ldb     rl2,%2b76(r12)
+1994:  b120           extsb   r2
+1996:  47f2 000a      and     r2,%000a(r15)
+199a:  8d24           test    r2
+199c:  ee1e           jr      ne/nz,%19da
+199e:  8de4           test    r14
+19a0:  e603           jr      eq/z,%19a8
+19a2:  a1c2           ld      r2,r12
+19a4:  2eea           ldb     @r14,rl2
+19a6:  a9e0           inc     r14,1
+19a8:  6bf0 0004      dec     %0004(r15),1
+19ac:  4df1 0004 0000 cp      %0004(r15),#%0000
+19b2:  e213           jr      le,%19da
+19b4:  6bd0 0002      dec     %0002(r13),1
+19b8:  4dd1 0002 0000 cp      %0002(r13),#%0000
+19be:  e904           jr      ge,%19c8
+19c0:  a1d7           ld      r7,r13
+19c2:  5f00 1ada      call    %1ada
+19c6:  e805           jr      %19d2
+19c8:  21d2           ld      r2,@r13
+19ca:  29d0           inc     @r13,1
+19cc:  202b           ldb     rl3,@r2
+19ce:  8233           subb    rh3,rh3
+19d0:  a132           ld      r2,r3
+19d2:  a12c           ld      r12,r2
+19d4:  0b0c ffff      cp      r12,#%ffff
+19d8:  eedb           jr      ne/nz,%1990
+19da:  0b0c ffff      cp      r12,#%ffff
+19de:  e60c           jr      eq/z,%19f8
+19e0:  4df1 0004 0000 cp      %0004(r15),#%0000
+19e6:  e204           jr      le,%19f0
+19e8:  a1c7           ld      r7,r12
+19ea:  a1d6           ld      r6,r13
+19ec:  5f00 1a84      call    %1a84
+19f0:  61f2 0000      ld      r2,%0000(r15)
+19f4:  0d28           clr     @r2
+19f6:  e804           jr      %1a00
+19f8:  61f2 0000      ld      r2,%0000(r15)
+19fc:  0d25 0001      ld      @r2,#%0001
+1a00:  8de4           test    r14
+1a02:  e60a           jr      eq/z,%1a18
+1a04:  8bbe           cp      r14,r11
+1a06:  e608           jr      eq/z,%1a18
+1a08:  4df1 0006 0063 cp      %0006(r15),#%0063
+1a0e:  e602           jr      eq/z,%1a14
+1a10:  0ce8           clrb    @r14
+1a12:  a9e0           inc     r14,1
+1a14:  bd21           ldk     r2,1
+1a16:  e801           jr      %1a1a
+1a18:  8322           sub     r2,r2
+1a1a:  5cf1 0b03 000e ldm     r11,%000e(r15),#4
+1a20:  010f 0016      add     r15,#%0016
+1a24:  9e08           ret
+1a26:  abf9           dec     r15,10
+1a28:  a171           ld      r1,r7
+1a2a:  bd50           ldk     r5,0
+1a2c:  0c11 5e5e      cpb     @r1,#%5e
+1a30:  ee02           jr      ne/nz,%1a36
+1a32:  a950           inc     r5,1
+1a34:  a910           inc     r1,1
+1a36:  bd40           ldk     r4,0
+1a38:  8d54           test    r5
+1a3a:  e603           jr      eq/z,%1a42
+1a3c:  6241 2b76      resb    %2b76(r4),1
+1a40:  e802           jr      %1a46
+1a42:  6441 2b76      setb    %2b76(r4),1
+1a46:  a940           inc     r4,1
+1a48:  0b04 0080      cp      r4,#%0080
+1a4c:  e1f5           jr      lt,%1a38
+1a4e:  a112           ld      r2,r1
+1a50:  a910           inc     r1,1
+1a52:  202b           ldb     rl3,@r2
+1a54:  b130           extsb   r3
+1a56:  a134           ld      r4,r3
+1a58:  0703 007f      and     r3,#%007f
+1a5c:  0b03 005d      cp      r3,#%005d
+1a60:  e60b           jr      eq/z,%1a78
+1a62:  8d54           test    r5
+1a64:  e603           jr      eq/z,%1a6c
+1a66:  6441 2b76      setb    %2b76(r4),1
+1a6a:  e802           jr      %1a70
+1a6c:  6241 2b76      resb    %2b76(r4),1
+1a70:  a940           inc     r4,1
+1a72:  8d44           test    r4
+1a74:  eeec           jr      ne/nz,%1a4e
+1a76:  ab10           dec     r1,1
+1a78:  a112           ld      r2,r1
+1a7a:  a9f9           inc     r15,10
+1a7c:  9e08           ret
+1a7e:  9e08           ret
+1a80:  9e08           ret
+1a82:  9e08           ret
+1a84:  abf7           dec     r15,8
+1a86:  6ffe 0006      ld      %0006(r15),r14
+1a8a:  6ff7 0002      ld      %0002(r15),r7
+1a8e:  a16e           ld      r14,r6
+1a90:  0b07 ffff      cp      r7,#%ffff
+1a94:  e61c           jr      eq/z,%1ace
+1a96:  60ea 0006      ldb     rl2,%0006(r14)
+1a9a:  b120           extsb   r2
+1a9c:  0702 0001      and     r2,#%0001
+1aa0:  8d24           test    r2
+1aa2:  e604           jr      eq/z,%1aac
+1aa4:  21e2           ld      r2,@r14
+1aa6:  4be2 0004      cp      r2,%0004(r14)
+1aaa:  eb08           jr      ugt,%1abc
+1aac:  21e2           ld      r2,@r14
+1aae:  4be2 0004      cp      r2,%0004(r14)
+1ab2:  ee0d           jr      ne/nz,%1ace
+1ab4:  4de4 0002      test    %0002(r14)
+1ab8:  ee0a           jr      ne/nz,%1ace
+1aba:  29e0           inc     @r14,1
+1abc:  69e0 0002      inc     %0002(r14),1
+1ac0:  2be0           dec     @r14,1
+1ac2:  21e2           ld      r2,@r14
+1ac4:  60fb 0003      ldb     rl3,%0003(r15)
+1ac8:  2e2b           ldb     @r2,rl3
+1aca:  8322           sub     r2,r2
+1acc:  e802           jr      %1ad2
+1ace:  2102 ffff      ld      r2,#%ffff
+1ad2:  61fe 0006      ld      r14,%0006(r15)
+1ad6:  a9f7           inc     r15,8
+1ad8:  9e08           ret
+1ada:  abf5           dec     r15,6
+1adc:  6ffe 0004      ld      %0004(r15),r14
+1ae0:  a17e           ld      r14,r7
+1ae2:  60ea 0006      ldb     rl2,%0006(r14)
+1ae6:  b120           extsb   r2
+1ae8:  a727           bit     r2,7
+1aea:  e602           jr      eq/z,%1af0
+1aec:  64e0 0006      setb    %0006(r14),0
+1af0:  60ea 0006      ldb     rl2,%0006(r14)
+1af4:  b120           extsb   r2
+1af6:  0702 0001      and     r2,#%0001
+1afa:  8d24           test    r2
+1afc:  e605           jr      eq/z,%1b08
+1afe:  60ea 0006      ldb     rl2,%0006(r14)
+1b02:  b120           extsb   r2
+1b04:  a726           bit     r2,6
+1b06:  e60d           jr      eq/z,%1b22
+1b08:  2102 ffff      ld      r2,#%ffff
+1b0c:  e853           jr      %1bb4
+1b0e:  2107 0200      ld      r7,#%0200              ; 200 =0x6f02 [o.'.a.1.]
+1b12:  5f00 20d4      call    %20d4
+1b16:  6fe2 0004      ld      %0004(r14),r2
+1b1a:  8d24           test    r2
+1b1c:  ee12           jr      ne/nz,%1b42
+1b1e:  64e2 0006      setb    %0006(r14),2
+1b22:  4de4 0004      test    %0004(r14)
+1b26:  ee0f           jr      ne/nz,%1b46
+1b28:  60ea 0006      ldb     rl2,%0006(r14)
+1b2c:  b120           extsb   r2
+1b2e:  a722           bit     r2,2
+1b30:  e6ee           jr      eq/z,%1b0e
+1b32:  60ea 0007      ldb     rl2,%0007(r14)
+1b36:  b120           extsb   r2
+1b38:  0102 2c16      add     r2,#%2c16
+1b3c:  6fe2 0004      ld      %0004(r14),r2
+1b40:  e8f0           jr      %1b22
+1b42:  64e3 0006      setb    %0006(r14),3
+1b46:  61e2 0004      ld      r2,%0004(r14)
+1b4a:  2fe2           ld      @r14,r2
+1b4c:  60ed 0006      ldb     rl5,%0006(r14)
+1b50:  b150           extsb   r5
+1b52:  a752           bit     r5,2
+1b54:  e602           jr      eq/z,%1b5a
+1b56:  bd51           ldk     r5,1
+1b58:  e802           jr      %1b5e
+1b5a:  2105 0200      ld      r5,#%0200              ; 200 =0x6f02 [o.'.a.1.]
+1b5e:  21e6           ld      r6,@r14
+1b60:  60ef 0007      ldb     rl7,%0007(r14)
+1b64:  b170           extsb   r7
+1b66:  5f00 2658      call    %2658
+1b6a:  6fe2 0002      ld      %0002(r14),r2
+1b6e:  6be0 0002      dec     %0002(r14),1
+1b72:  4de1 0002 0000 cp      %0002(r14),#%0000
+1b78:  e913           jr      ge,%1ba0
+1b7a:  4de1 0002 ffff cp      %0002(r14),#%ffff
+1b80:  ee0a           jr      ne/nz,%1b96
+1b82:  64e4 0006      setb    %0006(r14),4
+1b86:  60ea 0006      ldb     rl2,%0006(r14)
+1b8a:  b120           extsb   r2
+1b8c:  a727           bit     r2,7
+1b8e:  e605           jr      eq/z,%1b9a
+1b90:  62e0 0006      resb    %0006(r14),0
+1b94:  e802           jr      %1b9a
+1b96:  64e5 0006      setb    %0006(r14),5
+1b9a:  4de8 0002      clr     %0002(r14)
+1b9e:  e8b4           jr      %1b08
+1ba0:  21e2           ld      r2,@r14
+1ba2:  202b           ldb     rl3,@r2
+1ba4:  8233           subb    rh3,rh3
+1ba6:  0703 00ff      and     r3,#%00ff
+1baa:  6ff3 0002      ld      %0002(r15),r3
+1bae:  29e0           inc     @r14,1
+1bb0:  61f2 0002      ld      r2,%0002(r15)
+1bb4:  61fe 0004      ld      r14,%0004(r15)
+1bb8:  a9f5           inc     r15,6
+1bba:  9e08           ret
+1bbc:  abf5           dec     r15,6
+1bbe:  6ffe 0004      ld      %0004(r15),r14
+1bc2:  2ff6           ld      @r15,r6
+1bc4:  a17e           ld      r14,r7
+1bc6:  4de4 0004      test    %0004(r14)
+1bca:  e609           jr      eq/z,%1bde
+1bcc:  60ef 0006      ldb     rl7,%0006(r14)
+1bd0:  b170           extsb   r7
+1bd2:  a773           bit     r7,3
+1bd4:  e604           jr      eq/z,%1bde
+1bd6:  61e7 0004      ld      r7,%0004(r14)
+1bda:  5f00 22d6      call    %22d6
+1bde:  60ea 0006      ldb     rl2,%0006(r14)
+1be2:  060a f3f3      andb    rl2,#%f3
+1be6:  6eea 0006      ldb     %0006(r14),rl2
+1bea:  61f2 0000      ld      r2,%0000(r15)
+1bee:  6fe2 0004      ld      %0004(r14),r2
+1bf2:  8d24           test    r2
+1bf4:  ee03           jr      ne/nz,%1bfc
+1bf6:  64e2 0006      setb    %0006(r14),2
+1bfa:  e803           jr      %1c02
+1bfc:  61e2 0004      ld      r2,%0004(r14)
+1c00:  2fe2           ld      @r14,r2
+1c02:  4de8 0002      clr     %0002(r14)
+1c06:  61fe 0004      ld      r14,%0004(r15)
+1c0a:  a9f5           inc     r15,6
+1c0c:  9e08           ret
+1c0e:  abff           dec     r15,16
+1c10:  5cf9 0b03 0008 ldm     %0008(r15),r11,#4
+1c16:  6ff7 0002      ld      %0002(r15),r7
+1c1a:  a16e           ld      r14,r6
+1c1c:  60ee 0006      ldb     rl6,%0006(r14)
+1c20:  b160           extsb   r6
+1c22:  a767           bit     r6,7
+1c24:  e614           jr      eq/z,%1c4e
+1c26:  64e1 0006      setb    %0006(r14),1
+1c2a:  62e4 0006      resb    %0006(r14),4
+1c2e:  e80f           jr      %1c4e
+1c30:  600f 2c59      ldb     rl7,%2c59              ; [2c59]=0x0100 [........]
+1c34:  b170           extsb   r7
+1c36:  5f00 240e      call    %240e
+1c3a:  8d24           test    r2
+1c3c:  e603           jr      eq/z,%1c44
+1c3e:  64e2 0006      setb    %0006(r14),2
+1c42:  e805           jr      %1c4e
+1c44:  4de5 0004 3102 ld      %0004(r14),#%3102
+1c4a:  0de5 3102      ld      @r14,#%3102
+1c4e:  60ea 0006      ldb     rl2,%0006(r14)
+1c52:  b120           extsb   r2
+1c54:  a722           bit     r2,2
+1c56:  e611           jr      eq/z,%1c7a
+1c58:  60fa 0003      ldb     rl2,%0003(r15)
+1c5c:  6efa 0005      ldb     %0005(r15),rl2
+1c60:  bdb1           ldk     r11,1
+1c62:  76f6 0005      lda     pr6,%0005(r15)
+1c66:  60ef 0007      ldb     rl7,%0007(r14)
+1c6a:  b170           extsb   r7
+1c6c:  a1b5           ld      r5,r11
+1c6e:  5f00 2712      call    %2712
+1c72:  a12c           ld      r12,r2
+1c74:  4de8 0002      clr     %0002(r14)
+1c78:  e82d           jr      %1cd4
+1c7a:  61ed 0004      ld      r13,%0004(r14)
+1c7e:  8dd4           test    r13
+1c80:  ee11           jr      ne/nz,%1ca4
+1c82:  0b0e 2c52      cp      r14,#%2c52
+1c86:  e6d4           jr      eq/z,%1c30
+1c88:  2107 0200      ld      r7,#%0200              ; 200 =0x6f02 [o.'.a.1.]
+1c8c:  5f00 20d4      call    %20d4
+1c90:  a12d           ld      r13,r2
+1c92:  6fe2 0004      ld      %0004(r14),r2
+1c96:  8d24           test    r2
+1c98:  e6d2           jr      eq/z,%1c3e
+1c9a:  64e3 0006      setb    %0006(r14),3
+1c9e:  bdc0           ldk     r12,0
+1ca0:  a1cb           ld      r11,r12
+1ca2:  e810           jr      %1cc4
+1ca4:  21e2           ld      r2,@r14
+1ca6:  83d2           sub     r2,r13
+1ca8:  a12c           ld      r12,r2
+1caa:  a12b           ld      r11,r2
+1cac:  0b02 0000      cp      r2,#%0000
+1cb0:  e209           jr      le,%1cc4
+1cb2:  2fed           ld      @r14,r13
+1cb4:  60ef 0007      ldb     rl7,%0007(r14)
+1cb8:  b170           extsb   r7
+1cba:  a1d6           ld      r6,r13
+1cbc:  a1c5           ld      r5,r12
+1cbe:  5f00 2712      call    %2712
+1cc2:  a12c           ld      r12,r2
+1cc4:  4de5 0002 01ff ld      %0002(r14),#%01ff
+1cca:  60fa 0003      ldb     rl2,%0003(r15)
+1cce:  2eda           ldb     @r13,rl2
+1cd0:  a9d0           inc     r13,1
+1cd2:  2fed           ld      @r14,r13
+1cd4:  8bcb           cp      r11,r12
+1cd6:  e605           jr      eq/z,%1ce2
+1cd8:  64e5 0006      setb    %0006(r14),5
+1cdc:  2102 ffff      ld      r2,#%ffff
+1ce0:  e802           jr      %1ce6
+1ce2:  61f2 0002      ld      r2,%0002(r15)
+1ce6:  5cf1 0b03 0008 ldm     r11,%0008(r15),#4
+1cec:  a9ff           inc     r15,16
+1cee:  9e08           ret
+1cf0:  abf9           dec     r15,10
+1cf2:  5cf9 0c02 0004 ldm     %0004(r15),r12,#3
+1cf8:  a17e           ld      r14,r7
+1cfa:  60ea 0006      ldb     rl2,%0006(r14)
+1cfe:  b120           extsb   r2
+1d00:  0702 0006      and     r2,#%0006
+1d04:  0b02 0002      cp      r2,#%0002
+1d08:  ee1c           jr      ne/nz,%1d42
+1d0a:  61ed 0004      ld      r13,%0004(r14)
+1d0e:  8dd4           test    r13
+1d10:  e618           jr      eq/z,%1d42
+1d12:  21e2           ld      r2,@r14
+1d14:  83d2           sub     r2,r13
+1d16:  a12c           ld      r12,r2
+1d18:  0b02 0000      cp      r2,#%0000
+1d1c:  e212           jr      le,%1d42
+1d1e:  2fed           ld      @r14,r13
+1d20:  4de5 0002 0200 ld      %0002(r14),#%0200
+1d26:  60ef 0007      ldb     rl7,%0007(r14)
+1d2a:  b170           extsb   r7
+1d2c:  a1d6           ld      r6,r13
+1d2e:  a1c5           ld      r5,r12
+1d30:  5f00 2712      call    %2712
+1d34:  8b2c           cp      r12,r2
+1d36:  e605           jr      eq/z,%1d42
+1d38:  64e5 0006      setb    %0006(r14),5
+1d3c:  2102 ffff      ld      r2,#%ffff
+1d40:  e801           jr      %1d44
+1d42:  8322           sub     r2,r2
+1d44:  5cf1 0c02 0004 ldm     r12,%0004(r15),#3
+1d4a:  a9f9           inc     r15,10
+1d4c:  9e08           ret
+1d4e:  abf1           dec     r15,2
+1d50:  2ffe           ld      @r15,r14
+1d52:  210e 2c4a      ld      r14,#%2c4a             ; 2c4a =0x3302 [3...3...]
+1d56:  e803           jr      %1d5e
+1d58:  a1e7           ld      r7,r14
+1d5a:  dff9           calr    %1d6a
+1d5c:  a9e7           inc     r14,8
+1d5e:  4b0e 2d8a      cp      r14,%2d8a              ; [2d8a]=0x2d8a [-....@..]
+1d62:  e7fa           jr      c/ult,%1d58
+1d64:  21fe           ld      r14,@r15
+1d66:  a9f1           inc     r15,2
+1d68:  9e08           ret
+1d6a:  abf7           dec     r15,8
+1d6c:  5cf9 0d01 0004 ldm     %0004(r15),r13,#2
+1d72:  a17e           ld      r14,r7
+1d74:  210d ffff      ld      r13,#%ffff
+1d78:  60ea 0006      ldb     rl2,%0006(r14)
+1d7c:  b120           extsb   r2
+1d7e:  0702 0083      and     r2,#%0083
+1d82:  e625           jr      eq/z,%1dce
+1d84:  60ea 0006      ldb     rl2,%0006(r14)
+1d88:  b120           extsb   r2
+1d8a:  0702 0040      and     r2,#%0040
+1d8e:  8d24           test    r2
+1d90:  ee1e           jr      ne/nz,%1dce
+1d92:  d052           calr    %1cf0
+1d94:  a12d           ld      r13,r2
+1d96:  60ef 0007      ldb     rl7,%0007(r14)
+1d9a:  b170           extsb   r7
+1d9c:  5f00 25ac      call    %25ac
+1da0:  0b02 0000      cp      r2,#%0000
+1da4:  e903           jr      ge,%1dac
+1da6:  2102 ffff      ld      r2,#%ffff
+1daa:  e81a           jr      %1de0
+1dac:  60ea 0006      ldb     rl2,%0006(r14)
+1db0:  b120           extsb   r2
+1db2:  a723           bit     r2,3
+1db4:  e604           jr      eq/z,%1dbe
+1db6:  61e7 0004      ld      r7,%0004(r14)
+1dba:  5f00 22d6      call    %22d6
+1dbe:  60ea 0006      ldb     rl2,%0006(r14)
+1dc2:  b120           extsb   r2
+1dc4:  0702 000c      and     r2,#%000c
+1dc8:  e602           jr      eq/z,%1dce
+1dca:  4de8 0004      clr     %0004(r14)
+1dce:  60ea 0006      ldb     rl2,%0006(r14)
+1dd2:  060a 0000      andb    rl2,#%00
+1dd6:  6eea 0006      ldb     %0006(r14),rl2
+1dda:  4de8 0002      clr     %0002(r14)
+1dde:  a1d2           ld      r2,r13
+1de0:  5cf1 0d01 0004 ldm     r13,%0004(r15),#2
+1de6:  a9f7           inc     r15,8
+1de8:  9e08           ret
+1dea:  abfd           dec     r15,14
+1dec:  5cf9 0c02 0008 ldm     %0008(r15),r12,#3
+1df2:  5df6 0002      ldl     %0002(r15),rr6
+1df6:  a15e           ld      r14,r5
+1df8:  8d54           test    r5
+1dfa:  ee02           jr      ne/nz,%1e00
+1dfc:  8322           sub     r2,r2
+1dfe:  e87b           jr      %1ef6
+1e00:  61f2 0002      ld      r2,%0002(r15)
+1e04:  0c21 7272      cpb     @r2,#%72
+1e08:  ee04           jr      ne/nz,%1e12
+1e0a:  4c21 0001 7777 cpb     %0001(r2),#%77
+1e10:  e609           jr      eq/z,%1e24
+1e12:  61f2 0002      ld      r2,%0002(r15)
+1e16:  0c21 7777      cpb     @r2,#%77
+1e1a:  ee0d           jr      ne/nz,%1e36
+1e1c:  4c21 0001 7272 cpb     %0001(r2),#%72
+1e22:  ee09           jr      ne/nz,%1e36
+1e24:  61f2 0002      ld      r2,%0002(r15)
+1e28:  0c25 7272      ldb     @r2,#%72
+1e2c:  61f2 0002      ld      r2,%0002(r15)
+1e30:  4c25 0001 2b2b ldb     %0001(r2),#%2b
+1e36:  61f2 0002      ld      r2,%0002(r15)
+1e3a:  4c21 0001 2b2b cpb     %0001(r2),#%2b
+1e40:  bd30           ldk     r3,0
+1e42:  af36           tcc     eq/z,r3
+1e44:  a13d           ld      r13,r3
+1e46:  61f2 0002      ld      r2,%0002(r15)
+1e4a:  202c           ldb     rl4,@r2
+1e4c:  b140           extsb   r4
+1e4e:  a143           ld      r3,r4
+1e50:  2102 2c3e      ld      r2,#%2c3e              ; 2c3e =0x0061 [.a.r.w.r]
+1e54:  2104 0003      ld      r4,#%0003              ; 3 "OPR. 1981 ZILOG INC."
+1e58:  bb24 0436      cpir    r3,@r2,r4,eq/z
+1e5c:  eecf           jr      ne/nz,%1dfc
+1e5e:  8144           add     r4,r4
+1e60:  8d42           neg     r4
+1e62:  6143 2c48      ld      r3,%2c48(r4)
+1e66:  1e38           jp      @rr3
+1e68:  61f7 0004      ld      r7,%0004(r15)
+1e6c:  a1d6           ld      r6,r13
+1e6e:  dfb8           calr    %1f00
+1e70:  e825           jr      %1ebc
+1e72:  8dd4           test    r13
+1e74:  e602           jr      eq/z,%1e7a
+1e76:  bd62           ldk     r6,2
+1e78:  e801           jr      %1e7c
+1e7a:  bd61           ldk     r6,1
+1e7c:  61f7 0004      ld      r7,%0004(r15)
+1e80:  5f00 2644      call    %2644
+1e84:  a12c           ld      r12,r2
+1e86:  0b02 0000      cp      r2,#%0000
+1e8a:  e909           jr      ge,%1e9e
+1e8c:  4d01 2ea0 0002 cp      %2ea0,#%0002           ; [2ea0]=0x0000 [....]
+1e92:  ee05           jr      ne/nz,%1e9e
+1e94:  61f7 0004      ld      r7,%0004(r15)
+1e98:  a1d6           ld      r6,r13
+1e9a:  dfce           calr    %1f00
+1e9c:  a12c           ld      r12,r2
+1e9e:  a1c7           ld      r7,r12
+1ea0:  9244           subl    rr4,rr4
+1ea2:  bd32           ldk     r3,2
+1ea4:  5f00 2632      call    %2632
+1ea8:  e80a           jr      %1ebe
+1eaa:  8dd4           test    r13
+1eac:  e602           jr      eq/z,%1eb2
+1eae:  bd62           ldk     r6,2
+1eb0:  e801           jr      %1eb4
+1eb2:  8366           sub     r6,r6
+1eb4:  61f7 0004      ld      r7,%0004(r15)
+1eb8:  5f00 2644      call    %2644
+1ebc:  a12c           ld      r12,r2
+1ebe:  0b0c 0000      cp      r12,#%0000
+1ec2:  e19c           jr      lt,%1dfc
+1ec4:  4de8 0002      clr     %0002(r14)
+1ec8:  a1c2           ld      r2,r12
+1eca:  6eea 0007      ldb     %0007(r14),rl2
+1ece:  8dd4           test    r13
+1ed0:  e607           jr      eq/z,%1ee0
+1ed2:  60ea 0006      ldb     rl2,%0006(r14)
+1ed6:  040a 8080      orb     rl2,#%80
+1eda:  6eea 0006      ldb     %0006(r14),rl2
+1ede:  e80a           jr      %1ef4
+1ee0:  61f2 0002      ld      r2,%0002(r15)
+1ee4:  0c21 7272      cpb     @r2,#%72
+1ee8:  ee03           jr      ne/nz,%1ef0
+1eea:  64e0 0006      setb    %0006(r14),0
+1eee:  e802           jr      %1ef4
+1ef0:  64e1 0006      setb    %0006(r14),1
+1ef4:  a1e2           ld      r2,r14
+1ef6:  5cf1 0c02 0008 ldm     r12,%0008(r15),#3
+1efc:  a9fd           inc     r15,14
+1efe:  9e08           ret
+1f00:  abfb           dec     r15,12
+1f02:  5cf9 0c02 0006 ldm     %0006(r15),r12,#3
+1f08:  2ff6           ld      @r15,r6
+1f0a:  a17e           ld      r14,r7
+1f0c:  8d64           test    r6
+1f0e:  e620           jr      eq/z,%1f50
+1f10:  8377           sub     r7,r7
+1f12:  5f00 26fa      call    %26fa
+1f16:  a12d           ld      r13,r2
+1f18:  a1e7           ld      r7,r14
+1f1a:  2106 01b6      ld      r6,#%01b6              ; 1b6 =0x5f00 [_.&"`.'.]
+1f1e:  5f00 25ba      call    %25ba
+1f22:  a12c           ld      r12,r2
+1f24:  0b02 0000      cp      r2,#%0000
+1f28:  e10f           jr      lt,%1f48
+1f2a:  a127           ld      r7,r2
+1f2c:  5f00 25ac      call    %25ac
+1f30:  a1e7           ld      r7,r14
+1f32:  bd62           ldk     r6,2
+1f34:  5f00 2644      call    %2644
+1f38:  a12c           ld      r12,r2
+1f3a:  a1d6           ld      r6,r13
+1f3c:  8d60           com     r6
+1f3e:  0706 01b6      and     r6,#%01b6
+1f42:  a1e7           ld      r7,r14
+1f44:  5f00 259c      call    %259c
+1f48:  a1d7           ld      r7,r13
+1f4a:  5f00 26fa      call    %26fa
+1f4e:  e806           jr      %1f5c
+1f50:  a1e7           ld      r7,r14
+1f52:  2106 01b6      ld      r6,#%01b6              ; 1b6 =0x5f00 [_.&"`.'.]
+1f56:  5f00 25ba      call    %25ba
+1f5a:  a12c           ld      r12,r2
+1f5c:  a1c2           ld      r2,r12
+1f5e:  5cf1 0c02 0006 ldm     r12,%0006(r15),#3
+1f64:  a9fb           inc     r15,12
+1f66:  9e08           ret
+1f68:  abf3           dec     r15,4
+1f6a:  6ffe 0002      ld      %0002(r15),r14
+1f6e:  210e 2c4a      ld      r14,#%2c4a             ; 2c4a =0x3302 [3...3...]
+1f72:  e806           jr      %1f80
+1f74:  4b0e 2d8a      cp      r14,%2d8a              ; [2d8a]=0x2d8a [-....@..]
+1f78:  e702           jr      c/ult,%1f7e
+1f7a:  8322           sub     r2,r2
+1f7c:  e808           jr      %1f8e
+1f7e:  a9e7           inc     r14,8
+1f80:  60ea 0006      ldb     rl2,%0006(r14)
+1f84:  b120           extsb   r2
+1f86:  0702 0083      and     r2,#%0083
+1f8a:  eef4           jr      ne/nz,%1f74
+1f8c:  a1e2           ld      r2,r14
+1f8e:  61fe 0002      ld      r14,%0002(r15)
+1f92:  a9f3           inc     r15,4
+1f94:  9e08           ret
+1f96:  5f00 1f9c      call    %1f9c
+1f9a:  9e08           ret
+1f9c:  a178           ld      r8,r7
+1f9e:  5f00 1d4e      call    %1d4e
+1fa2:  a180           ld      r0,r8
+1fa4:  7f01           sc      #%01                   ; SYS exit (#1)
+1fa6:  abf9           dec     r15,10
+1fa8:  5cf9 0c02 0004 ldm     %0004(r15),r12,#3
+1fae:  a17e           ld      r14,r7
+1fb0:  610d 2ea4      ld      r13,%2ea4
+1fb4:  e809           jr      %1fc8
+1fb6:  a1d6           ld      r6,r13
+1fb8:  a9d1           inc     r13,2
+1fba:  2167           ld      r7,@r6
+1fbc:  a176           ld      r6,r7
+1fbe:  a1e7           ld      r7,r14
+1fc0:  dff5           calr    %1fd8
+1fc2:  a12c           ld      r12,r2
+1fc4:  8d24           test    r2
+1fc6:  ee03           jr      ne/nz,%1fce
+1fc8:  0dd4           test    @r13
+1fca:  eef5           jr      ne/nz,%1fb6
+1fcc:  8322           sub     r2,r2
+1fce:  5cf1 0c02 0004 ldm     r12,%0004(r15),#3
+1fd4:  a9f9           inc     r15,10
+1fd6:  9e08           ret
+1fd8:  abf9           dec     r15,10
+1fda:  a164           ld      r4,r6
+1fdc:  a171           ld      r1,r7
+1fde:  a142           ld      r2,r4
+1fe0:  a940           inc     r4,1
+1fe2:  202b           ldb     rl3,@r2
+1fe4:  0a1b           cpb     rl3,@r1
+1fe6:  ee08           jr      ne/nz,%1ff8
+1fe8:  a112           ld      r2,r1
+1fea:  a910           inc     r1,1
+1fec:  202b           ldb     rl3,@r2
+1fee:  0a0b 3d3d      cpb     rl3,#%3d
+1ff2:  eef5           jr      ne/nz,%1fde
+1ff4:  a142           ld      r2,r4
+1ff6:  e807           jr      %2006
+1ff8:  0c14           testb   @r1
+1ffa:  ee04           jr      ne/nz,%2004
+1ffc:  4c41 ffff 3d3d cpb     %ffff(r4),#%3d
+2002:  e6f8           jr      eq/z,%1ff4
+2004:  8322           sub     r2,r2
+2006:  a9f9           inc     r15,10
+2008:  9e08           ret
+200a:  abfd           dec     r15,14
+200c:  2ff7           ld      @r15,r7
+200e:  8d74           test    r7
+2010:  ee02           jr      ne/nz,%2016
+2012:  8322           sub     r2,r2
+2014:  e85c           jr      %20ce
+2016:  8377           sub     r7,r7
+2018:  5f00 255e      call    %255e
+201c:  6ff2 0008      ld      %0008(r15),r2
+2020:  bd7e           ldk     r7,14
+2022:  2106 20d2      ld      r6,#%20d2              ; 20d2 =0x9e08 [......\.]
+2026:  5f00 2678      call    %2678
+202a:  6ff2 0004      ld      %0004(r15),r2
+202e:  4df8 0002      clr     %0002(r15)
+2032:  4df8 000a      clr     %000a(r15)
+2036:  4df4 0008      test    %0008(r15)
+203a:  e620           jr      eq/z,%207c
+203c:  61f2 0008      ld      r2,%0008(r15)
+2040:  4bf2 0000      cp      r2,%0000(r15)
+2044:  e308           jr      ule,%2056
+2046:  a123           ld      r3,r2
+2048:  43f3 0000      sub     r3,%0000(r15)
+204c:  6ff3 0008      ld      %0008(r15),r3
+2050:  69f0 0002      inc     %0002(r15),1
+2054:  e813           jr      %207c
+2056:  61f2 0000      ld      r2,%0000(r15)
+205a:  43f2 0008      sub     r2,%0008(r15)
+205e:  6ff2 000a      ld      %000a(r15),r2
+2062:  61f2 0008      ld      r2,%0008(r15)
+2066:  6ff2 0000      ld      %0000(r15),r2
+206a:  4df8 0008      clr     %0008(r15)
+206e:  6bf0 0002      dec     %0002(r15),1
+2072:  bd7e           ldk     r7,14
+2074:  61f6 0004      ld      r6,%0004(r15)
+2078:  5f00 2678      call    %2678
+207c:  61f7 0000      ld      r7,%0000(r15)
+2080:  5f00 255e      call    %255e
+2084:  5f00 2654      call    %2654
+2088:  8377           sub     r7,r7
+208a:  5f00 255e      call    %255e
+208e:  6ff2 0006      ld      %0006(r15),r2
+2092:  4df1 0002 0000 cp      %0002(r15),#%0000
+2098:  e105           jr      lt,%20a4
+209a:  bd7e           ldk     r7,14
+209c:  61f6 0004      ld      r6,%0004(r15)
+20a0:  5f00 2678      call    %2678
+20a4:  4df1 0002 0000 cp      %0002(r15),#%0000
+20aa:  ea07           jr      gt,%20ba
+20ac:  4df1 0002 0000 cp      %0002(r15),#%0000
+20b2:  e909           jr      ge,%20c6
+20b4:  4df4 0006      test    %0006(r15)
+20b8:  e606           jr      eq/z,%20c6
+20ba:  61f7 0008      ld      r7,%0008(r15)
+20be:  41f7 0006      add     r7,%0006(r15)
+20c2:  5f00 255e      call    %255e
+20c6:  61f2 000a      ld      r2,%000a(r15)
+20ca:  41f2 0006      add     r2,%0006(r15)
+20ce:  a9fd           inc     r15,14
+20d0:  9e08           ret
+20d2:  9e08           ret
+20d4:  030f 0012      sub     r15,#%0012
+20d8:  5cf9 0806 0004 ldm     %0004(r15),r8,#7
+20de:  a17e           ld      r14,r7
+20e0:  bd80           ldk     r8,0
+20e2:  4b07 2d8c      cp      r7,%2d8c               ; [2d8c]=0xfff8 [...@....]
+20e6:  e303           jr      ule,%20ee
+20e8:  8322           sub     r2,r2
+20ea:  5e08 2258      jp      %2258
+20ee:  4d04 2d94      test    %2d94                  ; [2d94]=0x0000 [....... ]
+20f2:  e603           jr      eq/z,%20fa
+20f4:  4d04 2d98      test    %2d98                  ; [2d98]=0x0000 [...     ]
+20f8:  ee01           jr      ne/nz,%20fc
+20fa:  bd81           ldk     r8,1
+20fc:  4d04 2d94      test    %2d94                  ; [2d94]=0x0000 [....... ]
+2100:  ee14           jr      ne/nz,%212a
+2102:  4d05 2d94 2d90 ld      %2d94,#%2d90           ; [2d94]=0x0000 [....... ]
+2108:  4d05 2d96 2d92 ld      %2d96,#%2d92           ; [2d96]=0x0000 [.....   ]
+210e:  2102 2d92      ld      r2,#%2d92              ; 2d92 =0x0000 [........]
+2112:  0502 0001      or      r2,#%0001
+2116:  6103 2d94      ld      r3,%2d94               ; [2d94]=0x0000 [....... ]
+211a:  2f32           ld      @r3,r2
+211c:  2102 2d90      ld      r2,#%2d90              ; 2d90 =0x0000 [........]
+2120:  0502 0001      or      r2,#%0001
+2124:  6104 2d96      ld      r4,%2d96               ; [2d96]=0x0000 [.....   ]
+2128:  2f42           ld      @r4,r2
+212a:  76e2 0003      lda     pr2,%0003(r14)
+212e:  a320           res     r2,0
+2130:  b324           rr      r2,1
+2132:  a12a           ld      r10,r2
+2134:  610d 2d94      ld      r13,%2d94              ; [2d94]=0x0000 [....... ]
+2138:  21d2           ld      r2,@r13
+213a:  0702 fffe      and     r2,#%fffe
+213e:  a12c           ld      r12,r2
+2140:  610b 2d96      ld      r11,%2d96              ; [2d96]=0x0000 [.....   ]
+2144:  27d0           bit     @r13,0
+2146:  e611           jr      eq/z,%216a
+2148:  e820           jr      %218a
+214a:  21c2           ld      r2,@r12
+214c:  0702 fffe      and     r2,#%fffe
+2150:  a12c           ld      r12,r2
+2152:  2fd2           ld      @r13,r2
+2154:  6f02 2d94      ld      %2d94,r2               ; [2d94]=0x0000 [....... ]
+2158:  e808           jr      %216a
+215a:  4b0c 2d94      cp      r12,%2d94              ; [2d94]=0x0000 [....... ]
+215e:  e6f5           jr      eq/z,%214a
+2160:  21c2           ld      r2,@r12
+2162:  0702 fffe      and     r2,#%fffe
+2166:  a12c           ld      r12,r2
+2168:  2fd2           ld      @r13,r2
+216a:  27c0           bit     @r12,0
+216c:  e6f6           jr      eq/z,%215a
+216e:  a1a2           ld      r2,r10
+2170:  81a2           add     r2,r10
+2172:  81d2           add     r2,r13
+2174:  8b2c           cp      r12,r2
+2176:  e705           jr      c/ult,%2182
+2178:  a1a2           ld      r2,r10
+217a:  81a2           add     r2,r10
+217c:  81d2           add     r2,r13
+217e:  8b2d           cp      r13,r2
+2180:  e35b           jr      ule,%2238
+2182:  4b0c 2d96      cp      r12,%2d96              ; [2d96]=0x0000 [.....   ]
+2186:  ee01           jr      ne/nz,%218a
+2188:  a1db           ld      r11,r13
+218a:  a1cd           ld      r13,r12
+218c:  21d2           ld      r2,@r13
+218e:  0702 fffe      and     r2,#%fffe
+2192:  a12c           ld      r12,r2
+2194:  4b0d 2d94      cp      r13,%2d94              ; [2d94]=0x0000 [....... ]
+2198:  eed5           jr      ne/nz,%2144
+219a:  6102 2d96      ld      r2,%2d96               ; [2d96]=0x0000 [.....   ]
+219e:  83b2           sub     r2,r11
+21a0:  b329 ffff      sra     r2,#1
+21a4:  a1a6           ld      r6,r10
+21a6:  8326           sub     r6,r2
+21a8:  8186           add     r6,r8
+21aa:  bd20           ldk     r2,0
+21ac:  a163           ld      r3,r6
+21ae:  b32d 0001      slal    rr2,#1
+21b2:  1602 0000 03ff addl    rr2,#%000003ff
+21b8:  9426           ldl     rr6,rr2
+21ba:  b147           extsl   rq4
+21bc:  1a04 0000 0400 divl    rq4,#%00000400
+21c2:  a179           ld      r9,r7
+21c4:  4b07 2d8e      cp      r7,%2d8e               ; [2d8e]=0x0040 [.@......]
+21c8:  eb8f           jr      ugt,%20e8
+21ca:  a172           ld      r2,r7
+21cc:  b329 000a      sla     r2,#10
+21d0:  a12e           ld      r14,r2
+21d2:  8377           sub     r7,r7
+21d4:  5f00 2578      call    %2578
+21d8:  a12d           ld      r13,r2
+21da:  81e2           add     r2,r14
+21dc:  8b2d           cp      r13,r2
+21de:  eb84           jr      ugt,%20e8
+21e0:  a1e7           ld      r7,r14
+21e2:  5f00 3578      call    %3578                  ; !! target 0x3578 PAST image-end 0x352a (heap/zero)
+21e6:  a12d           ld      r13,r2
+21e8:  0b02 ffff      cp      r2,#%ffff
+21ec:  5e06 20e8      jp      eq/z,%20e8
+21f0:  8d84           test    r8
+21f2:  e610           jr      eq/z,%2214
+21f4:  0502 0001      or      r2,#%0001
+21f8:  6103 2d96      ld      r3,%2d96               ; [2d96]=0x0000 [.....   ]
+21fc:  2f32           ld      @r3,r2
+21fe:  a192           ld      r2,r9
+2200:  b329 0009      sla     r2,#9
+2204:  8122           add     r2,r2
+2206:  81d2           add     r2,r13
+2208:  ab21           dec     r2,2
+220a:  a12c           ld      r12,r2
+220c:  4d05 2d98 0001 ld      %2d98,#%0001           ; [2d98]=0x0000 [...     ]
+2212:  e809           jr      %2226
+2214:  a1bd           ld      r13,r11
+2216:  a192           ld      r2,r9
+2218:  b329 0009      sla     r2,#9
+221c:  8122           add     r2,r2
+221e:  4102 2d96      add     r2,%2d96               ; [2d96]=0x0000 [.....   ]
+2222:  ab21           dec     r2,2
+2224:  a12c           ld      r12,r2
+2226:  2102 2d90      ld      r2,#%2d90              ; 2d90 =0x0000 [........]
+222a:  0502 0001      or      r2,#%0001
+222e:  2fc2           ld      @r12,r2
+2230:  21c2           ld      r2,@r12
+2232:  2fc2           ld      @r12,r2
+2234:  6f0c 2d96      ld      %2d96,r12              ; [2d96]=0x0000 [.....   ]
+2238:  a1a2           ld      r2,r10
+223a:  81a2           add     r2,r10
+223c:  81d2           add     r2,r13
+223e:  6f02 2d94      ld      %2d94,r2               ; [2d94]=0x0000 [....... ]
+2242:  4b0c 2d94      cp      r12,%2d94              ; [2d94]=0x0000 [....... ]
+2246:  e301           jr      ule,%224a
+2248:  2f2c           ld      @r2,r12
+224a:  6102 2d94      ld      r2,%2d94               ; [2d94]=0x0000 [....... ]
+224e:  0502 0001      or      r2,#%0001
+2252:  2fd2           ld      @r13,r2
+2254:  76d2 0002      lda     pr2,%0002(r13)
+2258:  5cf1 0806 f464 ldm     r8,%f464(r15),#7
+225e:  010f 0012      add     r15,#%0012
+2262:  9e08           ret
+2264:  abfb           dec     r15,12
+2266:  a171           ld      r1,r7
+2268:  7612 0003      lda     pr2,%0003(r1)
+226c:  a320           res     r2,0
+226e:  b324           rr      r2,1
+2270:  a123           ld      r3,r2
+2272:  6104 2d94      ld      r4,%2d94               ; [2d94]=0x0000 [....... ]
+2276:  2142           ld      r2,@r4
+2278:  0702 fffe      and     r2,#%fffe
+227c:  a125           ld      r5,r2
+227e:  2740           bit     @r4,0
+2280:  e611           jr      eq/z,%22a4
+2282:  e81e           jr      %22c0
+2284:  2152           ld      r2,@r5
+2286:  0702 fffe      and     r2,#%fffe
+228a:  a125           ld      r5,r2
+228c:  2f42           ld      @r4,r2
+228e:  6f02 2d94      ld      %2d94,r2               ; [2d94]=0x0000 [....... ]
+2292:  e808           jr      %22a4
+2294:  4b05 2d94      cp      r5,%2d94               ; [2d94]=0x0000 [....... ]
+2298:  e6f5           jr      eq/z,%2284
+229a:  2152           ld      r2,@r5
+229c:  0702 fffe      and     r2,#%fffe
+22a0:  a125           ld      r5,r2
+22a2:  2f42           ld      @r4,r2
+22a4:  2750           bit     @r5,0
+22a6:  e6f6           jr      eq/z,%2294
+22a8:  a132           ld      r2,r3
+22aa:  8132           add     r2,r3
+22ac:  8142           add     r2,r4
+22ae:  8b25           cp      r5,r2
+22b0:  e707           jr      c/ult,%22c0
+22b2:  a132           ld      r2,r3
+22b4:  8132           add     r2,r3
+22b6:  8142           add     r2,r4
+22b8:  8b24           cp      r4,r2
+22ba:  eb02           jr      ugt,%22c0
+22bc:  a142           ld      r2,r4
+22be:  e809           jr      %22d2
+22c0:  a154           ld      r4,r5
+22c2:  2142           ld      r2,@r4
+22c4:  0702 fffe      and     r2,#%fffe
+22c8:  a125           ld      r5,r2
+22ca:  4b04 2d94      cp      r4,%2d94               ; [2d94]=0x0000 [....... ]
+22ce:  eed7           jr      ne/nz,%227e
+22d0:  8322           sub     r2,r2
+22d2:  a9fb           inc     r15,12
+22d4:  9e08           ret
+22d6:  abf3           dec     r15,4
+22d8:  6ffe 0002      ld      %0002(r15),r14
+22dc:  2ff7           ld      @r15,r7
+22de:  61fe 0000      ld      r14,%0000(r15)
+22e2:  21e6           ld      r6,@r14
+22e4:  ab61           dec     r6,2
+22e6:  a16e           ld      r14,r6
+22e8:  6f06 2d94      ld      %2d94,r6               ; [2d94]=0x0000 [....... ]
+22ec:  21e6           ld      r6,@r14
+22ee:  0706 fffe      and     r6,#%fffe
+22f2:  2fe6           ld      @r14,r6
+22f4:  61fe 0002      ld      r14,%0002(r15)
+22f8:  a9f3           inc     r15,4
+22fa:  9e08           ret
+22fc:  030f 0016      sub     r15,#%0016
+2300:  5cf9 0806 0008 ldm     %0008(r15),r8,#7
+2306:  2ff6           ld      @r15,r6
+2308:  a17e           ld      r14,r7
+230a:  ab71           dec     r7,2
+230c:  a17a           ld      r10,r7
+230e:  21a7           ld      r7,@r10
+2310:  0707 fffe      and     r7,#%fffe
+2314:  c3e7           ldb     rh3,#%e7
+2316:  b379 ffff      sra     r7,#1
+231a:  a178           ld      r8,r7
+231c:  a960           inc     r6,1
+231e:  a260           resb    rh6,0
+2320:  b364           rr      r6,1
+2322:  a16b           ld      r11,r6
+2324:  27a0           bit     @r10,0
+2326:  e602           jr      eq/z,%232c
+2328:  a1e7           ld      r7,r14
+232a:  d02b           calr    %22d6
+232c:  61f7 0000      ld      r7,%0000(r15)
+2330:  d067           calr    %2264
+2332:  a129           ld      r9,r2
+2334:  a1b2           ld      r2,r11
+2336:  81b2           add     r2,r11
+2338:  8192           add     r2,r9
+233a:  8b2a           cp      r10,r2
+233c:  ef16           jr      nc/uge,%236a
+233e:  a1b2           ld      r2,r11
+2340:  81b2           add     r2,r11
+2342:  8192           add     r2,r9
+2344:  a183           ld      r3,r8
+2346:  8183           add     r3,r8
+2348:  81a3           add     r3,r10
+234a:  8b32           cp      r2,r3
+234c:  ef0e           jr      nc/uge,%236a
+234e:  2192           ld      r2,@r9
+2350:  0502 0001      or      r2,#%0001
+2354:  af92           tcc     le,r9
+2356:  61f7 0000      ld      r7,%0000(r15)
+235a:  d144           calr    %20d4
+235c:  6ff2 0004      ld      %0004(r15),r2
+2360:  2192           ld      r2,@r9
+2362:  0702 fffe      and     r2,#%fffe
+2366:  2f92           ld      @r9,r2
+2368:  e805           jr      %2374
+236a:  61f7 0000      ld      r7,%0000(r15)
+236e:  d14e           calr    %20d4
+2370:  6ff2 0004      ld      %0004(r15),r2
+2374:  4df4 0006      test    %0006(r15)
+2378:  e615           jr      eq/z,%23a4
+237a:  4bfe 0004      cp      r14,%0004(r15)
+237e:  e612           jr      eq/z,%23a4
+2380:  a1ed           ld      r13,r14
+2382:  61fc 0004      ld      r12,%0004(r15)
+2386:  8b8b           cp      r11,r8
+2388:  e302           jr      ule,%238e
+238a:  a182           ld      r2,r8
+238c:  e801           jr      %2390
+238e:  a1b2           ld      r2,r11
+2390:  a12b           ld      r11,r2
+2392:  e804           jr      %239c
+2394:  21d2           ld      r2,@r13
+2396:  2fc2           ld      @r12,r2
+2398:  a9d1           inc     r13,2
+239a:  a9c1           inc     r12,2
+239c:  a1b2           ld      r2,r11
+239e:  abb0           dec     r11,1
+23a0:  8d24           test    r2
+23a2:  eef8           jr      ne/nz,%2394
+23a4:  61f2 0004      ld      r2,%0004(r15)
+23a8:  5cf1 0806 0008 ldm     r8,%0008(r15),#7
+23ae:  010f 0016      add     r15,#%0016
+23b2:  9e08           ret
+23b4:  abfb           dec     r15,12
+23b6:  5cf9 0c02 0006 ldm     %0006(r15),r12,#3
+23bc:  1df6           ldl     @r15,rr6
+23be:  61f3 0002      ld      r3,%0002(r15)
+23c2:  59f2 0000      mult    rr2,%0000(r15)
+23c6:  4ff3           .word   #%4ff3
+23c8:  0002 a137      addb    rh2,#%37
+23cc:  d17d           calr    %20d4
+23ce:  a12c           ld      r12,r2
+23d0:  8d24           test    r2
+23d2:  ee02           jr      ne/nz,%23d8
+23d4:  8322           sub     r2,r2
+23d6:  e80f           jr      %23f6
+23d8:  a1ce           ld      r14,r12
+23da:  61f2 0002      ld      r2,%0002(r15)
+23de:  a920           inc     r2,1
+23e0:  a320           res     r2,0
+23e2:  b324           rr      r2,1
+23e4:  a12d           ld      r13,r2
+23e6:  e802           jr      %23ec
+23e8:  0de8           clr     @r14
+23ea:  a9e1           inc     r14,2
+23ec:  abd0           dec     r13,1
+23ee:  0b0d 0000      cp      r13,#%0000
+23f2:  e9fa           jr      ge,%23e8
+23f4:  a1c2           ld      r2,r12
+23f6:  5cf1 0c02 0006 ldm     r12,%0006(r15),#3
+23fc:  a9fb           inc     r15,12
+23fe:  9e08           ret
+2400:  abf5           dec     r15,6
+2402:  1cf9 0502      ldm     @r15,r5,#3
+2406:  a174           ld      r4,r7
+2408:  d09a           calr    %22d6
+240a:  a9f5           inc     r15,6
+240c:  9e08           ret
+240e:  abf9           dec     r15,10
+2410:  2ff7           ld      @r15,r7
+2412:  76f6 0002      lda     pr6,%0002(r15)
+2416:  a172           ld      r2,r7
+2418:  5f00 2442      call    %2442
+241c:  0b02 0000      cp      r2,#%0000
+2420:  e902           jr      ge,%2426
+2422:  8322           sub     r2,r2
+2424:  e801           jr      %2428
+2426:  bd21           ldk     r2,1
+2428:  a9f9           inc     r15,10
+242a:  9e08           ret
+242c:  abf5           dec     r15,6
+242e:  1df6           ldl     @r15,rr6
+2430:  a172           ld      r2,r7
+2432:  2106 7409      ld      r6,#%7409
+2436:  61f5 0000      ld      r5,%0000(r15)
+243a:  5f00 2610      call    %2610
+243e:  a9f5           inc     r15,6
+2440:  9e08           ret
+2442:  abf5           dec     r15,6
+2444:  1df6           ldl     @r15,rr6
+2446:  a172           ld      r2,r7
+2448:  2106 7408      ld      r6,#%7408
+244c:  61f5 0000      ld      r5,%0000(r15)
+2450:  5f00 2610      call    %2610
+2454:  a9f5           inc     r15,6
+2456:  9e08           ret
+2458:  abf5           dec     r15,6
+245a:  6ffe 0004      ld      %0004(r15),r14
+245e:  a17e           ld      r14,r7
+2460:  0b07 0041      cp      r7,#%0041
+2464:  e105           jr      lt,%2470
+2466:  0b07 005a      cp      r7,#%005a
+246a:  ea02           jr      gt,%2470
+246c:  030e ffe0      sub     r14,#%ffe0
+2470:  a1e2           ld      r2,r14
+2472:  61fe 0004      ld      r14,%0004(r15)
+2476:  a9f5           inc     r15,6
+2478:  9e08           ret
+247a:  abfb           dec     r15,12
+247c:  6ffc 0006      ld      %0006(r15),r12
+2480:  a165           ld      r5,r6
+2482:  a171           ld      r1,r7
+2484:  a17c           ld      r12,r7
+2486:  a112           ld      r2,r1
+2488:  a910           inc     r1,1
+248a:  0c24           testb   @r2
+248c:  eefc           jr      ne/nz,%2486
+248e:  ab10           dec     r1,1
+2490:  a152           ld      r2,r5
+2492:  a950           inc     r5,1
+2494:  a113           ld      r3,r1
+2496:  a910           inc     r1,1
+2498:  202c           ldb     rl4,@r2
+249a:  2e3c           ldb     @r3,rl4
+249c:  8cc4           testb   rl4
+249e:  eef8           jr      ne/nz,%2490
+24a0:  a1c2           ld      r2,r12
+24a2:  61fc 0006      ld      r12,%0006(r15)
+24a6:  a9fb           inc     r15,12
+24a8:  9e08           ret
+24aa:  abf9           dec     r15,10
+24ac:  a164           ld      r4,r6
+24ae:  a171           ld      r1,r7
+24b0:  a142           ld      r2,r4
+24b2:  a940           inc     r4,1
+24b4:  202b           ldb     rl3,@r2
+24b6:  0a1b           cpb     rl3,@r1
+24b8:  ee07           jr      ne/nz,%24c8
+24ba:  a112           ld      r2,r1
+24bc:  a910           inc     r1,1
+24be:  202b           ldb     rl3,@r2
+24c0:  8cb4           testb   rl3
+24c2:  eef6           jr      ne/nz,%24b0
+24c4:  8322           sub     r2,r2
+24c6:  e806           jr      %24d4
+24c8:  201a           ldb     rl2,@r1
+24ca:  b120           extsb   r2
+24cc:  ab40           dec     r4,1
+24ce:  204b           ldb     rl3,@r4
+24d0:  b130           extsb   r3
+24d2:  8332           sub     r2,r3
+24d4:  a9f9           inc     r15,10
+24d6:  9e08           ret
+24d8:  abfb           dec     r15,12
+24da:  6ffc 0006      ld      %0006(r15),r12
+24de:  a165           ld      r5,r6
+24e0:  a171           ld      r1,r7
+24e2:  a17c           ld      r12,r7
+24e4:  a152           ld      r2,r5
+24e6:  a950           inc     r5,1
+24e8:  a113           ld      r3,r1
+24ea:  a910           inc     r1,1
+24ec:  202c           ldb     rl4,@r2
+24ee:  2e3c           ldb     @r3,rl4
+24f0:  8cc4           testb   rl4
+24f2:  eef8           jr      ne/nz,%24e4
+24f4:  a1c2           ld      r2,r12
+24f6:  61fc 0006      ld      r12,%0006(r15)
+24fa:  a9fb           inc     r15,12
+24fc:  9e08           ret
+24fe:  abf7           dec     r15,8
+2500:  a171           ld      r1,r7
+2502:  bd30           ldk     r3,0
+2504:  e801           jr      %2508
+2506:  a930           inc     r3,1
+2508:  a112           ld      r2,r1
+250a:  a910           inc     r1,1
+250c:  0c24           testb   @r2
+250e:  eefb           jr      ne/nz,%2506
+2510:  a132           ld      r2,r3
+2512:  a9f7           inc     r15,8
+2514:  9e08           ret
+2516:  abf7           dec     r15,8
+2518:  6ffe 0006      ld      %0006(r15),r14
+251c:  2ff6           ld      @r15,r6
+251e:  a17e           ld      r14,r7
+2520:  20ea           ldb     rl2,@r14
+2522:  4afa 0001      cpb     rl2,%0001(r15)
+2526:  ee02           jr      ne/nz,%252c
+2528:  a1e2           ld      r2,r14
+252a:  e805           jr      %2536
+252c:  a1e2           ld      r2,r14
+252e:  a9e0           inc     r14,1
+2530:  0c24           testb   @r2
+2532:  eef6           jr      ne/nz,%2520
+2534:  8322           sub     r2,r2
+2536:  61fe 0006      ld      r14,%0006(r15)
+253a:  a9f7           inc     r15,8
+253c:  9e08           ret
+253e:  abf9           dec     r15,10
+2540:  2ff6           ld      @r15,r6
+2542:  a171           ld      r1,r7
+2544:  bd30           ldk     r3,0
+2546:  201a           ldb     rl2,@r1
+2548:  4afa 0001      cpb     rl2,%0001(r15)
+254c:  ee01           jr      ne/nz,%2550
+254e:  a113           ld      r3,r1
+2550:  a112           ld      r2,r1
+2552:  a910           inc     r1,1
+2554:  0c24           testb   @r2
+2556:  eef7           jr      ne/nz,%2546
+2558:  a132           ld      r2,r3
+255a:  a9f9           inc     r15,10
+255c:  9e08           ret
+255e:  a170           ld      r0,r7
+2560:  7f1b           sc      #%1b                   ; SYS alarm (#27)
+2562:  a142           ld      r2,r4
+2564:  9e08           ret
+2566:  a170           ld      r0,r7
+2568:  8944           xor     r4,r4
+256a:  7f11           sc      #%11                   ; SYS break (#17)
+256c:  a142           ld      r2,r4
+256e:  5e07 2722      jp      c/ult,%2722
+2572:  6f00 2e9c      ld      %2e9c,r0               ; [2e9c]=0x352a [5*......]
+2576:  9e08           ret
+2578:  a170           ld      r0,r7
+257a:  6102 2e9c      ld      r2,%2e9c               ; [2e9c]=0x352a [5*......]
+257e:  8120           add     r0,r2
+2580:  a101           ld      r1,r0
+2582:  ab10           dec     r1,1
+2584:  ab20           dec     r2,1
+2586:  8a21           cpb     rh1,rh2
+2588:  e604           jr      eq/z,%2592
+258a:  7f11           sc      #%11                   ; SYS break (#17)
+258c:  a142           ld      r2,r4
+258e:  5e07 2722      jp      c/ult,%2722
+2592:  6102 2e9c      ld      r2,%2e9c               ; [2e9c]=0x352a [5*......]
+2596:  6f00 2e9c      ld      %2e9c,r0               ; [2e9c]=0x352a [5*......]
+259a:  9e08           ret
+259c:  a170           ld      r0,r7
+259e:  a161           ld      r1,r6
+25a0:  8944           xor     r4,r4
+25a2:  7f0f           sc      #%0f                   ; SYS chmod (#15)
+25a4:  a142           ld      r2,r4
+25a6:  9e0f           ret     nc/uge
+25a8:  5e08 2722      jp      %2722
+25ac:  a170           ld      r0,r7
+25ae:  8944           xor     r4,r4
+25b0:  7f06           sc      #%06                   ; SYS close (#6)
+25b2:  a142           ld      r2,r4
+25b4:  9e0f           ret     nc/uge
+25b6:  5e08 2722      jp      %2722
+25ba:  a170           ld      r0,r7
+25bc:  a161           ld      r1,r6
+25be:  7f08           sc      #%08                   ; SYS creat (#8)
+25c0:  a142           ld      r2,r4
+25c2:  9e0f           ret     nc/uge
+25c4:  5e08 2722      jp      %2722
+25c8:  a170           ld      r0,r7
+25ca:  a161           ld      r1,r6
+25cc:  7f29           sc      #%29                   ; SYS dup (#41)
+25ce:  a142           ld      r2,r4
+25d0:  9e0f           ret     nc/uge
+25d2:  5e08 2722      jp      %2722
+25d6:  21f0           ld      r0,@r15
+25d8:  ad70           ex      r0,r7
+25da:  2ff2           ld      @r15,r2
+25dc:  93f3           push    @r15,r3
+25de:  93f4           push    @r15,r4
+25e0:  93f5           push    @r15,r5
+25e2:  93f6           push    @r15,r6
+25e4:  a1f1           ld      r1,r15
+25e6:  6102 2ea4      ld      r2,%2ea4
+25ea:  7f3b           sc      #%3b                   ; SYS exece (#59)
+25ec:  a142           ld      r2,r4
+25ee:  a9f7           inc     r15,8
+25f0:  2ff7           ld      @r15,r7
+25f2:  5e08 2722      jp      %2722
+25f6:  7f02           sc      #%02                   ; SYS fork (#2)
+25f8:  e804           jr      %2602
+25fa:  a142           ld      r2,r4
+25fc:  9e0f           ret     nc/uge
+25fe:  5e08 2722      jp      %2722
+2602:  6f04 2e9e      ld      %2e9e,r4               ; [2e9e]=0x0000 [......]
+2606:  8922           xor     r2,r2
+2608:  9e08           ret
+260a:  7f14           sc      #%14                   ; SYS getpid (#20)
+260c:  a142           ld      r2,r4
+260e:  9e08           ret
+2610:  a170           ld      r0,r7
+2612:  a161           ld      r1,r6
+2614:  a152           ld      r2,r5
+2616:  8944           xor     r4,r4
+2618:  7f36           sc      #%36                   ; SYS ioctl (#54)
+261a:  a142           ld      r2,r4
+261c:  9e0f           ret     nc/uge
+261e:  5e08 2722      jp      %2722
+2622:  a170           ld      r0,r7
+2624:  a161           ld      r1,r6
+2626:  8944           xor     r4,r4
+2628:  7f25           sc      #%25                   ; SYS kill (#37)
+262a:  a142           ld      r2,r4
+262c:  9e0f           ret     nc/uge
+262e:  5e08 2722      jp      %2722
+2632:  a170           ld      r0,r7
+2634:  a141           ld      r1,r4
+2636:  a152           ld      r2,r5
+2638:  9244           subl    rr4,rr4
+263a:  7f13           sc      #%13                   ; SYS seek (#19)
+263c:  9442           ldl     rr2,rr4
+263e:  9e0f           ret     nc/uge
+2640:  5e08 2722      jp      %2722
+2644:  a170           ld      r0,r7
+2646:  a161           ld      r1,r6
+2648:  a152           ld      r2,r5
+264a:  7f05           sc      #%05                   ; SYS open (#5)
+264c:  a142           ld      r2,r4
+264e:  9e0f           ret     nc/uge
+2650:  5e08 2722      jp      %2722
+2654:  7f1d           sc      #%1d                   ; SYS pause (#29)
+2656:  9e08           ret
+2658:  a170           ld      r0,r7
+265a:  a161           ld      r1,r6
+265c:  a152           ld      r2,r5
+265e:  7f03           sc      #%03                   ; SYS read (#3)
+2660:  a142           ld      r2,r4
+2662:  9e0f           ret     nc/uge
+2664:  5e08 2722      jp      %2722
+2668:  2100 0001      ld      r0,#%0001              ; 1 "COPR. 1981 ZILOG INC."
+266c:  8944           xor     r4,r4
+266e:  7f27           sc      #%27                   ; SYS setpgrp (#39)
+2670:  a142           ld      r2,r4
+2672:  9e0f           ret     nc/uge
+2674:  5e08 2722      jp      %2722
+2678:  2102 0016      ld      r2,#%0016              ; 16 =0x2e00 [..!.v...]
+267c:  a170           ld      r0,r7
+267e:  a161           ld      r1,r6
+2680:  0b00 0014      cp      r0,#%0014
+2684:  5e09 2722      jp      ge,%2722
+2688:  a103           ld      r3,r0
+268a:  b339 0001      sla     r3,#1
+268e:  6132 3502      ld      r2,%3502(r3)
+2692:  6f31 3502      ld      %3502(r3),r1
+2696:  b314           rr      r1,1
+2698:  b310           rl      r1,1
+269a:  e302           jr      ule,%26a0
+269c:  7631 26ae      lda     pr1,%26ae(r3)
+26a0:  7f30           sc      #%30                   ; SYS sig (#48)
+26a2:  a740           bit     r4,0
+26a4:  e601           jr      eq/z,%26a8
+26a6:  a142           ld      r2,r4
+26a8:  9e0f           ret     nc/uge
+26aa:  5e08 2722      jp      %2722
+26ae:  dfed           calr    %26d6
+26b0:  dfee           calr    %26d6
+26b2:  dfef           calr    %26d6
+26b4:  dff0           calr    %26d6
+26b6:  dff1           calr    %26d6
+26b8:  dff2           calr    %26d6
+26ba:  dff3           calr    %26d6
+26bc:  dff4           calr    %26d6
+26be:  dff5           calr    %26d6
+26c0:  dff6           calr    %26d6
+26c2:  dff7           calr    %26d6
+26c4:  dff8           calr    %26d6
+26c6:  dff9           calr    %26d6
+26c8:  dffa           calr    %26d6
+26ca:  dffb           calr    %26d6
+26cc:  dffc           calr    %26d6
+26ce:  dffd           calr    %26d6
+26d0:  dffe           calr    %26d6
+26d2:  dfff           calr    %26d6
+26d4:  d000           calr    %26d6
+26d6:  030f 001e      sub     r15,#%001e
+26da:  1cf9 000e      ldm     @r15,r0,#15
+26de:  61f7 001e      ld      r7,%001e(r15)
+26e2:  0307 26b0      sub     r7,#%26b0
+26e6:  6172 3502      ld      r2,%3502(r7)
+26ea:  b371 ffff      srl     r7,#1
+26ee:  1f20           call    r2
+26f0:  1cf1 000e      ldm     r0,@r15,#15
+26f4:  010f 0020      add     r15,#%0020
+26f8:  7f00           sc      #%00                   ; SYS indir (#0)
+26fa:  a170           ld      r0,r7
+26fc:  7f3c           sc      #%3c                   ; SYS umask (#60)
+26fe:  a142           ld      r2,r4
+2700:  9e08           ret
+2702:  7f07           sc      #%07                   ; SYS wait (#7)
+2704:  9442           ldl     rr2,rr4
+2706:  5e07 2722      jp      c/ult,%2722
+270a:  8d74           test    r7
+270c:  9e06           ret     eq/z
+270e:  2f73           ld      @r7,r3
+2710:  9e08           ret
+2712:  a170           ld      r0,r7
+2714:  a161           ld      r1,r6
+2716:  a152           ld      r2,r5
+2718:  7f04           sc      #%04                   ; SYS write (#4)
+271a:  a142           ld      r2,r4
+271c:  9e0f           ret     nc/uge
+271e:  5e08 2722      jp      %2722
+2722:  6f02 2ea0      ld      %2ea0,r2               ; [2ea0]=0x0000 [....]
+2726:  6f05 2ea2      ld      %2ea2,r5               ; [2ea2]=0x0000 [..]
+272a:  1402 ffff ffff ldl     rr2,#%ffffffff
+2730:  9e08           ret

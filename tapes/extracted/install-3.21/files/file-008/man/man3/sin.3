@@ -1,0 +1,72 @@
+.po 1i
+.TH SIN 3 Bell
+.V 08/15/84 17:26:29
+.\" @[$]sin.3	1.8	08/15/84 17:26:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sin, cos, tan, asin, acos, atan, atan2 \- trigonometric functions 
+.SH SYNOPSIS
+.nf
+\fB#include <math.h>
+.PP
+\fBdouble sin\fI(x)
+\fBdouble \fIx;
+.PP
+\fBdouble cos\fI(x)
+\fBdouble \fIx;
+.PP
+\fBdouble asin\fI(x)
+\fBdouble \fIx;
+.PP
+\fBdouble acos\fI(x)
+\fBdouble \fIx;
+.PP
+\fBdouble atan\fI(x)
+\fBdouble \fIx;
+.PP
+\fBdouble atan2\fI(x, y)
+\fBdouble \fIx, y;\fR
+.fi
+.SH DESCRIPTION
+.B Sin, cos
+and
+.B tan
+return trigonometric functions of radian arguments.
+The magnitude of the argument should be checked
+by the caller to make sure the result is meaningful.
+.PP
+.B Asin
+returns the arc sin in the range \-pi/2 to pi/2.
+.PP
+.B Acos
+returns the arc cosine in the range
+0 to pi.
+.PP
+.B Atan
+returns the arc tangent of
+.I x
+in the range \-pi/2 to pi/2.
+.PP
+.B Atan2
+returns the arc tangent of
+.I x/y
+in the range \-pi to pi.
+.SH DIAGNOSTICS
+Arguments of magnitude greater than 1
+cause
+.B asin
+and
+.B acos
+to return value 0;
+.I errno
+is set to EDOM.
+The value of
+.B tan
+at its singular points is a huge number, and
+.I errno
+is set to ERANGE.
+.SH LIMITATIONS
+The value of
+.B tan
+for arguments greater than about 2**31 is garbage.

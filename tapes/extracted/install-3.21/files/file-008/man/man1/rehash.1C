@@ -1,0 +1,33 @@
+.po 1i
+.TH REHASH 1C UCB
+.V 08/15/84 17:02:06
+.\"@[$]rehash.1C	1.4	08/15/84 17:02:06 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+rehash \- re-make the hash table of commands
+.SH SYNOPSIS
+.B rehash
+.SH DESCRIPTION
+The
+.B rehash
+command is internal to the C Shell. Its purpose is to
+create a 
+.I hash-table
+of the available commands (files) named in the 
+.I PATH
+shell variable.
+.PP
+The 
+.B
+rehash
+command is invoked automatically at 
+.I login
+and must be re-invoked each time there is a change in
+either the
+.I PATH
+variable, or the commands (files) located along the 
+.I "search path".
+.SH SEE ALSO
+.I "The C Shell" 
+in the ZEUS Utilities Manual

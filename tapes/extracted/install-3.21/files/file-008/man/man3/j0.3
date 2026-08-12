@@ -1,0 +1,42 @@
+.po 1i
+.TH J0 3M Bell
+.V 08/15/84 17:21:24
+.\" @[$]j0.3	1.7	08/15/84 17:21:24 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+j0, j1, jn, y0, y1, yn \- bessel functions
+.SH SYNOPSIS
+.nf
+\fB#include <math.h>
+.PP
+\fBdouble j0\fI(x)
+\fB     double \fIx;
+.PP
+\fBdouble j1\fI(x)
+\fB     double\fI x;
+.PP
+\fBdouble jn\fI(n, x)
+\fB     double\fI x;
+.PP
+\fBdouble y0\fI(x)
+\fB     double\fI x;
+.PP
+\fBdouble y1\fI(x)
+\fB     double\fI x;
+.PP
+\fBdouble yn\fI(n, x)
+\fB     double\fI x;\fR
+.fi
+.SH DESCRIPTION
+These functions calculate Bessel functions of the first
+and second kinds for real arguments and integer orders.
+.SH DIAGNOSTICS
+Negative arguments cause
+.B y0, y1,
+and
+.B yn
+to return a huge negative value
+and set
+.I errno
+to EDOM.

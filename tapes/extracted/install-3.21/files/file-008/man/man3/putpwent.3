@@ -1,0 +1,39 @@
+.po 1i
+.TH PUTPWENT 3 Bell
+.V 08/15/84 17:23:17
+.\" @[$]putpwent.3	1.5	08/15/84 17:23:17 - Zilog Inc.
+.fi
+.ad
+.SH NAME
+putpwent \- write password file entry
+.SH SYNOPSIS
+.nf
+\fB#include <pwd.h>
+.PP
+\fBint putpwent \fI(p, f)
+.br
+\fB     struct \fIpasswd \(**p;
+.br
+\fB     FILE \fI\(**f;\fR
+.fi
+.SH DESCRIPTION
+.B Putpwent\^
+is the inverse of
+.BR getpwent (3).
+Given a pointer to a
+.I passwd\^
+structure created by
+.B getpwent\^
+(or
+.BR getpwuid (3)
+or
+.BR getpwnam (3)),
+.B putpwent\^
+writes a line on the stream
+.I f\^
+which matches the format of
+.BR /etc/passwd .
+.SH DIAGNOSTICS
+.B Putpwent\^
+returns non-zero if an error was detected during its operation,
+otherwise zero.

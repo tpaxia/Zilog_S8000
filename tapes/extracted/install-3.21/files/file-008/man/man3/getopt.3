@@ -1,0 +1,135 @@
+.po 1i
+.TH GETOPT 3 Bell
+.V 08/15/84 17:20:00
+.\" @[$]getopt.3	1.5 08/15/84 17:20:00 - Zilog Inc
+.ad
+.fi
+.SH NAME
+getopt \- get option letter from argv
+.SH SYNOPSIS
+.nf
+\fBint getopt \fI(argc, argv, optstring)\fR
+\fBint \fIargc;\fR
+\fBchar \fI\(**\(**argv;\fR
+\fBchar \fI\(**optstring;\fR
+
+\fBextern char \fI\(**optarg;\fR
+\fBextern int \fIoptind;\fR
+.fi
+.SH DESCRIPTION
+.B Getopt\^
+returns the next option letter in
+.I argv\^
+that matches a letter in
+.IR optstring .
+.I Optstring\^
+is a string of recognized option letters;
+if a letter is followed by a colon, the option
+is expected to have an argument that may or
+may not be separated from it by white space.
+.I Optarg\^
+is set to point to the start of the option argument on return from
+.BR getopt .
+.PP
+.B Getopt\^
+places in
+.I optind\^
+the
+.I argv\^
+index of the next argument to be processed.
+Because
+.I optind\^
+is external, it is normally initialized to zero
+automatically before the first call to
+.BR getopt .
+.PP
+When all options have been processed
+(i.e. up to the first non-option argument),
+.B getopt\^
+returns
+.SM
+.BR EOF .
+The special option
+.B \-\-
+may be used to delimit the end of the options;
+.SM
+.B EOF
+will be returned, and
+.B \-\-
+will be skipped.
+.SH DIAGNOSTICS
+.B Getopt\^
+prints an error message on
+.I stderr\^
+and returns a
+question mark
+.RB ( ? )
+when it encounters an option letter not included in
+.IR optstring .
+.SH EXAMPLE
+The following code fragment shows how one might process the arguments
+for a command that can take the mutually exclusive options
+.B a
+and
+.BR b ,
+and the options
+.B f
+and
+.BR o ,
+both of which require arguments:
+.PP
+.RS
+.nf
+.ss 18
+main (argc, argv)
+int argc;
+char \(**\(**argv;
+{
+    int c;
+    extern int optind;
+    extern char \(**optarg;
+.br
+    \&.
+.br
+    \&.
+.br
+    \&.
+    while ((c = getopt (argc, argv, "abf:o:")) != \s-1EOF\s+1)
+        switch (c) {
+        case \(fma\(fm:
+            if (bflg)
+                errflg++;
+            else
+                aflg++;
+            break;
+        case \(fmb\(fm:
+            if (aflg)
+                errflg++;
+            else
+                bproc();
+            break;
+        case \(fmf\(fm:
+            ifile = optarg;
+            break;
+        case \(fmo\(fm:
+            ofile = optarg;
+            bufsiza = 512;
+            break;
+        case \(fm?\(fm:
+            errflg++;
+        }
+    if (errflg) {
+        fprintf (stderr, "usage: . . . ");
+        exit (2);
+    }
+    for( ; optind < argc; optind++) {
+        if (access (argv[optind], 4)) {
+    \&.
+.br
+    \&.
+.br
+    \&.
+}
+.ss 12
+.fi
+.RE

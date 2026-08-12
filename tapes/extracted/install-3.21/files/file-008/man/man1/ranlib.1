@@ -1,0 +1,42 @@
+.po 1i
+.TH RANLIB 1 Bell
+.V 08/15/84 17:01:56
+.\" @[$]ranlib.1	1.6	08/15/84 17:01:56 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ranlib \- convert archives to random libraries
+.SH SYNOPSIS
+.B ranlib
+.I archive ...
+.SH DESCRIPTION
+.B Ranlib
+converts each
+.I archive
+to a form that can be loaded
+more rapidly by the loader,
+by adding a table of contents named
+.B __.SYMDEF
+to the beginning of the archive.
+It uses
+.BR ar (1)
+to reconstruct the archive,
+so that sufficient temporary file space must
+be available in the file system containing the
+current directory.
+.SH SEE ALSO
+ld(1), ar(1).
+.SH LIMITATIONS
+Because generation of a library by
+.B ar
+and randomization by
+.B ranlib
+are separate,
+phase errors are possible.
+The loader
+.B ld
+warns when the modification date of
+a library is more recent than
+the creation of its dictionary; but this warning appears even
+if the library is only copied.
+

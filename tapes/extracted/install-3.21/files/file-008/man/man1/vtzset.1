@@ -1,0 +1,123 @@
+.po 1i
+.TH VTZSET 1 Zilog
+.V 08/15/84 17:09:57
+.\" @[$]vtzset.1	1.8	08/15/84 17:09:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+vtzset \- set up vtz terminal function keys
+.SH SYNOPSIS
+\fBvtzset \fIfile\fR
+.SH DESCRIPTION
+.B Vtzset
+is a user interface for programming the function keys on the
+VTZ terminal.
+The input
+.I file
+should contain the "definitions" for any or all of the 34
+programmable keys.  The format of these definitions
+is:
+
+	\fIkey  sequence\fR
+
+.I Key
+is defined as:
+
+	pf1	for the PF1 key
+.br
+	pf2	for the PF2 key
+.br
+	pf3	for the PF3 key
+.br
+	pf4	for the PF4 key
+.br
+	1	for the 1 key
+.br
+	2	for the 2 key
+.br
+	3	for the 3 key
+.br
+	4	for the 4 key
+.br
+	5	for the 5 key
+.br
+	6	for the 6 key
+.br
+	7	for the 7 key
+.br
+	8	for the 8 key
+.br
+	9	for the 9 key
+.br
+	0	for the 0 key
+.br
+	\-	for the - key
+.br
+	\,	for the , key
+.br
+.li
+	.	for the . key
+.br
+	enter	for the enter key
+.br
+	u	for the up-arrow key
+.br
+	d	for the down-arrow key
+.br
+	l	for the left-arrow key
+.br
+	r	for the right-arrow key
+.br
+	^u	for control up-arrow 
+.br
+	^d	for control down-arrow 
+.br
+	^l	for control left-arrow 
+.br
+	^r	for control right-arrow 
+.br
+	U	for shift up-arrow 
+.br
+	D	for shift down-arrow 
+.br
+	L	for shift left-arrow 
+.br
+	R	for shift right-arrow 
+.br
+	^U	for control shift up-arrow 
+.br
+	^D	for control shift down-arrow 
+.br
+	^L	for control shift left-arrow 
+.br
+	^R	for control shift right-arrow 
+.br
+
+
+.I Sequence
+is defined as a sequence of 0 to 6 characters.  For special characters,
+the following notation should be used:
+
+	\\n	for newline
+.br
+	\\r	for carriage return
+.br
+	\\ 	for space (i.e. backslash followed by a space)
+.br
+	\\e	for escape
+.br
+	\\t	for tab
+.br
+	\\\\	for backslash
+.br
+	^char	for a control char
+.SH FILES
+/usr/lib/vtz/numpad	number pad "definitions" file
+.br
+/usr/lib/vtz/vipad	vi(1) commands "definitions" file
+.SH LIMITATIONS
+Because
+.B vtzset
+requires the terminal to be in raw mode, it cannot be used while
+.BR remote (1)
+on another system.

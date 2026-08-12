@@ -1,0 +1,51 @@
+.po 1i
+.TH READSYM 3 Zilog
+.V 08/15/84 17:25:31
+.\" @[$]readsym.3	1.6	08/15/84 17:25:31 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+readsym \- read next symbol from name list
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.br
+#include <s.out.h>
+.PP
+\fBreadsym\fI(sym, stream)\fR
+.br
+\fBstruct {
+.br
+\fB     struct \fBs_nlist \fIbol;
+.br
+\fB     char   \fIextra[128];
+.br
+\fB}      \fI*sym;
+.br
+\fBFILE \fI*stream;\fR
+.fi
+.SH DESCRIPTION
+.B Readsym
+copies the next complete symbol from
+.I stream
+into the supplied
+.IR sym .
+.I Stream
+is assumed to be positioned at a symbol boundary within the name
+list of an
+.BR a.out (5)
+format object module.
+.I Sym
+must be large enough to store the largest possible symbol, which is
+127 characters plus control information.
+.B Readsym
+returns the number of extra s_nlist 
+slots the symbol occupies. This number
+ranges between 0 for a symbol of less than eight characters to 9 for
+a symbol of 127 characters.
+.SH SEE ALSO
+a.out(5)
+nlist(3).
+.SH DIAGNOSTICS
+.I Readsym
+returns \-1 for read past end of file or invalid data.

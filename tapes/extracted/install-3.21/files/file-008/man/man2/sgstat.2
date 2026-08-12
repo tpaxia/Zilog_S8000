@@ -1,0 +1,54 @@
+.po 1i
+.TH SGSTAT 2 Zilog
+.V 08/15/84 17:15:06
+.\"@[$]sgstat.2	1.8	08/15/84 17:15:06 - Zilog Inc.
+.fi
+.ad
+.SH NAME
+sgstat \- get highest segmented code address
+.SH SYNOPSIS
+.nf
+.na
+\fBsgstat\fI(\fIbuffer\fR)
+.br
+\fBstruct {
+.br
+	char \fIsegno ;\fR
+.br
+	\fBunsigned \fIsize ;\fR
+.br
+.B }\fI*buffer\fR ;\fR
+.br
+.SH DESCRIPTION
+.fi
+.ad
+The
+.B sgstat
+system call returns information in 
+.I buffer
+that describes code segments for the calling process. 
+The calling program must be segmented.
+The size is in bytes.  The 
+.I buffer
+table is filled with the first 
+10 code segment numbers and sizes (in bytes).
+If there are less than 10 code segments, the table is filled out with
+values of -1.  This call is used in conjunction with profiling by the 
+.BR monitor (3)
+routine.
+.SH DIAGNOSTICS
+.PP
+The
+.B sgstat
+call should never return an error condition.
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT SGSTAT	:= 56
+
+	...		!* buffer address in rr0 *!
+	clr	rr4
+	sc	#SGSTAT
+	...		!* return value in rr4 *!
+.fi
+.ad

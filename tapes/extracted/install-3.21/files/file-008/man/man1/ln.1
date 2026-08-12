@@ -1,0 +1,27 @@
+.po 1i
+.TH LN 1 Bell
+.V 08/15/84 16:56:32
+.\" @[$]ln.1	1.6	08/15/84 16:56:32 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ln  \- link a filename to an actual file
+.SH SYNOPSIS
+.B ln
+\fIname1  name2\fR
+.SH DESCRIPTION
+A link is a directory entry referring to a file; 
+the same file (together with its size, all its 
+protection information, etc.)
+can have several links to it.
+There is no way to distinguish a link to a file
+from its original directory entry;
+any changes in the file are effective
+independently of the name by which the file is known.
+.PP
+A link is created from \fIname2\fR to \fIname1\fR.
+.PP
+It is forbidden to link to a directory
+or to link across file systems.
+.SH SEE ALSO
+rm(1).

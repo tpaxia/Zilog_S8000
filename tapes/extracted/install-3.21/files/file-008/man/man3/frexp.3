@@ -1,0 +1,47 @@
+.po 1i
+.TH FREXP 3 Zilog
+.V 08/15/84 17:19:29
+.\" @[$]frexp.3	1.13 08/15/84 17:19:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+frexp, ldexp, modf \- split into mantissa and exponent 
+.SH SYNOPSIS
+.nf
+\fBdouble frexp\fR(\fIvalue, eptr\fR)
+\fBdouble \fIvalue\fR;
+\fBint \fR*\fIeptr\fR;
+.PP
+\fBdouble ldexp\fR(\fIvalue, exp\fR)
+\fBdouble \fIvalue;\fR
+\fBint \fIexp;\fR
+.PP
+\fBdouble modf\fR(\fIvalue, iptr\fR)
+\fBdouble \fIvalue, *iptr;\fR
+.fi
+.SH DESCRIPTION
+.B Frexp
+returns the mantissa of a double 
+.I value
+as a double quantity,
+.I x,
+of magnitude less than 1
+and stores an integer 
+.I n
+such that
+.I value
+=
+.IR x *2** n
+indirectly through 
+.I eptr.
+.PP
+.B Ldexp
+returns the quantity
+.IR value *2** exp.
+.PP
+.B Modf
+returns the positive fractional part of
+.I value
+and stores the integer part indirectly
+through 
+.I iptr.

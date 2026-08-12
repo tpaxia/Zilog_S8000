@@ -1,0 +1,24 @@
+.po 1i
+.TH LOGOUT 1C UCB
+.V 08/15/84 16:57:02
+.\"@[$]logout.1C	1.5	08/15/84 16:57:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+logout \- terminate the current login session
+.SH SYNOPSIS
+.B logout
+.SH DESCRIPTION
+.B Logout
+terminates a login shell.
+Especially useful if
+.I ignoreeof
+is set.
+.SH LIMITATIONS
+\fBLogout\fR will only execute from the \fIlogin\fR shell.
+.sp
+the \fIlogout\fR process does not recognize interupts
+.SH SEE ALSO
+exit(1C), kill(1), onintr(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

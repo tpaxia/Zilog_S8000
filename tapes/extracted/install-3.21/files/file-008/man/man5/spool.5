@@ -1,0 +1,264 @@
+.po 1i
+.TH SPOOL 5 Zilog
+.V 08/15/84 17:35:28
+.\" @[$]spool.5	1.6	08/15/84 17:35:28 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+spool \- information for writing backends for the Zeus printer spooler
+.SH SYNOPSIS
+\fB#include <spool.h> \fR
+.SH DESCRIPTION
+This section gives information on how to write backends
+for the Zeus printer spooler.
+.PP
+Backends for the Zeus printer spooler are expected to copy data
+from RFFD to SFFD while doing any filtering required.
+When it is time to print something, \fIdqueuer\fR(1) invokes
+the backend, passing it status and printing information.
+Other than copying input to output, there is only one other
+condition that backends must handle.
+The backends do not read RFFD if a \fB\-B\fR flag was passed
+to it by dqueuer.
+The dqueuer generates the \fB\-B\fR flag when the file to be
+printed cannot be found.
+It is used by the dqueuer to cause system supplied backends to
+indicate 'file not found' on a banner page by itself.
+The backend handles flags and status passed to it by the dqueuer.
+.PP
+Backends are also used to generate banner pages and burst
+pages for easy separation and identification of print requests.
+.PP
+Backends expect the following flags to be passed as arguments 
+when invoked.
+They are used for banner page information by the system backends.
+.nf
+.RS
+    \-B            File not found.
+    \-c x          Print file x number of times.
+    \-d dest       Destination string
+    \-f file       File name being printed.
+    \-F from       'from' is the user making the request.
+    \-s time       String with time that file was spooled
+    \-t title      Title requested
+.RE
+.fi
+Any extra options included in the configuration file are passed
+directly to the backend.
+.PP 
+The spooling system also allows the backend to return certain
+statuses so that \fIxq\fR(1) can monitor its progress.
+This is done through the file on STATUSFD.
+The contents of this file has the structure of \fIDstat\fR
+(in the next section).
+The only fields that the backend may access are \fIDpgsdone\fR
+(number of pages printed) and \fIDpercentd\fR (percentage of
+file printed) fields.
+Modification of other fields can cause unpredictable results.
+Use the OFFSET macro included in this file.
+.sp
+.RS
+.nf
+     /* Macro definition to find the offset (in bytes)
+     of a certain element in a structure
+     */
+     #define OFFSET(struct,item)
+     (off_t)((char *)&(struct.item) - (char *)&struct)
+.RE
+.sp
+.fi
+.PP
+The fields \fIDpgsdone\fR and \fIDpercentd\fR are printed by
+\fIxq\fR(1).
+They are originally set to -1, indicating that the backend
+does not support these counters.
+No problems are caused by not including this support.
+Do not try to read or write any other fields of the
+\fIDstat\fR structure.
+The spooler uses record locking extensively, and even
+reading a field can cause a deadlock situation.
+.PP
+Upon completion of processing, the backend exits.
+If the exit returns a non-zero value, the spooler assumes
+an error has occurred and tries to recover.
+If error logging is enabled, a message is written and
+the code is returned into the error file.
+It will then try to repeat the request.
+If the error occurs more than twice, the dqueuer sets
+the device status to DOWN.
+The Device may be reenabled by using the command
+.RS
+.nf
+          xq -q q:dev -Ud
+.RE
+.fi
+where \fIq:dev\fR is replaced with the queue  name and device number.
+See \fIxq\fR(M) for more details.
+.SH REQUEST and STATUS INFORMATION
+.sp
+The directory \fI/usr/spool/queuer/requestdir\fR
+holds files that contain request records.
+Each time \fBnq\fR is run, one file is created.
+Each file contains one or more request records, one for each
+file requested to be printed.
+The first field in the file is an \fIoff_t\fR pointer to the
+first request record in the file.
+The remainder of the records are arranged as a link list.
+The structure definition is:
+.nf
+.sp
+     /* structure defining normal (print) requests */
+     struct normal {	
+        ippid   bepid;          /* pid of a backend if active */
+        char    user[USERL];    /* owner of request */
+        char    from[USERL];    /* loginid of user */
+        int     uid;            /*  "    "     " */
+        int     gid;            /*  "    "     " */
+        char    qnam[QUEL];     /* queue for request */
+        char    dnam[DEVL];     /* device for request */
+        struct  opts noptions;
+        int     seqno;
+        int     pri;
+        char    request[FILENL];/* file name of request */
+        char    temp[FILENL];   /* file name if using cp */
+        char    wdir[2*FILENL]; /* working directory */
+        int     status;
+        time_t  dsptime;        /* time dispatched */
+        char    form[FORML];
+        long    length;
+        int     copies;
+        time_t  time;
+        char    dest[FILENL];   /* destination of output */
+        char    title[FILENL];  /* printed on banner page */
+        off_t   nextstruct;
+         };
+.sp
+.fi
+.PP
+\fIQnam\fR contains the queue desired.
+(If the default queue was requested, \fBnq\fR fills in
+the default name.)
+\fBDnam\fR is the device desired.
+If the first available device is desired, this field is null.
+.PP
+\fIOpts\fR is a bit array that describes certain boolean options
+that the user requested.
+The definition of the bit array is:
+.nf
+.sp
+     /* define option struct */
+     struct opts {
+             unsigned burst     : 1;
+             unsigned copy      : 1;
+             unsigned encrypt   : 1;
+             unsigned mail      : 1;
+             unsigned rm        : 1;
+             unsigned silent    : 1;
+            };
+.sp
+.fi
+.PP
+\fISeqn\fR contains the sequence number of this request.
+.PP
+\fIStatus\fR contains READY, HELD, or DISPCHD depending upon
+the status of this request.
+\fIForm\fR contains the string describing the special form
+needed for this request.
+.PP
+.br
+The directory \fI/usr/spool/queuer/statusdir\fR
+contains the status files for all queues and devices.
+The status file name for queues is just the name of the queue.
+For example, the name of the status file for
+a queue called \fIlp\fR would be /usr/spool/queuer/statusdir/lp.
+The format of the status file is defined by the following structure:
+.nf
+.sp
+     /* entries in queue status directory */
+     struct Qstat {	
+             int     Qstatus;
+             int     Qpri;
+             int     Qselect;
+             };
+.sp
+.fi
+.PP
+The values for \fIQstatus\fR, \fIQpri\fR, and \fIQselect\fR
+are defined by:
+.RS
+.nf
+.sp
+     /* priority defines */
+     #define PRIR    0   /*  rush        */
+     #define PRIN    1   /*  normal      */
+     #define PRID    2   /*  deferred    */
+.sp
+     /* selection criteria defines */
+     #define SELF    0   /*  fifo    */
+     #define SELS    1   /*  size    */
+.sp
+     /* valid statuses for queues, devices, and requests
+      don't use zero ... used for certain checks
+     */
+     #define HELD    1
+     #define OFFLINE 2
+     #define DOWN    3
+     #define RUNNING 4
+     #define DISPCHD 5
+     #define READY   6
+.RE
+.fi
+.PP
+A description of the priority and selection
+criteria is given in the system administrator manual.
+.PP
+In addition to the queue status files, one file is created for
+each device known to the system.
+The name of the file is the queue name appended with a colon and
+then the device name.
+For example, the device 'mrm' on queue 'lp' would have
+status file called /usr/spool/queuer/statusdir/lp:mrm.
+The format of the status file is given by the following:
+.nf
+.sp
+     /* entries in device status directory */
+     struct Dstat {	
+             int     Dstatus;
+             int     Duid;            /* UID of current request */
+             char    Dform[FORML];    /* current form on device */
+             time_t  last_dispatched; /* last time we were 
+                                         dispatched */
+             int     retrys;          /* number of dispatch 
+                                         retrys */
+             ippid   Dpid;            /* pid of backend active 
+                                         on this device */
+             int     Dpgsdone;
+             int     Dseqn;           /* current sequence number */
+             int     Dpercentd;
+             };
+.sp
+.fi
+.PP
+The \fIDstatus\fR field contains one of the values described
+above under queues.
+\fILast_dispatched\fR is set by the dqueuer just before
+it dispatches a backend to this device and is used to detect
+time outs on the device.
+\fIDpgsdone\fR and \fIDprecentd\fR are values set by intelligent
+backends to indicate how much processing has been completed.
+.PP
+One status file is created for each device and queue when the
+configuration file is parsed and it is determined that the
+required file does not already exist.
+In this case, the initial values are taken from the
+configuration file.
+Once the status file exists, reparsing the configuration
+file will not affect it.
+Changes can be made by deleting the status file, editing
+the configuration file, and reparsing the configuration
+file by issuing "/etc/dqueuer -r."
+.SH SEE ALSO
+dqueuer(1),
+xq(1),
+xq(M),
+nq(1),

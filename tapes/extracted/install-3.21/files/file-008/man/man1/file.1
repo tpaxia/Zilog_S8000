@@ -1,0 +1,26 @@
+.po 1i
+.TH FILE 1 Bell 
+.V 08/15/84 16:51:06
+.\" @[$]file.1	1.9	08/15/84 16:51:06 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+file \- determine file type
+.SH SYNOPSIS
+.B file
+[\fB-f\fI file\fR]
+.I file ...
+.SH DESCRIPTION
+.B File
+performs a series of tests on each argument
+in an attempt to classify it.
+If an argument appears to be ASCII,
+.B file
+examines the first 512 bytes and tries to guess its language.
+If the 
+.B -f
+option is given, the next argument is taken to be a file containing
+the names of the files to be examined.
+.SH LIMITATIONS
+It often makes mistakes.
+In particular, it often suggests that command files are C programs.

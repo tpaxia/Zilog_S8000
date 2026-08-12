@@ -1,0 +1,71 @@
+.po 1i
+.TH PUTFILE 1 Zilog
+.V 08/15/84 17:01:41
+.\" @[$]putfile.1	1.12	08/15/84 17:01:41 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+putfile \- transfer files from remote to local system
+.SH SYNOPSIS
+.B putfile 
+[\fB\-bBfq\fR] \fIfilename1\fR [ [\fB\-b\fR] \fIfilename2\fR \.\.\. ]
+.SH DESCRIPTION
+.B Putfile 
+downloads one or more files from a remote ZEUS
+to a local system running ZEUS or RIO.
+The RIO System must be running the file transfer
+software of the ZLAB-8000 Communication Package.
+This program is invoked from the remote system; therefore,
+.BR remote (1)
+must be executed first.
+Files are transferred one record at a time along with a 
+checksum to ensure the accuracy of the data.
+The transfer of one file can be terminated to go
+to the next by entering a control-x.
+The entire transfer can be aborted by entering an escape.
+.SH OPTIONS
+.TP
+.B \-b
+The next file is considered to be binary. A binary file is created
+on the local system instead of an ASCII file and new-lines are not
+replaced by carriage returns.
+.TP
+.B \-B
+All file names on the line are treated as if they are
+preceded by a \fB\-b\fR.
+This is generally desirable for a ZEUS-to-ZEUS transfer. 
+.TP
+.B \-f
+The program suppresses all nonfatal error messages.
+.TP
+.B \-q
+The program prints a query before replacing an existing file of the
+same name as the one being transferred.
+.SH SEE ALSO
+getfile(1), local(1), remote(1).
+.SH DIAGNOSTICS
+"checksum error ... retry"    Printed if the computed checksum
+does not match the transmitted checksum.
+.sp
+"timeout ... retry"    Printed if a character is not
+read within a reasonable time after a read is issued.
+.sp
+"illegal end-of-text ... retry"    Generally indicates
+a system error; not enough characters were read.
+.sp
+"<filename> ... transfer aborted"    Printed after a specific
+number of retries, if the user enters a control-x or an escape,
+or if the transfer failed (due to lack of space or bad media).
+.bp
+"putfile: <n1> successful transfers  <n2> unsuccessful transfers"
+Printed at program termination.
+.sp
+"<filename> ... unable to open file"    Printed if the file cannot
+be opened on either system.
+.sp
+"<filename> ... unable to transfer directory file"    Printed if the
+file is a directory file.
+.sp
+The program outputs a single dot (.) after each successful
+transfer of a 128-byte record.
+If the transfer appears to halt, allow 20 seconds for a retry.

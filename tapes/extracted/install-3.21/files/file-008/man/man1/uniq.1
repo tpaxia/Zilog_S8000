@@ -1,0 +1,72 @@
+.po 1i
+.TH UNIQ 1  Bell
+.V 08/15/84 17:08:46
+.\" @[$]uniq.1	1.5	08/15/84 17:08:46 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+uniq \- report repeated lines in a file
+.SH SYNOPSIS
+.B uniq
+[
+.B \-cdu
+[
+.BI + n
+] [
+.BI \- n
+]
+] [ \fIinfile\fR [ \fIoutfile\fR ] ]
+.SH DESCRIPTION
+.B Uniq
+reads 
+.I infile
+comparing adjacent lines.
+In the normal case, the second and succeeding copies
+of repeated lines are
+removed; the remainder is written on
+.IR outfile .
+Repeated lines must be adjacent in order to be found
+(see \fBsort\fR(1)).
+The normal mode output is the union of the
+.B \-u
+and
+.B \-d
+mode outputs.
+.PP
+The
+.I n
+arguments specify skipping an initial portion of each line
+in the comparison:
+.TP 8
+.BI \- n
+The first
+.IR n 
+fields together with any blanks before each are ignored.
+A field is defined as a string of nonspace, nontab characters
+separated by tabs and spaces from its neighbors.
+.TP 8
+.BI + n
+The first
+.IR n 
+characters are ignored.
+Fields are skipped before characters.
+.SH OPTIONS
+.TP
+.B \-c
+Supersedes
+.B \-u
+and
+.B \-d
+and generates
+an output report in default style
+but with each line preceded by a count of the
+number of times it occurred.
+.TP
+.B \-d
+One copy of just the repeated lines is to be written.
+.TP
+.B \-u
+The lines that are not repeated
+in the original file are output.
+.SH SEE ALSO
+sort(1), comm(1), diff(1), diff3(1), bdiff(1).

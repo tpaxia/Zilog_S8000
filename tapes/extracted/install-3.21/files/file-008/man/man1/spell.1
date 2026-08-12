@@ -1,0 +1,123 @@
+.po 1i
+.TH SPELL 1 Bell
+.V 08/15/84 17:06:18
+.\" @[$]spell.1	1.11 08/15/84 17:06:18 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+spell, spellin, spellout \- find spelling errors
+.SH SYNOPSIS
+.B spell
+[ \fB-bdvx\fR ] ...  [ \fIfile\fR ] ...
+.PP
+.B spellin
+[ \fIlist\fR ]
+.PP
+.B spellout
+[
+.B \-d
+] \fIlist\fR
+.SH DESCRIPTION
+.B Spell
+collects words from the named documents,
+and looks them up in a spelling list.
+Words that do not occur and cannot be derived
+(by applying certain inflections,
+prefixes or suffixes) from words in the spelling list
+are printed on the standard output.
+If no files are named,
+words are collected from the standard input.
+.PP
+.B Spell
+ignores most
+.BR troff (1),
+.BR tbl (1),
+and
+.BR  eqn (1)
+constructions.
+.PP
+The spelling list is based on many sources,
+and while more haphazard than an ordinary
+dictionary, is also more effective in respect to
+proper names and popular technical words.
+Coverage of the specialized vocabularies of biology,
+medicine, and chemistry is light.
+.PP
+Pertinent auxiliary files can be specified by name 
+arguments, indicated as follows with their default settings.
+Copies of all output are accumulated in the history file.
+The stop list filters out misspellings (for example, thier=thy\-y+ier)
+that would otherwise pass.
+.PP
+Two routines help maintain the hash lists used by
+.B spell.
+Both expect a list of words, one per line,
+from the standard input.
+.B Spellin
+adds the words on the standard input to the
+preexisting
+.I list
+and places a new list on the standard output.
+If no 
+.I list
+is specified, the new list is created from scratch.
+.B Spellout
+looks up each word in the standard input and prints
+on the standard output those that are missing from 
+(or present on, with option
+.BR \-d )
+the hash list.
+.SH OPTIONS
+.IP \fB\-b\fR
+British spelling is checked.
+Besides preferring centre, colour, speciality, travelled, etc.,
+this option insists upon \-ise in words like standardise.
+.IP \fB\-d\fR
+Used with \fIspellout\fR;
+prints on the standard output those that are present on the
+hash list.
+.bp
+.IP \fB\-v\fR
+All words not literally in the spelling list are printed,
+and plausible derivations from spelling list words are indicated.
+.IP \fB\-x\fR
+Every plausible stem is printed with = for each word.
+.SH EXAMPLES
+To add words in \fIfile\fR to the list: 
+.sp 2
+\fBcat \fIfile\fB >> /usr/dict/words
+.sp
+sort \-o /usr/dict/words -u /usr/dict/words 
+.sp
+.nf
+spellin /usr/dict/hlista < /usr/dict/words > /usr/dict/hlistx
+.fi
+.sp
+move /usr/dict/hlistx /usr/dict/hlista\fR
+.SH FILES
+/usr/dict/hlist[ab]
+.br
+	hashed spelling lists, American & British
+.br
+/usr/dict/hstop
+.br
+	hashed stop list
+.br
+/usr/dict/spellhist
+.br
+	history file
+.br
+/usr/lib/spell
+.br
+.SH SEE ALSO
+deroff(1), look(1), sort(1), tee(1), sed(1).
+.SH LIMITATIONS
+The spelling list's coverage is uneven;
+new installations will probably wish to monitor 
+the output for several months to gather local additions.
+.sp
+British spelling was done by an American.
+.sp
+Hyphens are removed from hyphenated words prior to lookup,
+sometimes causing either or both parts of the word to be
+output as misspelled.

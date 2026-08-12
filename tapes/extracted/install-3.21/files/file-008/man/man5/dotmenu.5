@@ -1,0 +1,183 @@
+.po 1i
+.TH DOTMENU 5 ZILOG
+.V 08/15/84 17:34:13
+.\" @[$]dotmenu.5	1.9 08/15/84 17:34:14 - Zilog Inc.
+.ad
+.fi
+.SH NAME 
+.B .menu
+\- menu format file
+.SH SYNOPSIS
+.BI mkmenu " [ file ]"
+.SH DESCRIPTION
+For an overview of the menu system see \fBmkmenu\fR(1). 
+.sp
+This entry describes the menu specifications file created by \fBmkmenu\fR
+and driven by \fBzmenu\fR(1). A file in this format is said to be in the
+format ".menu". The .menu format menu specifications file contains:
+.sp
+* Menu-header, line 1 field 1 (suggested: Company Name).
+.sp
+* Menu-header, line 1 field 2 (suggested: System Name).
+.sp
+* Menu-header, line 2 field 1 (suggested: Division Name).
+.sp
+* Menu-header, line 2 field 2 (suggested: Menu Title).
+.sp
+* The ZEUS function to be executed.
+.sp
+* The environment in which the function is to be executed.
+.sp
+* The function description.
+.sp
+ .menu format menu specifications files are text files. Assuming a sufficient 
+familiarity with the .menu
+format, menus can be created with a text editor; it is probably
+easiest to create them with the \fBmkmenu\fR interactive menu specifications
+builder. 
+.sp
+Menu options each occupy their own line in the specifications file. 
+They are entered
+in groups of three fields: the execution environment selection-number, 
+the executable ZEUS function, and
+the function description. The fields are separated by colons. 
+All fields are optional, but absences 
+can result in impractical menus. 
+.sp
+The specifications file can reside
+in any directory, but that directory must be made known to \fBzmenu\fR by
+first having created an environment variable or a pointer-file 
+whose contents are a
+pathname where the menu specifications file can be found. Three
+pointers make up \fBzmenu\fR's "search list."   
+.sp
+In this order, \fBzmenu\fR seeks: an environment
+variable \fIMENUPATH\fR, a file ~/.menupath, a file /etc/menupath. \fBzmenu\fR
+expects to find the specifications file in the directory pointed to by
+the contents of the first search list member found, whether or not 
+other search list members also exist. 
+For example, if the menu specifications directory is set 
+with a command
+of the form:
+.sp
+.nf
+               \fBsetenv MENUPATH \fI/dir/dir/dir/menudir\fR
+.sp
+and a command is entered in the form:
+.sp
+               \fBzmenu \fImenuname\fR
+.sp
+.fi
+\fBzmenu\fR first looks for an environment variable named '\fIMENUPATH\fR'.
+Finding it, it searches for a file named \fImenuname\fR in the directory
+\fI/dir/dir/dir/menudir\fR.
+.sp
+When no search list members exist,
+\fBzmenu\fR seeks the menu specifications file in the invoker's
+home directory. 
+The home directory can also be specified in the environment menupath
+file.
+.sp
+* Menu Directory
+.sp
+A menu directory is the directory in which \fBzmenu\fR
+searches for the menu specifications file. 
+The driver
+changes to this menu-directory before executing the commands in the 
+specifications file. 
+If the specified
+menu-directory is non-existent or unreadable, \fBzmenu\fR returns 
+an error message. 
+.sp
+* Menu Header (L1 F1)
+.sp
+\fBzmenu\fR displays the first twenty-six characters of this field 
+at position (0,0) on the user's CRT; it displays all characters up to 
+the first colon. 
+.sp
+* Menu Header (L1 F2)
+.sp 
+\fBzmenu\fR displays the first twenty-six characters of this field at
+position (27,0) on the user's CRT; it displays all characters following 
+any leading newlines up to the next colon.
+.sp
+* Menu Header (L2 F1)
+.sp
+\fBzmenu\fR displays the first twenty-six characters of this field 
+at position
+(0,1) on the user's CRT; it displays all characters following any leading
+newlines up to the next colon.
+.sp
+* Menu Header (L2 F2)
+.sp
+\fBzmenu\fR displays the first twenty-six characters of this field
+at position (27,1) on the user's CRT; it displays all characters following
+any leading newlines up to the next colon.
+.sp
+* Executable Function 
+.sp
+The contents of this field (up to eighty characters) are executed
+by \fBsh\fR(1), by \fBcsh\fR,
+or by \fBzmenu\fR depending upon the contents of the Execution Environment
+field.
+.sp
+* Execution Environment  
+.sp
+This field contains one of three values: `0` if the executable function 
+is either the name of another menu-file to be executed by \fBzmenu\fR or an
+exit-from-the-menu function; `1` 
+if the executable function is a shell script or a command to be executed
+by \fBsh\fR; or `2` if the executable function is a c-shell script
+or a command to be executed by \fBcsh\fR. If this field is undefined or
+unrecognizable,
+`0` is the default; this results in an exit from the menu.  
+Though menus-to-be-chained and menu-exits both contain a `:0`,
+the menuname precedes the `:0`
+when a chained menu is indicated.
+.sp
+* Function Description 
+.sp
+This field contains text describing the function executed with this selection.
+.SH EXAMPLE
+.nf
+Contents of a sample menu-file of the format .menu:
+.sp
+ZILOG INCORPORATED:
+SAMPLE MENU:
+General Systems Division:
+   ZEUS:
+:0:Exit the ZEUS(tm) system.
+sh:1:Run the Bourne Shell.
+ls:2:List current directory.
+Menuname:0:Menuname menu. 
+.sp 2 
+.fi
+A .menu file in the above format results in the following CRT
+output (here, a compacted display):
+.sp 2
+.nf  
+ZILOG INCORPORATED         SAMPLE MENU       Day Mon dd. (hh:mm:ss)
+General Systems Division      ZEUS           Menu: .menu  Port: 03
+
+
+                    0. Exit the ZEUS(tm) system.
+       
+                    1. Run the Bourne Shell.
+
+                    2. List current directory. 
+
+                    3. Menuname menu. 
+
+                       Please make a selection:
+
+
+.SH FILES
+~/.menupath         user menu-search path
+/etc/menupath       global menu-search path.
+ .menu              default menu-file
+.fi
+.SH SEE ALSO
+.nf
+zmenu(1), mkmenu(1), zmprint(1), menupath(5), setenv(1)
+ 
+

@@ -1,0 +1,253 @@
+.po 1i
+.TH DELTA 1 Bell
+.V 08/15/84 16:45:57
+.\" @[$]delta.1	1.14 08/15/84 16:45:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+delta \- make a delta (change) to an SCCS file
+.SH SYNOPSIS
+\fBdelta \fR[\fIoptions\fR ] \fIfiles\fR
+.SH DESCRIPTION
+.B Delta
+is used to permanently introduce into
+the named SCCS file changes that were made to the file retrieved by
+.BR get (1)
+(called the g-file: generated file).
+.PP
+.B Delta
+makes a change to each named SCCS file.
+If a directory is named,
+.B delta
+behaves as though each file in the directory were
+a named argument.
+However, non-SCCS files
+(last component of the pathname does not begin with \fBs.\fR)
+and unreadable files
+are silently ignored.
+If \fB\-\fR is given as an argument, standard input is read
+(see \fBWARNINGS\fR).
+Each line of the standard input is taken to be the name of an SCCS file
+to be processed.
+.PP
+.B Delta
+may issue prompts on the standard output depending upon
+certain keyletters specified and flags
+that may be
+present in the SCCS file
+(see \fBadmin\fR(1) and the
+.B \-m
+and
+.B \-y
+keyletters below).
+.PP
+Keyletter arguments
+apply independently
+to each named file.
+.TP
+\fB-r\fISID\fR
+Uniquely
+identifies which delta is to be made to the SCCS file.
+The use of this keyletter is necessary only if two or more
+outstanding
+.BR get s
+.RB ( "get \-e" )
+requests-for-editing against the same SCCS file were entered by the same person
+(login name).
+The SID value specified with the
+.B \-r
+keyletter can be either the SID specified on the
+.B get
+command line or the SID to be created as reported by the
+.B get
+command.
+A diagnostic results if the specified SID is ambiguous, or
+if it is necessary but omitted on the command line.
+.TP
+\fB-g\fIlist\fR
+Specifies
+a \fIlist\fR
+(see \fBget\fR(1)
+for the definition of \fIlist\fR)
+of deltas which are to be ignored
+when the file is accessed at the change level (SID)
+created by this delta. If the list has more than one member, enclose the
+list in double quotes.
+.TP
+\fB-m[\fIMRlist]\fR
+If
+the SCCS file has the
+.B v
+flag set
+(see
+.BR admin (1))
+then a Modification Request (MR) number must be
+supplied as the reason for creating the new delta.
+If more than one MR number is given, the list must be enclosed in
+double quotes. 
+.sp
+If
+.B \-m
+is not used and the standard input is a terminal, the prompt
+.B MRs?
+is issued on the standard output before the standard input
+is read; if the standard input is not a terminal, no prompt is issued.
+The
+.B MRs?
+prompt always precedes the
+.B comments?
+prompt
+(see
+.B \-y
+keyletter).
+.sp
+MRs entered interactively in this manner are separated by
+blanks and/or tab characters.
+An unescaped new-line character terminates the MR list.
+.sp
+Note that if the
+.B v
+flag has a value
+it is interpreted as the name of a program 
+(or shell procedure) which will validate
+the correctness of the MR numbers.
+If a non-zero exit status is returned 
+from the MR number validation program,
+.B delta
+terminates
+(it is assumed that the MR numbers were not all valid).
+.TP
+\fB-n\fR
+Specifies retention of the edited
+g-file normally removed at completion of delta processing.
+.TP
+\fB-p\fR
+Causes
+.B delta
+to print (on the standard output) the SCCS file
+differences before and after the delta is applied
+in a
+.BR diff (1)
+format.
+.TP
+\fB-s\fR
+Suppresses
+issuance, on the standard output, of the created delta's SID,
+as well as the number of lines inserted, deleted and unchanged in the
+SCCS file.
+.TP
+\fB-y[\fIcomment\fR]
+Arbitrary text
+used to describe the reason for making the delta.
+If the comment is comprised of more than one word, enclose the comment in
+double quotes.
+A null string is considered a valid \fIcomment\fR.
+.sp
+If
+.B \-y
+is not specified and the standard input is a terminal, the prompt
+.B comments?
+is issued on the standard output before the standard
+input is read. If the standard input is not a terminal, no
+prompt is issued.
+An unescaped new-line character terminates the comment text.
+.SH FILES
+All files of the form
+.IR ?- file
+are explained in the
+\fISource Code Control System User's Guide\fR.
+The naming convention for these files is also described there.
+.TP
+d-file
+Created during the execution of
+.BR delta ;
+removed after completion of
+.BR delta .
+.bp
+.TP
+g-file
+Existed
+before the execution of
+.BR delta ;
+removed after completion of
+.BR delta .
+.TP
+p-file
+Existed
+before the execution of
+.BR delta ;
+may exist after completion of
+.BR delta .
+.TP
+q-file
+Created during the execution of
+.BR delta ;
+removed after completion of
+.BR delta .
+.TP
+x-file
+Created during the execution of
+.BR delta ;
+renamed to SCCS file after completion of
+.BR delta .
+.TP
+z-file
+Created during the execution of
+.BR delta ;
+removed during the execution of
+.BR delta .
+.TP
+/bin/diff
+Program to compute differences
+between the "gotten" file and the g-file .
+.SH WARNINGS
+Lines beginning with an \fBSOH\fR ASCII character (binary 001)
+cannot be placed in the SCCS file unless the
+.B SOH
+is escaped.
+This character has special meaning to SCCS
+(see
+.B sccsfile\c
+(5)) and will cause an error.
+.PP
+A
+.B get
+of many SCCS files,
+followed by a
+.B delta
+of those files, should be avoided when the
+.B get
+generates a large amount of data.
+Instead,
+multiple
+.B "get/delta"
+sequences should be used.
+.PP
+If the standard input
+(\fB\-\fR)
+is specified on the
+.B delta
+command line,
+the
+.B \-m
+(if necessary)
+and
+.B \-y
+keyletters
+.I must
+also be present.
+Omission of these keyletters causes an error to occur.
+.SH SEE ALSO
+admin(1),
+bdiff(1),
+get(1),
+help(1),
+prs(1),
+sccsfile(5).
+.br
+.I "Source Code Control System User's Guide" 
+in the ZEUS Utilities Manual
+.SH DIAGNOSTICS
+Use
+.BR help (1)
+for explanations.

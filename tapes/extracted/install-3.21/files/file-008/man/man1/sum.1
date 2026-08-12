@@ -1,0 +1,31 @@
+.po 1i
+.TH SUM 1 Bell
+.V 08/15/84 17:06:44
+.\" @[$]sum.1	1.8 08/15/84 17:06:44 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sum \- sum and count blocks in a file
+.SH SYNOPSIS
+.B sum
+[
+.B \-r
+] \fIfile\fR
+.SH DESCRIPTION
+.B Sum
+calculates and prints a 16-bit checksum for the named file,
+and also prints the number of blocks in the file.
+It is typically used to look for bad spots, or
+to validate a file communicated over
+some transmission line.
+.SH OPTIONS
+.TP
+.B \-r
+Cause the algorithm from the previous version of
+.B sum
+to be used in computing the checksum.
+.SH SEE ALSO
+wc(1)
+.SH DIAGNOSTICS
+"Read error" is indistinguishable from end of file on
+most devices; check the block count.

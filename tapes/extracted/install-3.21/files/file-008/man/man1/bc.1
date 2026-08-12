@@ -1,0 +1,184 @@
+.po 1i
+.TH BC 1 Bell
+.V 08/15/84 16:38:03
+.\" @[$]bc.1	1.7	08/15/84 16:38:03 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+bc \- arbitrary-precision arithmetic language
+.SH SYNOPSIS
+\fBbc\fR [ \fB\-cl\fR ] [ \fIfile\fR ... ]
+.SH DESCRIPTION
+.B Bc
+is an interactive translator for a language which resembles
+C but provides unlimited precision arithmetic.
+It receives input from any files given and then reads
+the standard input.
+.HP 6
+.B Comments
+.br
+are enclosed in /* and */.
+.HP 6
+.B Names
+.br
+simple variables: letters a-z
+.br
+array elements: letter [ expression ]
+.br
+The words 'ibase', 'obase', and 'scale'
+.HP 6
+.B "Other operands"
+.br
+arbitrarily long numbers with optional sign and decimal point.
+.br
+( expression )
+.br
+sqrt ( expression )
+.br
+length ( expression )  number of significant decimal digits
+.br
+scale ( expression )  number of digits right of decimal point
+.br
+letter ( expression , ... , expression )
+.HP 6
+.B Operators
+.br
++  \-  *  /  %  ^
+.br
+    (% is remainder; ^ is power)
+.br
+++   \-\- 
+.br
+    (prefix and postfix; apply to names)
+.br
+==  <=  >=  !=  <  >
+.br
+=  =+  =\-  =*  =/  =%  =^
+.br
+.HP 6
+.B Statements
+.br
+expression
+.br
+{ statement ; ... ; statement }
+.br
+if ( expression ) statement
+.br
+while ( expression ) statement
+.br
+for ( expression ; expression ; expression ) statement
+.br
+null statement
+.br
+break
+.br
+quit
+.HP 6
+.B "Function definitions"
+.br
+define letter ( letter ,..., letter ) {
+.br
+	auto letter, ... , letter
+.br
+	statement; ... statement
+.br
+	return ( expression )
+.br
+}
+.HP 6
+.B "Functions in \-l math library"
+.br
+s(x)	sine
+.br
+c(x)	cosine
+.br
+e(x)	exponential
+.br
+l(x)	log
+.br
+a(x)	arctangent
+.br
+j(n,x)	Bessel function
+.PP
+.DT
+All function arguments are passed by value.
+.PP
+The value of a statement that is an expression is printed
+unless the main operator is an assignment.
+Either semicolons or newlines may separate statements.
+Assignment to
+.I scale
+influences the number of digits to be retained on arithmetic
+operations in the manner of
+.BR dc (1).
+Assignments to
+.I ibase
+or
+.I obase
+set the input and output number radix respectively.
+.PP
+The same letter may be used as an array, a function,
+and a simple variable simultaneously.
+All variables are global to the program.
+\&'Auto' variables are pushed down during function calls.
+When arrays are used as function arguments
+or defined as automatic variables,
+empty square brackets must follow the array name.
+.PP
+.B Bc
+is actually a preprocessor for
+.BR dc (1).
+.B Bc
+automatically runs
+.B dc
+and opens a pipe to it.
+.SH OPTIONS
+.IP
+.B -c
+Only compiles, does not run \fBdc\fR and the \fBdc\fR input
+appears on \fBbc\fR 's standard output.
+.IP
+.B -l
+Defines a math function library.
+.SH EXAMPLES
+.RS
+.nf
+scale = 20
+define e(x){
+	auto a, b, c, i, s
+	a = 1
+	b = 1
+	s = 1
+	for(i=1; 1==1; i++){
+		a = a*x
+		b = b*i
+		c = a/b
+		if(c == 0) return(s)
+		s = s+c
+	}
+}
+.fi
+.PP
+.RE
+defines a function to compute an approximate value of
+the exponential function and
+.PP
+.RS
+	for(i=1; i<=10; i++) e(i)
+.RE
+.PP
+prints approximate values of the exponential function of
+the first ten integers.
+.SH FILES
+.ta \w'/usr/lib/lib.b 'u
+/usr/lib/lib.b	mathematical library
+.br
+dc(1)	desk calculator proper
+.SH LIMITATIONS
+No &&, \(or\|\(or, or ! operators.
+.sp
+.I For
+statement must have all three expression's.
+.sp
+.I Quit
+is interpreted when read, not when executed.

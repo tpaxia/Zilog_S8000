@@ -1,0 +1,50 @@
+.po 1i
+.TH KILL 1 Bell
+.V 08/15/84 16:55:16
+.\" @[$]kill.1	1.8	08/15/84 16:55:16 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+kill \- send a signal to a process
+.SH SYNOPSIS
+\fBkill\fR [ \fB\-\fIsigno\fR] \fIprocessid ...\fR
+.SH DESCRIPTION
+.B Kill
+sends a signal (15 by default to terminate) to the specified processes.
+If a signal number preceded by a minus is given as the first argument,
+that signal is sent instead of terminate (\fIsignal\fR (2)).
+This kills processes that do not catch the signal;
+"kill \-9 ..." is a sure kill.
+.PP
+If process number 0 is specified, all members in the process
+group (processes resulting from the current login) are signaled.
+.PP
+The killed processes must belong to the current user unless the
+super-user executes it.
+To shut the system down and bring it up, the super-user uses
+"kill \-1 1";  \fIinit\fR(M).
+.PP
+The process number of an asynchronous process
+started with an & is reported by the shell.
+Process numbers are also found by using  \fIps\fR(1).
+.SH EXAMPLE
+.RS
+     % nroff -man intro.03 > INTRO &
+     1028
+
+     % ps
+        PID TTY TIME CMD
+         42 8   0:12 -csh 
+       1028 8   0:02 nroff -man intro.03 
+       1029 8   0:02 ps 
+
+     % kill -9 1028
+     1028: nroff: Killed
+
+     % ps
+        PID TTY TIME CMD
+         42 8   0:12 -csh 
+       1038 8   0:02 ps 
+.RE
+.SH SEE ALSO
+ps(1), kill(2), signal(2), init(M).

@@ -1,0 +1,116 @@
+.po 1i
+.TH VAL 1 Bell
+.V 08/15/84 17:09:38 
+.\" @[$]val.1	1.5 08/15/84 17:09:38 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+val \- validate SCCS file
+.SH SYNOPSIS
+\fBval \-\fR
+.br
+\fBval\fR [\fB\-m\fIname\fR]
+.br
+	[\fB\-r\fISID\fR]
+.br
+	[\fB\-s\fR]
+.br
+	[\fB\-y\fItype\fR]
+.br
+\fIfiles\fR
+.SH DESCRIPTION
+.B Val\^
+determines if the specified
+.I file\^
+is an SCCS file meeting the characteristics specified
+by the optional argument list.
+Arguments to
+.B val\^
+can appear in any order.
+The arguments consist of keyletter arguments, which begin with
+a \fB\-\fR, and named files.
+.PP
+.B Val\^
+has a special argument, \fB\-\fR, which causes reading of the
+standard input until an end-of-file condition is detected.
+Each line read is independently processed as if it were a
+command line argument list.
+.PP
+.B Val\^
+generates diagnostic messages on the standard output for each
+command line and file processed and also returns a single
+8\fB-\fRbit code upon exit as described below.
+.PP
+The 8\fB-\fRbit code returned by
+.B val\^
+is a disjunction of the possible errors, i.e., can be
+interpreted as a bit string where (moving from left to right)
+set bits are interpreted as follows:
+.nf
+.PP
+.RS
+bit 0 = missing file argument
+bit 1 = unknown or duplicate keyletter argument
+bit 2 = corrupted SCCS file
+bit 3 = can't open file or file not SCCS
+bit 4 = \fISID\fR is invalid or ambiguous
+bit 5 = \fISID\fR does not exist
+bit 6 = %Y%, \fB\-y\fR mismatch
+bit 7 = %M%, \fB\-m\fR mismatch
+.RE
+.fi
+.PP
+Note that
+.B val\^
+can process two or more files on a given command line and in
+turn can process multiple command lines (when reading the
+standard input).
+In these cases an aggregate code is returned \- a logical
+\fBOR\fR of the codes generated for each command line
+and file processed.
+.SH KEYS
+.PP
+The keyletter arguments are defined as follows.
+The effects of any keyletter argument apply independently to
+each named file on the command line.
+.TP
+\fB\-m\fIname\fR
+The argument value
+.I name\^
+is compared with the SCCS %M% keyword in \fIfile\fR.
+.TP
+\fB\-r\fISID\fR
+The argument value \fISID\fR (\fISCCS ID\fRentification String)
+is an SCCS delta number.
+A check is made to determine if the \fISID\fR is ambiguous
+(e.g., \fBr\fR1 is ambiguous because it physically does not
+exist but implies 1.1, 1.2, etc. which may exist) or invalid
+(e.g., \fBr\fR1.0 or \fBr\fR1.1.0 are invalid because
+neither case can exist as a valid delta number).
+If the \fISID\fR is valid and not ambiguous, a check is made
+to determine if it actually exists.
+.TP
+\fB\-s\fR
+The presence of this argument silences the diagnostic message
+normally generated on the standard output for any error that is
+detected while processing each named file on a given command line.
+.TP
+\fB\-y\fItype\fR
+The argument value
+.I type\^
+is compared with the SCCS %Y% keyword in \fIfile\fR.
+.SH SEE ALSO
+admin(1),
+delta(1),
+get(1),
+prs(1).
+.SH DIAGNOSTICS
+Use
+.BR help (1)
+for explanations.
+.SH LIMITATONS
+.B Val\^
+can process up to 50 files on a single command line.
+Any number above 50 will produce a
+.B core
+dump.

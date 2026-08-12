@@ -1,0 +1,211 @@
+.po 1i
+.TH DISASM 3 Zilog 
+.V 08/15/84 17:17:49
+.\" @[$]disasm.3	1.10	08/15/84 17:17:49 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+disasm, disinit \- disassemble Z8000 instructions 
+.SH SYNOPSIS
+.nf
+\fB#include <disasm.h>
+.PP
+\fBdisinit\fI(getfunc,symfunc,flag)\fR
+.br
+\fBunsigned \fI*(getfunc)();\fR
+.br
+\fBint \fI*(symfunc)();\fR
+.br
+\fBint \fRflag;
+.PP
+\fIADDR *\fBdisasm\fI(adr,space,insptr)\fR
+.br
+\fI ADDR \fI*adr;\fR
+.br
+\fBint\fI space;\fR
+.br
+\fI INSTR *insptr;\fR
+.fi
+.PP
+On
+.BR cc (1)
+or
+.BR scc (1)
+command include a
+.B -lz8000
+option to access
+proper library archive file.
+.SH DESCRIPTION
+These functions are used to disassemble binary words into the
+equivalent Z8000 assembly instructions.
+The routines handle segmented and non-segmented
+code, and floating point instructions.
+.I Disinit
+is called before
+.B disasm
+to initialize the various parameters that the disassembly
+routines require.
+The different structures, variables, and constants used to communicate
+with
+.B disasm
+as defined in
+.B <disasm.h>
+are:
+.PP
+.nf
+.ta 8n +8n +8n +8n +8n +8n +8n
+
+/* @[$]disasm.h	1.1  12/11/81 17:07:54 - Zilog Inc */
+/*   disasm/disinit  .... disassembler include file */
+
+typedef struct address { char a_segno;
+	      long a_offset;
+	    } ADDR;
+
+typedef struct _instr { char *d_opcode;
+	       char *d_operand[4];
+	       char *d_comment;
+	     } INSTR;
+
+#define NON_SEG 0
+#define SEG     1
+
+#define ISYMBOL 0
+#define DSYMBOL 1
+
+int	disinit();
+ADDR	*disasm();
+
+.fi
+.PP
+.IR Getfunc
+is the address of a routine that
+.B disasm
+will use to request words to be disassembled.
+The calling sequence is:
+.nf
+.sp
+\fBgetfunc\fR(\fIadr,space)\fR
+     \fIADDR *adr;
+     \fBint \fIspace;\fR
+.fi
+.sp
+where
+.IR adr
+is a pointer to a structure containing the address of the word
+.B disasm
+is requesting and
+.IR space
+is an integer value containing the value passed to
+.B disasm
+(see below).
+.PP
+.IR Symfunc
+is the address of a routine that
+.B disasm
+calls in order to allow the calling routine to translate
+hexadecimal addresses to symbolic representations.  Its calling sequence
+is:
+.nf
+.sp
+\fBsymfunc\fR(\fIadr,symtype,s)
+     \fIADDR *adr;
+     \fRint \fIsymtype;
+     \fRchar *\fIs;\fR
+.fi
+.sp
+where
+.IR adr
+indicates the address to be translated.
+.IR Symtype
+contains either ISYMBOL or DSYMBOL (defined in
+.B  <disasm.h>)
+indicating whether the address should be considered to be
+in I-Space or D-Space.
+.IR S
+is a string pointer into which the function should copy the
+null-terminated string associated with the address given.
+For programs that do not handle symbols, a simple function containing
+.br
+.sp
+sprintf(s,"%%%04X",adr->a_offset); /* non-seg. example */
+.br
+.sp
+is sufficient.
+.PP
+.IR Flag
+indicates whether the information is to be interpreted as
+segmented or non-segmented code.
+The only valid values for this parameter are
+SEG and NON_SEG (defined in
+.B <disasm.h>
+and any others will give undefined results.
+.PP
+.B Disasm
+is the routine that actually does the disassembly.
+.IR Adr
+is the address of an ADDR structure that contains the starting
+address of the instruction to be disassembled.
+.IR Space
+is an integer containing information to indicate in what space
+the words to be disassembled reside.
+The disassembler does not use this parameter in 
+any way except to pass it to
+.BR getfunc.
+.IR Insptr
+is the address of an INSPTR structure (defined in
+.B <disasm.h>)
+into which
+.B disasm
+will return the disassembled instruction.
+It contains five null-terminated
+character string fields: an opcode, four operands, and a comment.
+The opcode field contains the standard
+.B ZILOG
+mnemonic for the decoded instruction (see note on errors below).
+In the case of extended processing unit (epu) instructions,
+if it is determined that the code does not represent a valid
+floating point instruction, the generalized
+form suggested in chapter 3 of
+.I Z8000 Assembly Language Programming,
+published by Osborne/Mc Graw-Hill, is used.
+.PP
+The four operand fields contain between zero and four null-terminated
+strings containing the translated operands.
+If any operand does not exist for a particular instruction,
+the first character of that field will be a null.
+The last field, comment, contains auxiliary information.
+For instance, the disassembly of the system call instruction
+.B "sc  #5"
+contains a comment field containing the string "! open !"
+indicating that a system call number five is the
+.B ZEUS
+.BR open (2)
+system call.
+.PP
+.B Disasm
+returns a pointer to an ADDR structure containing the address
+of the beginning of the next instruction in the case of successful
+completion, and a null in the case of an error.
+An error is indicated when
+.B disasm
+is unable to translate the given code into an instruction.
+In this case the opcode field will contain a string of the form
+%xxxx where xxxx is the 
+hexadecimal representation of the word given to
+.B disasm.
+In an error situation, all fields except the opcode are guaranteed to
+start with a null.
+.SH FILES
+/usr/lib/libz8000.a	/usr/lib/slibz8000.a
+.SH SEE ALSO
+adb(1).
+.SH DIAGNOSTICS
+A null is returned instead of a pointer when instruction cannot be
+disassembled.
+.SH LIMITATIONS
+.B Disasm
+will always disassemble valid instructions correctly.  It may, however, 
+misinterpret invalid binary sequences to be valid instructions.
+This is most noticeable in floating point instructions where some
+bits contain constant fields other than the opcode.

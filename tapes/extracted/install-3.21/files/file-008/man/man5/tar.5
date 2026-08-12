@@ -1,0 +1,60 @@
+.po 1i
+.TH TAR 5 Bell
+.V 08/15/84 17:35:40
+.\" @[$]tar.5	1.5	08/15/84 17:35:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+tar \- tar tape format
+.SH DESCRIPTION
+.PP
+A tape written with the program  
+.BR tar (1)
+has a certain format:  each file
+on the tape is preceded with a header of information .  This header 
+has the following structure.
+.nf
+
+	struct header
+	{
+		char name[NAMSIZ];
+		char mode[8];
+		char uid[8];
+		char gid[8];
+		char size[12];
+		char mtime[12];
+		char chksum[8];
+		char linkflag;
+		char linkname[NAMSIZ];
+	};
+
+.fi
+Here, NAMSIZ currently is equal to 100.  Each header block is 512 bytes
+long.  This structure takes less that 512 bytes so the remainder are
+filled in with nulls.
+.nf
+Meaning of the fields:
+.sp
+   name       The name of the file as typed on the command
+              line.
+.sp
+   mode       The mode the file had when it was written.
+              Refer to the description of st_mode in stat(2)
+              for more information.,
+.sp
+   uid        Owner of the file
+.sp
+   gid        Group the owner is in
+.sp
+   size       Size in bytes of the file
+.sp
+   mtime      Last modified time
+.sp
+   chksum     Checksum of the header
+.sp
+   linkflag   Set if this file has a link to another
+.sp
+   linkname   The name of the file linked to this one
+.fi
+.SH SEE ALSO
+tar(1).

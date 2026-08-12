@@ -1,0 +1,799 @@
+.po 1i
+.TH ADB 1 Bell
+.V 08/15/84 16:35:47
+.\" @[$]adb.1	1.7	08/15/84 16:35:47 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+adb \- debugger
+.SH SYNOPSIS
+\fBadb\fR [\fB\-w\fR] [ \fIobjfil\fR [ \fIcorfil\fR ] ]
+.SH DESCRIPTION
+.B Adb
+is a general-purpose debugging program to examine files and provide
+a controlled environment for execution of ZEUS programs.
+.PP
+.I Objfil
+is normally an executable program file, preferably
+containing a symbol table;
+if not, the symbolic features of
+.B adb
+cannot be used, although the file can still
+be examined.
+The default for
+.I objfil
+is a.out.
+.I Corfil
+is assumed to be a core image file produced after
+executing
+.IR objfil ;
+the default for
+.I corfil
+is core.
+.PP
+Requests to
+.B adb
+are read from the standard input and
+responses are written to the standard output.
+.B Adb
+prompts for input with a question mark "\ ?\ ".
+If the 
+\fB\-w\fR flag is present, both \fIobjfil\fR and \fIcorfil\fR
+are created, if necessary, and opened for reading, modifying,
+and writing.
+\fBAdb\fR ignores QUIT; INTERRUPT causes return to the next
+.B adb
+command.
+.PP
+Requests to \fBadb\fR are of the form
+.PP
+.RS
+[\fIaddress\fR] [,\fIcount\fR] [\fIcommand\fR] [;]
+.RE
+.PP
+If
+.I address
+is present, \fIdot\fR is set to
+.IR address .
+Initially,
+.I dot
+is set to 0.
+For most commands,
+.I count
+is an expression that specifies how many times
+the command will be executed (default is 1).
+Currently,
+.I address
+is considered an expression with an unspecifiable (default) segment
+number of 0.  It is expected that this will change.
+.PP
+The interpretation of an address depends
+on the context in which it is used.
+If a subprocess is being debugged,
+addresses are interpreted
+in the usual way in the address space of the subprocess.
+For further details of address mapping, see \fBADDRESSES\fR.
+.PP
+.SH EXPRESSIONS
+.TP 7.2n
+.B .
+The value of
+.IR dot .
+.TP 7.2n
++
+The value of
+.I dot
+incremented by the current increment.
+.TP 7.2n
+^
+The value of
+.I dot
+decremented by the current increment.
+.TP 7.2n
+"
+The last
+.I address
+typed.
+.TP 7.2n
+.bp
+.I integer
+An octal number if
+.I integer
+begins with a 0;
+a hexadecimal number if preceded by
+.BR % ;
+otherwise, a decimal number.
+.TP 7.2n
+.IB integer . fraction
+A 32-bit floating point number.
+.TP 7.2n
+.I \'cccc\|\'
+An ASCII value of up to 4 characters; a backslash "\ \\\ "
+can be used to escape an apostrophe  "\ \'\ ".
+.TP 7.2n
+.I < name
+The value of
+.IR name ,
+which is either a variable name or a register name.
+.B Adb
+maintains a number of variables
+(see
+\fBVARIABLES\fR)
+named by single letters or digits.
+If
+.I name
+is a register name, the value of the register is obtained from
+the system header in
+.IR corfil .
+The register names are
+r0 ... r14 sp pc fcw.
+.TP 7.2n
+.I symbol
+A
+.I symbol
+is a sequence
+of upper or lowercase letters, underscores, or
+digits not starting with a digit.
+.BR \\ " may be used to escape other characters."
+The value of the
+.I symbol
+is taken from the symbol table
+in
+.IR objfil .
+An initial underbar "\ _\ " or tilde "\ ~\ "
+will be prepended to
+.I symbol
+if needed.
+.TP
+.I _ symbol
+In C, the "true name" of an external symbol begins with _.
+It may be necessary to write this name to distinguish it
+from internal or hidden variables of a program.
+.TP 7.2n
+.IB routine . name
+The address of the variable
+.I name
+in the specified
+C routine.
+Both
+.I routine
+and
+.I name
+are
+.IR symbols .
+If
+.I name
+is omitted, the value is the address of the
+most recently activated C stack frame
+corresponding to
+.IR routine .
+Currently, this expression type is
+.I not
+supported.
+.TP 7.2n
+.RI ( exp \|)
+The value of the expression
+.IR exp .
+.sp
+.LP
+.SM
+.B  "Monadic\ Operators"
+.TP 7.2n
+.RI * exp
+The contents of the location addressed
+by
+.I exp
+in
+.IR corfil .
+.TP 7.2n
+.RI @ exp
+The contents of the location addressed by
+.I exp
+in
+.IR objfil .
+.TP 7.2n
+.RI \- exp
+Integer negation.
+.TP 7.2n
+.RI ~\fIexp\fR
+Bitwise complement.
+.sp
+.LP
+.B  "Dyadic\ Operators"
+(left associative
+and less binding than monadic operators)
+.TP 7.2n
+.IR e1 + e2
+Integer addition.
+.TP 7.2n
+.IR e1 \- e2
+Integer subtraction.
+.TP 7.2n
+.IR e1 * e2
+Integer multiplication.
+.TP 7.2n
+.IR e1 % e2
+Integer division.
+.TP 7.2n
+.IR e1 & e2
+Bitwise conjunction.
+.TP 7.2n
+.IR e1 \(bv e2
+Bitwise disjunction.
+.TP 7.2n
+.IR e1 # e2
+.I E1
+rounded up to the next multiple of
+.IR e2 .
+.DT
+.SH COMMANDS
+Most commands consist of a verb followed by a modifier or list
+of modifiers.
+The following verbs are available.
+(The commands ? and / can be followed by an 
+asterisk "\ *\ ";
+see
+.SM \fBADDRESSES\fR
+for further details.)
+.TP .5i
+.RI ? f
+Locations starting at
+.I address
+in
+.I  objfil
+are printed according to the format \fIf\fR.
+.TP
+.RI / f
+Locations starting at
+.I address
+in
+.I  corfil
+are printed according to the format
+.IR f .
+.TP
+.RI  = f
+The value of
+.I address
+itself is printed in the
+styles indicated by the format
+.IR f .
+(For
+.I i 
+format, ? is printed for the parts of the instruction that reference
+subsequent words.)
+.PP
+A
+.I format
+consists of one or more characters that specify a style
+of printing.
+Each format character can be preceded by a decimal integer
+that is a repeat count for the format character.
+While stepping through a format,
+.I dot
+is incremented temporarily
+by the amount given for each format letter.
+If no format is given, the last format is used.
+The format letters available are as follows
+(the number following each letter indicates how many bytes are printed):
+.ta 2.5n .5i
+.RS
+.TP
+.BR o "	2"
+Print 2 bytes in octal.
+All octal numbers output by
+.B adb
+are preceded by 0.
+.br
+.TP
+.BR O "	4"
+Print 4 bytes in octal.
+.br
+.TP
+.BR d "	2"
+Print in decimal.
+.br
+.TP
+.BR D "	4"
+Print long decimal.
+.br
+.TP
+.BR x "	2"
+Print 2 bytes in hexadecimal.
+.br
+.TP
+.BR X "	4"
+Print 4 bytes in hexadecimal.
+.br
+.TP
+.BR u "	2"
+Print as an unsigned decimal number.
+.br
+.TP
+.BR U "	4"
+Print long unsigned decimal.
+.br
+.TP
+.BR f "	4"
+Print the 32-bit value
+as a floating point number.
+.br
+.TP
+.BR F "	8"
+Print double floating point.
+.br
+.TP
+.BR b "	1"
+Print the addressed byte in octal.
+.br
+.TP
+.BR c "	1"
+Print the addressed character.
+.br
+.TP
+.BR C "	1"
+Print the addressed character using
+the following escape convention.
+Character values 000 to 040 are printed as @ followed by the corresponding
+character in the range 0100 to 0140.
+The character @ is printed as @@.
+.br
+.TP
+.BI s "	n"
+Print the addressed characters until a zero character
+is reached.
+.br
+.TP
+.BI S "	n"
+Print a string using 
+the @ escape convention.
+.I N
+is the length of the string including its zero terminator.
+.br
+.TP
+.BR Y "	4"
+Print four bytes in date format (\fBctime\fR(3)).
+.br
+.TP
+.BI i "	n"
+Print as Z8000 instructions.
+.I n
+is the number of bytes occupied by the instruction.
+This style of printing causes variables 1 and 2 to be set
+to the offset parts of the source and destination respectively.
+.br
+.TP
+.BR a "	0"
+Print the value of
+.I dot
+in symbolic form.
+Symbols are checked to ensure that they have an appropriate
+type as indicated below.
+.LP
+.nf
+.DT \"for some reason the following tabs don't work.  will this fix it?  -- isaac
+		/	local or global data symbol
+		?	local or global text symbol
+		=	local or global absolute symbol
+.fi
+.IP "\fBp \fR2"
+Print the addressed value in symbolic form using
+the same rules for symbol lookup as
+.BR a .
+.br
+.IP "\fBt \fR0"
+When preceded by an integer, tabs to the next
+appropriate tab stop.
+For example,
+.B 8t 
+moves to the next 8-space tab stop.
+.br
+.IP "\fBr \fR0"
+Print a space.
+.br
+.IP "\fBn \fR0"
+Print a new-line.
+.br
+.tr '"
+.TP
+.BR '...' " 0"
+Print the enclosed string.
+.br
+.tr ''
+.br
+.TP
+.B ^
+.I Dot
+is decremented by the current increment.
+Nothing is printed.
+.br
+.TP
++
+.I Dot
+is incremented by 1; nothing is printed.
+.br
+.TP
+\-
+.I Dot
+is decremented by 1; nothing is printed.
+.RE
+.TP
+new-line
+If the previous command temporarily incremented
+.IR dot ,
+make the increment permanent.
+Repeat the previous command with a
+.I count
+of 1.
+.TP
+.RB [ ?/ ] l "\fI value mask\fR"
+Words starting at
+.I  dot
+are masked with
+.I mask
+and compared with
+.I value
+until
+a match is found.
+If
+.B L
+is used, the match is for four bytes at a time instead of two.
+If no match is found,
+.I dot
+is unchanged; otherwise,
+.I dot
+is set to the matched location.
+If
+.I mask
+is omitted, \-1 is used.
+.TP
+.RB [ ?/ ] w "\fI value ...\fR"
+Write the 2-byte
+.I value
+into the addressed
+location.
+If the command is \fIW\fR, write four bytes.
+Odd addresses are not allowed when writing to the subprocess
+address space.
+.TP
+[\fB?/\fR]\fBm\fI b1 e1 f1\fR[\fB?/\fR]
+.br
+New values for
+.RI ( b1,\ e1,\ f1 )
+are recorded.
+If less than three expressions are given, the remaining map
+parameters are left unchanged.
+If the ? or / is followed by an asterisk "\ *\ "
+the second segment
+(\fIb2\fR\|,\|\fIe2\fR\|,\|\fIf2\fR)
+of the mapping is changed.
+If the list is terminated by ? or /, the file
+(\fIobjfil\fR or
+.I corfil
+respectively) is used for subsequent requests.
+(For example, /m? causes / to refer to
+.IR objfil .)
+.TP
+.BI > name
+.I Dot
+is assigned to the variable or register named.
+.TP
+.B !
+A shell is called to read the
+rest of the line following !.
+.TP
+.RI $ modifier
+Miscellaneous commands.
+The available 
+.I modifiers 
+are:
+.RS
+.TP
+\fB$ < \fIf\fR
+Read commands from the file
+.I f
+and return.
+.br
+.TP
+\fB$ > \fIf\fR
+Send output to the file
+.I  f,
+which is created if it does not exist.
+.br
+.TP
+.B $r
+Print the general registers and
+the instruction addressed by
+.BR pc .
+.I Dot
+is set to \fBpc\fR.
+.br
+.TP
+.B $f
+Print the floating registers.
+.TP
+.B $b
+Print all breakpoints
+and their associated counts and commands.
+.br
+.TP
+.B $c
+C stack backtrace. If
+.I address
+is given, then it is taken as the
+program address
+from which to start the backtrace.
+If
+.I count
+is given, then only the first 
+.I count
+stack frames are printed.
+.br
+.TP
+.B $C
+If
+.B $C
+is used, the 16-bit values for each 
+active routine's stack frame
+are printed with the return address labeled.
+If
+.I count
+is given, only the first 
+.I count
+stack frames are printed.
+If
+.I address
+is given,
+.I dot
+is temporarily moved to that address (i.e. pc is not altered) for
+perusal of instructions.
+.br
+.TP
+.B $e
+The names and values of
+external variables are printed.
+.br
+.TP
+.B $w
+Set the page width for output to
+.I address
+(default 72).
+.br
+.TP
+.B $s
+Set the limit for symbol matches to
+.I address
+(default 255).
+.br
+.TP
+.B $o
+All integers input are regarded as octal.
+.br
+.TP
+.B $x
+All integers input are regarded as hexadecimal.
+.br
+.TP
+.B $d
+Reset integer input as described in
+.SM \fBEXPRESSIONS\fR.
+.br
+.TP
+.B $q
+Exit from
+.BR adb .
+.br
+.TP
+.B $v
+Print all nonzero variables in hexadecimal.
+.br
+.TP
+.B $m
+Print the address map.
+.RE
+.TP
+.BI : modifier
+Manage a subprocess.
+Available modifiers are:
+.RS
+.TP
+\fB:b\fI c\fR
+Set breakpoint at
+.IR address .
+The breakpoint is executed
+.IR count \-1
+times before
+causing a stop.
+Each time the breakpoint is encountered,
+the command
+.I :c
+is executed.
+If this command sets
+.I dot
+to zero,
+the breakpoint causes a stop.
+.TP
+.B :d
+Delete breakpoint at
+.IR address .
+.TP
+.B :r
+Run
+.I objfil
+as a subprocess.
+If
+.I address
+is given explicitly, the
+program is entered at this point; otherwise,
+the program is entered at its standard entry point.
+.I Count
+specifies how many breakpoints are to be
+ignored before stopping.
+Arguments to the subprocess can be supplied on the
+same line as the command.
+An argument starting with < or > causes the standard
+input or output to be established for the command.
+All signals are turned on at entry to the subprocess.
+.TP
+\fB:c\fI s\fR
+The subprocess is continued
+with signal
+.I s
+(\fBsignal\fR (2)).
+If
+.I address
+is given, the subprocess
+is continued at this address.
+If no signal is specified, the signal
+that caused the subprocess to stop is sent.
+Breakpoint skipping is the same
+as for
+.BR r .
+.TP
+\fB:s\fI s\fR
+As for \fBc\fR, except that
+the subprocess is single stepped
+.I count
+times.
+If there is no current subprocess,
+.I objfil
+is run
+as a subprocess as for
+.BR r .
+In this case, no signal can be sent; the remainder of the line
+is treated as arguments to the subprocess.
+.TP
+.B :k
+The current subprocess, if any, is terminated.
+.RE
+.SH VARIABLES
+.B Adb
+provides a number of variables.
+Named variables are set initially by
+.B  adb
+but are not used subsequently.
+Numbered variables are reserved for communication
+as follows:
+.TP
+.B 0
+The last value printed.
+.br
+.TP
+.B 1
+The last offset part of an instruction source.
+.br
+.TP
+.B 2
+The previous value of variable 1.
+.PP
+On entry, the following are set
+from the system header in the
+.IR corfil .
+If
+.I corfil
+does not appear to be a
+core file,
+these values are set from
+.IR objfil .
+.TP
+.B b
+The base address of the data segment.
+.br
+.TP
+.B d
+The data segment size.
+.br
+.TP
+.B e
+The entry point.
+.br
+.TP
+.B m
+The magic number (0xE607, 0xE611, 0xE605, 0xE707, 0xE711, 0xE705)
+.br
+.TP
+.B s
+The stack segment size.
+.br
+.TP
+.B t
+The text segment size.
+.SH ADDRESSES
+The address in a file associated with
+a written address is determined by a mapping
+associated with that file.
+Each mapping is represented by two triples
+.RI ( "b1, e1, f1" )
+and
+.RI ( "b2, e2, f2" )
+and the
+.I file address
+corresponding to a written
+.I address
+is calculated as follows:
+.PP
+.RS
+b1\(<=address<e1 => file address=address+f1-b1\fR
+.sp
+otherwise,
+.sp
+b2\(<=address<e2 => file address=address+f2-b2\fR
+.RE
+.PP
+otherwise, the requested
+.I address
+is not legal.
+If the program being debugged is segmented, then only one segment
+at a time will be mapped.
+If a reference is made to a location in another segment, the map setting
+will automatically be changed to correspond to that segment.
+In some cases (for example, programs with separated instruction
+and data space), the two segments for a file can overlap.
+If a question mark "\ ?\ "
+or a slash "\ /\ "
+is followed by an asterisk "\ *\ "
+only the second
+triple is used.
+.PP
+The initial setting of both mappings is suitable for
+normal a.out and core files.
+If the program being debugged is segmented,
+the segment containing the entrypoint (usually the function "main")
+is mapped initially.
+.PP
+All appropriate values are kept as signed 32-bit integers
+so that
+.B adb
+can be used on large files.
+.SH FILES
+/dev/mem
+.br
+/dev/swap
+.br
+a.out
+.br
+core
+.SH SEE ALSO
+ptrace(2),
+disasm(3),
+a.out(5),
+core(5)
+.SH DIAGNOSTICS
+"Adb" when there is no current command or format.
+Comments about inaccessible files, syntax errors,
+abnormal termination of commands, etc.
+Exit status is 0, unless last command failed or
+returned a non-zero status.
+.SH LIMITATIONS
+A breakpoint set at the entry point is not effective
+on initial entry to the program.
+.sp
+When single stepping, system calls do not count as an
+executed instruction.
+.sp
+Local variables whose names are the same as an external
+variable can cause errors in the accessing of the external.
+.sp
+A hexadecimal number specified for an address may be 
+interpreted as a 
+.I symbol
+if not preceded by a %.

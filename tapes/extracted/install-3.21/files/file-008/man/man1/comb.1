@@ -1,0 +1,106 @@
+.po 1i
+.TH COMB 1 Bell
+.V 08/15/84 16:42:12
+.\" @[$]comb.1	1.7 08/15/84 16:42:12 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+comb \- combine SCCS deltas
+.SH SYNOPSIS
+\fBcomb\fR [\fB\-c\fIlist \fB\-o \fB\-p\fISID \fB\-s\fR] \fIfiles\fR
+.SH DESCRIPTION
+.B Comb\^
+generates a shell procedure (see \fBsh\fR(1)) which
+reconstructs the given SCCS files.
+The reconstructed files will be smaller than the original
+files.
+The arguments can be specified in any order, but all
+keyletter arguments apply to all named SCCS files.
+.PP
+If a directory is named,
+.B comb\^
+behaves as though each file in the directory were specified
+as a named file, except that non-SCCS files (last component
+of the path name does not begin with \fBs.\fR) and unreadable
+files are ignored.
+.PP
+If a name of \fB\-\fR is given, the standard input is read;
+each line of the standard input is taken to be the name of an
+SCCS file to be processed;
+non-SCCS files and unreadable files are ignored.
+.PP
+The generated shell procedure is written on the standard output.
+.SH OPTIONS
+The keyletter arguments are as follows.
+Each is explained as if only one named file is to be processed,
+but the effects of any keyletter argument apply independently
+to each named file.
+.TP 10
+\fB\-c\fIlist\fR
+A
+.I list\^
+(see \fBget\fR(1) for the syntax of a \fIlist\fR) of deltas
+to be preserved.
+All other deltas are discarded.
+.TP
+\fB\-o\fR
+Causes the reconstructed file to be accessed at the release
+of the created delta for each \fBget \-e\fR generated;
+otherwise, the reconstructed file is accessed at the most
+recent ancestor.
+Use of the
+.B \-o
+keyletter can decrease the size of the reconstructed SCCS file.
+It can also alter the shape of the delta tree of the original file.
+.TP
+\fB\-p\fISID
+The \fISCCS ID\fRentification string (\fISID\fR) of the oldest
+delta to be preserved.
+All older deltas are discarded in the reconstructed file.
+.TP
+\fB\-s\fR
+Causes \fBcomb\fR to generate a shell procedure which produces
+a report for each file giving:
+the file name,
+size (in blocks) after combining,
+original size,
+and percentage change computed by:
+.sp
+.ce 1
+100 * (original \- combined) / original
+.sp
+It is  recommended that before any SCCS files are actually
+combined, this option should be used to determine exactly
+how much space is saved by the combining process.
+.PP
+If no keyletter arguments are specified,
+.B comb\^
+preserves only leaf deltas and the minimal number of ancestors
+needed to preserve the tree.
+.SH FILES
+.TP 14
+s.COMB
+The name of the reconstructed SCCS file.
+.TP 14
+comb?????
+Temporary.
+.SH SEE ALSO
+admin(1),
+delta(1),
+get(1),
+help(1),
+prs(1),
+sccsfile(5).
+.br
+.I "Source Code Control System User's Guide\^"
+in the ZEUS Utilities Manual
+.SH DIAGNOSTICS
+Use
+.BR help (1)
+for explanations.
+.SH LIMITATIONS
+.B Comb\^
+can rearrange the shape of the tree of deltas.
+It may not save any space;
+in fact, it is possible for the reconstructed file to
+actually be larger than the original.

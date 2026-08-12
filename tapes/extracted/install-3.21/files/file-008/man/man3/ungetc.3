@@ -1,0 +1,42 @@
+.po 1i
+.TH UNGETC 3 Bell
+.V 08/15/84 17:29:58
+.\" @[$]ungetc.3	1.7	08/15/84 17:29:58 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ungetc \- push character back into input stream
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.PP
+\fBungetc\fI(c, stream)
+\fBFILE\fI *stream;
+\fBchar\fI c;\fR
+.fi
+.SH DESCRIPTION
+.B Ungetc
+pushes the character
+.I c
+back on an input stream.
+That character is returned by the next
+.B getc
+call on that stream.
+.PP
+One character of pushback is guaranteed provided
+something has been read from the stream and the stream is
+actually buffered.
+Attempts to push EOF are rejected.
+.PP
+.BR  Fseek (3)
+erases all memory of pushed-back characters.
+.SH SEE ALSO
+getc(3),
+setbuf(3),
+fseek(3).
+.SH DIAGNOSTICS
+.B Ungetc
+returns
+.SM
+.B EOF
+if it cannot push a character back.

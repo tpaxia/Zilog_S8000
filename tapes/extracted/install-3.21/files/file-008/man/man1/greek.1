@@ -1,0 +1,92 @@
+.po 1i
+.TH GREEK 1 Bell
+.V 08/15/84 16:53:57
+.\" @[$]greek.1	1.4	08/15/84 16:53:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+greek \- select terminal filter
+.SH SYNOPSIS
+.B greek
+[
+.BR \-T\fIterminal\fR
+]
+.SH DESCRIPTION
+.B Greek\^
+is a filter that reinterprets the extended character set,
+as well as the reverse and half-line motions, of a
+128-character TELETYPE\*S\*R Model 37 terminal (which is the
+.BR nroff (1)
+default terminal) for certain other terminals.
+Special characters are simulated by overstriking.
+If the argument is omitted,
+.B greek\^
+attempts to use the environment variable
+.B $TERM
+(see
+.BR environ (7)).
+The following
+.IR terminal s
+are currently recognized:
+.RS
+.PP
+.PD 0
+.TP 10
+hp
+Hewlett-Packard 2621, 2640, and 2645.
+.TP
+tek
+Tektronix 4014.
+.TP 10
+300
+DASI 300.
+.TP
+300-12
+DASI 300 in 12-pitch.
+.TP
+300s
+DASI 300s.
+.TP
+300s-12
+DASI 300s in 12-pitch.
+.TP
+450
+DASI 450.
+.TP
+450-12
+DASI 450 in 12-pitch.
+.TP
+1620
+Diablo 1620 (alias DASI 450).
+.TP
+1620-12
+Diablo 1620 (alias DASI 450) in 12-pitch.
+.TP
+2621
+Hewlett-Packard 2621, 2640, and 2645.
+.TP
+2640
+Hewlett-Packard 2621, 2640, and 2645.
+.TP
+2645
+Hewlett-Packard 2621, 2640, and 2645.
+.TP
+4014
+Tektronix 4014.
+.PD
+.RE
+.SH FILES
+/usr/bin/300
+.br
+/usr/bin/300s
+.br
+/usr/bin/450
+.SH SEE ALSO
+300(1),
+4014(1),
+450(1),
+eqn(1), 
+greek(7),
+nroff(1),
+environ(5),
+term(7).

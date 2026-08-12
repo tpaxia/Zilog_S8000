@@ -1,0 +1,25 @@
+.po 1i
+.TH WHICH 1 UCB
+.V 08/15/84 17:10:29
+.\" @[$]which.1	1.4	08/15/84 17:10:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+which \- locate a program file including aliases and paths (csh only)
+.SH SYNOPSIS
+\fBwhich\fR [ \fIcommand_list\fR ] ...
+.SH DESCRIPTION
+.B Which
+searches for the executable commands given in \fIcommand_list\fR.
+Each argument is expanded if it
+is aliased; it is searched for along the user's environment variable, PATH.
+Both aliases and paths are taken from the user's .cshrc file.
+.SH FILES
+~/.cshrc		source of aliases and path values
+.SH DIAGNOSTICS
+A diagnostic is given for names which are aliased to more that a single word,
+or if an executable file with the argument name was not found in the path.
+.SH LIMITATIONS 
+Only aliases and paths from ~/.cshrc are used; importing from the current
+environment is not attempted.  Must be executed by a csh, because only csh's
+know about aliases.

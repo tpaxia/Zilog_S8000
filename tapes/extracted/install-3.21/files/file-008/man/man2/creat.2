@@ -1,0 +1,147 @@
+.po 1i
+.TH CREAT 2 Bell
+.V 08/15/84 17:12:49
+.\" @[$]creat.2	1.8	08/15/84 17:12:49 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+creat  \- create a new file
+.SH SYNOPSIS
+.B int creat
+.I (file, mode)
+.br
+.B char
+.I *file;
+.br
+.B int 
+.I mode;
+.SH DESCRIPTION
+.B Creat
+creates a new file or prepares to rewrite an existing
+.I file,
+given as the address of a null-terminated string.
+If the file did not exist,
+the file's owner
+.SM ID
+is set to the process's effective
+user
+.SM ID\*S,
+the file's group
+.SM ID
+is set to the process's effective group
+.SM ID\*S,
+and
+the low-order 12 bits of the file mode are set to the value of
+.I mode
+modified as follows:
+.IP
+All bits set in the process's file mode creation mask are cleared.
+See
+.BR umask (2).
+.IP
+The "save text image after execution bit" of the mode is cleared.
+.PP
+See
+.BR chmod (2)
+for the
+construction of the
+.I mode
+argument.
+.PP
+If the file did exist, its mode and owner remain unchanged
+but it is truncated to 0 length.
+.PP
+The file is also opened for writing, and its file descriptor
+is returned.
+.PP
+The
+.I mode
+given is arbitrary; it need not allow
+writing.
+This feature is used by programs that deal with temporary
+files of fixed names.
+The creation is done with
+a mode that forbids writing.
+If a second
+instance of the program attempts a
+.B creat,
+an error is
+returned and the program knows that the name is unusable
+for the moment.
+.SH SEE ALSO
+write(2), close(2), chmod(2), umask(2).
+.SH DIAGNOSTICS
+.PP
+.B Creat
+will fail if one or more of the following are true:
+.IP
+A component of the
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+A component of the
+path prefix
+does not exist.
+.SM
+\%[ENOENT]
+.IP
+Search permission is denied on a component of the
+path prefix.
+.SM
+\%[EACCES]
+.IP
+The path name is null.
+.SM
+\%[ENOENT]
+.IP
+The file does not exist and the directory in which the file
+is to be created does not permit writing.
+.SM
+\%[EACCES]
+.IP
+The named file resides or would reside on a read-only file system.
+.SM
+\%[EROFS]
+.IP
+The file is a pure procedure (shared text) file that is being executed.
+.SM
+\%[ETXTBSY]
+.IP
+The file exists and write permission is denied.
+.SM
+\%[EACCES]
+.IP
+The named file is an existing directory.
+.SM
+\%[EISDIR]
+.IP
+There are already too many files open.
+.SM
+\%[EMFILE]
+.IP
+.I File
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion,
+a non-negative integer,
+namely the file descriptor,
+is returned.
+Otherwise, a value of \-1 is returned and
+I errno
+is set to indicate the error.
+.DT
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT CREAT	:= 8
+	...		!* filename, mode in r0, r1 respectively *!
+			!* (segmented: filename, mode in rr0, r2) *!
+	sc	#CREAT
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

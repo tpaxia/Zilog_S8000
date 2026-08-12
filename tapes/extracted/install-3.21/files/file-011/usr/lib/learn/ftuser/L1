@@ -1,0 +1,15 @@
+#nocleanup
+#print
+In this session, you learn to use ZEUS. Each lesson supplies
+some information and gives you a chance to do some work on the
+system. You respond to the prompt $ by typing in something
+and then pressing the (RETURN) key. Try typing:   ok (RETURN)
+
+#
+stty erase  kill 
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+1a

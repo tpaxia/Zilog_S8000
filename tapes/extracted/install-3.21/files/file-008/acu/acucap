@@ -1,0 +1,5 @@
+r8|rm8|UDS RM-8:IF=S:SC=\002:EC=\003:AB=\002\004:\
+	TA=\072:PA=;:EN=<:LD=?:RD=\002\003:RC=C:RB=B:\
+	RN=A:RO=D:RE=E:RW=5:RA=5:SP=1200
+ur|urp|US Robotics Password:IF=S:SC=ATE0V0DT:LD=\015:AB=\015:\
+	TA=,:PA=,:RD=A/:RC=1:RN=3:RE=4:RW=5:RA=5:

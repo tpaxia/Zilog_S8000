@@ -1,0 +1,46 @@
+.po 1i
+.TH FOREACH 1C UCB
+.V 08/15/84 16:51:49
+.\"@[$]foreach.1C	1.6	08/15/84 16:51:49 - Zilog Inc.
+.ad
+.SH NAME
+foreach \- C Shell flow control loop initiation
+.SH SYNOPSIS
+.B foreach
+.I name 
+.I "( list )"
+.in +5m
+.I command
+.in -5m
+.B end
+.SH DESCRIPTION
+The variable
+.I name
+is successively set to each member of
+.I wordlist
+and the sequence of commands between this command and the matching
+.B end
+are executed.
+Both
+.B foreach
+and
+.B end
+must appear alone on separate lines.
+.PP
+When this command is read from the terminal, the loop is read up once
+prompting with ? before any statements in the loop are executed.
+A typing mistake in a loop at the terminal can be rubbed out.
+.SH FILES
+/bin/csh
+.SH SEE ALSO
+break(1C),
+breaksw(1C), 
+continue(1C),
+exit(1C),
+if(1C),
+nohup(1C),
+onintr(1C),
+switch(1C),
+while(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

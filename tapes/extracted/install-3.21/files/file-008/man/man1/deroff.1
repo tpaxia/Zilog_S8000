@@ -1,0 +1,156 @@
+.po 1i
+.TH DEROFF 1 Bell
+.V 08/15/84 16:46:29
+.\" @[$]deroff.1	1.14  08/15/84 16:46:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+deroff \- remove nroff/troff, tbl, and eqn constructs
+.SH SYNOPSIS
+.B deroff
+[
+.BI \-m x
+] [
+.B \-w
+] [ \fIfiles\fR ]
+.SH DESCRIPTION
+.B Deroff
+reads each of the
+.I files
+in sequence and removes all
+.BR nroff (1)
+and
+.BR troff (1)
+requests, macro calls, backslash constructs,
+.BR eqn (1)
+constructs (between
+.SM
+\&.EQ
+and
+.SM
+\&.EN
+lines, and between delimiters), and
+.BR tbl (1)
+descriptions. It writes the remainder of the file
+to the standard output.
+.B Deroff
+follows chains of included files
+(.so
+and
+\&.nx
+.B troff
+commands).
+If a file has already been included, a
+\&.so
+naming that file is ignored. A further 
+\&.nx
+naming that file terminates execution.
+If no \fIfile\fR is given,
+.B deroff
+reads the standard input.
+.SH OPTIONS
+.TP
+.BI \-m x
+May be followed by an
+.BR m ,
+.BR s ,
+or
+.BR l .
+The resulting
+.B \-mm
+or
+.B \-ms
+option causes the
+.B mm
+or
+.B ms
+macros to be interpreted so that only running text
+is output (i.e., no text from macro lines).
+The
+.B \-ml
+option forces the
+.B \-mm
+option and also causes deletion of lists associated with the
+.B mm
+macros.
+.TP
+.B \-w
+The output is a word list, one "word" per line,
+with all other characters deleted.
+Otherwise, the output follows the original, with
+the deletions indicated above.
+In text, a "word" is any string that contains
+at least two letters and is composed
+of letters, digits, ampersands
+( & ),
+and apostrophes
+( \^\(fm\^ ).
+In a macro call, however, a "word" is a string that begins
+with at least two letters and contains a total of at
+least three letters.
+Delimiters are characters other than letters,
+digits, apostrophes, and ampersands.
+Trailing apostrophes and ampersands are removed from "words."
+.SH EXAMPLES
+.RS
+.nf
+%\fBcat example.file\fR
+.sp
+\&.PP
+This is a sample file with nroff commands.
+It will be used with deroff:
+\&.RS
+deroff example.file
+\&.RE
+to remove the nroff commands for reading purposes.
+.bp
+%\fB deroff example.file\fR
+
+This is a sample file with nroff commands.
+It will be used with deroff:
+
+deroff example.file
+
+to remove the nroff commands for reading purposes.
+.sp
+%\fBderoff -w example.file\fR
+.sp
+This
+is
+a
+sample
+file
+with
+nroff
+commands
+It
+will
+be
+used
+with
+deroff
+deroff
+example
+file
+to
+remove
+the
+nroff
+commands
+for
+reading
+purposes
+.fi
+.RE
+.SH SEE ALSO
+eqn(1), tbl(1), troff(1).
+.SH LIMITATIONS
+.B Deroff
+is not a complete
+.B troff
+interpreter, so it can be confused by subtle constructs.
+Most such errors result in too much rather than too little output.
+.br
+The
+.B \-ml
+option does not handle nested lists correctly.

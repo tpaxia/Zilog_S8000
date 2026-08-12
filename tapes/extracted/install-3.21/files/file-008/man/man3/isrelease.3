@@ -1,0 +1,35 @@
+.po 1i
+.TH ISRELEASE 3 Zilog
+.V 08/15/84 17:21:07
+.\" @[$]isrelease.3	1.5 08/15/84 17:21:07 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isrelease - unlock records in a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisrelease\fI(isfd)\fR
+\fBint \fIisfd;\fR
+.fi
+.SH DESCRIPTION
+.B Isrelease
+unlocks records which have been manually locked
+using the 
+.B isread
+call.
+All locked records in the file indicated by 
+.I isfd
+will be unlocked.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isclose(3),
+islock(3),
+isread(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

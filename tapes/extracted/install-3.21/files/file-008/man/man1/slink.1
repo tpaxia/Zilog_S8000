@@ -1,0 +1,145 @@
+.po 1i
+.TH SLINK 1 Zilog
+.V 08/15/84 17:06:01
+.\" @[$]slink.1	1.9 08/15/84 17:06:01 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+slink \- memory binder for downloading object modules.
+.SH SYNOPSIS
+.B slink
+\fR[ \fB-eioPsvwxX\fR ] [ [ \fB-S \fIaddr\fR ] \fIfile\fR ...] ... \fR
+.SH DESCRIPTION
+.B Slink
+creates load modules for downloading to target hardware.
+Modules may be bound to particular memory locations by using the
+.B -S
+address option.
+.PP
+.B Slink
+combines several object modules into one load module file. The output of
+.B slink
+is left on the file \fBa.out\fR(5). If the
+.B -o
+option is used,
+the name so specified is used instead of \fBa.out\fR;
+the file has
+the same format.
+If no errors occur during the link, the file is marked executable.
+.PP
+The argument routines are concatenated in the order specified.
+In the absence of the
+.B -e
+option, the entry point of the 
+output is the beginning of the first routine.
+.PP
+The options must be specified separately.
+.PP
+The options are:
+.PP
+.ne 5v
+.IP "\fB-e\fR \fIname\fR" 10
+Take the following argument as the 
+.I name
+of the entry point of the program. The
+link address of the text section is the default.
+.IP "\fB-i" 10
+Separate the program text and data (also called instruction
+and data) areas when the output file is executed. This
+option is only for Z8 object modules.
+.PP
+.ne 3v
+.IP "\fB-o\fR \fIname\fR" 10
+Change the name of the
+.B slink
+output file to the
+.I name
+specified.
+The form of the load module remains the same
+as described in \fBa.out\fR(5).
+.PP
+.ne 3v
+.IP "\fB-P\fR" 10
+Preserve the temporary work files in /tmp/sl...... for debug purposes.
+.PP
+.ne 3v
+.IP "\fB-s\fR" 10
+Strip the output: 
+remove the symbol table and relocation bits to save space.
+.PP
+.ne 3v
+.IP "\fB-S\fR \fIaddress file\fR ..." 10
+Set the location of the
+.I files
+listed. 
+The
+.I address
+may be specified in hex,
+octal, or decimal using standard C language conventions: 
+a leading 0x indicates
+hex, and a leading zero indicates octal. 
+Errors can result if sections overlap, or if the bottom
+address causes a section to wrap around.
+.PP
+.ne 3v
+.IP "\fB-v\fR" 10
+Verbose option. Print the command line passed to \fBld\fR(1).
+.PP
+.ne 3v
+.IP "\fB-w\fR" 10
+Suppress the symbol redefinition warning. This warning is produced while
+searching archives. 
+If an archive contains a module that defines a symbol that
+is already defined, a redefinition warning is produced.
+.PP
+.ne 3v
+.IP "\fB-x\fR" 10
+Enter only external and global symbols and do not 
+preserve local symbols in
+the output symbol table. 
+This option saves some space in the output file.
+.PP
+.ne 3v
+.IP "\fB-X\fR" 10
+Save local symbols except for section 
+name entries in the symbol table and
+for those whose names begin with L. 
+This option is used by the C compiler to
+discard internally generated labels while 
+retaining symbols local to routines.
+.SH FILES
+/tmp/sl......	work files which will remain if -P option is specified.
+.br
+a.out		output file.
+.SH SEE ALSO
+ld(1), a.out(5).
+.SH DIAGNOSTICS
+Load not performed.
+.br
+Fork failed.
+.br
+No children to wait for.
+.br
+Temp files, '/tmp/sl......', were not removed.
+.br
+Bad option: <option>.
+.br
+<file> not in correct a.out format.
+.br
+Cannot handle segmented file: <file>.
+.br
+Cannot handle overlay file: <file>.
+.br
+Cannot handle stripped file: <file>.
+.br
+Z8000 files cannot start on odd boundaries.
+.br
+Cannot mix Z8000 modules with Z8 or Z80 modules.
+.br
+Cannot mix Z8 modules with Z80 modules.
+.br
+.SH LIMITATIONS
+.B Slink
+is unable to handle segmented or overlay programs.
+.br
+Nothing is done with common symbols; they follow bss.

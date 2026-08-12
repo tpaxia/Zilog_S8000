@@ -1,0 +1,76 @@
+.po 1i
+.TH WRITE 1 Bell
+.V 08/15/84 17:10:52
+.\" @[$]write.1	1.7	08/15/84 17:10:52 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+write  \- write to another user
+.SH SYNOPSIS
+.B write
+\fIuser\fR [ \fIttyname\fR ]
+.SH DESCRIPTION
+.B Write
+copies lines from a terminal to that of another user.
+When first called, it sends the message
+.sp
+.RS
+Message from name ttyname...
+.RE
+.sp
+.PP
+The recipient of the message writes back at this point.
+Communication continues until an end of file is
+read from the terminal or an interrupt is sent.
+At that point
+.B write
+writes EOT on the other terminal and exits.
+.PP
+To write to a user who is logged in more than once, the
+.I ttyname
+argument is used to indicate the appropriate terminal name.
+.PP
+Permission to write can be denied or granted by the
+.B mesg
+command.
+At log on, writing is allowed.
+Certain commands, in particular
+.B nroff
+and
+.BR  pr (1),
+disallow messages.
+.PP
+If the character ! is found at the beginning of a line,
+.B write
+calls the shell
+to execute the rest of the
+line as a command.
+.PP
+The following protocol is suggested for using
+.BR write .
+On the first write to another user, wait for a response
+before starting to send.
+Each party should end each message with a distinctive
+signal such as \fIo\fR for over.
+\fIOo\fR for over and out is suggested when conversation
+is to be terminated.
+.PP
+\fIwrite\fR is better suited to a single message being sent.
+For a lengthy, two-way conversation, use \fItalk\fR.
+.SH EXAMPLE
+.sp
+.RS
+                Message from bradf tty6...
+         This is a test of the write command.
+         o
+         EOF
+
+.RE
+.SH FILES
+.ta 1.5i
+/etc/utmp	to find user
+.br
+/bin/sh		to execute !
+.ta
+.SH SEE ALSO
+mail(1), mesg(1), talk(1), who(1).

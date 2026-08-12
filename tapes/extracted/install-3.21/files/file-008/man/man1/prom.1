@@ -1,0 +1,123 @@
+.po 1i
+.TH PROM 1 Zilog
+.V 08/15/84 17:00:58 
+.\" @[$]prom.1	1.10 08/15/84 17:00:58 
+.ad
+.fi
+.SH NAME
+prom \- PROM programming utility
+.SH SYNOPSIS
+.B prom
+[
+.B \-b
+] [
+.B \-d
+.I device
+] [ 
+.B \-Dlos 
+.I hex
+] \fIfile\fR
+.SH DESCRIPTION
+.B Prom
+is used to output a file to a PROM programming device.
+The user can specify the size (length) of the PROM (\fB-l\fR),
+the address space of the file which is to be placed into
+the PROM (\fB-s\fR and \fB-o\fR), and either word or byte oriented
+input to the device.
+The output from
+.B prom
+can be directed to any device and is in Tektronix Hex
+format without acknowledements.
+This allows direct communication with various programming
+units such as the Data I/O Model 19 with the Translation Option.
+.PP
+Once the command line is entered,
+.B prom
+will query the user before each transfer.
+The prompt is similar to this:
+.IP
+Ready: segment 0 start 0 end fff low byte ? (y/r/s/q)
+.ne 4v
+.PP
+Respond by typing one of these replies:
+.IP \fBy\fR
+yes - Send data to device and increment to next address space.
+.IP \fBr\fR
+repeat - Send data and repeat same address space.
+.IP \fBs\fR
+skip - Do not send data; increment to next address space.
+.IP \fBq\fR
+quit - End execution, do not send data.
+.PP
+.B Prom
+does not check for bad address offsets.
+An odd offset is acceptable.
+.PP
+The PROM programming device is usually connected to a different
+terminal port (RS-232) than the user is currently using.
+The PROM program can be controlled from one port and the
+actual transfers to the device controlled through another port.
+Any device can be named including a file to be copied into the
+PROM programming device at a later time.
+.PP
+All PROM programming devices have different options.
+This program was specifically designed for use with a Data I/O
+Model 19 with Translation Mode.
+Other devices that accept Tektronix Hex format without 
+acknowledgements may also function correctly but have not
+been specifically tested.  
+.bp
+.SH OPTIONS
+.TP
+.B  \-b
+Break word-oriented files into high and low bytes so that 16 bit
+data can be sent to two 8 bit PROMs.
+The default is off.
+Processing always begins with the low byte when this option is on.
+.TP
+.B  \-d
+Select output device.
+Enter a full pathname for either a device or file.
+The default is /dev/tty, the controlling terminal.
+.TP
+.B \-D
+For separate I and D files, only output the data section.
+By default, for separate I and D files only the code section is output.
+.TP
+.B  \-l
+Set the length of the prom; default is 0x800.
+A transfer of this length is sent to the designated device.
+The transfer is padded with 0xFF value bytes wherever code
+is not found in the input file.
+.TP
+.B  \-o
+Set the offset (beginning address) of the first data to be transferred.
+This should be an even number for word-oriented files such
+as Z8000 object code files.
+The default is 0x000.
+.TP
+.B  \-s
+Select the segment number from the input file to be programmed.
+Only one segment is valid during each execution of
+.B prom .
+The value must be between 0x00 and 0x80.
+The default is segment 0x00. See
+.BR DIAGNOSTICS .
+.SH FILES
+/dev/tty    sends the output to the user's terminal
+.br
+/tmp/prm*   temporary file
+.SH SEE ALSO
+load(1), a.out(5).
+.SH DIAGNOSTICS
+Diagnostics will be issued if:
+.in +5m
+.sp
+the input file is not a valid object module;
+.sp
+a specified segment is not found in the file;
+.sp
+a specified segment is empty;
+.sp
+or the specified address range contains no code or data.
+.in 0

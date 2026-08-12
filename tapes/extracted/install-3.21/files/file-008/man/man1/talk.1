@@ -1,0 +1,70 @@
+.po 1i
+.TH TALK 1 Zilog
+.V 08/15/84 17:07:09
+.\" @[$]talk.1	1.5	08/15/84 17:07:09 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+talk  \-  communicate with another user
+.SH SYNOPSIS
+.B talk
+\fIuser\fR [ \fIttyname\fR ]
+.SH DESCRIPTION
+.B Talk
+copies lines from your terminal to that of another user.
+When first called, it sends the message
+.sp
+.RS
+     Message from name ttyname...
+.RE
+.sp
+The recipient of the message should write back at this point.
+Communication continues until an end of file is
+read from the terminal or an interrupt is sent.
+At that point
+.B talk
+writes "EOF" on the other terminal and exits.
+.PP
+To write to a user who is logged in more than once,
+the
+.I ttyname
+argument may be used to indicate the
+appropriate terminal.
+.PP
+Permission to write may be denied or granted by use of the
+.BR mesg (1)
+command.
+At the outset writing is allowed.
+Certain commands, in particular
+.BR nroff (1)
+and
+.BR  pr (1)
+disallow messages in order to prevent messy output.
+.PP
+.B Talk
+differs from
+.BR write (1)
+in that the message is written as each character is read, rather
+than at end of line.
+.PP
+Typing the "escape" key, " ESC " causes a new line, and a "less than 
+sign", " < ", to be sent to the sender's
+terminal, and a new line, and a "greater than sign", ">",
+to be sent to the receiver's terminal.
+This sequence is meant to indicate that it is the other
+persons turn to \fBtalk\fR.
+.PP
+The following protocol is suggested for using
+.BR talk :
+one user first writes to a second user, the first user
+should wait for the second user to respond
+before starting to send.
+Each party should end each part of their communication
+with an "escape" key "ESC".
+.SH FILES
+/etc/utmp	to find user
+.SH SEE ALSO
+mesg(1), who(1), mail(1), write(1)
+.SH LIMITATIONS
+Escape to the shell via "!" is not supported, as it is in
+.BR write (1).

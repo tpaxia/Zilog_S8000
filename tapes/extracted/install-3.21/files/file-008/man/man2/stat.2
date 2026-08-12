@@ -1,0 +1,191 @@
+.po 1i
+.TH STAT 2 Bell
+.V 08/15/84 17:15:32
+.\" @[$]stat.2	1.8	08/15/84 17:15:32 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+stat, fstat \- get file status
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B #include <sys/stat.h>
+.PP
+.B int stat
+.I (file, buf)
+.br
+.B char
+.I *file;
+.br
+.B struct stat
+.I *buf;
+.PP
+.B int fstat
+.I (fildes, buf)
+.br
+.B int
+.I fildes;
+.br
+.B struct stat
+.I *buf;
+.SH DESCRIPTION
+.B Stat
+obtains detailed information about 
+.I file.
+.B Fstat
+obtains the same information about an open file
+known by the file descriptor from a successful
+.BR open (2)
+.BR creat (2)
+.BR dup (2),
+or
+.BR pipe (2)
+call.
+.PP
+.I File
+points to a null-terminated string naming
+a file;
+.I buf
+is the address of a buffer
+into which information is placed concerning the file.
+It is unnecessary to have any
+permissions with respect to the file, but all directories
+leading to the file must be searchable.
+The layout of the structure pointed to by buf
+as defined in
+.I <stat.h>
+is given below.
+.I St_mode 
+is encoded according to the #define statements.
+.ta \w'#define 'u +\w'S_XXXXX  'u +\w'0x0000   'u
+.PP
+.nf
+.na
+struct	stat
+{
+       dev_t          st_dev;
+       ino_t          st_ino;
+       unsigned short st_mode;
+       short          st_nlink;
+       short          st_uid;
+       short          st_gid;
+       dev_t          st_rdev;
+       off_t          st_size;
+       time_t         st_atime;
+       time_t         st_mtime;
+       time_t         st_ctime;
+};
+
+#define   S_IFMT    0170000   /* type of file */
+#define   S_IFDIR   0040000   /* directory */
+#define   S_IFCHR   0020000   /* character special */
+#define   S_IFBLK   0060000   /* block special */
+#define   S_IFREG   0100000   /* regular */
+#define   S_IFMPC   0030000   /* multiplexed char special */
+#define   S_IFMPB   0070000   /* multiplexed block special */
+#define   S_ISUID   0004000   /* set user id on execution */
+#define   S_ISGID   0002000   /* set group id on execution */
+#define   S_ISVTX   0001000   /* save swapped text even after use */
+#define   S_IREAD   0000400   /* read permission, owner */
+#define   S_IWRIT   0000200   /* write permission, owner */
+#define   S_IEXEC   0000100   /* execute/search permission, owner */
+.fi
+.ad
+.PP
+The mode bits 0000070 and 0000007 encode group and
+others permissions (
+.BR chmod (2)).
+The defined types, 
+.I ino_t, off_t, time_t,
+name various width integer
+values; 
+.I dev_t
+encodes major and minor device numbers; their exact
+definitions are in the include file <sys/types.h> (
+.BR types (5)).
+.PP
+When 
+.I fildes
+is associated with a pipe,
+.I fstat
+reports an ordinary
+file with restricted permissions.
+The size is the number of bytes queued in the pipe.
+.PP
+.I St_atime
+is the time the file was last read:
+it is not set when a directory
+is searched.
+.I St_mtime
+is the time the file was last written or created.
+It is not set by changes of owner, group, link count, or mode.
+.I St_ctime
+is set both both by writing and changing the i-node.
+.SH DIAGNOSTICS
+.B Stat
+will fail if one or more of the following are true:
+.IP
+A component of the
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+The named file does not exist.
+.SM
+\%[ENOENT]
+.IP
+Search permission is denied for a component of the
+path prefix.
+.SM
+\%[EACCES]
+.IP
+.I Buf
+or
+.I path
+points to an invalid address.
+.SM
+\%[EFAULT]
+.PP
+.I Fstat
+will fail if one or more of the following are true:
+.IP
+.I Fildes
+is not a valid open file descriptor.
+.SM
+\%[EBADF]
+.IP
+.I Buf
+points to an invalid address.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH SEE ALSO
+ls(1), filsys(5).
+.SH ASSEMBLER
+.na
+.nf
+    CONSTANT STAT	:= 18
+
+    ...		!* name in r0, buf in r1 		*!
+    		!* (segmented: name in rr0, buf in rr2)	*!
+    clr	r4
+    sc	#STAT
+    ...		!* return value in r4 *!
+       		!* carry flag set if error *!
+
+    CONSTANT FSTAT	:= 28
+
+    ...		!* fildes in r0, buf in r1			*!
+    		!* (segmented: fildes in r0, buf segment	*!
+    		!* number in r1, buf offset in r2)		*!
+    clr	r4
+    sc	#FSTAT
+    ...		!* return value in r4 *!
+       		!* carry flag set if error *!
+.ad
+.fi

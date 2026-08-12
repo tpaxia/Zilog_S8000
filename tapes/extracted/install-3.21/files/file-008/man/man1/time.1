@@ -1,0 +1,47 @@
+.po 1i
+.TH TIME 1 Bell
+.V 08/15/84 17:07:40
+.\" @[$]time.1	1.15	08/15/84 17:07:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+time \- time a command
+.SH SYNOPSIS
+.B time
+[ \fB-v\fR ] command (csh internal and /bin/time)
+.SH DESCRIPTION
+The given command is executed; after it is complete,
+.B time
+prints the time spent in the system, the time spent in execution
+of the command, the elapsed time during the command, and
+percentage used of cpu time to real time.
+Times are reported in seconds.
+.SH OPTIONS
+.TP
+.B \-v
+A verbose version of the command's
+output is printed.
+.SH EXAMPLES
+An output of this command is:
+.PP
+  %time cc file.c
+  3.3u 3.5s 0:19 35%
+.PP
+An output using the \fB\-v\fR option is:
+.PP
+.nf
+.na
+%time -v cc file.c
+3.3 user-sec., 3.5 system-sec., 00:19 real-time, 35% of capacity
+.fi
+.ad
+.PP
+The times are printed on the diagnostic output stream.
+.SH SEE ALSO
+csh(1), sh(1), time(1C).
+.SH LIMITATIONS
+Elapsed time is accurate to the second,
+while the CPU times are measured
+to the 60th second.
+Thus the sum of the CPU times can be up to a second larger
+than the elapsed time.

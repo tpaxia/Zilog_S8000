@@ -1,0 +1,36 @@
+.po 1i
+.TH MEM 4 Bell
+.V 08/15/84 17:31:07
+.\" @[$]mem.4	1.4	08/15/84 17:31:07 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mem, kmem  \- memory
+.SH DESCRIPTION
+.B Mem
+is a special file that is an image of the memory
+of the computer.
+For example, it examines and even patches the system.
+.B Kmem
+is the same as 
+.B mem
+except that kernel virtual memory
+rather than physical memory is accessed.
+.PP
+Byte addresses
+are interpreted as memory addresses.
+References to nonexistent locations return errors.
+.PP
+Examining and patching device registers is likely
+to lead to unexpected results when read-only or write-only
+bits are present.
+.PP
+On the System 8000, the kernel instruction space begins at
+physical location 0.  Kernel data space starts at the next 256-byte
+boundary following the kernel instruction space.
+.PP
+The per-process data for the current process
+begins at kernel virtual memory address 0xF800.
+.SH FILES
+/dev/mem,
+/dev/kmem.

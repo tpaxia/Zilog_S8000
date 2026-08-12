@@ -1,0 +1,224 @@
+.po 1i
+.TH PTRACE 2 Bell 
+.V 08/15/84 17:14:51
+.\" @[$]ptrace.2	1.14	08/15/84 17:14:51 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ptrace \- process trace
+.SH SYNOPSIS
+.B "#include <signal.h>  "
+(if non-segmented parent)
+.br
+.B #include <ssignal.h>  "
+(if segmented parent)
+.PP
+.B int ptrace
+.I (request, pid, addr, data)
+.br
+.B int
+.I *addr;
+.br
+.B int
+.I request, pid, data;
+.PP
+.B int sptrace
+.I (request, pid, addr, data)
+.br
+.B int
+.I *addr;
+.SH DESCRIPTION
+.B Ptrace
+allows a parent process to control the execution of a child process,
+and examine and change its core image.
+Its primary use is for the implementation of breakpoint debugging.
+.PP
+.B Sptrace
+is the version of ptrace that should be used if a segmented child
+is to be traced.  (It does not matter what the parent is.)  Similarly,
+if a non-segmented child is to be traced, use
+.B ptrace.
+The only difference between the two calls is that
+.B sptrace
+must have a 32-bit "addr" as a parameter whereas
+.B ptrace
+must have a 16-bit parameter "addr".
+The compiler will produce addresses
+corresponding to the type (segmented or non-segmented) of the parent;
+it is up to the user to make sure the address length is correct.
+.PP
+There are four arguments whose interpretation
+depends on a
+.I request
+argument.
+Generally,
+.I pid
+is the process ID of the traced process,
+which must be a child (no more distant descendant)
+of the tracing process.
+A process being traced
+behaves normally until it encounters some signal 
+whether internally generated
+like "privileged instruction" or externally generated like "interrupt."
+(See
+.BR signal (2)
+for the list.)
+Then the traced process enters a stopped state
+and its parent is notified via
+.BR  wait (2).
+When the child is in the stopped state,
+its core image can be examined and modified
+using
+.BR ptrace .
+If desired, another
+.B ptrace
+request can then cause the child either to terminate
+or to continue, possibly ignoring the signal.
+.PP
+The value of the
+.I request
+argument determines the precise
+action of the call:
+.TP 4
+0
+This request is the only one used by the child process;
+it declares that the process is to be traced by its parent.
+All the other arguments are ignored.  Either the ptrace or sptrace
+system call can be issued; however, the third argument must be
+a word if ptrace is used and a long if sptrace is used.
+Peculiar results occur if the parent does not expect to trace the child.
+.TP 4
+1,2
+The
+word in the child process's address space
+at
+.I addr
+is returned.
+If information and data (I and D) space are separated,
+request 1 indicates I
+space and, 2 indicates D space.
+.I Addr
+must be even.
+The child must be stopped.
+The input
+.I data
+is ignored.
+.TP 4
+3
+The word
+of the system's per-process data area corresponding to
+.I addr
+is returned.
+.I Addr
+must be even and less than the size of the per-process data area.
+This space contains the registers and other information about
+the process;
+its layout corresponds to the
+.I user
+structure in the system.
+.TP 4
+4,5
+The
+given
+.I data
+is written at the word in the process's address space corresponding to
+.I addr,
+which must be even.
+No useful value is returned.
+If I and D spaces are separated, request 4 indicates I space, 
+5 D space.
+Attempts to write in procedure fail if another process is executing the
+same file.
+.TP 4
+6
+The process's system data is written,
+as it is read with request 3.
+Only the general registers
+and certain bits of the processor status 
+word can be written in this way.
+The program counter is not allowed to be changed.
+.TP 4
+7
+The
+.I data
+argument is taken as a signal number
+and the child's execution continues
+at location
+.I addr
+as if it had incurred that signal.
+Normally the signal number is either 0 to indicate that the signal that
+caused the stop should be ignored, or that value fetched out of the
+process's image indicating which signal caused the stop.
+If
+.I addr
+is (int *)1 then execution continues from where it stopped.
+.TP 4
+8
+The traced process terminates.
+.TP 4
+9
+Execution continues as in request 7; however, only one instruction is
+executed, then execution stops.
+The signal number from the stop is SIGTRAP.
+This is part of the mechanism for implementing breakpoints.
+.PP
+As indicated,
+these calls
+(except for request 0)
+can be used only when the subject process has stopped.
+The
+.I wait
+call is used to determine
+when a process stops;
+in such a case the "termination" status
+returned by
+.I wait
+has the value 0177 to indicate stoppage rather
+than genuine termination.
+.PP
+To forestall possible fraud,
+.B ptrace
+inhibits the set-user-ID facility
+on subsequent
+.BR  exec (2)
+calls.
+If a traced process calls
+.B exec,
+it stops before executing the first instruction of the new image
+showing signal SIGTRAP.
+.SH SEE ALSO
+wait(2), signal(2), adb(1), szdb(1).
+.SH DIAGNOSTICS
+The value \-1 is returned if
+.I request 
+is invalid,
+.I pid
+is not a traceable process,
+.I addr
+is out of bounds,
+or
+.I data
+specifies an illegal signal number.
+.SH LIMITATIONS
+The error indication, \-1, is a legitimate function value;
+.I errno,
+(
+.BR INTRO (2)),
+can be used to clarify.
+.PP
+It is not but should be possible to stop a 
+process on occurrence of a system call;
+in this way a completely controlled environment could be provided.
+.SH ASSEMBLER
+.nf
+.na
+  CONSTANT PTRACE := 26
+
+  ...  !* request in r0, pid in r1, addr in r2 *!
+       !* data in r3 *!
+       !* (segmented: parameters in r0, r1, rr2, r4, respectively) *!
+  sc  #PTRACE
+  ...  !* return value in r4 *!
+       !* carry bit set on error *!
+.ad
+.fi

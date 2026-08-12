@@ -1,0 +1,77 @@
+.po 1i
+.TH RSH 1 Bell
+.V 08/15/84 17:02:57
+.\" @[$]rsh.1	1.4	08/15/84 17:02:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+rsh \- restricted shell (command interpreter)
+.SH SYNOPSIS
+\fBrsh\fR [\fIflags\fR] [name[\fIarg1\fR...]]
+.SH DESCRIPTION
+.B Rsh
+is a restricted version of the standard command interpreter
+.BR sh (1).
+It sets up login names and execution environments with
+capabilities more controlled than the standard shell.
+The actions of
+.B rsh
+are identical to
+.BR sh ,
+except the following are disallowed:
+.RS
+.PP
+.B cd
+.br
+setting the value of
+.B $PATH
+.br
+command names containing
+.B /
+.br
+.B >
+and
+.B >>
+.RE
+.PP
+When invoked with the name
+.BR \-rsh ,
+.B rsh
+reads the user's \fB.profile\fR (from \fB$HOME/.profile\fR).
+It acts as the standard
+.B sh
+while doing this, except an interrupt causes an immediate exit,
+instead of returning to command level.
+These restrictions are enforced after .profile is interpreted.
+.PP
+When a command to be executed is found to be a shell procedure,
+.B rsh
+invokes
+.B sh
+to execute it.
+It is possible to provide to a user some shell procedures 
+that have access to the full power of the standard shell,
+while restricting him to a limited menu of commands;
+this assumes that the user does not have write and execute
+permissions in the same directory.
+.PP
+The net effect of these rules is that the writer of the .profile has
+complete control over user actions, by performing guaranteed setup
+actions, then leaving the user in an appropriate directory (probably
+.I not
+the login directory).
+.PP
+.B Rsh
+is a link to
+.B sh
+and any
+.I flag
+arguments are the same as for
+.BR sh (1).
+.PP
+The system administrator sets up a directory of commands
+that can be safely invoked by
+.BR rsh .
+.SH SEE ALSO
+sh(1),
+profile(5).

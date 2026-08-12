@@ -1,0 +1,81 @@
+.po 1i
+.TH UNAME 2 Zilog
+.V 08/15/84 17:16:11
+.\" @[$]uname.2	1.4	08/15/84 17:16:11 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+uname \- get name of current \s-1Zilog\s0 system
+.SH SYNOPSIS
+.B #include <sys/utsname.h>
+.PP
+.B int uname
+.I (name)
+.br
+.B struct utsname
+.I *name;
+.SH DESCRIPTION
+.B Uname
+stores
+information identifying the current
+.SM Zilog
+system in the structure pointed to by
+.IR name .
+.PP
+.B Uname
+uses the structure
+defined in \f3<sys/utsname.h>\fP:
+.PP
+.RS
+.nf
+struct utsname {
+	char	sysname[9];
+	char	nodename[9];
+	char	release[9];
+	char	version[9];
+};
+extern struct utsname utsname;
+.fi
+.RE
+.PP
+.B Uname
+returns
+a null-terminated character string naming the current
+.SM Zilog
+system in the character array
+.IR sysname .
+Similarly,
+.I nodename
+contains the name that the system is known by on a communications
+network.
+.I Release
+and
+.I version
+further identify the operating system.
+.PP
+.B Uname
+will fail if
+.I name
+points to an invalid address.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion, a non-negative value is returned.
+Otherwise, \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+uname(1).
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT UNAME	:= 57
+
+	...		!* name in r0 *!
+			!* (segmented: name in rr0) *!
+	clr	rr4
+	sc	#UNAME
+	...		!* return value in rr4 *!
+	   		!* carry flag set if error *!
+.ad
+.fi

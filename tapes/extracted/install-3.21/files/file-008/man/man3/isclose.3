@@ -1,0 +1,31 @@
+.po 1i
+.TH ISCLOSE 3 Zilog
+.V 08/15/84 17:20:35
+.\" @[$]isclose.3	1.7 08/15/84 17:20:35 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isclose - close a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisclose\fI(isfd)\fR
+\fBint \fIisfd;\fR
+.fi
+.SH DESCRIPTION
+.B Isclose
+is used to close a C-ISAM file.
+Any locks that are held for the file by the process issuing
+the isclose call are released.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isbuild(3),
+islock(3),
+isopen(3).
+.br
+\fIC-ISAM Programmer's Guide\fR in the 
+ZEUS Languages/Programming Tools Manual

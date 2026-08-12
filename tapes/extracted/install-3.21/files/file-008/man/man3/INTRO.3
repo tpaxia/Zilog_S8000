@@ -1,0 +1,53 @@
+.po 1i
+.TH INTRO 3 Zilog
+.V 08/15/84 17:16:46
+.\" @[$]INTRO.3	1.14 08/15/84 17:16:46 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+intro \- introduction to library functions
+.SH SYNOPSIS
+.B #include <stdio.h>
+.br
+.B #include <math.h>
+.SH DESCRIPTION
+This section describes functions that are found
+in various libraries.
+(Functions that directly invoke ZEUS system primitives
+are described in Section 2.)
+.LP
+.ce
+.B NOTE
+.sp
+.in +5m
+.ll -5m
+Care must be taken when using any library function to read
+or write files that might be locked against access by
+another process.
+Many functions automatically buffer input/output in
+one-block buffers;
+that is, if any part of a 512-byte disk block is needed,
+the whole block is read.
+If
+.I any
+byte in a block is locked against access
+buffered access on any other byte in that block
+causes the accessing process to sleep until the access is
+unlocked.
+.sp
+Record locking is primarily used by COBOL programs.
+System files that are routinely locked by system programs
+are indicated in Section 5.
+.ll +5m
+.in -5m
+.SH FILES
+/lib/libc.a	/lib/slibc.a	/lib/libm.a	/lib/slibm.a
+.SH SEE ALSO
+nm(1), ld(1), cc(1), intro(2), sld(1), scc(1)
+.LP
+For a description of ZEUS record locking,
+see
+.IR lkdata (2).
+To turn off buffering for Standard I/O Package
+functions, see
+.IR setbuf (3).

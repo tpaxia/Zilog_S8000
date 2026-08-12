@@ -1,0 +1,29 @@
+.po 1i
+.TH TSORT 1 Bell
+.V 08/15/84 17:08:33
+.\" @[$]tsort.1	1.5	08/15/84 17:08:33 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+tsort \- topological sort
+.SH SYNOPSIS
+.B tsort
+[ \fIfile\fR ]
+.SH DESCRIPTION
+.B Tsort
+produces an ordered list of items
+consistent with a partial ordering of items
+mentioned in the input
+.IR file .
+If no
+.I file
+is specified, the standard input is understood.
+.PP
+The input consists of pairs of items (nonempty strings)
+separated by blanks.
+Pairs of different items indicate ordering.
+Pairs of identical items indicate presence, but not ordering.
+.SH SEE ALSO
+lorder(1).
+.SH DIAGNOSTICS
+Odd data: there is an odd number of fields in the input file.

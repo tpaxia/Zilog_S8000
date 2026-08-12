@@ -1,0 +1,64 @@
+.po 1i
+.TH FERROR 3 Bell
+.V 08/15/84 17:18:58
+.\" @[$]ferror.3	1.9	08/15/84 17:18:58 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ferror, feof, clearerr, fileno \- stream status inquiries 
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.PP
+\fBfeof\fR(\fIstream)
+\fBFILE \fR*\fIstream;
+.PP
+\fBferror\fR(\fIstream)
+\fBFILE \fR*\fIstream;
+.PP
+\fBclearerr\fR(\fIstream)
+\fBFILE \fR*\fIstream;
+.PP
+\fBfileno\fR(\fIstream)
+\fBFILE \fR*\fIstream;\fR
+.fi
+.SH DESCRIPTION
+.B Feof
+returns nonzero if end of file has been read on
+.I stream;
+it returns zero otherwise.
+.PP
+.B Ferror
+returns nonzero if an error has occurred reading or writing
+the named
+.I stream;
+it returns zero otherwise.
+.B Ferror
+does not clear the error status:  once
+.B ferror
+returns nonzero it continues to return nonzero
+until the stream is closed
+or
+.B clearerr
+is used to reset the error status.
+.PP
+.B Clearerr
+resets the error status on the
+.I stream.
+Subsequent calls to
+.B ferror
+with the same stream name argument return zero
+until another error occurs.
+.PP
+.B Fileno
+returns the integer file descriptor
+associated with the
+.I stream
+.BR open (2)).
+.PP
+These functions
+are implemented as macros;
+they cannot be redeclared.
+.SH SEE ALSO
+fopen(3),
+open(2).

@@ -1,0 +1,65 @@
+.po 1i
+.ad
+.TH MKSEG 2 Bell
+.SH NAME
+mkseg \- make a segment
+.SH SYNOPSIS
+.B char *mkseg
+.I (segno,size)
+.br
+.B unsigned
+.I segno, size;
+.SH DESCRIPTION
+The 
+.B mkseg
+system call creates a new, unnamed, private segment 
+and returns a pointer to it.  
+The segment is created as \fIsize\fR bytes, rounded up to the nearest
+256 byte boundary.  
+The initial contents are all 0's.  The process issuing the 
+.B mkseg
+call must be operating in segmented mode.
+.PP
+The 
+.I segno
+parameter specifies a preferred segment number. 
+Valid segment numbers range
+from 1-127.  
+If there is no preferred segment number, a value
+of 0 means that the system will assign the next free segment.
+.PP
+.SH SEE ALSO
+sgbrk(2), exec(2), sgstat(2), sld(1).
+.SH DIAGNOSTICS
+The
+.B mkseg
+call returns a -1L on an error if:
+.IP *
+the segment will not fit into memory
+.SM
+\%[ENOMEM],
+.IP *
+the preferred segment number is illegal
+.SM
+\%[ENOSEG],
+.IP *
+too many segments would exist for the process
+.SM
+\%[ENOSEG],
+.IP *
+or the preferred segment is already allocated.
+.SM
+\%[ENOSEG]
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT MKSEG	:= 55
+
+	...		!* segno, size in      *!
+	        	!* r0, r1 respectively *!
+	ldl	rr4, #0
+	sc	#MKSEG
+	...		!* return value in rr4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

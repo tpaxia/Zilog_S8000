@@ -1,0 +1,154 @@
+.po 1i
+.TH LP 4 Zilog
+.ad
+.fi
+.po 1i
+.V 08/15/84 17:30:54
+.\" @[$]lp.4	1.5	08/15/84 17:30:54 - Zilog Inc.
+.ad
+.SH NAME
+lp \- line printer driver
+.SH DESCRIPTION
+The files
+.BR lp ,
+.BR lp2 
+refer to line printer ports.
+.PP
+ZEUS can accommodate up to three line printers, depending
+on the hardware configuration.
+The printers can have either a Centronics or Data Products interface.
+During SYSGEN the kernel
+can be configured to have no line printers.
+.PP
+The default configuration is for Centronics line printer.
+A Data Products interface will need a different hardware configuration.
+Refer to the System 8000 hardware reference manual for details.
+.PP
+The device files
+.IR /dev/lp 
+and
+.IR /dev/lp2
+refer to the line printer drivers.
+Each has a major device number of 9 and a minor device number
+that depends on the kind of printer and port used.
+.PP
+The line printers are accessed by the line printer spooler 
+.BR lp (1) 
+or by the 
+.BR ioctl (2) 
+system call.
+.PP
+The 
+.BR ioctl 
+system call is used to modify some parameters of the line
+printer driver.
+This call uses the following structure and commands 
+which are defined in 
+.sp
+.IR /usr/include/sgtty.h:
+.nf
+.sp
+.br
+ #define	SHOWLPR   (('l' << 8) | 0)
+ #define	SETLP     (('l' << 8) | 1)
+.sp
+ /*
+ * This is the structure of the 
+ * arguments to the lpr ioctl program
+ */
+.sp
+ struct lparms
+.sp
+ {
+.sp
+     int     lines;         /* number of lines per page     */
+     int     cols;          /*number of columns per page    */
+     int     indent;        /*default indentation for       */
+                            /*line printer                  */
+.sp
+ };
+.fi
+.PP
+The way the the system call is implemented is 
+similar to the tty(2) ioctl
+call.
+.sp
+.nf
+ #include <sgtty.h>
+.sp
+ struct lparms args ;
+.sp
+	if ((fd = open("/dev/lp", 2)) < 0 )
+		printf("can\'t open /dev/lp\\n");
+	rtn = (ioctl(fd, SHOWLPR, &args));
+	rtn = (ioctl(fd, SETLP, &args));
+.sp
+.fi
+.PP
+If the command SHOWLPR is issued to the line 
+printer, the line printer driver
+will return to the user's lparms structure the parameters:
+lines per page, columns per page, and standard indent.
+.PP
+Lines per page is defined as the number of lines printed before
+an FF character (0xC) is output.
+.PP
+Columns per page means the number of characters 
+printed before a "carriage
+return" is output.
+For Data Products printers this is a '\\n' character (0xA) which causes
+a line feed and carriage return to be emitted.
+For Centronics printers the line printer driver must emit a '\\r' (0xD) 
+and '\\n' (0xA) to emit a carriage return and line feed.
+If the Centronics printer has an "automatic line feed" option,
+it emits a line feed for '\\r' (0xD).
+This should be disabled to allow underlining.
+.PP
+Indent is the default indentation for all output to 
+.IR /dev/lp.
+Note that the the length of the line printed will be cols \- indent 
+thus lines longer than this are truncated rather than 
+shifted to the right.
+.PP
+The command SETLP allows the system administrator to set these values 
+in the line printer driver to accommodate printers with different 
+characteristics.
+The default values set at compile time for lines, cols and indent 
+are 66, 130, and 1 respectively.
+.PP
+The following is a description of how the line printer driver handles 
+some special characters.
+.br
+\& '\\n' (0xA) \- Newline:  This is output 'as is' for 
+Data Products printers.
+For Centronics printers, a '\\r' is output also.
+.br
+\& '\\r' (0xD) \- Carriage Return:  This is output 'as is'.
+.br
+\& '\\f' (0xC) \- Form Feed:  This output 'as is' for 
+Data Products printers
+and appended with a '\\r' for Centronics printers.
+.br
+\& '\\b' (0x8) \- Backspace:  A '\\r' is 
+emitted and spaces are printed up 
+to the previous character printed.
+.br
+\& '\\t' (0x9) \- Horizontal Tab:  Blanks are output to the 
+nearest multiple 
+of four.
+.SH FILES
+/dev/lp
+.br
+/dev/lp2
+.br
+/usr/include/sgtty.h
+.SH SEE ALSO
+ioctl(2),
+tty(4).
+.sp
+.I Zeus System Administrators Manual, 
+.br
+.I System 8000 Hardware Reference Manual Manual
+.SH LIMITATIONS
+There is no way at this time of choosing CR/LF default for automatic LF
+printers.

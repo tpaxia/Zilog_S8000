@@ -1,0 +1,99 @@
+.po 1i
+.TH TIMES 2 Bell
+.V 08/15/84 17:15:47
+.\"@[$]times.2	1.8	08/15/84 17:15:47 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+times \- get process times
+.SH SYNOPSIS
+.B long times(
+.I buffer)
+.br
+.B struct
+.I tbuffer *buffer;
+.SH DESCRIPTION
+.B Times
+returns time and accounting information
+for the current process
+and for the terminated child processes
+of the current process.
+All times are in 1/HZ seconds,
+where HZ=60 in North America.
+.PP
+After the call, the buffer appears as follows:
+.PP
+.nf
+.na
+struct tbuffer {
+	long	proc_user_time;
+	long	proc_system_time;
+	long	child_user_time;
+	long	child_system_time;
+};
+.PP
+.fi
+.ad
+The children times are the sum
+of the children's process times and
+their children's times.
+.PP
+.B Utime
+is the
+.SM CPU
+time used while executing instructions in the user space of the
+calling process.
+.PP
+.B Stime
+is the
+.SM CPU
+time used by the system on behalf of the calling process.
+.PP
+.B Cutime
+is the sum of the
+.BR "utime"s
+and
+.BR "cutime"s
+of the child processes.
+.PP
+.B Cstime
+is the sum of the
+.BR "stime"s
+and
+.BR "cstime"s 
+of the child processes.
+.PP
+.B Times
+will fail if
+.I buffer
+points to an illegal address.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion,
+.B times
+returns the elapsed real time, in 60ths of a second, since an arbitrary
+point in the past (e.g., system start-up time).
+This point does not change from one invocation of
+.B times
+to another.
+If
+.B times
+fails, a \-1 is returned and
+.B errno
+is set to indicate the error.
+.SH SEE ALSO
+exec(2), fork(2), time(2), wait(2).
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT TIMES	:= 43
+
+	...		!* buffer in r0 *!
+			!* (segmented: buffer in rr0) *!
+	clr	rr4
+	sc	#TIMES
+	...		!* return value in rr4 *!
+	   		!* carry flag set if error *!
+.ad
+.fi

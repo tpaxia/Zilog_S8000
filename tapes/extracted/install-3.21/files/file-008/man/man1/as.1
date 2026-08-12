@@ -1,0 +1,70 @@
+.po 1i
+.TH AS 1 Zilog
+.V 08/15/84 16:37:01
+.\" @[$]as.1	1.7	08/15/84 16:37:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+as \- PLZ/ASM assembler
+.SH SYNOPSIS
+.B as
+[ \fIoption\fR ... ] file
+.SH DESCRIPTION
+.B As
+assembles the named file.
+.SH OPTIONS
+.TP 6
+.B \-f
+Allow assembly of floating point instructions.
+.TP
+.B \-l
+Produce a listing containing object code and locations.
+For input file \fIfile\fB.s,\fR the listing is produced in file
+\fIfile\fB.l\fR in the current directory.
+.TP
+\fB\-o\ \fR objfile
+The output of the assembly is left on \fIobjfile.\fR
+If this option is omitted, the output is left on the file
+.IR a.out .
+.TP
+.B \-p
+Produce a listing to standard output.
+.TP
+.B \-u
+Treat all undefined references as externals.
+.TP
+.B \-z
+Produce Zobj object format for MCZ compatible systems.
+When this option is specified, the default output file becomes
+.I t.out
+instead of
+.IR a.out .
+.PP
+.SH FILES
+/lib/as2        pass 2 of the assembler
+.br
+/lib/as2d       pass 2 data
+.br
+/lib/asz2       pass 2 for Zobj output
+.br
+/lib/asz2d      pass 2 data for Zobj output
+.br
+/tmp/T_*H       temporary
+.br
+/tmp/T_*I       temporary
+.br
+a.out	         object
+.SH SEE ALSO
+cas(1),
+ld(1),
+nm(1),
+objdu(1),
+objhdr(1),
+a.out(5).
+.br
+.I "PLZ/ASM Assembler User Guide"
+in the ZEUS Languages / Programming Tools Manual
+.SH DIAGNOSTICS
+When syntactic or semantic errors occur, the offending line is printed
+followed by an error number. The errors are described in the user guide.
+.br

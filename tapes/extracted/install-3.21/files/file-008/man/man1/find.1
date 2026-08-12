@@ -1,0 +1,164 @@
+.po 1i
+.TH FIND 1 Bell
+.V 08/15/84 16:51:15
+.\" @[$]find.1	1.8	08/15/84 16:51:16 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+find \- find files
+.SH SYNOPSIS
+.B find
+.I path-name-list 
+.I expression
+.SH DESCRIPTION
+.B Find
+recursively descends the directory hierarchy
+for each path name in the \fIpath-name-list\fR (i.e., one
+or more path names) seeking files that match a Boolean
+\fIexpression\fR written in the primaries given below.
+In the descriptions, the argument \fIn\fR is used as 
+a decimal integer where \fB+\fIn\fR means more than
+\fIn\fR, \fB\-\fIn\fR means less than \fIn\fR, and
+\fIn\fR means exactly \fIn\fR.
+.PP
+The primaries can be combined using the following operators
+(in order of decreasing precedence):
+.TP
+1)
+The negation of a primary (\fB!\fR is the unary \fInot\fR
+operator).
+.TP
+2)
+Concatenation of primaries (the \fIand\fR operation is implied
+by the juxtaposition of two primaries).
+.TP
+3)
+Alternation of primaries (\fBo\fR is the \fIor\fR operator).
+.SH OPTIONS
+.TP 16
+.BI \-atime " n\^"
+True if the file has been accessed in
+.I n\^
+days.
+.TP 16
+.BI \-cpio " device\^"
+Write the current file on
+.I device\^
+in
+.BR cpio\| (5)
+format (5120 byte records).
+.TP 16
+.BI \-ctime " n\^"
+True if the file has been changed in
+.I n\^
+days.
+.TP 16
+.BI \-exec " cmd\^"
+True if the executed
+.I cmd\^
+returns a zero value as exit status.
+The end of
+.I cmd\^
+must be punctuated by an escaped semicolon.
+A command argument
+.B {}
+is replaced by the current path name.
+.TP 16
+.BI \-group " gname\^"
+True if the file belongs to the group
+.IR gname .
+If 
+.I gname\^
+is numeric and does not appear in the
+.B /etc/group
+file, it is taken as a group \s-1ID\s0.
+.TP 16
+.BI \-links " n\^"
+True if the file has
+.I n\^
+links.
+.TP 16
+.BI \-mtime " n\^"
+True if the file has been modified in
+.I n\^
+days.
+.TP 16
+\fB\-name \fIfile\fR
+True if \fIfile\fR matches the current file name.
+Normal shell argument syntax may be used if escaped 
+(watch out for \fB[\fR,\fB?\fR and \fB \(** ).
+.TP 16
+.BI \-newer " file\^"
+True if
+the current file has been modified more recently than the argument
+.IR file .
+.TP 16
+.BI \-ok " cmd\^"
+Like
+.B \-exec
+except that the generated command line is printed with a question
+mark first, and is executed only if the user responds by typing
+.BR y .
+.TP 16
+.BI \-perm " onum\^"
+True if the file permission flags exactly match the octal number
+.I onum\^
+(see
+.BR chmod (1)).
+If
+.I onum\^
+is prefixed by a minus sign, more flag bits (017777, see
+.BR stat (2))
+become significant and the flags are compared:
+.sp \n(PDu
+.RS 20m
+(flags&onum)==onum
+.RE
+.sp \n(PDu
+.TP 16
+.B  \-print
+Always true;
+causes the current path name to be printed.
+.TP 16
+.BI \-size " n\^"
+True if the file is
+.I n\^
+blocks long (512 bytes per block).
+.TP 16
+.BI \-type " c\^"
+True if the type of the file is
+.IR c ,
+where
+.I c\^
+is
+.BR b ,
+.BR c ,
+.BR d ,
+.BR p ,
+or
+.B f
+for
+block special file, character special file, directory,
+fifo (a.k.a named pipe), or plain file.
+.TP 16
+.BI \-user " uname\^"
+True if the file belongs to the user
+.IR uname .
+If
+.I uname\^
+is numeric and does not appear as a login name in the
+.B /etc/passwd
+file, it is taken as a user \s-1ID\s0.
+.TP 16
+.BI ( " expression " )
+True if the parenthesized expression is true
+(parentheses are special to the shell and must be escaped).
+.SH EXAMPLE
+To find all files named \f3a.out\fP that
+have not been accessed for a week:
+.PP
+find / -name a.out -atime +7 -print
+.SH FILES
+/etc/passwd, /etc/group
+.SH SEE ALSO
+cpio(1), sh(1), test(1), stat(2), cpio(5), fs(5).

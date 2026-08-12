@@ -1,0 +1,33 @@
+.po 1i
+.TH SYS 3 Zilog
+.V 08/15/84 17:28:58
+.\" @[$]sys.3	1.9	08/15/84 17:28:58 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+SYS \- system call relay program 
+.SH SYNOPSIS
+\fBexecl ( "/bin/SYS", "SYS", 0 ); \fR
+.SH DESCRIPTION
+The
+.B SYS
+program runs on a host concurrently with a program on a satellite 
+Development Module (DM).
+The program running on the DM must have been downloaded by
+\fIload\fR(1), that executes
+.B SYS
+as the last step of the loading process.
+.PP
+.B SYS
+runs even if the satellite system calls are not utilized.
+It is terminated by a normal exit from the downloaded program.
+.SH SEE ALSO
+load(1),
+exec(2).
+.SH LIMITATIONS
+Abnormal termination of a program leaves 
+.B SYS
+still running on the host.
+In this case, RUBOUT stops the execution of
+.B SYS
+on the host.

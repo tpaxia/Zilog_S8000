@@ -1,0 +1,103 @@
+.po 1i
+.TH DIFF3 1 Bell 
+.V 08/15/84 16:47:17
+.\" @[$]diff3.1	1.7 08/15/84 16:47:17 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+diff3 \- 3-way differential file comparison
+.SH SYNOPSIS
+.B diff3
+[
+.B \-ex3
+] \fIfile1 file2 file3\fR
+.SH DESCRIPTION
+.B Diff3\^
+compares three versions of a file
+and publishes disagreeing ranges of text
+flagged with these codes:
+.RS
+.TP 16
+====
+all three files differ
+.TP 16
+====1
+.IR file1 " is different"
+.TP 16
+====2
+.IR file2 " is different"
+.TP 16
+====3
+.IR file3 " is different"
+.RE
+.PP
+The type of change needed to convert a given range
+of a given file to some other is
+indicated in one of these ways:
+.RS
+.TP 16
+.IB f " : " n1 " a"
+Text is to be appended after line number
+.I n1\^
+in file
+.IR f ,
+where
+.I f\^
+= 1, 2, or 3.
+.TP 16
+.IB f " : " n1 " , " n2 " c"
+Text is to be
+changed in the range line
+.I n1\^
+to line
+.IR n2 .
+If 
+.I n1\^
+=
+.IR n2 ,
+the range may be abbreviated to
+.IR n1 .
+.RE
+.PP
+The original contents of the range follows immediately
+after a "c"
+indication.
+When the contents of two
+files are identical, the contents of the lower-numbered
+file is suppressed.
+.SH OPTIONS
+.TP
+.B \-e
+.B diff3\^
+publishes a script (to standard output) for the editor
+.BR ed (1)\^
+that will incorporate into
+.I file1\^
+all changes between
+.I file2\^
+and
+.IR file3 ,
+that is, the changes that normally would be flagged "====" and "====3".
+.TP
+\fB\-x \fR(\fB\-3\fR)
+produces a script to incorporate
+only changes flagged "====" ("====3").
+.SH EXAMPLES
+.PP
+The following command will apply the resulting script to
+.IR file1 :
+.PP
+.ti 10n
+(cat script; echo \(fm1,$p\(fm; echo w) \(bv ed \- file1
+.SH FILES
+/tmp/d3\(**
+.br
+/usr/lib/diff3prog
+.SH SEE ALSO
+diff(1), ed(1)
+.SH LIMITATIONS
+Text lines that consist of a single "." will defeat the
+.BR \-e
+option.
+.sp
+Files longer than 64K bytes won't work.

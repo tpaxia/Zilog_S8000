@@ -1,0 +1,159 @@
+.po 1i
+.TH EX 1 UCB
+.V 08/15/84 16:50:09
+.\"@[$]ex.1	1.7	08/15/84 16:50:09 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ex, edit \- text editor
+.SH SYNOPSIS
+.B ex
+.br
+	[ \fB\-\fR ]
+.br
+	[ \fB\-v\fR ]
+.br
+	[ \fB\-t\fItag\fR ]
+.br
+	[ \fB\-r\fR ]
+.br
+	[ \fB\-R\fR ]
+.br
+	[ \fB\+\fI[command\fR ]]
+.br
+	[ \fB\-l\fR ]
+.br
+.I 	file ...
+.sp 
+.B edit
+[
+.I ex options
+]
+.SH DESCRIPTION
+.B Ex
+is the root of a family of editors:
+.B edit,
+.B ex,
+and
+.B vi.
+.B Ex
+is a superset of
+.B ed,
+with the most notable extension being a display editing facility.
+Display-based editing is the focus of
+.B vi.
+.PP
+The available options are:
+
+.TP 5
+.B \-
+This option suppresses all editor prompts and printing of
+character counts output by \fIe, r,\fR and \fIw\fR commands;
+this option is also useful in processing editor scripts in 
+command files.
+
+.TP 5
+.B \-v
+This option causes \fIvi\fR to be invoked instead of \fIex\fR.
+
+.TP 5
+.BI \-t \ tag
+The cursor will be positioned at the definition of 
+\fItag\fR immediately after \fIex\fR is entered.
+
+.TP 5
+.B \-r
+This option is used to recover named files 
+after an editor or system crash; the last saved version
+is retrieved.
+
+.TP 5
+.B \-R
+This option is used to invoke a "read only" version of \fIex\fR.
+
+.TP 5
+.BI \+ \[command]
+The editor begins by executing the command, \fIcommand\fR;
+if \fIcommand\fR is omitted, then the editor begins with
+the cursor positioned at the last line of the file.
+
+.TP 5
+.B \-l
+This sets up \fIex\fR for LISP editing; that is,
+the editing options, \fIshowmatch\fR and \fIlisp\fR are set.
+
+.TP 5
+\fIfile\fR
+Name of the file(s) to be edited.
+.PP
+The editor \fIedit\fR is convenient for casual users; it avoids some
+of the complexities of \fIex\fR.
+.PP
+To use a display-based editor on a \s-2CRT\s0 terminal, see
+\fBvi\fR (1), a command that focuses on the display editing
+portion of \fBex\fR.
+.SH DOCUMENTATION
+The document
+.I "The ZEUS Line-Oriented Text Editor -- Ed"
+provides a comprehensive introduction to
+.B edit
+assuming no previous knowledge of computers or the \s-2ZEUS\s0 system.
+.PP
+.I "The Ex Reference Manual"
+is a comprehensive and complete manual for the command mode features
+of
+.B ex,
+but is not a tutorial to learn from.
+.PP
+.I "Introduction to Display Editing with vi"
+introduces the display editor
+.B vi
+and provides reference material on
+.B vi.
+.PP
+These documents can be found in 
+the ZEUS Utilities Manual.
+.SH FILES
+.DT
+/usr/lib/ex?.?strings	error messages
+.br
+/usr/lib/ex?.?recover	recover command
+.br
+/usr/lib/ex?.?preserve	preserve command
+.br
+/etc/termcap	          describes capabilities of terminals
+.br
+~/.exrc		          editor startup file
+.br
+/tmp/Ex\fInnnnn\fR             editor temporary
+.br
+/tmp/Rx\fInnnnn\fR             named buffer temporary
+.br
+/usr/preserve            preservation directory
+.SH SEE ALSO
+ed(1), grep(1), sed(1), vi(1), termcap(5), environ(5), termlist(7)
+.SH LIMITATIONS
+The
+.I undo
+command causes all marks to be lost on lines changed, then restored
+if the marked lines were changed.
+.PP
+.I Undo
+never clears the buffer modified condition.
+.PP
+The
+.I z
+command prints a number of logical rather than physical lines.
+More than a screen full of output results if long lines are present.
+.PP
+File input/output errors do not print a name if the command line
+option \- is used.
+.PP
+There is no easy way to do a single-scan ignoring case.
+.PP
+The editor does not warn if text is placed in named buffers and not used
+before exiting the editor.
+.PP
+Null characters are discarded in input files,
+and cannot appear in resultant
+files.

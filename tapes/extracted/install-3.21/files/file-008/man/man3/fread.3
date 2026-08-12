@@ -1,0 +1,56 @@
+.po 1i
+.TH FREAD 3 Bell
+.V 08/15/84 17:19:22
+.\" @[$]fread.3	1.9	08/15/84 17:19:22 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+fread, fwrite \- buffered binary input/output 
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>\fR
+.PP
+\fBfread((char *)\fIptr, sizeof(*ptr), nitems, stream)\fR
+\fBFILE *\fIstream;\fR
+\fBint \fIptr, nitems;\fR
+.PP
+\fBfwrite((char *)\fIptr, sizeof(*ptr), nitems, stream)\fR
+\fBFILE *\fIstream;\fR
+\fBint \fIptr, nitems;\fR
+.fi
+.SH DESCRIPTION
+.B Fread
+reads, into a block beginning at
+.I ptr,
+.I nitems
+of data of the type of
+.I *ptr
+from the named input
+.IR stream .
+It returns the number of items actually read.
+.PP
+.B Fwrite
+appends at most
+.I nitems
+of data of the type of
+.I *ptr
+beginning at
+.I ptr
+to the named output
+.IR stream .
+It returns the number of items actually written.
+.SH SEE ALSO
+read(2),
+write(2),
+fopen(3),
+getc(3),
+putc(3),
+gets(3),
+puts(3),
+printf(3),
+scanf(3).
+.SH DIAGNOSTICS
+.B Fread
+and
+.B fwrite
+return 0 upon end of file or error.

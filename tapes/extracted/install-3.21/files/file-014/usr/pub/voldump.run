@@ -1,0 +1,61 @@
+#
+# "@[$]voldump.run	1.1  05/29/84 16:42:37 - Zilog Inc"
+# This script creates a listing of files on the filesystem
+# to be dumped and then calls 'volcopy' to do the backup.
+# The inode of the file containing the listing is passed
+# to volcopy.
+#
+# To invoke this script:
+#
+#	vdump fsname devices files tape
+#
+# Where:
+#	fsname		- name of filesystem when labeled (using /etc/labelit)
+#	devices	 	- name of filesystem node, e.g. /dev/rsmd0
+#	files		- name of label on filesystem, this may be
+#			  null ( "" )
+#	tape		- name of tape in which to write data
+
+set devices = ($1)
+set files = ($2)
+set tape = ($3)
+set fsname = ($4)
+set finish = $#devices
+
+echo -n "Mount tape on 9trk tape drive.  Type 'y' when ready: "
+while ( 1 )
+	set answer = `gets`
+	if ( $answer != 'y' ) then
+		echo TYPE 'y' WHEN READY!!!!!!!
+		continue
+	else
+		break
+	endif
+end
+
+@ i = 1
+while ( $i <= $finish )
+	echo "/etc/ff $devices[$i] > $files[$i]/ff_out"
+	/etc/ff $devices[$i] > $files[$i]/ff_out
+	if ("$status" != "0") then
+		goto err
+	endif
+
+	set inode = `ls -i $files[$i]/ff_out`
+
+	echo Voldumping $files[$i]
+	echo "/etc/volcopy -l -i $inode[1] $files[$i] $devices[$i] 1 $tape 1"
+	/etc/volcopy -l -i $inode[1] $fsname[$i] $devices[$i] 1 $tape 1
+	if ("$status" != "0") then
+		goto err
+	endif
+	rm $files[$i]/ff_out
+	@ i++
+
+end
+exit(0)
+
+err:
+	rm $files[$i]/ff_out
+	echo 	Voldump aborted due to error.
+	exit(1)

@@ -1,0 +1,118 @@
+.po 1i
+.TH STDIO 3 Bell
+.V 08/15/84 17:27:11
+.\" @[$]stdio.3	1.7	08/15/84 17:27:11 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+stdio \- standard buffered input/output package
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>
+.PP
+\fB     FILE *stdin;
+\fB     FILE *stdout;
+\fB     FILE *stderr;\fR
+.fi
+.SH DESCRIPTION
+The functions declared in the
+\fB#include\fR
+file,
+\fB<stdio.h>\fR
+constitute an efficient
+user-level buffering scheme.
+The in-line macros
+.B getc
+and
+.BR  putc (3)
+handle characters quickly.
+The higher level routines
+.B "gets, fgets, scanf, fscanf, fread,"
+.B "puts, fputs, printf, fprintf, fwrite"
+.B "fgetc, fputc, getw,"
+and
+.B putw
+all use
+.B getc
+and
+.B putc;
+they can be freely intermixed.
+.PP
+A file with associated buffering is called a stream,
+and is declared to be a pointer to a defined type
+.SM
+.B FILE.
+.BR  Fopen (3)
+creates certain descriptive data for a stream
+and returns a pointer to designate the stream in all
+further transactions.
+There are three normally open streams with constant
+pointers declared in
+the include file and associated with the standard open files:
+.RS
+.TP 10n
+.BR stdin
+standard input file
+.br
+.ns
+.TP
+.B stdout
+standard output file
+.br
+.ns
+.TP
+.BR stderr
+standard error file
+.RE
+.PP
+A constant pointer
+.SM
+.B NULL
+(0)
+designates no stream at all.
+.PP
+An integer constant
+.SM
+.B EOF
+(\-1) is returned
+upon end of file or error by integer functions that
+deal with streams.
+.PP
+Any routine that uses the standard input/output package
+must include the header file <stdio.h> of pertinent
+macro definitions.
+The functions and constants
+are declared in the include file
+and need no further declaration.
+The constants and the following functions are
+implemented as macros; redeclaration of these names
+is perilous:
+.B getc,
+.B getchar,
+.B putc,
+.B putchar,
+.B feof,
+.B ferror,
+.BR fileno .
+.SH SEE ALSO
+open(2),
+close(2),
+read(2),
+write(2).
+.SH DIAGNOSTICS
+The value
+.SM
+.B EOF
+is returned uniformly to indicate that a
+.SM
+.B FILE
+pointer has not been initialized with
+.B fopen,
+input (output) has been attempted on an output (input) stream,
+or a
+.SM
+.B FILE
+pointer designates corrupt or otherwise unintelligible
+.SM
+.B FILE
+data.

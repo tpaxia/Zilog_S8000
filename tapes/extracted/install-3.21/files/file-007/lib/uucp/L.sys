@@ -1,0 +1,2 @@
+pdp11 Any,5 tty3 9600 tty3 login:-EOT-login: -uucp ssword: uucp
+zeusA Any,5 tty4 1200 tty4 login:-EOT-login: -uucp ssword: uucp

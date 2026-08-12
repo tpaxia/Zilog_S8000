@@ -1,0 +1,10 @@
+PN=acu0
+TY=r8: UDS RM-801 for Multiple Enclosure System
+MD=tty7.4A: tty7 connected to  103/212 in slot #1
+MD=tty40.4A: tty40 connected to 103/212 in slot #1
+
+PN=acu1
+TY=r8: UDS RM-801 for Multiple Enclosure System
+DO=9: Rolm CBX
+MD=tty7.4A: tty7 connected to 103/212 in slot #1
+MD=tty40.4A: tty7 connected to 103/212 in slot #1

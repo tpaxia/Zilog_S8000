@@ -1,0 +1,53 @@
+.po 1i
+.TH REMOTE 1 Zilog
+.V 08/15/84 17:02:09
+.\" @[$]remote.1	1.10 08/15/84 17:02:09 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+remote \- transfer control to a remote ZEUS/UNIX system
+.SH SYNOPSIS
+.B remote
+.RI [ system_name ]
+.SH DESCRIPTION
+.B Remote
+is used to transfer control to a remote system running
+ZEUS or UNIX software.
+Additionally, using the utilities
+.BR getfile (1)
+and
+.BR putfile (1),
+files can be up and down loaded between the remote and local systems.
+.IR System_name
+indicates the name of the system to which control is to be transferred.
+If no
+.IR system_name
+is given, the first system in "/usr/spool/uucp/remotelines"
+is taken as default.
+.PP
+If the remote system does not respond within twenty seconds, the
+remoteline times out and a message "remote line to
+.I system_name
+timed out" is printed.  This can occur if the remoteline is disconnected
+or if the remote system is down.
+.PP
+Also, if
+.B remote
+terminates via a "hangup", a "logout" is sent to the remote system and
+control is returned to the local system. 
+.PP
+If the remote system should go
+down while connected to it through 
+.BR remote ,
+it is possible to return to the local system by using the
+control-\\ (ASCII fs).
+This feature can also be useful
+when using
+.B remote
+over a dial-up line.
+.SH FILES
+/usr/spool/uucp/LCK..*		lock files
+.br
+/usr/spool/uucp/remotelines	database of systems
+.SH SEE ALSO
+putfile(1), getfile(1), local(1), remotelines(5).

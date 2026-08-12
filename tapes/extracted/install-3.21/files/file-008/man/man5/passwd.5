@@ -1,0 +1,97 @@
+.po 1i
+.TH PASSWD 5 Bell
+.V 08/15/84 17:35:02
+.\" @[$]passwd.5	1.6	08/15/84 17:35:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+passwd \- password file
+.SH DESCRIPTION
+.I Passwd
+contains for each user the following information:
+.sp
+.RS
+.IP "\ \bu"
+name (login name, contains no uppercase)
+.IP "\ \bu"
+encrypted password
+.IP "\ \bu"
+numerical user ID
+.IP "\ \bu"
+numerical group ID
+.IP "\ \bu"
+optional
+.IP "\ \bu"
+initial working directory
+.IP "\ \bu"
+program to use as shell
+.DT
+.RE
+.fi
+.PP
+This is an ASCII file. 
+Each field within each user's entry
+is separated from the next by a colon.
+The optional field can contain any desired information.
+Each user is separated from the next by a new line.
+If the password field is null, no password is demanded;
+if the shell field is null, the shell itself (
+.BR sh (1))
+is used.
+.PP
+This file resides in directory
+.IR /etc .
+Because of the encrypted passwords, it has general read permission
+and can be used, for example, to map numerical user ID's to names.
+.PP
+The encrypted password consists of 13 characters chosen from 
+a 64 character alphabet
+.RB ( . ", " / ,
+.BR 0\-9 ", " A\-Z ", " a\-z ),
+except when the password is null
+in which case the encrypted
+password is also null. Password aging is effected for a particular user
+if his encrypted password in the 
+password file is followed by a comma and a non-null string
+of characters from the above alphabet. 
+(Such a string must be introduced in
+the first instance by the super-user.)
+The first character of the age,
+.IR M " say,"
+denotes the maximum number of weeks for which a password is valid.
+A user who attempts to login after his password has expired will be
+forced to supply a new one.
+The next character,
+.IR m " say,"
+denotes the minimum period in weeks which
+must expire before the password may be changed. The remaining characters
+define the week 
+(counted from the beginning of 1970)
+when the password was
+last changed. (A null string is equivalent to zero.)
+\fIM\fR and \fIm\fR have numerical values in the range 0\-63.
+If
+.IR "m " = " M " "= 0"
+(derived from
+the string
+.B .
+or
+.BR .. )
+the user will be forced to change his password the
+next time he logs in 
+(and the ``age'' will disappear 
+from his entry in the password file).
+If
+.IR "m " > " M"
+(signified, e.g., by the string
+.BR ./ )
+only the super-user
+will be able to change the password.
+.SH FILES
+/etc/passwd
+.SH SEE ALSO
+login(1),
+passwd(1),
+getpwent(3),
+crypt(3),
+group(5).

@@ -1,0 +1,122 @@
+.po 1i
+.TH VI 1 UCB
+.V 08/15/84 17:09:44
+.\" @[$]vi.1	1.8	08/15/84 17:09:44 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+vi \- screen oriented (visual) display editor based on ex
+.SH SYNOPSIS
+.B vi
+[
+.B \-t
+\fItag\fR ] [
+.B \-r
+] [
+.B \-R
+] [
+\fB+\fR\fI[command\fR ]] [
+.B \-l
+] name \.\.\.
+.SH DESCRIPTION
+.B Vi
+(visual) is a display oriented text editor based on
+.BR ex (1).
+.B Ex
+and
+.B vi
+run the same code; it is possible to get to the command mode of
+.B ex
+from within
+.B vi
+and vice-versa.  In addition, a "read-only" version of vi,
+.B view,
+is available for file perusing.
+.PP
+\fBVi\fR looks at the environment of the shell to find out on
+which type of terminal the editing session is to take place.
+If the c shell (\fBcsh\fR(1)) is running, the command \fBprintenv\fR
+displays that environment; if the shell (\fBsh\fR(1)) is running, the
+command \fBset\fR does the display.
+.PP
+.I "Introduction to Display Editing with Vi"
+provide full details on using
+.B vi.
+.SH OPTIONS
+.TP 5
+.B \-l
+This sets up \fBvi\fR for LISP editing; that is,
+the editing options, \fIshowmatch\fR and \fIlisp\fR are set.
+.TP 5
+.B \-r
+This option is used to recover named files 
+after an editor or system crash; the last saved version
+is retrieved.
+.TP 5
+.B \-R
+This option is used to invoke the "read only" version of \fBvi\fR;
+this is the same as using the "view" command.
+.TP 5
+.BI \-t \ tag
+The cursor will be positioned at the definition of 
+\fItag\fR immediately after \fBvi\fR is entered.
+.TP 5
+.BI \+ \[command]
+The editor begins by executing the command, \fIcommand\fR;
+if \fIcommand\fR is omitted, then the editor begins with
+the cursor positioned at the last line of the file.
+.TP 5
+\fIname\fR
+Name of the file(s) to be edited.
+.SH EXAMPLES
+To change the terminal type under the c shell to, type vtz-2/10, enter
+.nf
+		# setenv TERM vtz
+.fi
+To change the type under the shell, type
+.nf
+		# set TERM=vtz
+.br
+		# export TERM
+.fi
+.SH FILES
+See
+.BR ex (1)
+.SH SEE ALSO
+ex (1), edit (1), termcap(5), environ(5), termlist(7).
+.br
+\fI"Introduction to Display Editing with Vi"\fR in the
+ZEUS Utilities Manual
+.SH LIMITATIONS
+Software tabs using \fB^T\fR work only immediately after the
+.I autoindent.
+.PP
+Left and right shifts on intelligent terminals do not make use of
+insert and delete character operations in the terminal.
+.PP
+The
+.I wrapmargin
+option examines at output columns when blanks are typed.
+If a long word passes through the margin and onto the next line
+without a break, then the line is not broken.
+.PP
+Insert/delete within a line is slow if tabs are present on intelligent
+terminals.
+.PP
+Saving text on deletes in the named buffers is inefficient.
+.PP
+The
+.I source
+command does not work when executed as \fB:source\fR;
+there is no way to use the \fB:append\fR, \fB:change\fR,
+and \fB:insert\fR commands, since it is not possible to give
+more than one line of input to a \fB:\fR escape.  To use these
+on a \fB:global\fR, enter \fIq\fR to \fBex\fR command mode,
+execute them, and then reenter the screen editor with
+.B vi
+or
+.I open.
+.PP
+If the temporary file exceeds 128K characters,
+.B vi
+will not attempt to edit the file and exits immediately.

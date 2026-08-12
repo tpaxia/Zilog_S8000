@@ -1,0 +1,73 @@
+.po 1i
+.TH TMPNAM 3 Bell
+.V 08/15/84 17:29:39
+.\" @[$]tmpnam.3	1.4 08/15/84 17:29:39 - Zilog Inc
+.ad
+.fi
+.SH NAME
+tmpnam \- create a name for a temporary file
+.SH SYNOPSIS
+.B #include <stdio.h>
+.sp
+.B char \(**tmpnam \fI(s)
+.br
+\fB    char\fI \(**s;\fR
+.SH DESCRIPTION
+.B Tmpnam
+generates a file name that can safely be used for
+a temporary file.
+If
+.RI (int) s
+is zero,
+.B tmpnam
+leaves its result in an internal static area and returns a pointer
+to that area.
+The next call to
+.B tmpnam
+will destroy the contents of the area.
+If
+.RI (int) s
+is nonzero,
+.I s
+is assumed to be the address of an array of at least
+.B L_tmpnam
+bytes;
+.B tmpnam
+places its result in that array and returns
+.I s
+as its value.
+.P
+.B Tmpnam
+generates a different file name each time it is called.
+.P
+Files created using
+.B tmpnam
+and either
+.BR fopen (2)
+or
+.BR creat (2)
+are only temporary in the sense that they reside in a directory
+intended for temporary use, and their names are unique.
+It is the user's responsibility to use
+.BR unlink (2)
+to remove the file when its use is ended.
+.SH FILES
+/usr/tmp	directory for temporary files
+.SH SEE ALSO
+creat(2),
+unlink(2),
+fopen(3),
+mktemp(3).
+.SH LIMITATIONS
+If called more than 17,576 times in a single process,
+.B tmpnam
+will start recycling previously used names.
+.br
+Between the time a file name is created and the file is opened, it
+is possible for some other process to create a file with the same name.
+This can never happen if that other process is using
+.B tmpnam
+or
+.BR mktemp ,
+and the file names are chosen so as to render duplication by other
+means unlikely.

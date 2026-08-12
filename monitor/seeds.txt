@@ -1,0 +1,45 @@
+# Code entry points for tools/trace.py — addresses the linear sweep can't find
+# on its own because the monitor dispatches through tables.
+
+0x0070   # RESET: PC taken from the Z8001 reset PSA at 0x0004
+
+# Monitor ROM entry-point vector, image 0x0056..0x006f
+0x0a4a
+0x0a68
+0x09d8
+0x0a80
+0x050c
+0x0540
+0x0594
+0x0544
+0x0398
+0x03a4
+0x11aa
+0x0cae
+0x016c   # main command loop
+
+# Command dispatch table at 0x01c2, indexed by the letter table at 0x01b2
+0x0c3e   # B  boot
+0x033e   # C  compare
+0x03b2   # D  display memory
+0x02f4   # F  fill
+0x0b54   # G  go
+0x06d4   # I  input from port
+0x0b42   # J  jump
+0x0dc2   # L  load
+0x0316   # M  move
+0x0bc6   # N  next
+0x148e   # T  test / diagnostics
+0x0bf8   # Q  quit
+0x07a6   # R  registers
+0x1294   # Z  (self test)
+0x06de   # P  output to port
+
+# Trap and interrupt handlers, from the PSA template at 0x0250 (-> RAM 0x4400)
+0x0218   # unimplemented-instruction / privileged / segment / NVI / VI catch-all
+0x0f2c   # system-call trap (entered segmented: PSA FCW 0xc000)
+0x12fc   # non-maskable interrupt
+0x0abc   # VI entry  9 (vector 0x12): SIO0-B external/status
+0x10c0   # VI entry 10 (vector 0x14): SIO0-B receive  (console)
+0x1090   # VI entry 13 (vector 0x1a): SIO0-A external/status
+0x10ca   # VI entry 14 (vector 0x1c): SIO0-A receive

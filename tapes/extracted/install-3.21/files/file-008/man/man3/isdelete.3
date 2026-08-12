@@ -1,0 +1,62 @@
+.po 1i
+.TH ISDELETE 3 Zilog
+.V 08/15/84 17:20:42
+.\" @[$]isdelete.3	1.5 08/15/84 17:20:42 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isdelete, isdelcurr - delete the current record from a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisdelete\fI(isfd, record)\fR
+\fBint \fIisfd;\fR
+\fBchar \fIrecord[];\fR
+.sp
+\fBisdelcurr\fI(isfd)\fR
+\fBint \fIisfd;\fR
+.fi
+.SH DESCRIPTION
+Both 
+.B isdelete
+and 
+.B isdelcurr
+delete records from C-ISAM files.
+.B Isdelcurr
+will delete the current record.
+.B Isdelete
+will locate the specified record and delete it.
+In order to use 
+.B isdelete
+the primary key must be unique.
+The primary key value of the desired record must be placed at
+their correct positions in the the I/O buffer pointed to by
+the 
+.I record
+parameter.
+.PP
+To use 
+.B isdelcurr
+the record must previously have been
+located with an 
+.B isread
+or 
+.B isstart
+.PP
+.B Isfd
+is the C-ISAM file descriptor returned when the
+file was opened.
+.PP
+The file must be open for both input and output.
+The appropriate values will be deleted from the index file
+for each index defined.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isread(3),
+isstart(3).
+.br
+C-Isam Programmer's Guide in the Zeus Languages/Programming Tools Manual

@@ -1,0 +1,59 @@
+.po 1i
+.TH HISTORY 1C UCB
+.V 08/15/84 16:54:26
+.\"@[$]history.1C	1.5	08/15/84 16:54:26 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+history \- print list of previous commands
+.SH SYNOPSIS
+\fBhistory\fR
+.br
+\fBset history=\fIN\fR
+.SH DESCRIPTION
+Commands input from the teminal are numbered sequentially from one and
+are saved on the history list, whose size is controlled by the history
+variable.
+.PP
+The contents of the history list is seen with the command:
+.sp
+.RS
+\fBhistory
+.RE
+.PP
+The size of the history list is determined by setting
+the \fIhistory\fR shell variable with the command:
+.sp
+.RS
+\fBset history=\fIN\fR
+.RE
+.sp
+where \fIN\fR is the desired size of the history list
+(15 is a recommended number).
+.PP
+These saved commands (also called events) are referred to
+in the following ways:
+.RS
+.IP !n 12
+event number n
+.IP !-m 12
+the desired even is m events prior to the current event
+.IP !p 12
+prefix of a command in an event
+.IP !?string? 12
+string in an event argument; trailing ? can be omitted if nothing
+follows
+.IP !! 12
+immediately previous event
+.RE
+.PP
+A history reference can be given without an event specification;
+for example, !$.
+In this case, the reference is to the previous command unless a previous
+history reference occurred on the same line in which case this form
+repeats the previous reference.
+.SH SEE ALSO
+set(1C), setenv(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual
+

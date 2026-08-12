@@ -1,0 +1,59 @@
+.po 1i
+.TH GETFILE 1 Zilog
+.V 08/15/84 16:53:11
+.\" @[$]getfile.1	1.15	08/15/84 16:53:11 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+getfile \- transfer files from local to remote system
+.SH SYNOPSIS
+.B getfile 
+[\fB-bBfq\fR] \fIfile1\fR [ [\fB-b\fR] \fIfile2\fR ... ]
+.SH DESCRIPTION
+The \fBremote\fR(1) program is executed from a local ZEUS system or a local RIO
+system running the file transfer software of the System 8000 Communications
+Package. The locus of control is transferred
+to a remote ZEUS system. 
+\fBGetfile\fR 
+transfers one or more files from the local to the remote system. 
+Files are transferred one record at a time along with a checksum to
+ensure the accuracy of the data.
+Transfer of one file can be terminated by entering a control-x.
+The entire transfer can be aborted by entering an escape.
+.SH OPTIONS
+.TP
+.B \-b
+The next file is considered to be binary; 
+new lines are not replaced by carriage returns.
+.TP
+.B \-B
+All file names on the line are treated as if they were preceded
+by a
+.BR -b .
+This is usually desirable for ZEUS-to-ZEUS transfers.
+.TP
+.B \-f
+The program suppresses all nonfatal error messages.
+.TP
+.B \-q
+The program prints a query before replacing an existing file
+of the same name as the one being transferred.
+.DT
+.SH SEE ALSO
+putfile(1), local(1), remote(1).
+.SH DIAGNOSTICS
+"checksum error ... retry"   Printed if the computed checksum
+does not match the transmitted checksum.
+.sp
+"<filename> ... transfer aborted"   Printed after a specific number
+of retries, if a control-x or an escape is entered, or if the
+transfer failed (due to lack of space or bad media).
+.sp
+"getfile: <n1> successful transfers  <n2> unsuccessful transfers"
+Printed at program termination.
+.sp
+"<filename> ... unable to open file"   Printed if the file cannot
+be opened on either system.
+.sp
+The program outputs a single dot (.) after each successful transfer of a
+record.  If the transfer appears to halt, allow 20 seconds for a retry.

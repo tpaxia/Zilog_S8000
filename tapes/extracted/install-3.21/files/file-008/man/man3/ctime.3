@@ -1,0 +1,157 @@
+.po 1i
+.TH CTIME 3 Bell
+.V 08/15/84 17:17:20
+.\" @[$]ctime.3	1.12	08/15/84 17:17:20 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ctime, localtime, gmtime, asctime, tzset \- convert date and time to \s-1ASCII\s0 
+.SH SYNOPSIS
+.nf
+\fBchar \(**ctime \fR(\fIclock\fR)
+.br
+\fBlong \(**\fIclock;\fR
+.sp
+#include <time.h>\fR
+.sp
+\fBstruct tm \(**localtime \fR(\fIclock\fR)
+.br
+\fBlong \(**\fIclock;
+.sp
+\fBstruct tm \(**gmtime \fR(\fIclock\fR)
+.br
+\fBlong \(**\fIclock;
+.sp
+\fBchar \(**asctime \fR(tm\fR)
+.br
+\fBstruct \fItm \(**tm;\fR
+.sp
+\fBtzset \fR( )\fR
+.fi
+.SH DESCRIPTION
+.B Ctime\^
+converts a time pointed to by
+.I clock\^
+such as returned by
+.BR time (2)
+into \s-1ASCII\s0 and returns a pointer to a
+26-character string in the following form.
+All the fields have constant width.
+.PP
+.RS
+Sun Sep 16 01:03:52 1973\\n\\0
+.RE
+.PP
+.B Ctime
+also corrects for the time zone and possible daylight savings time.
+.PP
+.B Localtime\^
+and
+.B gmtime\^
+return pointers to structures containing the broken-down time.
+.B Localtime\^
+corrects for the time zone and possible daylight savings time;
+.B gmtime\^
+converts directly to \s-1GMT\s0, which is the
+time the \s-1ZEUS\s0 system uses.
+.B Asctime\^
+converts a broken-down time to \s-1ASCII\s0 and returns 
+a pointer to a 26-character string.
+.PP
+The structure declaration from the include file is:
+.RS
+.PP
+struct	tm {	/* see ctime(3) */
+.br
+	int	tm_sec;
+.br
+	int	tm_min;
+.br
+	int	tm_hour;
+.br
+	int	tm_mday;
+.br
+	int	tm_mon;
+.br
+	int	tm_year;
+.br
+	int	tm_wday;
+.br
+	int	tm_yday;
+.br
+	int	tm_isdst;
+.br
+};
+.RE
+.PP
+These quantities give the time on a 24-hour clock,
+day of month (1-31),
+month of year (0-11),
+year \- 1900,
+day of week (Sunday = 0),
+day of year (0-365),
+and a flag that is non-zero if daylight saving time is in effect.
+.PP
+The external
+.B long
+variable
+.I timezone\^
+contains the difference, in seconds, between \s-1GMT\s0 and local
+standard time (in \s-1EST\s0,
+.I timezone\^
+is 5\(**60\(**60);
+the external variable
+.I daylight\^
+is non-zero if and only if the standard
+.SM U.S.A.
+Daylight Savings Time conversion should be applied.
+The program knows about the peculiarities
+of this conversion in 1974 and 1975;
+if necessary, a table for these years can be extended.
+.PP
+If an environment variable named
+.SM
+.B TZ
+is present,
+.B ctime\^
+and
+.B localtime
+use the contents of the variable to override the default time
+zone, which is found by \fBftime\fR().
+The value of
+.SM
+.B TZ
+must be a three-letter time zone name, followed by a number
+representing the difference between local time and Greenwich
+time in hours, followed by an optional three-letter name for
+a daylight time zone.
+For example, the setting for New Jersey would be
+.SM
+.BR EST5EDT .
+The effects of setting
+.SM
+.B TZ
+are thus to change the values of the external variables
+.I timezone\^
+and
+.IR daylight ;
+in addition, the time zone names contained in the external variable
+.PP
+.B
+ 	char \(**tzname[2] = {"\s-1EST\s0", "\s-1EDT\s0"};
+.PP
+are set from the environment variable.
+The function
+.B tzset\^
+sets the external variables from
+.SM
+.BR TZ ;
+it is called by
+.B asctime\^
+and may also be called explicitly by the user.
+.PP
+.SH SEE ALSO
+time(2), getenv(3), environ(7).
+.SH LIMITATIONS
+The return values point to static data
+whose content is overwritten by each call.

@@ -1,0 +1,35 @@
+.po 1i
+.TH DOG 1 UCB
+.V 08/15/84 16:47:37
+.\" @[$]dog.1	1.5	08/15/84 16:47:37 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+dog \- controlled output flow filter for CRT previewing
+.SH SYNOPSIS
+.B dog
+[ \fIfile\fR... ]
+.SH DESCRIPTION
+.B Dog
+is a filter that allows examination of a continuous text
+on a soft-copy terminal.
+.B Dog
+pauses after the first 23 lines of output.
+If RETURN is pressed, 23 more lines are displayed.
+.PP
+If CTRL-D is pressed, 11 more lines are displayed so that
+the file is scrolled.
+It is also possible to type positive numbers to
+.B dog
+causing that
+many lines to be printed, or negative numbers causing that many lines
+to be discarded followed by a scroll.
+.PP
+The terminal is set to
+.I noecho
+mode by this program so that the output can be continuous.
+The numbers and carriage returns therefore do not show on the terminal.
+.SH SEE ALSO
+cat(1),
+more(1),
+pr(1).

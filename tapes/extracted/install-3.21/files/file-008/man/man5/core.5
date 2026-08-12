@@ -1,0 +1,41 @@
+.po 1i
+.TH CORE 5 Bell
+.V 08/15/84 17:34:08
+.\"@[$]core.5	1.4	08/15/84 17:34:08 - Zilog Inc.
+.ad
+.SH NAME
+core \- format of core image file
+.SH DESCRIPTION
+ZEUS
+writes a memory image of a terminated
+process when any error occurs.
+(See
+.BR signal (2)
+for the list of reasons.)
+The most common errors are memory violations, illegal
+instructions, and user-generated
+quit signals.
+The memory image, called core, is written in the process's
+working directory, provided normal
+access controls apply.
+.PP
+The first 2048 bytes of the memory image
+are a copy of the system's per-user
+data for the process, including the registers
+as they were at the time of the fault.
+The remainder represents the actual contents of
+the user's memory when the image
+was written.  If a user program is separate I & D, the code segment(s)
+are not dumped, just the data segment(s). 
+In the combined I & D case, all user segments are dumped.
+In both cases the user's stack appears in the core file after all the
+user segments.
+.PP
+The debugger
+.BR adb (1)
+is sufficient to deal with memory images.
+.SH SEE ALSO
+adb(1),
+signal(2).
+.SH LIMITATIONS
+The name core is a throwback to an earlier era.

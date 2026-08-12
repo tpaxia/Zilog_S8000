@@ -1,0 +1,273 @@
+.po 1i
+.TH HIER 7 Zilog
+.V 08/15/84 17:37:28
+.\" @[$]hier.7	1.9	08/15/84 17:37:28 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+hier \- file system hierarchy
+.SH DESCRIPTION
+The following outline gives a quick tour through
+a representative directory hierarchy.
+.na
+.nh
+.IP /
+root
+.PD 0
+.IP /dev/
+devices (4)
+.RS
+.IP ct*
+cartridge tape,
+.BR ct (4)
+.IP rct*
+raw cartridge tape,
+.BR ct (4)
+.IP mt*
+magnetic tape,
+.BR mt (4)
+.IP rmt*
+raw magnetic tape,
+.BR mt (4)
+.IP console
+main console,
+.BR tty (4)
+.IP tty*
+terminals,
+.BR tty (4)
+.IP zd*
+disk,
+.BR zd (4)
+.IP rzd*
+raw disk,
+.BR zd (4)
+.IP md*
+disk,
+.BR md (4)
+.IP rmd*
+raw disk,
+.BR md (4)
+.IP smd*
+disk,
+.BR smd (4)
+.IP rsmd*
+raw disk,
+.BR smd (4)
+.IP ...
+.RE
+.IP /bin/
+utility programs, /usr/bin/ (1)
+.RS
+\fBas\fR assembler first pass, /lib/as2
+.br
+\fBcc\fR C compiler executive, /lib/c[012]
+.br
+\&.\&.\&.
+.RE
+.IP /lib/
+object libraries and other stuff, /usr/lib/
+.RS
+.IP libc.a
+system calls, standard I/O, etc. (2,3)
+.IP cpp
+C preprocessor
+.IP c[1234]
+passes of
+.BR cc (1)
+.IP ...
+.RE
+.IP /etc/
+essential data and dangerous maintenance utilities
+.RS
+.IP passwd
+password file,
+.BR passwd (5)
+.IP group
+group file,
+.BR group (5)
+.IP motd
+message of the day,
+.BR login (1)
+.IP mnttab
+mounted file table,
+.BR mnttab (5)
+.IP ddate
+dump history,
+.BR dump (1)
+.IP ttys
+properties of terminals,
+.BR ttys (5)
+.IP getty
+part of
+.IR login ,
+.BR getty (M)
+.IP init
+the parent of all processes,
+.BR init (M)
+.IP rc
+shell program to bring the system up,
+.BR rc (M)
+.IP cron
+the clock demon,
+.BR cron (M)
+.IP mount
+.BR mount (M)
+.IP wall
+.BR wall (M)
+.IP ...
+.RE
+.IP /tmp/
+temporary files
+.RS
+.IP e*
+used by
+.BR ed (1)
+.IP ctm*
+used by 
+.BR cc (1)
+.IP ...
+.RE
+.IP /usr/
+general-purpose directory, usually a mounted file system
+.RS
+.IP adm/
+administrative information
+.RS
+.IP wtmp
+login history,
+.BR utmp (5)
+.IP messages
+hardware error messages
+.RE
+.RE
+.IP "/usr/ bin/"
+utility programs, to keep /bin/ small
+.RS
+.IP dict/
+word lists, etc.
+.RS
+.IP words
+principal word list, used by
+.BR look (1)
+.IP spellhist
+history file for
+.BR spell (1)
+.RE
+.IP games/
+.IP include/
+standard #include files
+.RS
+.IP s.out.h
+object file layout,
+.BR a.out (5)
+.IP stdio.h
+standard I/O,
+.BR stdio (3)
+.IP ...
+.IP sys/
+system-defined layouts, cf /usr/sys/h
+.RS
+.IP acct.h
+process accounts,
+.BR acct (5)
+.IP buf.h
+internal system buffers
+.IP ...
+.RE
+.RE
+.IP lib/
+object libraries and stuff, to keep /lib/ small
+.RS
+.IP atrun
+scheduler for
+.BR at (1)
+.IP tmac/
+macros for
+.BR troff (1)
+.RS
+.IP tmac.an
+macros for
+.BR man (7)
+.IP tmac.s
+macros for
+.BR ms (7)
+.IP ...
+.RE
+.bp
+.IP font/
+fonts for
+.BR troff (1)
+.RS
+.IP R
+Times Roman
+.IP B
+Times Bold
+.IP ...
+.RE
+.RE
+.IP /usr/\tman/
+.RS
+volume 1 of this manual,
+.BR man (1)
+.RS
+.IP man0/
+general
+.RS
+.BP intro
+introduction to volume 1,
+.BR ms (7)
+format
+.RE
+.IP man1/
+chapter 1
+.RS
+.IP as.1
+.IP ...
+.RE
+.IP ...
+.RE
+.IP spool/
+delayed execution files
+.RS
+.IP at/
+used by 
+.BR at (1)
+.IP queuer/
+general purpose enqueing program
+.br
+used by
+.BR nq (1)
+.IP uucp/
+work files and staging area for 
+.BR uucp (1)
+.RS
+.IP LOGFILE
+summary log
+.IP LOG.*
+\&.\&.\&. log file for one transaction
+.RE
+.IP mail/
+mailboxes for
+.BR mail (1)
+.RS
+.TP
+.I uid
+mail file for user
+.I uid
+.TP
+.IR uid .lock
+lock file while
+.I uid
+is receiving mail
+.RE
+.RE
+.RE
+.ad
+.sp
+.SH SEE ALSO
+find(1),
+grep(1),
+ls(1),
+ncheck(M).
+.SH LIMITATIONS
+The position of files is subject to change without notice.

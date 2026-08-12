@@ -1,0 +1,75 @@
+.po 1i
+.TH UNITS 1 Bell
+.V 08/15/84 17:08:50
+.\" @[$]units.1	1.7	08/15/84 17:08:50 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+units \- conversion program
+.SH SYNOPSIS
+.B units
+.SH DESCRIPTION
+.B Units
+converts quantities expressed in various standard scales to
+their equivalents in other scales.
+It works interactively in this fashion:
+.PP
+.I "	You have:"
+inch
+.br
+.I "	You want:"
+cm
+.br
+.I "		* 2.54000e+00
+.br
+.I "		\*/ 3.93701e\-01
+.PP
+A quantity is specified as a multiplicative combination of
+units optionally preceded by a numeric multiplier.
+Powers are indicated by suffixed positive integers,
+division by the usual sign:
+.PP
+.I "	You have:"
+15 pounds force/in2
+.br
+.I "	You want:"
+atm
+.br
+.I "		* 1.02069e+00"
+.br
+.I "		\*/ 9.79730e\-01"
+.PP
+.I Units 
+only does multiplicative scale changes. 
+Thus it can convert Kelvin to Rankine, but not Centigrade to
+Fahrenheit.
+Most familiar units, abbreviations, and metric prefixes 
+are recognized, together with a generous leavening of
+exotica and a few constants of nature including:
+.PP
+.ta 1.5i
+pi	ratio of circumference to diameter
+.br
+c	speed of light
+.br
+e	charge on an electron
+.br
+g	acceleration of gravity 
+.br
+force	same as g
+.br
+mole	Avogadro's number
+.br
+water	pressure head per unit height of water
+.br
+au	astronomical unit
+.ta
+.PP
+`Pound' is a unit of mass.
+Compound names are run together, e.g. `lightyear'.
+British units that differ from their US counterparts
+are prefixed thus: `brgallon'.
+Currency is denoted `belgiumfranc', `britainpound', ...
+For a complete list of units, `cat /usr/lib/units'.
+.SH FILES
+/usr/lib/units

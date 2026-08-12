@@ -1,0 +1,198 @@
+.po 1i
+.TH CPIO 1 Bell
+.V 08/15/84 16:42:35
+.\" @[$]cpio.1	1.18	08/15/84 16:42:35 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cpio \- copy file archives in and out
+.SH SYNOPSIS
+.B cpio
+.B \-o
+[
+.B aBcv
+]
+.PP
+.B cpio
+.B \-i
+[
+.B Bdhmrstuv6
+] [ \fIpatterns\fR ]
+.PP
+.B cpio
+.B \-p
+[
+.B adlmuv
+] \fIdirectory\fR
+.SH DESCRIPTION
+.B Cpio \-o
+(copy out)
+reads the standard (usually keyboard) input to obtain a list of pathnames
+and copies those files onto the
+standard output
+together with pathname and status information.
+.PP
+.B Cpio \-i
+(copy in)
+extracts from the
+standard input (which is assumed to be the product of a previous
+.BR "cpio \-o" )
+the names of files selected by
+zero or more
+.I patterns
+given in the name-generating notation of
+.BR sh (1).
+In
+.IR patterns ,
+meta-characters
+.BR ? ,
+.BR \(** ,
+and
+.BR [ \|.\|.\|. ]
+match the slash
+.B /
+character.
+The default for
+.I patterns
+is
+.BR \(**
+(i.e., select all files).
+.PP
+.B Cpio \-p
+(pass) copies
+out-and-in
+in a single operation.
+Destination pathnames are interpreted relative to the named
+.IR directory .
+.SH OPTIONS
+.TP
+.B a
+Reset access times of input files after they have been copied.
+.TP
+.B B
+Input/output is to be blocked 5,120 bytes to the record
+(does not apply to the
+.I pass
+option; meaningful only with data directed to or from
+tape devices).
+.TP
+.B c
+Write
+.I header
+information in
+.SM ASCII
+character form for portability.
+.TP
+.B d
+Directories are to be created as needed.
+.TP
+.B h
+Reads tapes created on DEC machines.  Only meaningful with
+.B -i
+option.
+.TP
+.B l
+Whenever possible, link files rather than copying them.
+Usable only with the
+.B \-p
+option.
+.TP
+.B m
+Retain previous file modification time.
+This option is ineffective on directories that are being copied.
+.TP
+.B r
+Interactively rename files.
+If the user types a null line, the
+file is skipped.
+.TP
+.B s
+This option swaps the bytes of a word as they are read.
+.TP
+.B t
+Print a table of contents of the input.
+No files are created.
+.TP
+.B u
+Copy unconditionally
+(normally, an older file will not replace a newer file
+with the same name).
+.TP
+.B v
+Verbose:
+causes a list of file
+names to be printed.
+When used with the
+.B t
+option,
+the table of contents looks like the output of an
+.B ls -l
+command
+(see
+.BR ls (1)).
+.TP
+.B 6
+Process an old (i.e.,
+.SM UNIX
+Sixth
+Edition format)
+file.
+Only useful with
+.B \-i
+(copy in).
+.PD
+.SH EXAMPLES
+The first example archives the contents of a directory
+on cartridge tape;
+the second duplicates a directory hierarchy:
+.PP
+.RS
+\fBls \|\(bv \|cpio \|\-o \|> /dev/ct0\fR
+.sp
+\fBcd \|\fIolddir\fR
+.br
+\fBfind \|.\|
+\-print \|\(bv \|cpio \|\-pdl \|\fInewdir\fR
+.RE
+.PP
+The command:
+.sp
+.RS
+\fBfind \|.\|
+\-print \|\(bv \|cpio \|\-oB \|> /dev/rct0\fR
+.RE
+.PP
+can be handled more efficiently by:
+.PP
+.RS
+\fBfind \|.\|
+\-exec cpio -oB > \|/dev/rct0\fR
+.RE
+.SH SEE ALSO
+ar(1), find(1), cpio(5).
+.SH LIMITATIONS
+Pathnames are restricted to 128 characters.
+If there are too many unique linked files,
+the program runs out of memory to keep track of them.
+Thereafter, linking information is lost.
+Only the super-user can copy special files.
+.sp
+.B Cpio
+operates on files in the "pwd" (present working directory) only.
+To mass-copy files from some 
+source other than the pwd to a specified destination, a script like the 
+following is recommended:
+.sp
+.nf
+          cd $1
+          ls | cpio -pl $2 
+.bp
+This script, named 'copy,' and entered as
+.sp
+          \fBcopy /source/path /destination/path\fR
+.sp
+.fi 
+will copy all files, but not subdirectories, in /source/path to 
+/destination/path.
+
+ 

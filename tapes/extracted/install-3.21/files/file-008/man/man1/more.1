@@ -1,0 +1,278 @@
+.po 1i
+.TH MORE 1 UCB
+.V 08/15/84 16:59:17
+.\" @[$]more.1	1.13 08/15/84 16:59:17 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+more, page \- filter for viewing text files on a crt
+.SH SYNOPSIS
+.B more
+[\fB-dfl\fIn\fR] [+\fIline\fR] [+/\fIpat\fR] [\fIfile\fR ... ]
+.LP
+.B page
+[\fB-dfl\fIn\fR] [+\fIline\fR] [+/\fIpat\fR] [\fIfile\fR ... ]
+.SH DESCRIPTION
+.B More
+allows examination of a file on a terminal by
+scrolling either a block of lines or a single line up from the 
+bottom of the screen. 
+When invoked, \fBmore\fR 
+pauses after scrolling a block and prints
+.sp
+.RS
+\fB\--More--
+.RE
+.sp
+at the bottom of the screen.
+Each time a block or a line is displayed, if
+.B more
+is reading from a file
+rather than a pipe,
+a percentage is displayed
+along with the --More-- prompt.
+This gives the percentage of the file 
+in characters that has been displayed. 
+.PP
+.B More
+looks in the file
+/etc/termcap
+to determine terminal characteristics and
+display size. 
+On a terminal capable of displaying 24 lines,
+the default scroll block is 22 lines.
+.PP
+\fBMore\fR sets the terminal to
+noecho mode so that output will be uninterrupted. 
+What you type will not show on your terminal,
+except for the / and !
+commands.
+.PP
+If the standard output is not a teletype, 
+.B more
+acts just like
+.B cat,
+except that a header is printed before each file (if there is
+more than one).
+.PP
+If the 
+.B -l
+option is not given,
+.B more
+will pause after any line that contains a control-L (^L),
+as if the end of a
+scroll-block had been reached.
+If a file begins with a form feed, the screen will be cleared
+before the file is printed.
+.PP
+If the program is invoked as
+.B page,
+the screen is cleared before each block is printed, unless a carriage-return
+is entered to see the next line only. The default block is 
+.I k
+\- 1 rather
+than
+.I k
+\- 2 lines, where
+.I k
+is the number of lines the terminal can display. Thus, if the terminal can
+display 24 lines, the default display block is 23, rather than 22, lines. 
+.PP
+.SH INTRA-PROGRAM DIRECTIVES
+In the following sequences, \fIi\fR is a numeric argument in whose
+absence the value 1 is usually, but not always, supplied. 
+.PP
+.IP \fIi\|\fP<\fBspace\fR>
+Display
+.I i
+more lines or 22 lines if no argument is given.  The next 
+<\fBspace\fR> entered without a preceding \fIi\fR defaults to 22 lines. To
+permanently set the scroll-block activated with a <\fBspace\fR>, use 
+the \fBz\fR
+option described below.
+.PP
+.IP <\fBcarriage-return\fR>
+Scroll the next line in the file at the bottom of the screen.
+.PP
+.IP \fIi\fP<\fBcontrol-D\fR>
+Display \fIi\fR more lines or 11 more lines, if \fIi\fR is not given.
+\fII\|\fP remains set until 
+changed with another \fIi\fR<^D>. In combination with the \fBz\fR directive
+used prior to the <space> directive, 
+this gives the user two "installed" scroll-block sizes to choose from. 
+.PP
+.IP \fBd\fR
+Same as ^D. 
+.PP
+.IP \fIi\|\fBf\fR
+Skip \fIi\fP screenfuls and print the number of lines set with the \fBz\fR
+directive, or 22 lines, if the default was not changed with the \fBz\fR
+directive. 
+.PP
+.IP \fIi\|\fBs\fR
+Skip \fIi\|\fP lines and print the number of lines set with the \fBz\fR
+directive, or 22 lines, if the default was not changed with the \fBz\fR
+directive.
+.PP
+.IP \fIi\|\fBz\fR
+Set the default scroll-block activated with a <\fBspace\fR> or \fBz\fR 
+to \fIi\fR.
+.PP
+.IP "\fBq\fR or \fB:q\fR or \fBQ\fR or \fB:Q\fR"
+Exit from
+.B more.
+.PP 
+.IP \fB=\fR
+Display the current line number.
+.PP
+.IP \fBv\fR
+Start up the editor
+.B vi
+at the current line.
+.PP
+.IP \fBh\fR
+Help command; give a description of all the
+.B more
+commands.
+.PP
+.IP \fIi\fI/expression\fR
+Search for the \fIi\fR-th occurrence of
+the regular expression \fIexpression.\fP
+If there are less than \fIi\fP occurrences of \fIexpression\|\fP,
+and the input is a file (rather than a pipe),
+then the position in the file remains unchanged.
+Otherwise, the number of lines set with the \fBz\fR directive is displayed,
+or 22 lines if
+the default scroll-block size was not changed. 
+The display begins two lines before the line in which
+the expression was found.
+The erase and kill characters may be used to edit the
+.bp
+regular expression.
+Erasing back past the first column cancels the search command.
+.PP
+.IP \fIi\|\fBn\fR
+Search for the \fIi\|\fP-th occurrence of the 
+last regular expression entered.
+.PP
+.IP "\fB'\fR"
+(Single Quote) Go to the point from which the last search started.
+If no search has been performed in the current file, this command
+goes back to the beginning of the file.
+.PP
+.IP "\fB!\fIcommand\fR"
+\fRInvoke a shell to execute \fIcommand\|\fP. 
+The characters "%" and "!" in \fIcommand\fR are replaced with the
+current filename and the previous shell command respectively.
+If there is no current filename, "%" is not expanded.
+The sequences "\\%" and "\\!" are replaced by "%" and "!" respectively.
+.PP
+.IP \fIi\|\fB:n\fR
+Skip to the \fIi\|\fP-th next file given in the command line
+(skips to last file if \fIi\fR doesn't make sense).
+.PP
+.IP \fIi\|\fB:p\fR
+Skip to the \fIi\|\fP-th previous file given in the command line.
+If this command is given while printing a file,
+.B more
+goes back to the beginning of the file. If \fIi\fP doesn't make sense,
+.B more
+skips back to the first file.
+If
+.B more
+is not reading from a file, the bell is rung and nothing else happens.
+.PP
+.IP "\fB:f\fR"
+Display the current filename and line number.
+.PP
+.IP "\fB . \fR"
+(Dot) Repeat the previous command.
+.PP
+The commands are key-stroke activated; i.e., \fBmore\fR does not wait until 
+a carriage return is entered before acting on the command.
+Up to the time when the command character itself is given,
+the line kill character can be hit to cancel the numeric
+argument being formed.
+In addition, hitting  the erase character redisplays the
+--More--(xx%) message.
+.PP
+The quit key (normally control\-\\) can be hit
+while output is being sent to the terminal
+to terminate the scroll. In this event, 
+.B more
+stops sending output and displays the usual --More--
+prompt.
+Now it is possible to enter one of the usual commands in the normal manner.
+Unfortunately, some output is lost when this is done, due to the
+fact that any characters waiting in the terminal's output queue
+are flushed when the quit signal occurs.
+.SH OPTIONS
+.TP
+.B \-d
+.B More
+will prompt with the message "Hit
+space to continue" at the end of each screenful.
+This is useful if
+.B more
+is being used as a filter in some setting,
+such as a class,
+where many users may be unsophisticated.
+.TP
+.B \-f
+This causes
+.B more
+to count physical, rather than logical, lines.
+That is, lines delimited by the newline character, regardless of their
+length, are not folded into screen-width lines.
+.TP
+.B \-l
+Do
+not treat ^L (form feed) specially.
+.TP
+.I \-n
+An integer which is the size (in screen-width lines) of the scroll-block which
+.B more
+will use instead of the default, 22.
+.TP
+.B +\fIline\fP
+Begin displaying at \fIline\fP.
+.TP
+.B +/\fIpattern\fP
+Begin displaying two lines before the line containing the
+regular expression \fIpattern\fP.
+.SH EXAMPLES
+.PP
+.DT
+Using \fBmore\fR
+as a filter for viewing \fBnroff\fR(1) output:
+.sp
+.nf
+	\fBnroff \-ms +2 \fIfile\fB | more\fR
+.fi
+.sp
+Begin viewing \fIfile\fR at \fIstring\fR:
+.sp
+.nf
+        \fBmore +/\fIstring\fR \fIfile\fR
+.fi
+.sp
+View \fIfile\fR with 12 line scroll-blocks.
+Disregard form-feeds:
+.sp
+.nf
+        \fBmore -12 -l \fIfile\fR
+.fi
+.sp
+View \fIfile\fR with 5 line scroll-blocks beginning at \fIstring\fR
+(note: the scroll-block can be reset within \fBmore\fR with the \fBz\fR
+directive):
+.sp
+.nf
+        \fBmore -5 +/\fIstring\fR
+        
+.SH FILES
+/etc/termcap		terminal data base
+.br
+/usr/lib/more.help	help file
+.SH SEE ALSO
+cat(1), dog(1), head(1), tail(1), pr(1).

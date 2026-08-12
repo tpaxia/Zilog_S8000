@@ -1,0 +1,86 @@
+.po 1i
+.TH ISSTART 3 Zilog
+.V 08/15/84 17:21:16
+.\" @[$]isstart.3	1.5 08/15/84 17:21:16 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isstart - select the current index and record within an C-ISAM file
+.SH SYNOPSIS
+.nf
+\fBisstart\fI(isfd, keydesc, length, record, mode)\fR
+\fBint \fIisfd;\fR
+\fBstruct \fIdeydesc *keydesc;\fR
+\fBint \fIlength;\fR
+\fBchar \fIrecord[];\fR
+\fBint \fImode;\fR
+.fi
+.SH DESCRIPTION
+.B Isstart
+selects the current index and record 
+to be used for subsequent operations in an C-ISAM file.
+(When an C-ISAM file is created with 
+.B isbuild
+or opened with
+.B isopen
+the current index is the primary index and the
+current record is the first record.)
+.PP
+The 
+.I keydesc
+is used to designate the desired index.
+It must be either the primary index, or an index that was
+previously added using the 
+.B isaddindex
+call.
+.PP
+The 
+.I mode
+will indicate which record should become the
+current record.
+If ISFIRST or ISLAST modes are selected, the 
+.I length
+and 
+.I record
+parameters are not needed.
+(
+.B Islast
+will position on the end of the file following the
+last record.)
+.PP
+If the current record is to be selected by way of key 
+search, the 
+.I record
+buffer must have the search values
+inserted in it at the correct offsets within the record.
+In this case, the 
+.I length
+parameter contains 0 if
+the entire key is being used for comparison, or a positive
+value k if only the first "k" bytes of the key are being compared.
+.PP
+In this case the mode may be ISEQUAL (to find the first record
+with a key value equal to that supplied in the 
+.I record
+buffer), ISGREAT (to find the first record with a key value
+greater than that supplied in the 
+.I record
+buffer), or
+ISGTEQ (to find the first record with a keyvalue greater or
+equal to that supplied in the 
+.I record
+buffer).
+.SH LIMITATIONS
+If mode is ISFIRST or ISLAST, the parameters' length and 
+record are unneeded and are not used by the isstart call.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isbuild(3),
+isopen(3),
+isread(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

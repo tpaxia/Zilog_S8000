@@ -1,0 +1,139 @@
+.po 1i
+.TH DIFF 1 Bell
+.V 08/15/84 16:47:07
+.\" @[$]diff.1	1.8	08/15/84 16:47:07 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+diff \- differential file comparer
+.SH SYNOPSIS
+.B diff
+[
+.B \-befh
+] \fIfile1 file2\fR
+.SH DESCRIPTION
+.B Diff
+tells what lines must be changed in two files to bring them
+into agreement.
+If
+.I file1
+.RI ( file2 )
+is \-, the standard input is used.
+If
+.I file1
+.RI ( file2 )
+is a directory, then a file in that directory
+whose file-name is the same as the file-name of 
+.I file2
+.RI ( file1 )
+is used.
+The normal output contains lines of these forms:
+.IP "" 5
+.I n1
+a
+.I n3,n4
+.br
+.I n1,n2
+d
+.I n3
+.br
+.I n1,n2
+c
+.I n3,n4
+.PP
+These lines resemble
+.BR  ed (1)
+commands to convert
+.I file1
+into
+.IR file2 .
+The numbers after the letters pertain to
+.IR file2 .
+By exchanging \fIa\fR for \fId\fR and reading backward,
+conversion of \fIfile2\fR into \fIfile\fR1 is given.
+As in \fIed,\fR identical pairs where \fIn1\fR = \fIn2\fR or \fIn3\fR =
+\fIn4\fR are abbreviated as a single number.
+.PP
+Following each of these lines come all the lines that are
+affected in the first file flagged by <, then all the lines that are
+affected in the second file flagged by >.
+.PP
+Except in rare circumstances,
+.B diff
+finds a smallest sufficient set of file
+differences.
+.SH OPTIONS
+.TP
+.B \-b
+Cause trailing blanks (spaces and tabs) to be ignored and other
+strings of blanks to compare equal.
+.TP
+.B \-e
+Produce a script of \fIa, c,\fR and \fId\fR commands for the
+editor \fIed,\fR which recreates \fIfile2\fR from \fIfile\fR1.
+.TP
+.B \-f
+Produce a similar script, not useful with \fIed,\fR in the
+opposite order.
+.sp
+In connection with \fB\-e,\fR the following shell program can help
+maintain multiple versions of a file.
+Only an ancestral file ($1) and a chain of 
+version-to-version \fIed\fR scripts ($2,$3,...) made by \fIdiff\fR
+need be on hand.
+A latest version appears on the standard output.
+.sp
+.RS
+(shift; cat $\(**; echo \(fm1,$p\(fm) \(bv ed \- $1
+.RE
+.TP
+.B \-h
+Does a fast, but incomplete job.
+It works only when changed parts are short and well separated.
+Options 
+.B \-e
+and
+.B \-f
+are unavailable with
+.B \-h.
+.SH EXAMPLES
+.RS
+.nf
+\fB% cat list1             % cat list2\fR
+boat                    boa
+boathouse               boar
+boatload                board
+boatman                 boardinghouse
+boatmen                 boast
+boatyard                boat
+                        boathouse
+                        boatload
+                        boatman
+                        boatmen
+.sp
+\fB% diff list1 list2\fR
+0a1,5
+> boa
+> boar
+> board
+> boardinghouse
+> boast
+6d10
+< boatyard
+.RE
+.fi
+.SH FILES
+/tmp/d?????
+.br
+/usr/lib/diffh for 
+.B \-h
+.SH SEE ALSO
+cmp(1), comm(1), ed(1)
+.SH DIAGNOSTICS
+Exit status is 0 for no differences, 1 for some, 2 for trouble.
+.SH LIMITATIONS
+Editing scripts produced under the
+\fB\-e\fR  or \fB\-f\fR option are unable to
+create lines consisting of a single period (\&.).
+The script file is produced, but it will produce incorrect results if
+run under \fIed.\fR

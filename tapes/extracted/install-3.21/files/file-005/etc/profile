@@ -1,0 +1,3 @@
+: "@[$]profile	2.1 08/19/82 09:33:46 - Zilog Inc"
+TZ=PST8PDT
+export TZ

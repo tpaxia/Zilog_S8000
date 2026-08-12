@@ -1,0 +1,30 @@
+.po 1i
+.TH ISUNLOCK 3 Zilog
+.V  08/15/84 17:21:21
+.\" @[$]isunlock.3	1.5 08/15/84 17:21:21 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isunlock - unlock a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisunlock(isfd)
+\fBint isfd;\fR
+.fi
+.SH DESCRIPTION
+.B Isunlock
+releases an existing file-level lock
+for the file specified by the file descriptor 
+.I isfd.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isclose(3),
+islock(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

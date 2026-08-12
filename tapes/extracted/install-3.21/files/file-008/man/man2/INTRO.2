@@ -1,0 +1,293 @@
+.po 1i
+.TH INTRO 2 ZEUS
+.V 08/15/84 17:12:01
+.\"@[$]INTRO.2	1.19	08/15/84 17:12:01 - Zilog Inc.
+.ad
+.fi
+.de en
+.HP
+\\$1  \\$2  \\$3
+.br
+..
+.SH NAME
+intro, errno \- introduction to system calls and error numbers
+.SH SYNOPSIS
+.B #include <errno.h>
+.SH DESCRIPTION
+Section 2 of this manual
+lists all the entries into the system.
+Most of these calls have an error return.
+.pg
+An error condition is indicated by an otherwise
+impossible returned value.
+Almost always this is \(mi1;
+the individual sections specify the details.
+An error number is also made available
+in the external variable
+.IR errno .
+.I Errno
+is not cleared on successful calls, so it should be tested only
+after an error has occurred.
+.PP
+There is a table of messages
+associated with each error, and a routine for printing the
+message;
+see
+.BR perror (3).
+.PP
+As well, the external variable deverr may be set with error numbers 
+which relate to I/O devices.
+If errno is 5 or 6 then deverr should be checked to further determine 
+the nature of the error.
+The possible error numbers
+are not recited with each write-up in Section 2, since many
+errors are possible for most of the calls.
+.br
+Here is a list of the error numbers,
+their names as defined in <errno.h>,
+and the messages available using
+.BR perror .
+.en 1 EPERM "Not owner
+Typically this error indicates
+an attempt to modify a file in some way forbidden
+except to its owner or super-user.
+It is also returned for attempts
+by ordinary users to do things
+allowed only to the super-user.
+.en 2 ENOENT "No such file or directory
+This error occurs when a filename is specified
+and the file should exist but doesn't, or when one
+of the directories in a pathname does not exist.
+.en 3 ESRCH "No such process
+The process whose number was given to
+.B signal
+and
+.B ptrace
+does not exist, or is already dead.
+.en 4 EINTR "Interrupted system call
+An asynchronous signal (such as interrupt or quit),
+which the user has elected to catch,
+occurred during a system call.
+If execution is resumed
+after processing
+.bp
+the signal,
+it will appear as if the interrupted system call
+returned this error condition.
+.en 5 EIO "I/O error
+Some physical I/O error occurred during a
+.B read
+or
+.BR write .
+This error may in some cases occur
+on a call following the one to which it actually applies.
+.en 6 ENXIO "No such device or address
+I/O on a special file refers to a subdevice that does not
+exist,
+or beyond the limits of the device.
+It may also occur when a cartridge tape
+is prematurely pulled out of the tape drive
+or no mag tape is loaded on a drive.
+.en 7 E2BIG "Arg list too long
+An argument list longer than 5120 bytes
+is presented to
+.BR exec .
+.en 8 ENOEXEC "Exec format error
+A request is made to execute a file
+which, although it has the appropriate permissions,
+does not start with a valid magic number, see
+.BR a.out (5).
+.en 9 EBADF "Bad file number
+Either a file descriptor refers to no
+open file,
+or a read (resp. write) request is made to
+a file that is open only for writing (resp. reading).
+.en 10 ECHILD "No children
+.B Wait
+and the process has no
+living or unwaited-for children.
+.en 11 EAGAIN "No more processes
+In a
+.B fork,
+the system's process table is full
+or the user is not allowed to create any more
+processes.
+.en 12 ENOMEM "Not enough core
+During an
+.B exec
+or
+.B break,
+a program asks for more core than the system is able to supply.
+This is not a temporary condition; the maximum core size
+is a system parameter.
+.en 13 EACCES "Permission denied
+An attempt was made to access a file in a way forbidden
+by the protection system.
+.en 14 EFAULT "Bad address
+The system encountered a hardware fault in attempting to
+access the arguments of a system call.
+This is usually the result of a bad address passed to the 
+operating system as the address of the arguments.
+.en 15 ENOTBLK "Block device required
+A plain file was mentioned where a block device was required,
+operating system
+.BR mount .
+.en 16 EBUSY "Mount device busy
+An attempt to mount a device that was already mounted or
+an attempt was made to dismount a device
+on which there is an active file
+(open file, current directory, mounted-on file, active text segment).
+.en 17 EEXIST "File exists
+An existing file was mentioned in an inappropriate context,
+e.g.
+.BR link .
+.en 18 EXDEV "Cross-device link
+A link to a file on another device
+was attempted.
+.en 19 ENODEV "No such device
+An attempt was made to apply an inappropriate
+system call to a device;
+e.g. read a write-only device.
+.en 20 ENOTDIR "Not a directory
+A non-directory was specified where a directory
+is required,
+for example in a pathname or
+as an argument to
+.BR chdir .
+.en 21 EISDIR "Is a directory
+An attempt to write on a directory.
+.en 22 EINVAL "Invalid argument
+Some invalid argument:
+dismounting a non-mounted
+device;
+mentioning an unknown signal in
+.B signal;
+reading or writing a file for which
+.B seek
+has generated a negative pointer;
+passing a bad argument to
+.B ioctl.
+Also set by math functions, see 
+.BR intro (3).
+.en 23 ENFILE "File table overflow
+The system's table of open files is full,
+and temporarily no more
+.B opens
+can be accepted.
+.en 24 EMFILE "Too many open files
+Customary configuration limit is 20 per process.
+ZEUS allows 40 open files per process.
+.en 25 ENOTTY "Not a typewriter
+The file mentioned in
+.B stty
+or
+.B gtty
+is not a terminal or one of the other
+devices to which these calls apply.
+.en 26 ETXTBSY "Text file busy
+An attempt to execute a pure-procedure
+program that is currently open for writing
+(or reading!).
+Also an
+.bp
+attempt to open for writing a pure-procedure
+program that is being executed.
+.en 27 EFBIG "File too large
+The size of a file exceeded the maximum (about
+.if t 10\u\s-29\s+2\d
+.if n 1.0E9
+bytes).
+.en 28 ENOSPC "No space left on device
+During a
+.B write
+to an ordinary file,
+there is no free space left on the device.
+.en 29 ESPIPE "Illegal seek
+An
+.B lseek
+was issued to a pipe.
+This error should also be issued for
+other non-seekable devices.
+.en 30 EROFS "Read-only filesystem
+An attempt to modify a file or directory
+was made
+on a device mounted read-only.
+.en 31 EMLINK "Too many links
+An attempt to make more than 32767 links to a file.
+.en 32 EPIPE "Broken pipe
+A write on a pipe for which there is no process
+to read the data.
+This condition normally generates a signal;
+the error is returned if the signal is ignored.
+.en 33 EDOM "Argument too large
+The argument of a function in the math package (3M)
+is out of the domain of the function.
+.en 34 ERANGE "Result too large
+The value of a function in the math package (3M)
+is unrepresentable within machine precision.
+.en 35 EDEADLOCK "Deadlock imminent
+During a
+.B lkdata
+system call, either granting of this blocking lock will
+cause a deadlock condition in which case the 
+process must release some lock,
+or the system configurable number of locks is already allocated.
+.en 36 ENOSEG "No such segment
+During a
+.B mkseg
+system call, a segment greater than 127 was used. 
+During a 
+.B break
+system call, a segment not allocated to the program
+was used.
+Or during a
+.B mkseg
+system call, a segment already allocated was requested.
+.en 37 ENOPROF "Profiling failed
+When using the 
+.B profile
+system call on a segmented program, the system call failed because 
+there were more than 10 code segments in the program to be profiled.
+.bp
+The following is a list of device error numbers,
+their names as defined in <errno.h>,
+and the messages available using
+.BR perror .
+.en 0 DGEN "I/O error
+An error which does not fall into one of the catagories below.
+A general, device specific, error.
+.en 1 DNUNIT "No such device or address 
+The device requested does not exist or is not on line.
+.en 2 DIO "Data transfer error
+A physical error occured during an I/O operation.
+.en 3 DBUSY "Device busy
+The device has not completed the previous I/O operation before
+a request to the device was issued for the I/O operation
+which generated this error.
+.en 4 DPROT "Device write protected
+The device was physically write protected.
+This can occur when the write ring is missing from a mag tape or when
+a cartridge tape is set in "safe mode".
+.en 5 DNMEDIA "No media
+The device has no storage media.  This can occur if no cartridge is 
+installed in the cartridge tape drive or if no magnetic tape
+is installed in the mag tape drive.
+.en 6 DEMEDIA "End of media
+This can occur on the cartridge tape drive when a read was attempted
+at the end of the tape.
+.en 7 DEDATA "End of data
+This can occur on the cartridge tape drive when a read is
+attempted on a blank tape.
+.SH SEE ALSO
+intro(3)
+.SH ASSEMBLER
+.PP
+The Z8000 assembly language interface is given for each system call.
+.PP
+Return values appear in register r4 or rr4 if the return value is a long.
+An erroneous call is always
+indicated by turning on the carry bit of the program status word.
+The value -1 is returned in r4 as well.
+.PP
+The external variable errno is set after the system call to indicate 
+the error.

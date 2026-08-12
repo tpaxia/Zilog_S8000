@@ -1,0 +1,38 @@
+.po 1i
+.TH LEAVE 1 UCB
+.V 08/15/84 16:56:03
+.\" @[$]leave.1	1.4	08/15/84 16:56:03 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+leave \- remind you when you have to leave
+.SH SYNOPSIS
+\fBleave\fR [ \fIhhmm\fR ]
+.SH DESCRIPTION
+.B Leave
+provides the equivalent of an alarm clock, where the alarm is a message to
+the terminal. The user passes 
+\fBleave\fR a time-of-day argument
+that is the time at which he wishes to be awakened. \fBLeave\fR
+"goes off" 5 minutes before the alarm time, 1 minute before the alarm
+time, at the alarm time, and at 1 minute intervals thereafter until
+disabled. The alarm is disabled by logging off, by killing \fBleave\fR's 
+process with
+a "kill -9 \fIprocess-id\fR", or by throwing the terminal against the wall.
+If disabled by logging off, \fBleave\fR exits just before
+it would have printed the next message.
+.PP
+The time of day is in the form \fIhhmm\fR where \fIhh\fR is a
+time in hours (on a 12
+or 24 hour clock).  All times are converted to a 12 hour clock, and assumed
+to be in the next 12 hours.  
+.PP
+If no argument is given, \fBleave\fR prompts with "When do you have to 
+leave?".  A reply of new-line causes \fBleave\fR to exit, otherwise the 
+reply is assumed to be a time.  This form is suitable for inclusion in 
+a .login or .profile file.
+.PP
+Leave ignores interrupts, quits, and terminates.  
+.SH "SEE ALSO"
+calendar(1)
+

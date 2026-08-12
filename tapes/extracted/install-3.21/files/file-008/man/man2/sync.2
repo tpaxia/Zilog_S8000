@@ -1,0 +1,37 @@
+.po 1i
+.TH SYNC 2 Bell
+.V 08/15/84 17:15:43
+.\"@[$]sync.2	1.5	08/15/84 17:15:43 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sync \- update super-block
+.SH SYNOPSIS
+.B sync( )
+.SH DESCRIPTION
+.B Sync
+causes all information in core
+memory that should be on disk to be written out.
+This includes modified super blocks,
+modified i-nodes, and delayed block I/O.
+.PP
+It is used by programs which examine a file system,
+for example
+.BR icheck (M)
+.BR df (M)
+etc.
+It is mandatory before a boot.
+.SH SEE ALSO
+sync(M), update(M).
+.SH LIMITATIONS
+The writing, although scheduled, is not necessarily
+complete upon return from 
+.BR sync .
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT SYNC	:= 36
+
+	sc	#SYNC
+.ad
+.fi

@@ -1,0 +1,40 @@
+.po 1i
+.TH ISLOCK 3 Zilog
+.V 08/15/84 17:20:58
+.\" @[$]islock.3	1.5 08/15/84 17:20:58 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+islock - read-lock a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBislock\fI(isfd)
+\fBint \fIisfd;\fR
+.fi
+.SH DESCRIPTION
+.B Islock
+will lock the entire file that is
+specified by 
+.IR isfd .
+(
+.I isfd
+is the ISAM file descriptor returned by 
+.B isbuild
+or 
+.B isopen
+when the file was opened.)
+This is a "read" lock, other processes will be able to read
+the file but not update it, as long as they were opened for
+manual locking, not automatic locking.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isclose(3),
+isunlock(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

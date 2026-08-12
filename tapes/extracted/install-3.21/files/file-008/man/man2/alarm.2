@@ -1,0 +1,45 @@
+.po 1i
+.TH ALARM 2 Bell
+.V 08/15/84 17:12:26
+.\"@[$]alarm.2	1.5	08/15/84 17:12:26 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+alarm \- schedule signal after specified time
+.SH SYNOPSIS
+.B unsigned alarm
+.I (seconds)
+.br
+.B unsigned
+.I seconds;
+.SH DESCRIPTION
+.B Alarm
+causes signal SIGALRM, (\fBsignal\fR(2))
+to be sent to the invoking process
+in a number of seconds given by the argument.
+Unless caught or ignored, the signal terminates the process.
+.PP
+Alarm requests are not stacked;
+successive calls reset the alarm clock.
+If the argument is 0, any alarm request is cancelled.
+Because the clock has a 1-second resolution,
+the signal can occur up to one second early.
+Due to scheduling delays,
+resumption of execution of when the signal is
+caught can be delayed an arbitrary amount.
+The longest specifiable delay time is 65535 seconds.
+.SH RETURN VALUE
+The return value is the amount of time
+previously remaining in the alarm clock.
+.SH SEE ALSO
+pause(2), signal(2), sleep(3).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT ALARM	:= 27
+
+	...		!* seconds in r0	*!
+	sc	#ALARM
+	...		!* return value in r4	*!
+.fi
+.ad

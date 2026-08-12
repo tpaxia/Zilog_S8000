@@ -1,0 +1,29 @@
+.po 1i
+.TH MKTEMP 3 Bell
+.V 08/15/84 17:21:41
+.\" @[$]mktemp.3	1.5	08/15/84 17:21:41 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mktemp \- make a unique file name
+.SH SYNOPSIS
+.nf
+\fBchar *mktemp\fI(template)
+.br
+\fB     char \fI*template;\fR
+.fi
+.SH DESCRIPTION
+.B Mktemp
+replaces
+.I template
+by a unique file name, and returns the
+address of the template.
+The template is a file name with six trailing
+X's, that are replaced with the
+current process ID and a unique letter.
+.PP
+The letters are chosen to avoid file name duplication.
+.SH SEE ALSO
+getpid(2).
+.SH LIMITATIONS
+It is possible to run out of letters.

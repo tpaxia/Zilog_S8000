@@ -1,0 +1,49 @@
+.po 1i
+.TH DIR 5 Bell
+.V 08/15/84 17:34:12
+.\"@[$]dir.5	1.3	08/15/84 17:34:12 - Zilog Inc.
+.SH NAME
+dir \- format of directories
+.SH SYNOPSIS
+.B #include <sys/dir.h>
+.SH DESCRIPTION
+A directory
+behaves exactly like an ordinary file, save that no
+user may write into a directory.
+The fact that a file is a directory is indicated by
+a bit in the flag word of its i-node entry
+see,
+.BR filsys (5).
+The structure of a directory entry as given in the
+include file is:
+.RS
+.ta 8n +8n +8n
+.PP
+.nf
+.\" .SO /usr/include/sys/dir.h
+
+/* @[$]dir.h	2.1  05/13/82 13:50:31 - Zilog Inc */
+#ifndef	DIRSIZ
+#define	DIRSIZ	14
+#endif
+struct	direct
+{
+	ino_t	d_ino;
+	char	d_name[DIRSIZ];
+};
+.fi
+.RE
+.PP
+By convention, the first two entries in each directory
+are for `\fB.\fR' and `\fB..\fR'.  The first is an entry for the
+directory itself.  The second is for the parent
+directory.
+The meaning of `\fB..\fR' is modified for the root directory
+of the master file system and for the root directories of removable
+file systems.
+In the first case, there is no parent, and in the second,
+the system does not permit off-device references.
+Therefore in both cases `\fB..\fR' has the
+same meaning as `\fB.\fR'.
+.SH SEE ALSO
+filsys(5).

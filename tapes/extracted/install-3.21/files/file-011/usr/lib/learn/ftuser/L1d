@@ -1,0 +1,12 @@
+#print
+Now that you saved the output in a file, you might want to display
+the contents of that file. Use the cat command to display the contents
+of the file by typing:   cat out (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+1e

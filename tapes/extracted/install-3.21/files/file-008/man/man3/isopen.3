@@ -1,0 +1,51 @@
+.po 1i
+.TH ISOPEN 3 Zilog
+.V 08/15/84 17:21:01
+.\" @[$]isopen.3	1.5 08/15/84 17:21:01 - Zilog Inc.
+.ad
+.fi
+.SH ISOPEN
+isopen - open a C-ISAM file for processing
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisopen\fI(filename, mode)
+\fBchar \fI*filename;
+\fBint \fImode;\fR
+.fi
+.SH DESCRIPTION
+.B Isopen
+opens a C-ISAM file for processing.
+It returns the C-ISAM file descriptor to be used 
+in subsequent accesses to the C-ISAM file.
+.PP
+The filename parameter must point to a null-terminated string,
+which is the file name of the C-ISAM file to be processed.
+.PP
+.I Mode
+specifies the user's access intentions (input, output,
+or both) and the user's locking requirements (exclusive, manual,
+or automatic).
+The 
+.I mode
+will be ISEXCLLOCK, ISMANULOCK, or ISAUTOLOCK
+arithmetically added to ISINPUT, ISOUTPUT, or ISINOUT.
+.PP
+This call automatically positions the current record 
+pointer to the first record in order of the primary index.
+If another ordering is desired, the 
+.I isstart
+call can 
+be used to select another index, after the file is opened.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isbuild(3),
+isclose(3),
+isstart(3).
+.br
+C-Isam Programmer's Guide in the 
+Zeus Languages / Programming Tools Manual

@@ -1,0 +1,138 @@
+.po 1i
+.TH MDMCTL 2 Zilog
+.V 08/15/84 17:14:06
+.\" @[$]mdmctl.2	1.20	08/15/84 17:14:06 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+mdmctl \- configure a port for modem or terminal line.
+.SH SYNOPSIS
+.B mdmctl
+.I (request, modems, dev)
+.br
+.B int
+.I request;
+.br
+.B long
+.I *modems;
+.br
+.B int
+.I dev;
+.SH DESCRIPTION
+The
+.B mdmctl
+system call configures system hardware and software to 
+communicate with modems or terminals.
+For the purpose of this system call, modems are defined as 
+Data Communications
+Equipment requiring a seven wire interface to the 
+System 8000;  
+terminals are defined as Data Terminal Equipment requiring
+a three wire connection to the 
+System 8000.
+These connections are a subset of the
+RS-232C
+specification for such equipment.
+.PP
+Ports configured as 
+modems have the following characteristics.
+When an 
+.BR open (2) 
+call is attempted on such ports, usually by the
+.BR INIT (M)
+process, the 
+System 8000
+raises its 
+DSR
+(Data Set Ready) 
+and
+CTS
+(Clear to Send) lines.
+The
+.BR open (2)  
+call sleeps until the
+DTR
+(Data Terminal Ready) line is asserted.
+When the
+DTR
+line is dropped for more than 1/60 of a second, a hangup signal
+SIGHUP
+is sent to all processes in that modem's process group.
+Unless the processes catch the signal, they are terminated.
+.PP
+Terminals use only three lines,
+TxD
+(Transmitted Data),
+RxD
+(Received Data), and
+GND
+(Signal Ground).
+The 
+.BR open (2)  
+call never sleeps in this configuration; 
+interrupts from the other modem control lines are disabled;
+the
+System 8000
+asserts no other modem control lines.
+Since interrupts are disabled,
+system performance may  be improved because
+of the reduced overhead of processing interrupts that occur due to noise on the
+other modem control lines.
+.PP
+.B Mdmctl
+is used in the following manner:
+.br
+\fIModems\fR
+is the address of a 
+long. 
+Its value is the bitwise OR of the modem's lines.
+If lines zero and two are to be modems, there should be a one in bit
+positions zero and two (starting from the right, the
+least significant position).
+\fIModems\fR
+in this case is 0x5L.
+.I request
+is either
+TIOCMCG
+or 
+TIOCMCS;
+they are defined in
+sys/ioctl.h.
+.br
+.sp
+TIOCMCG 
+causes the current setting to be placed into location 
+\fImodems\fR.
+.br
+.sp
+TIOCMCS
+reconfigures the lines to the setting found in  
+.IR modems ,
+disabling or enabling interrupts from the lines.
+.br
+.sp
+\fIDev\fR 
+is the major device number of the hardware device for which to get/set the
+modem information.  Currently the major device numbers
+recognized are:
+.IP 8
+\-major device number for the SIOs.
+.IP 23
+\-major device number for the Intelligent Terminal Handler.
+.SH SEE ALSO
+open(2), tty(4), signal(2), init(M).
+.br
+System 8000 Hardware Reference Manual.
+.SH ASSEMBLER
+.nf
+.na
+    CONSTANT MDMCTL:= 62
+
+    ...        !* request in r0  *!
+         		!* addr in r2, dev in r3  *!
+    sc	#MDMCTL
+    ...		!* return value in rr4, carry flag set if error	*!
+.fi
+.ad
+For the segmented case the segment number of the address is in r1 and the
+offset in r2.

@@ -1,0 +1,517 @@
+.\" Zilog Systems Publications N/Troff Macros
+.\" This version has had comments stripped; an unstripped version is available.
+.so /usr/lib/tmac/tmac.e
+.rm b
+.rn rb b
+.po 1.25i
+.rm ac
+.rm lo
+.rm +c
+.rm ++
+.rm $c
+.rm sk
+.rm n1
+.rm n2
+.rm pa
+.rm ro
+.rm ar
+.rm ix
+.rm eh
+.rm oh
+.rm ef
+.rm of
+.rm m1
+.rm m2
+.rm m3
+.rm m4
+.rm ix
+.nr ZM 0
+.nr Z1 4v
+.nr hm 45p
+.nr fm 36p
+.nr tm 4v+\n(hmu
+.nr bm 4v+\n(fmu
+.nr ps 1v
+.if t .nr ps .5v
+.if n .nr pi 3m
+.nr sf 3
+.nr ss 2v
+.nr bs 1v
+.if t .nr bs .5v
+.nr tf 1
+.ds dd \&\|.\|.\|.\|
+.ds ZZ /usr/lib/mz
+.de n
+.ds Zu \\$1
+.ds ZT \\$1
+..
+.de ZD
+.xl \\n($lu
+.in \\n($iu
+..
+.ds ZP %
+.ds _ \k_\h'-\\n(.wu'\r_\d\d\h'|\\n_u'
+.de sm
+\\&\s-2\\$1\s0\\$2
+..
+.de sf
+.d#
+.nr $1 0
+.ie "\\$1"S" \
+\{\
+.	ds ZU SECTION
+.	af $1 1
+.	nr ZB 1
+.\}
+.el .ie "\\$1"SS" \
+\{\
+.	ds ZU SECTION
+.	af $1 1
+.	nr ZB 0
+.\}
+.el .ie "\\$1"A" \
+\{\
+.	ds ZU APPENDIX
+.	af $1 A
+.\}
+.el .tm Line \\n(c.: \\$1 is not a section form
+..
+.sf S
+.nr Z# 0
+.de ZJ
+.sz 14
+.b
+.ce 4
+.if !"\\$1""\\$1
+.if !"\\$2""\\$2
+.if !"\\$3""\\$3
+.if !"\\$4""\\$4
+.ce 0
+.sp \\n(Z1u
+.sz
+.ns
+.lp
+.if "\\n(Zc"1" .ig ..
+.ds Z5 \\*(Z-
+.ds Z6 \\*(Z-
+.ds Z7 \\*(Z-
+.if !"\\$3"" .ds Z5 _
+.if !"\\$4"" .ds Z6 _
+.(x c
+.sp 3
+\!.ne 8v+\\n(.Vu
+.ta \w'\\$1\ \ 'u
+.b
+\\$1\ \ \\$2
+.r
+.)x \\*(Z5
+.	if !"\\$3"" \
+\{\
+.		(x c
+.b
+\t\\$3
+.r
+.)x \\*(Z6
+.\}
+.	if !"\\$4"" \
+\{\
+.		(x c
+.b
+\t\\$4
+.r
+.)x \\*(Z7
+.rm Z7
+.rm Z6
+.rm Z7
+.\}
+.	(x c
+.	sp
+.	re
+.)x _
+...
+..
+.de Zo
+.rs
+.if "\\n%"0" .ig ..
+.ie t \
+\{\
+.	if o \
+.		pn +2
+.	bp
+.\}
+.el \
+\{\
+.	if o \
+.		bp +1
+.	bp +1
+.\}
+...
+..
+.nr ZH .5i
+.de @p
+.@I
+.if \\n(ZM=1 \
+\{\
+.	nr ZM 2
+.	1c
+.\}
+.if \\n(ZN \
+\{\
+.       ft R
+.       sp
+.	ZD
+.	nr ZN 0
+.\}
+.if "\\n(.z"|e" .tm Line \\n(c. -- Unmatched continued equation
+.in \\n($iu+\\n(pou
+.if \\n(.$ \
+.	in +\\$1n
+.re
+.ce 0
+.fi
+.@F \\n(pf
+.sz \\n(ppu
+.sp \\n(psu
+.ne \\n(.Lv+\\n(.Vu
+.ns
+..
+.de nn
+.if !"\\n(ZN"1" \
+\{\
+.	ZD
+.	sp \\n(psu*2u
+.	ne 4v+\\n(.Vu
+.	ce
+\fBNOTE\fR
+.\}
+.lp
+.ft B
+.	xl -\\n(ZHu
+.	in +\\n(ZHu
+.nr ZN 1
+..
+.de ww
+.if !"\\n(ZN"2" \
+\{\
+.	ZD
+.	sp \\n(psu*2u
+.	ne 4v+\\n(.Vu
+.	ce
+\fBWARNING\fR
+.\}
+.lp
+.ft B
+.	xl -\\n(ZHu
+.	in +\\n(ZHu
+.nr ZN 2
+..
+.de CC
+.if !"\\n(ZN"3" \
+\{\
+.	ZD
+.	sp \\n(psu*2u
+.	ne 4v+\\n(.Vu
+.	ce
+\fBCAUTION\fR
+.\}
+.lp
+.ft B
+.	xl -\\n(ZHu
+.	in +\\n(ZHu
+.nr ZN 3
+..
+.de dp
+.lp
+.in +3
+.if !"\\$1"" \
+\{\
+.	ti -3
+.	b "\\$1" \ \*-
+.\}
+..
+.de ip
+.if (\\n(ii>0)&(\\n(ii<1n) \
+.	nr ii \\n(iin
+.nr _0 \\n(ii
+.if \\n(.$>1 \
+.	nr _0 \\$2n
+.@p \\n(_0u
+.if \w'\\$1' \
+\{\
+.	ti -\\n(_0u
+\&\\$1\h'|\\n(_0u'\c
+.@F \\n(pf
+.\}
+.if \w'\\$1'>=\\n(_0u \
+.	br
+.rr _0
+..
+.de ii
+.nr ii \\$1n
+..
+.de ux
+.ie !"\\$3"f" \\&\\$2\s-2UNIX\s0\\$1
+.el \{\
+.if n \\&\\$2UNIX\\$1*
+.if t \\&\\$2\s-2UNIX\\s0\\$1\\f1\(dg
+.(f
+.if n *UNIX
+.if t \(dgUNIX
+is a Registered Trademark of Bell Laboratories.
+Zilog is licensed by Western Electric, Inc.
+.)f
+.\}
+..
+.de zs
+.ie !"\\$3"f" .sm \\$2ZEUS\\$1
+.el \{\
+.if n \\&\\$2ZEUS\\$1*
+.if t \\&\\$2\s-2ZEUS\\s0\\$1\\f1\(dg
+.(f
+.if n *ZEUS,
+.if t \(dgZEUS,
+Zilog Extended \s-2UNIX\s0 System,
+is derived from Version 7 UNIX.
+UNIX is a Registered Trademark of Bell Laboratories.
+Zilog is licensed by Western Electric, Inc.
+.)f
+.\}
+..
+.de ZX
+.if "\\$1"l" .ig ..
+.if "\\$1"b" .ig ..
+.if "\\$1"z" .ig ..
+.tm Line \\n(c. -- \\$1 not valid keep strategy
+...
+..
+.de Zh
+.rm Zw
+.rm Zy
+.if \\$5>0 .ds Zw "\t
+.if \\$6>0 .ds Zy "\t\t
+.(x \\$1
+.ta \\$5 \\$6
+\\*(Zw\\$2
+.if !"\\$3"".br
+.if !"\\$3""\\*(Zy\\$3
+.re
+.)x \\$4
+..
+.Zh i ".ta 1i" "" _
+.Zh t ".ta 1i" "" _
+.de Zi
+.(x i
+..
+.de Zt
+.(x t
+..
+.de Z!
+\!.Z\\$1
+\!\\$2
+\!.)x \\$3
+..
+.de Z_
+\!.Z\\$1
+\!\\$2
+\!.br
+\!\\$3
+\!.)x \\$4
+..
+.de kf
+.nr Zc 1
+.rm Zh
+.rm Z!
+.rm Z_
+.rm Zt
+.rm Zi
+..
+.de Zx
+.ie "\\$1"t" \
+.	ds Z0 Table
+.el \
+.	ds Z0 Figure
+
+.ie !"\\$2"" \
+.	nr Z\\$1 \\$2
+.el \
+.	nr Z\\$1 +1
+.ie \\n(Z# \
+\{\
+.	ds Z3 \\n($1\\(mi
+.	ds Z4 \\n($1\\(mi\\n(Z\\$1
+.\}
+.el \
+\{\
+.	rm Z3
+.	ds Z4 \\n(Z\\$1
+.\}
+.di Z1
+.ce 2
+\\*(Z0\ \\*(Z4\ \ \\$3
+.br
+.if !"\\$4""\\$4
+.ce 0
+.di
+.ie "\\*(Z)"l" \
+\{\
+.	ie "\\$4"" \
+.		Zh \\$1 "\0\0\\*(Z4\t\\$3" "" \\*(Z3\\n%
+.	el \
+\{\
+.		Zh \\$1 "\0\0\\*(Z4\t\\$3" "" _
+.		Zh \\$1 "\t\\$4" "" \\*(Z3
+.\}
+.\}
+.el \
+\{\
+.	ie "\\$4"" \
+.		Z! \\$1 "\0\0\\*(Z4\\\\\\\\t\\$3" \\*(Z3\\\\\\\\n%
+.	el \
+\{\
+.		Z_ \\$1 "\0\0\\*(Z4\\\\\\\\t\\$3" "\\\\\\\\t\\$4" \\*(Z3\\\\\\\\n%
+.\}
+.\}
+.rm Z3
+..
+.de (t
+.ds Zn t
+.ie "\\$4"" \
+.	ds Z) b
+.el .ie "\\$4"lm" \
+\{\
+.	ds Z) l
+.	br
+.	ne 2i
+.\}
+.el \
+.	ds Z) \\$4
+.ZX \\*(Z)
+.(\\*(Z) I
+.nr Zb \\n(bs
+.nr bs 0
+.Zx t "\\$1" "\\$2" "\\$3"
+.in 0
+.Z1
+.in
+.rm Z1
+.if "\\*(Z)"l" \
+\{\
+.	ds Zq \\$2
+.	ds Zp \\$3
+.\}
+.sp
+.ba +\\n(biu
+..
+.de )t
+.rm Zq
+.rm Zp
+.if !"\\*(Zn"t" .tm Line \\n(c. -- .)t without preceding .(t
+.rm Zn
+.ie "\\$1"P" \
+.	sp \\n(.pu-\\n(.du-\\n(tmu-\\n(bmu-2v
+.el \
+.	if !"\\$1"" \
+.		sp \\$1-\\n(.du-\\n(tmu-\\n(bmu-2v
+.nr bs \\n(Zb
+.rr Zb
+.ba -\\n(biu
+.)\\*(Z)
+.rm (Z
+..
+.de tt
+.ds Za \\$1
+.ds Zb \\$2
+.ds Zd \\$3
+.ds Ze \\$4
+.ds Zf \\$5
+.ds Zg \\$6
+.ds Zj \\$7
+.ds Zk \\$8
+.ds Zl \\$9
+.if "\\n(.z"|k" \
+\{\
+.	if !"\\$1"" .ds Za \\n(biu+\\*(Za
+.	if !"\\$2"" .ds Zb \\n(biu+\\*(Zb
+.	if !"\\$3"" .ds Zd \\n(biu+\\*(Zd
+.	if !"\\$4"" .ds Ze \\n(biu+\\*(Ze
+.	if !"\\$5"" .ds Zf \\n(biu+\\*(Zf
+.	if !"\\$6"" .ds Zg \\n(biu+\\*(Zg
+.	if !"\\$7"" .ds Zj \\n(biu+\\*(Zj
+.	if !"\\$8"" .ds Zk \\n(biu+\\*(Zk
+.	if !"\\$9"" .ds Zl \\n(biu+\\*(Zl
+.\}
+.ta \\*(Za \\*(Zb \\*(Zd \\*(Ze \\*(Zf \\*(Zg \\*(Zj \\*(Zk \\*(Zl
+..
+.de (i
+.ds Zn i
+.ie "\\$4"" \
+.	ds Z) b
+.el \
+.	ds Z) \\$4
+.ZX \\*(Z)
+.(\\*(Z)
+.Zx i "\\$1" "\\$2" "\\$3"
+.nr Z0 1v
+.if !"\\$3"" \
+.	nr Z0 2v
+..
+.de )i
+.if !"\\*(Zn"i" .tm Line \\n(c. -- .)i without preceding .(i
+.rm Zn
+.ie "\\$1"P" \
+.	sp \\n(.pu-\\n(.du-\\n(tmu-\\n(bmu-2v-\\n(Z0u
+.el \
+.	if !"\\$1"" \
+.		sp \\$1-\\n(.du-\\n(tmu-\\n(bmu-2v-\\n(Z0u
+.sp
+.in 0
+.Z1
+.in
+.rm Z1
+.)\\*(Z)
+..
+.de (e
+.ds Zn e
+.ie "\\$1"" \
+.	ds Z) b
+.el \
+.	ds Z) \\$1
+.ZX \\*(Z)
+.if "\\*(Z)"z" \
+\{\
+.	.tm Line \\n(c. -- examples may not be floating keeps
+.	.ds Z) b
+.\}
+.(\\*(Z)
+..
+.de )e
+.if !"\\*(Zn"e" .tm Line \\n(c. -- .)e without preceding .(e
+.)\\*(Z)
+..
+.de pv
+.sz 12p
+.b "PRELIMINARY VERSION"
+.ce 0
+.in 1.5i
+.xl 4.5i
+.sp
+The information contained in this draft
+may undergo changes,
+both in content and organization,
+before arriving at its final form.
+.ZD
+.ce 1000
+..
+.de st
+.rn st Z@
+.so \*(ZZ/memo.mz
+.st
+.rm Z@
+..
+.de mm
+.so \*(ZZ/man.mz
+..
+.rm TS
+.so \*(ZZ/mz.new
+.so \*(ZZ/tb.mz
+.nr c. 0

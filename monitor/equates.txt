@@ -1,0 +1,47 @@
+# Named addresses substituted into operands by tools/gen.py.
+#
+# Only unambiguous values belong here: a bare number is substituted wherever it
+# appears as an operand, so anything that doubles as a plain constant (0x4000
+# is both the local-RAM base and the non-segmented/system FCW, for instance)
+# must stay as hex.  `make verify` proves the substitution changed no encoding.
+
+# ---- CPU-A on-board peripherals (Z80 SIO/CTC/PIO behind the ZBI I/O window) --
+# The card decodes 0xff81..0xffbf: address bit 0 must be 1, then (addr-0xff81)/2
+# selects SIO0..3, CTC0..2, PIO in groups of four registers.
+0xff81 sio0a_data           # serial channel A data
+0xff83 sio0b_data           # serial channel B data   -- monitor console
+0xff85 sio0a_ctl            # serial channel A control
+0xff87 sio0b_ctl            # serial channel B control -- monitor console
+0xffa1 ctc0_ch0             # baud-rate clock for SIO0 channel A
+0xffa3 ctc0_ch1             # baud-rate clock for SIO0 channel B (console)
+0xffa5 ctc0_ch2
+0xffa7 ctc0_ch3
+0xffc1 scr                  # system configuration register; high nibble = DIP switches
+0xffc9 sbr                  # system boot / bus request register
+0xffd1 nbr
+0xffd9 snvr                 # NMI reason register
+0xffe1 reti_ack             # write acknowledges RETI to the ZBI daisy chain
+0xffe9 soft_reset
+
+# ---- monitor RAM (2 KB of local static RAM at 0x4000..0x47ff) ---------------
+0x40a0 monstack               # monitor stack top; grows down into the zeroed area
+0x40af cksum                # running checksum maintained by the hex-out routine
+0x40b0 cmdbuf               # 0x80-byte command line, space-filled at reset
+0x4130 outbuf               # text assembled here, then shipped by putbuf
+0x41b0 rxqueue              # 256-byte receive ring filled by the SIO interrupt
+0x439a rx_savedr1
+0x439c cmdlen               # characters accepted into cmdbuf
+0x439e outlen               # bytes pending in outbuf
+0x43a0 rxcount              # unread characters in rxqueue
+0x43a4 rxhead               # rxqueue read index
+0x43b8 iopb                 # I/O parameter block handed to the disk/tape drivers
+0x43ba iovec_read           # installed driver entry: read
+0x43bc iovec_write          # installed driver entry: write
+0x43f0 flags                # bit 1 = output held off (XOFF), bit 2 = suppress output
+0x43f1 flags2               # bit 3 = pass lower case through, bit 4, bit 2 = ...
+0x43f2 ch_backspace         # editing and flow-control characters, initialised
+0x43f3 ch_delete            #   from ctrlchar_init at reset
+0x43f4 ch_xon
+0x43f5 ch_xoff
+0x43fe ch_prompt            # character written to announce the command prompt
+0x4400 psa                  # program status area installed with LDCTL PSAPOFF

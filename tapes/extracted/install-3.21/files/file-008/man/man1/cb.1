@@ -1,0 +1,40 @@
+.po 1i
+.TH CB 1 Bell
+.V 08/15/84 16:39:14
+.\" @[$]cb.1	1.2	08/15/84 16:39:14 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+cb \- C program beautifier
+.SH SYNOPSIS
+.B cb
+< 
+.I file.c
+.SH DESCRIPTION
+.B Cb
+reformats a C program file,
+providing the spacing and indentation
+to display the structure of the program.
+.SH EXAMPLE
+The raw file named test.c containing the line:
+.sp
+.RS
+main() { printf("hello, world\en"); }
+.RE
+.sp
+when reformatted with the command:
+.sp
+.RS
+\fBcb < test.c
+.RE
+.sp
+produces the output:
+.sp
+.RS
+main() { 
+.br
+	printf("hello, world\en"); 
+.br
+}
+.br
+.RE

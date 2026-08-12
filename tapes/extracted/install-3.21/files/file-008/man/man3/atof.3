@@ -1,0 +1,84 @@
+.po 1i
+.TH ATOF 3 Zilog
+.V 08/15/84 17:17:02
+.\" @[$]atof.3	1.8	08/15/84 17:17:02 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+atof, atofs, atofd, _atof, atoi, atol \- convert ASCII to numbers
+.SH SYNOPSIS
+.nf
+\fBfloat atofs\fR(\fInptr\fR)
+\fBchar *\fInptr;
+.sp
+\fBdouble atof\fR(\fInptr\fR)
+\fBchar *\fInptr;
+.sp
+\fBdouble atofd\fR(\fInptr\fR)
+\fBchar *\fInptr;
+.sp
+\fB_atof\fR(\fInptr\fR)
+\fBchar *\fInptr;
+.sp
+\fBint atoi\fR(\fInptr\fR)
+\fBchar *\fInptr;
+.sp
+\fBlong atol\fR(\fInptr\fR);
+\fBchar *\fInptr;\fR
+.fi
+.SH DESCRIPTION
+These functions convert a string pointed to by
+.I nptr
+to floating, integer, and long integer representation
+respectively.
+The first unrecognized character ends the string.
+A value is returned according to
+the following convention:
+.B atofs
+returns in rr2,
+.B atofd
+and
+.B atof
+return in rq4, and
+.B _atof
+returns in f0.
+.B Atoi
+returns an integer value
+and
+.B atol
+returns a long value.
+.PP
+In its various forms,
+.B atof
+recognizes an optional sequence of tabs and spaces,
+an optional sign, then
+a numeric string.
+For finite numbers, the numeric string consists of
+a string of digits containing an optional decimal
+point, then an optional exponent consisting of the letter
+e or E followed by an optional sign and an integer.
+.PP
+A numeric string
+beginning with the letter I denotes signed infinity.
+A NAN (Not-A-Number) string has the form
+"NAN(xxxxxx)."
+The x's are hexadecimal digits to be mapped
+into the leading 24 significant bits of the NAN.
+.B Atoi
+and
+.B atol
+recognize an optional string of tabs and spaces, then an optional
+sign, then a string of digits.
+.SH SEE ALSO
+scanf(3).
+.SH LIMITATIONS
+All the aliases do not but should 
+collapse into a single routine (called
+.B atof
+here)
+that returns an extended value in f0.
+Also, a variant of
+.B atof
+should be created to subsume the task of
+.I recognizing
+floating-point strings, something now left to other parsers.

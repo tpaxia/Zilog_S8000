@@ -1,0 +1,232 @@
+.po 1i
+.TH ACUCAP 5 Zilog
+.V 08/15/84 17:33:40
+.\" @[$]acucap.5	1.4 08/15/84 17:33:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+acucap \- ACU capability data base
+.SH SYNOPSIS
+/usr/acu/acucap
+.SH DESCRIPTION
+.B Acucap
+is a data base describing automatic calling units.
+These are ACUs compatible with Bell 801
+series automatic calling units which employ an RS-232-C
+interface.
+ACUs are used in conjunction with modems, with the ACU establishing
+a connection between modems and the modems engaging in
+data transmission and reception.
+.PP
+Entries in
+.B acucap
+consist of a number of colon separated fields. The first entry
+for each ACU gives the known names of the ACU, separated by '|'
+characters. The first name is always two characters long
+and is used by the dialing software to identify an ACU type.
+The software gets this from /usr/acu/acutype. The second name
+given is the most common abbreviation for the ACU.
+It may not contain any blanks.
+The last name given is a long name fully identifying the ACU.
+It may contain blanks to improve readability.
+.PP
+All other entries are of the form "AA=y...",
+where "AA" is a capability mnemonic taken from the list in
+the next section, and "y..." is
+one or more characters detailing the capability. Most are a single
+character or a string of characters to be transmitted to the ACU
+to perform a dialing function or
+returned by the ACU at the completion of dialing.
+.PP
+An ACU description can continue for several lines
+if each description 
+line is terminated with an escape character '\\'.
+.SH CAPABILITIES
+.nf
+.ta \w'k0-k9  'u +\w'Type  'u
+\fBName Type Description\fR
+.sp
+IF   char interface type (S=serial, P=parallel)
+SC   str  character string preceding dialing information
+          (indicates start of information)
+EC   str  character string following dialing information
+          (indicates end of information)
+TA   char character that signals ACU to wait for subsequent
+          dial tone
+PA   char character that signals ACU to wait for a period
+          of time determined by ACU hardware
+LD   char character that signals ACU that there are no more
+          digits to be transmitted
+EN   char character that signals ACU that the end of the
+          telephone number has been reached
+.bp
+RD   str  character string to be transmitted to effect the
+          redial of the last number sent
+          (this implies that the ACU can store the last
+          telephone number transmitted)
+RW   num  seconds between redial attempts
+RA   num  number of redial attempts
+AB   char character string that signals ACU to abort
+          the dialing sequence
+RC   char character returned by ACU when connection has been
+          made to remote modem
+RB   char character returned by ACU when "line-busy" has been
+          detected
+RN   char character returned by ACU when destination does
+          not answer
+RO   char character returned by ACU when local modem is in use
+RE   char character returned by ACU when the ACU receives
+          an invalid character in the number to be dialed
+.fi
+.PP
+.B Capability Descriptions
+.PP
+The capability descriptions are composed of standard ASCII
+characters and escape-character sequences. The escape-character
+sequences are four characters with the first character
+consisting of the escape character '\\'.
+The remaining three
+characters are an octal number in the range 000 to 177.
+The escape-character sequences allow unambiguous expression of the
+ASCII control characters and the colon character (':' = '\\072').
+.PP
+.B Transmissions to ACUs
+.PP
+The string that is transmitted to the ACU is formatted as follows:
+.nf
+
+.ce
+<SC> [<modem-address>] telephone-number <EC>
+
+.fi
+where <modem-address> is optional. Telephone-number
+is composed of the digits 0 through 9 and the following
+control characters: <TA> <PA> <LD> <EN> .
+<TA> and <PA> may be interspersed among the digits at
+appropriate places for their functions. <LD> and <EN> must be
+placed after all digits and in that order. <EN> is optional.
+Thus, the following are all legal:
+.nf
+
+     9<TA>1112222<LD>
+     8<PA>3456789<LD><EN>
+     9876543<LD><EN>
+
+.fi
+while these are illegal :
+.nf
+
+     987<LD>4566     - <LD> must follow all digits
+     1234567<EN><LD> - <LD> must precede <EN>
+
+.fi
+.PP
+For ACUs that allow redialing, the entry <RD>
+is transmitted to cause this to occur. More on this later.
+.PP
+Aborting before dialing is complete is accomplished by
+transmitting the <AB> entry.
+.PP
+.B Pauses While Dialing
+.PP
+There are two types of "pauses" that are available on Bell
+801-compatible ACUs: "tandem" and "hardware".
+.PP
+"Tandem" pause refers to the ability of the ACU to pause
+in dialing the number until a dial tone is detected
+on the telephone line. It is used most often in company
+phone systems that employ a private branch exchange or PBX.
+These PBXs allow access to telephone lines outside the
+company's internal telephone circuits only after the
+user dials a special digit, called the dial-out digit.
+Normally, a user will hear a dial tone generated by the
+PBX when picking up the handset. After dialing the "dial-out"
+digit, he is routed to an available public telephone line
+where the telephone company's dial tone is presented to him.
+He may dial his number only after receiving this second
+dial tone. An ACU that is connected to a line attached to the same
+PBX must go through an identical sequence. In addition, the
+ACU will have an internal timer that determines how long it
+will wait for this dial tone before aborting the call.
+.PP
+"Hardware" pause refers to the ability of the ACU to simply
+stop dialing for a period of time determined by circuitry
+inside the ACU. Normally, there is a "jumper" that is placed
+on the circuit board that determines its duration and it is
+activated when a <PA> character is received.
+.PP
+.B Return Characters
+.PP
+The ACUs described above return single character status
+codes at the completion of dialing.
+Only one of the codes denotes success: <RC>. All the others
+denote a reason for failure as explained below:
+.nf
+
+     <RB> - failure due to busy tone detected
+     <RN> - failure due to no answer after 15 seconds
+     <RO> - failure due to modem already in use
+     <RE> - failure due to invalid character in number
+.fi
+.PP
+.B Redialing
+.PP
+The Bell 801-compatible ACUs have a redial mechanism that
+takes into account the ACU's ability to store the last telephone
+number received internally. These ACUs will then accept an
+abbreviated dial string to indicate the use of this internally-stored
+number as the number to dial. The <RD> entry specifies this abbreviated
+string.
+.BR Dial (3)
+also uses <RW>, the number of seconds between redial attempts,
+and <RA>, the number of redial attempts to implement a dial strategy
+of multiple attempts before reporting an error to the user.
+If <RA> is missing, then only one attempt is made.
+.PP
+.B A Sample Entry
+.PP
+The following illustrates an entry in /usr/acu/acucap
+for a Universal Data Systems RM-801, a rack-mountable
+ACU utilized by the UDS RM-8 Multiple Modem System.
+This system will house one ACU and up to eight modems of
+various types.
+.eo
+.nf
+
+     r8|rm8|UDS RM-801:IF=S:SC=\002:EC=\003:AB=\004:\
+     TA=\072:PA=;:EN=<:LD=?:RD=Y:RC=C:RB=B:RN=A:RO=D:RE=E\
+     RW=5:RA=5
+
+.fi
+.ec
+<SC> is the ASCII code for STX (octal '002') and <EC>
+the ASCII code for ETX (octal '003'). <AB> is the ASCII code
+for EOT (octal '004'). All others are standard ASCII characters,
+including <TA>, which is the colon ':' (octal '072').
+.SH FILES
+.nf
+/usr/acu/acucap         capability data base
+/usr/acu/acutype        configuration data
+.fi
+.PP
+The system administrator may want to arrange the /usr/acu/acucap
+file such that only the ACUs attached to the system or most likely to be
+attached to the system reside in that file.  Since the file is searched
+sequentially, it is also a good idea to arrange the file with the most
+common ACUs at the front of the file.  This makes
+processes searching /usr/acu/acucap more efficient.
+.SH SEE ALSO
+aculib(3), dial(3), acutype(5)
+.SH LIMITATIONS
+.BR Dial (3)
+allows only 20 characters for string capabilities, and the routines in 
+.BR aculib (3)
+do not check for overflow of the buffers.
+.PP
+The total length of a single entry (excluding only escaped new-lines)
+cannot exceed 1024.
+.PP
+Currently, the redial capability is used crudely. It is invoked
+no matter what error is returned by the ACU. Thus, redial may
+be attempted on "impossible" situations, such as when modem is
+in use or if the ACU reports an invalid character.

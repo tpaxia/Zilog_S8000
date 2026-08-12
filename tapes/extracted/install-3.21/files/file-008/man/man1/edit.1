@@ -1,0 +1,216 @@
+.po 1i
+.TH EDIT 1 UCB
+.V 08/15/84 16:48:49
+.\" @[$]edit.1	1.15	08/15/84 16:48:49 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+edit \- text editor for new or casual users
+.SH SYNOPSIS
+.B edit
+[
+.B \-r
+] 
+.I file\fR ...
+.SH DESCRIPTION
+.B Edit
+is a line-oriented variant of the text editor \fBex\fR(1). 
+"Line-oriented" means that (in general) directives operate on complete lines
+and multiples of complete lines rather than on words or characters within lines.
+The following is a brief introduction to \fBedit.\fR
+A more complete basic introduction is provided by
+the \fIEX Reference Manual\fR in the ZEUS Utilities Manual.
+For a description of a screen-oriented (word,
+line, and character oriented) text editor, see the \fIIntroduction
+To Display Editing With Vi\fR entry of the ZEUS
+Utilities Manual. 
+.SH INVOKING EDIT 
+To edit the contents of an existing file, begin with the command:
+.sp
+.RS
+\fBedit \fIfile\fR    or   \fBedit \fInew_file\fR
+.RE
+.sp
+.B Edit
+makes a copy of \fIfile\fR and returns the number of
+lines and characters in the file in a line of the form
+.sp
+.RS
+"file" xxx lines, xxxx characters
+.RE
+.sp
+To create a new file, enter \fBedit \fInew_file\fR. 
+A "File not found" message is returned and the \fBedit\fR prompt (:) is
+displayed.  Editing may proceed.
+.SH ENTERING DIRECTIVES
+The \fBedit\fR prompt is a colon (\fB:\fR). 
+.sp
+Most commands to
+.B edit
+operate on the current line if a line number is not specified.
+The current line is the last line affected by a command.
+.SH PRINTING LINES
+\fBEdit\fR sequentially numbers the lines in the buffer. 
+The first line is line 1.
+The command \fB1\fR<CR> causes \fBedit\fR to type this first line.
+To \fBprint\fR
+the current line, enter \fBp\fR<CR>. 
+To print the next line in the buffer, enter <CR>. 
+Multiple lines can be printed by a command of the form \fB1,23p\fR, which 
+prints lines 1 to 23.
+Entering <ctrl>\fBd\fR displays a half screen of lines on a CRT or 12 lines 
+on a hardcopy terminal.
+.sp
+A number of lines can be printed with the \fBz.\fR command.
+\fBz.12\fR prints 12 lines.
+Type \fB\&''\fR (two single quotes) to get back
+to the line before the \fBz\fR command.
+The \fBz\fR command can also be given other trailing characters:
+\fBz\-\fR prints the 24 lines ending with the current line;
+\fBz+\fR prints the 24 lines following the current line.
+.sp
+The current line number is printed in response to a \fB\&.=\fR entry.
+.SH DELETING LINES
+To \fBdelete\fR the current line, enter \fBd\fR<CR>. 
+\fBEdit\fR deletes the line and prints the new current line,
+which is usually the line following the deleted line.
+When the last line is deleted, the first entered line becomes the 
+new current line.
+Five lines of text starting with the current line are deleted
+with the command \fBd5\fR. 
+.SH ADDING LINES 
+When starting with an empty file or adding new lines, use either the
+\fBappend\fR, \fBa\fR<CR>, or \fBinsert\fR, \fBi\fR<CR>, command. 
+With the append command,
+\fBedit\fR reads lines from the terminal until it receives a line
+consisting of just a dot, then places these lines after the current
+line.
+The last line typed becomes the current line.
+.sp
+The \fBinsert\fR command is similar to \fBappend\fR,
+but places the lines before the current line.
+.PP
+.SH CHANGING TEXT
+Change text within the current line by using the
+\fBsubstitute\fR (\fBs\fR) command.
+Enter \fBs/\fIold\fR\|/\fInew\fR/ where \fIold\fR is the characters to be
+replaced and \fInew\fR is the new characters.
+.SH REPLACING LINES 
+The \fBchange\fR command, \fBc\fR<CR>, replaces the current line with a
+sequence of user-supplied lines.
+To \fBchange\fR more than one line, give the line numbers of the
+lines to be changed. For example, \fB3,5c\fR.
+.SH THE FILE BUFFER
+The \fBfile\fR command (\fBf\fR) tells how many lines there are in
+the buffer being edited and says "[Modified]" if that number has
+changed.
+.SH UPDATING THE FILE ON DISK
+After modifying a buffered file, replace the original (unmodified)
+file with the buffered copy by entering a \fBwrite\fR command, \fBw\fR<CR>.
+Leave the editor by issuing a \fBquit\fR command, \fBq\fR<CR>.
+If a file is edited but not changed, it is not
+necessary to write the file.
+Trying to \fBquit\fR from \fBedit\fR after modifying the buffer
+without writing it prints a warning that there has been "No
+write since last change." \fBEdit\fR now awaits another command.
+Issuing another \fBquit\fR command causes the buffer to be irretrievably
+discarded. There is a return to the shell.
+By using the \fBdelete\fR and \fBappend\fR commands and giving line
+numbers to see lines in the file, any changes can be made.
+.SH UNDOING THE PREVIOUS DIRECTIVE
+The \fBundo\fR command, \fBu\fR<CR>, reverses the effect of the last command
+that changed the buffer.
+Thus, if a \fBsubstitute\fR command does not produce the desired
+results, enter \fBu\fR<CR> and the old contents of the line will be
+restored.
+An \fBundo\fR command can also act on itself.
+\fBEdit\fR gives a warning message when commands affect more than
+one line in the buffer.
+If the amount of change seems unreasonable, issue an
+.B undo
+to see what happened.
+If the change is ok, enter
+.B undo
+again to get back the changes made before the first \fBundo\fR.
+Commands such as
+.B write
+and
+.B quit
+cannot be undone.
+.SH SEARCHING FOR TEXT
+Text strings can be located within a file by giving commands of the form
+\fB/\fItext\fB/\fR
+to search forward for
+.I text
+or
+\fB?\fItext\fB?\fR
+to search backward for
+.I text.
+If a search reaches the end of the file without finding the text, it
+wraps around and continues its search down to the line where the
+search command was issued.
+A useful feature here is a search of the form
+\fB/^\fItext\fB/\fR
+which searches for
+.I text
+at the beginning of a line.
+Similarly
+\fB/\fItext\fB$/\fR
+searches for
+.I text
+at the end of a line.
+The trailing \fB/ \fRor \fB?\fR can be omitted in these commands.
+.SH REFERENCING CURRENT AND LAST LINES
+The current line has the symbolic name "dot" (\fB\&.\fR). This is most
+useful in a range of lines, as in \fB\&.,$print\fR. This prints the rest of
+the lines in the file.
+To get to the last line in the file, use its symbolic name \fB$\fR.
+Thus, the command \fB$ delete\fR or \fB$d\fR deletes the last line in the file.
+Line references can be specified arithmetically.
+Thus, the line \fB$\-5\fR is the fifth before the last line, and \fB\&.+20\fR
+refers to the 20th line after the present line.
+.SH MOVING & COPYING TEXT
+Lines can be moved or copied within and between files. "Moved" means
+removing lines where they currently exist and placing them elsewhere.
+"Copying" means making a copy of the indicated lines elsewhere, so that
+they now exist in two places.
+.sp
+To move or copy lines between files, first put the desired lines in a
+\fIcharacter\fR buffer.  A command such as \fB1,50delete a\fR puts the
+first fifty lines of the currently edited file in character buffer \fBa\fR. 
+These lines no longer exist in their old position. To copy
+the same lines between files, the command is \fB1,50yank a\fR. These lines
+remain in the edited file.
+.B Edit
+has 26 such buffers named
+.B a
+through
+.BR z .
+Next, use the \fBedit\fR (\fBe\fR) command to edit the file to which
+the buffered lines are to be moved or copied. 
+For example, \fBedit chapter2\fR.
+Position the line-pointer at the line after which the buffered lines
+are to be placed with a command of the form \fB10\fR, where line 10
+is the line after which the buffered lines are to be placed. 
+Enter \fBput a \fR and the contents of character buffer \fBa\fR are 
+entered into chapter2 between the current and next line (lines 10 and old
+line 11). 
+If text is to be copied within the same file, use the \fBcopy\fR rather
+than the \fByank\fR command.  
+The command \fB1,50move $\fR moves 
+the first fifty lines of the file to the end of the file. Old line 51 is
+now the first line of the file. The command \fB1,50copy $\fR copies the
+first fifty lines of the file to the end of the file. Lines 1,50 now exist
+in two places. 
+.SH OPTIONS
+.TP
+.B \-r
+Recover named files after an editor or system crash;
+the last saved version is retrieved.
+.SH SEE ALSO
+ed(1), ex(1), vi(1), sed(1).
+.br
+\fIEX Reference Manual\fR in the ZEUS Utilities Manual.
+.SH LIMITATIONS
+See
+.BR ex (1).

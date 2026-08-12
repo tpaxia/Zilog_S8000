@@ -1,0 +1,29 @@
+.po 1i
+.TH SET 1C UCB
+.V 08/15/84 17:03:46
+.\"@[$]set.1C	1.5	08/15/84 17:03:46 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+set \- establish or modify a C Shell variable
+.SH SYNOPSIS
+\fBset \fR[\fIname\fB=\fIvalue\fR]
+.SH DESCRIPTION
+Without an argument, the set command
+command shows the value of all shell variables.
+Variables that have other than a single word as value print as a word
+list enclosed in parentheses.
+.PP
+The \fBset\fR command with
+an argument in the form \fIname\fB=\fIvalue\fR,
+\fBset\fR sets
+.I name
+to the single
+.I value
+.PP
+Variable expansion happens for all arguments before any
+setting occurs.
+.SH SEE ALSO
+csh(1), env(1), printenv(1), setenv(1C).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual

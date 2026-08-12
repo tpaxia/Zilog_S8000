@@ -1,0 +1,9 @@
+1984, 	/* this year */
+52,	/* Washingtons Birthday, Feb. 21 */
+150,	/* Memorial Day, May 30 */
+185,	/* Independence Day, July 4 */
+248,	/* Labor Day, Sept. 5 */
+328,	/* Thanksgiving Day, Nov. 24 */
+359,	/* Christmas Day, Dec. 25 */
+365,	/* New Year's Eve, Dec. 31 */
+-1	/* end of file */

@@ -68,8 +68,11 @@ panics.
   filesystem taken 1991-11-18:
   <https://drive.google.com/file/d/1cgpqKmj1a6vdj1PsfsX_Nna7iOSctdRk/view>.
 - Hardware and installation details:
-  Zilog *ZEUS System Administrator's Manual*, 03-3246-04, and
-  *System 8000 CPU Hardware Reference Manual*, 03-3200-01.
+  Zilog *ZEUS System Administrator's Manual*, 03-3246-04,
+  *System 8000 CPU Hardware Reference Manual*, 03-3200-01, and
+  *System 8000 Hardware Reference Manual*,
+  [03-3237-04](https://bitsavers.org/pdf/zilog/s8000/03-3237-04_hwRef_Dec82.pdf),
+  whose section 5.9 documents the CPU monitor.
 
 `S8000-2.tar` was obtained from the VCFed post linked above. It packages an
 installed ZEUS tree and contains useful `.contents` inventories, as well as
@@ -114,21 +117,6 @@ The raw filesystems were read back and compared with the staged manifest:
 SHA-256 `7a683ba63c8439398b2cd076dbc7ef08c6efc49f00ad1e55b9bc1a5749c6971a`,
 recovered from a pristine 1991-11-18 level-0 `dump` of a real S8000 root
 filesystem. `/etc/init` and `/etc/INIT` are hard links to it.
-
-Earlier builds could not use the original. The only copy then available,
-`archive/INIT.zeus-3.21-original`, has a corrupt 512-byte sector: nine bytes
-differ from the pristine binary at file offsets 0x220c–0x23ee, seven of them
-single-bit flips, all inside the region 0x2200–0x23FF. The `s.out` header and
-segment table are undamaged, which is why nothing caught it structurally. Those
-builds instead installed a source reconstruction, compiled on ZEUS from
-`systemIII/init.c`.
-
-The dump independently confirms that reconstruction work: the byte the project
-had derived by disassembly and patched at 0x220c (`0x35` → `0x25`) is exactly
-what the pristine binary contains, and the `f464` → `0004` pair at 0x2284 is
-the corrupt allocator call described in `systemIII/README.md`. The
-reconstruction's source and evidence are retained for that reason; the
-compiled artifact is not, since it is no longer installed.
 
 With the original restored, **every executable in the installed userland is an
 original recovered ZEUS binary**, including `/etc/init`, `/etc/fsck`, `getty`,
@@ -291,18 +279,18 @@ ZEUS login:
 
 The superuser account is `zeus` with password `zeus`.
 
-MAME's built-in S8000 terminal is usable but not a perfect emulation of the
-terminal expected by ZEUS. The first login banner can be visually mangled, and
-full-screen programs such as `vi` may not redraw perfectly. Pressing Return
-normally produces a clean `ZEUS login:` prompt. For more faithful cursor,
-screen, and keyboard behavior, connect an H19/Heath-compatible terminal
-emulator to the S8000 console instead. An experimental MAME H19-console branch
-can also be maintained on top of current upstream MAME without changing MAME's
-global terminal default.
+Current MAME provides an H19-compatible console for both machines.
 
 Use `sync` before closing MAME. MAME normally stores disk writes in a
 `diff/s8000*.dif` overlay; delete that overlay when you need to return to the
 pristine committed image.
+
+## Reverse-engineering notes
+
+- [`MONITOR.md`](MONITOR.md) — CPU monitor commands and serial download mode.
+- [`TCC.md`](TCC.md) — cartridge tape controller firmware and media format.
+- [`STANDALONE.md`](STANDALONE.md) — stand-alone bootstrap chain.
+- [`SERIAL-BOOT.md`](SERIAL-BOOT.md) — serial installation design notes.
 
 ## Rebuilding the clean image
 
@@ -314,15 +302,16 @@ The case-sensitive prepared source trees must be mounted at:
 ```
 
 The installed init is the pristine original `build/init.pristine-911118`; the
-build refuses to run unless it hashes to the value recorded above. The
-superseded reconstruction survives only as source, in `systemIII/init.c`.
-The build also verifies and installs the recovered `rc.sav`, `rc_csh`, `mfs`
+build refuses to run unless it hashes to the value recorded above. The build
+also verifies and installs the recovered `rc.sav`, `rc_csh`, `mfs`
 (hard-linked as `umfs`), and Model 31 `inittab.s8000-2`. The relinked kernel is
 taken from `s8000_usr/sys/conf/zeus`.
 
 Run:
 
 ```sh
+tools/retro-fuse/build-mkv7img.sh
+tools/retro-fuse/build-mkdev.sh
 ./rebuild_fs.sh
 ```
 
@@ -341,8 +330,7 @@ The rebuild performs these steps:
    including Monitor block-size code `1` for 512-byte CPU-A/HPCPU disk
    transfers.
 7. `chdman` creates an uncompressed CHD.
-8. The result is installed as both `s8000_smd.chd` and
-   `debug/s8000.chd`.
+8. The result is installed as `s8000_smd.chd`.
 
 The staging trees live on `/Volumes/ZeusFS/clean-stage` because a normal
 case-insensitive macOS filesystem cannot represent both `/etc/init` and

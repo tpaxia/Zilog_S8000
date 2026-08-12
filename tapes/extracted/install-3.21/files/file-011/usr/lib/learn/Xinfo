@@ -1,0 +1,17 @@
+ftuser - first-time user introduction to ZEUS
+files - basic file handling commands
+editor - text editor; you must know about files first
+morefiles - more on file manipulations and other useful stuff
+macros - "-ms" macros for memos & papers; you must know editor
+eqn - typing mathematics; you must know editor
+C - writing programs in the C language; you must know editor
+
+This is probably the best order, but after you have taken
+the "files" course and know the basics of "editor", you can
+try anything you like.
+
+You can always leave learn by typing:  bye (RETURN)
+You can stop learn from typing by pressing (RUB), which is an
+interrupt, or (BREAK). If learn won't accept your answer and
+you know you're right, type in the answer:  no (RETURN)
+when it asks whether you want to try the lesson again.

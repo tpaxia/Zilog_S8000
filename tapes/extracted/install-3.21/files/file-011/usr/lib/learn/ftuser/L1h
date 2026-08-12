@@ -1,0 +1,12 @@
+#print
+Now that you have created the unsorted file out and the sorted file
+sortout, use the cat command (really means "concatenate") to run the
+two files together by typing:   cat out sortout (RETURN)
+Then type:   ok (RETURN)
+
+#copyin
+#user
+#uncopyin
+#match ok
+#next
+1i

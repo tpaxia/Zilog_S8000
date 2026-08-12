@@ -1,0 +1,292 @@
+# What we understand about the ROM, keyed by image address.
+#
+#   <addr> = <symbol>     name this address (overrides the generated L_xxxx)
+#   <addr> ; <text>       block comment, emitted above the address, in order
+#   <addr> : <text>       end-of-line comment
+#
+# Addresses are hex without 0x.  Everything here is hand-written; tools/gen.py
+# never edits this file, so regenerating monitor30.s preserves all of it.
+
+# =====================================================================
+# Reset vector and banner
+# =====================================================================
+0000 ; The Z8001 fetches its initial status from the program status area at
+0000 ; physical 0x0000 on reset.  The segmented format is four words: a
+0000 ; reserved word, the flag/control word, then the program counter as
+0000 ; segment and offset.  FCW 0xc000 means segmented, system mode, all
+0000 ; interrupts disabled; the monitor gives that up almost immediately.
+0002 : FCW: SEG | S/N -- segmented, system mode
+0004 : PC segment 0 (0x8000 encodes "segment 0" in a long address)
+0006 : PC offset -> reset
+
+0008 ; Not printed by the monitor -- the ROM part number and copyright are
+0008 ; here so a memory dump of the first block identifies the firmware.
+
+# =====================================================================
+# Reset
+# =====================================================================
+0070 = reset
+0070 ; Power-on entry.  Everything below runs with interrupts off until the
+0070 ; PSA has been installed.
+0070 ;
+0070 ; The board leaves reset with the monitor EPROMs at 0x0000..0x3fff and
+0070 ; 2 KB of local static RAM at 0x4000..0x47ff; off-board memory and the
+0070 ; three MMUs stay disabled until the system configuration register says
+0070 ; otherwise.  The monitor never turns them on for itself -- it runs
+0070 ; entirely out of local RAM so that it survives a wild program.
+0070 : PSAP segment 0
+0074 : FCW: S/N only -- leave segmented mode
+0078 : from here on the CPU is a Z8002 for all practical purposes
+007c : clear MMU register 0 via the special I/O space
+
+0080 ; Console baud rate comes from two DIP switches in the top nibble of the
+0080 ; system configuration register (U70:1,4).  The nibble also carries the
+0080 ; boot-device selection in its other two bits, which the B command reads
+0080 ; back later.
+0080 : SCR, high nibble = DIP switches
+0084 : shift the switch nibble down (raw .word: see escapes.txt)
+0088 : keep the two baud-rate bits
+008c : CTC time constant for that rate
+
+0090 ; Both console CTC channels are set to counter mode with "time constant
+0090 ; follows" and reset asserted, then handed the divisor.  The CTC counts
+0090 ; a 1.2288 MHz clock and the SIO is programmed for a x64 sample rate, so
+0090 ; e.g. 9600 baud needs 1228800 / (9600*64) = 2.
+0090 : CTC control: reset, time constant follows, counter mode
+00a2 ; Channel B is the console, and gets the longer setup string because it
+00a2 ; also carries the interrupt vector for the pair.
+00a2 : 11-byte SIO setup string for channel B
+00aa : channel B control port
+00b2 : 9-byte SIO setup string for channel A
+00ba : channel A control port
+
+00c2 : no DRAM refresh -- local RAM is static
+00cc ; Zero local RAM by writing one word and rippling it upwards with LDIR.
+00cc : first word of local RAM
+00f4 ; Blank the command line buffer with spaces rather than zeros so that a
+00f4 ; recalled line is padded, not truncated.
+00f4 : two spaces
+010a : editing/flow-control character defaults -> 0x43f2
+0118 : trap and interrupt vectors -> 0x4400
+
+0138 : install the program status area
+0156 : flags2 bit 3 -- accept lower case as typed
+015a : flags2 bit 4 -- clear
+015e : CR/LF
+0162 : "S8000 Monitor 3.0 - Press START to Load System"
+016a : vectored interrupts on; the console SIO can now interrupt
+
+# =====================================================================
+# Main command loop
+# =====================================================================
+016c = cmdloop
+016c ; Every command returns here.  The stack pointer is reloaded from
+016c ; scratch each time round so that a command that unbalanced the stack
+016c ; (or a breakpoint taken inside one) cannot wedge the monitor, and the
+016c ; loop address is pushed as the return address for the dispatched
+016c ; handler -- handlers exit with a plain RET.
+016c : reset the monitor stack
+0170 : handlers RET straight back into the loop
+0174 : keep only the two live flag bits
+0180 : prompt character (a space by default)
+0184 : write the prompt
+0188 : read one edited command line
+018c : non-empty line -> use its first character
+0194 : empty line repeats as "N" (next)
+
+019a ; The command letter is looked up by scanning the letter table backwards
+019a ; with CPDRB.  On a match r1 holds the number of entries left, which is
+019a ; exactly the index of the matched letter counted from the start of the
+019a ; table -- so it doubles as the index into the parallel address table.
+019a : 16 bytes to scan
+019e : one past the end of cmd_letters
+01a2 : scan down for the command letter
+01a6 : unknown letter
+01a8 : word index
+01ac : handler address
+01b0 : enter the command handler
+
+01b1 ; The scan starts on the byte before the table so that r1 comes out as a
+01b1 ; zero-based index; that leading byte is never matched.
+01c2 ; Parallel to cmd_letters: B C D F G I J L M N T Q R Z P.
+
+01e0 = cmd_error
+01e0 : '?'
+01e6 : discard any pending output
+
+# =====================================================================
+# Trap and interrupt entry points
+# =====================================================================
+0218 = trap_uninit_vector
+0218 ; Every trap and interrupt vector the monitor does not itself use points
+0218 ; here.  The handler reports the vector it was entered through so that a
+0218 ; stray interrupt from an unconfigured board can be identified.
+021a : " UNINITIALIZED VECTOR ENTRY  ID= "
+
+# =====================================================================
+# Initialised data copied into RAM at reset
+# =====================================================================
+01f4 ; Seven words copied to 0x43f2.  The first four are the line-editing and
+01f4 ; flow-control characters: backspace, delete, XON, XOFF.  The last byte
+01f4 ; of the block is the prompt character, a space.
+0202 ; Z80 SIO setup strings.  Each byte pair is a write-register select
+0202 ; followed by its value; a lone byte is a WR0 command.
+0202 ;   18            WR0: channel reset
+0202 ;   02 10         WR2: interrupt vector base 0x10
+0202 ;   14 cc         WR4: x64 clock, 2 stop bits, no parity
+0202 ;   03 c1         WR3: 8 data bits, receiver enable
+0202 ;   05 ea         WR5: 8 data bits, transmitter enable, RTS+DTR
+0202 ;   11 1c         WR1: interrupt on every received character,
+0202 ;                      status affects vector
+020e ; As above but without the vector (WR2 is shared by both channels) and
+020e ; with WR1 = 0x18, so channel A does not modify the vector.
+
+0250 ; Copied to 0x4400 and installed as the program status area.  The layout
+0250 ; is the Z8001 segmented one -- four words per trap: reserved, FCW, PC
+0250 ; segment, PC offset -- because the PSA format follows the CPU type, not
+0250 ; the current mode.  Every entry loads FCW 0x4000, so traps are taken in
+0250 ; non-segmented system mode, except the system call which is entered
+0250 ; segmented (0xc000).
+0250 ;
+0250 ;   +0x08  unimplemented instruction -> trap_uninit_vector
+0250 ;   +0x10  privileged instruction    -> trap_uninit_vector
+0250 ;   +0x18  system call               -> 0x0f2c, segmented
+0250 ;   +0x20  segment trap              -> trap_uninit_vector
+0250 ;   +0x28  non-maskable interrupt    -> 0x12fc
+0250 ;   +0x30  non-vectored interrupt    -> trap_uninit_vector
+0250 ;   +0x38  vectored interrupt        -> trap_uninit_vector
+0250 ;   +0x40  vectored interrupt table, two words per entry, byte offset
+0250 ;          2 x the vector supplied by the device
+0250 ;
+0250 ; The four live vector-table entries are the console SIO's:
+0250 ;   vector 0x12 -> 0x0abc   channel B external/status
+0250 ;   vector 0x14 -> 0x10c0   channel B receive     (console input)
+0250 ;   vector 0x1a -> 0x1090   channel A external/status
+0250 ;   vector 0x1c -> 0x10ca   channel A receive
+
+02f0 ; CTC time constants: 300, 1200, 9600, 19200 baud, in DIP-switch order.
+
+# =====================================================================
+# Console output
+# =====================================================================
+050c = putmsg
+050c ; Print a length-prefixed message.  r2 points at a word holding the byte
+050c ; count, followed by that many characters; the text is copied into the
+050c ; output buffer and shipped by putbuf.  A zero length is a no-op.
+050c : length word
+0518 : step past it
+051e : copy the text into outbuf
+
+0540 = puthex16
+0540 ; Write r5 as four hex digits, accumulating the low nibbles into cksum
+0540 ; so that the S-record writer can checksum what it printed.
+0544 = puthex8
+0546 = puthex8_lo
+0566 : '0'..'9', or 'A'..'F' after the +7 above
+
+0594 = putline
+0594 ; Append a carriage return to the output buffer, then ship it.
+05a2 = putbuf
+05a2 ; Send outlen bytes from outbuf.  conout returns Z set on a carriage
+05a2 ; return, in which case a line feed is appended and the buffer reset.
+05b8 : line feed after the carriage return
+
+# =====================================================================
+# Console driver
+# =====================================================================
+0a4a = getc
+0a4a ; Take one character out of the interrupt-filled receive ring, blocking
+0a4a ; until rxcount says there is one.
+0a4a : spin until a character arrives
+0a56 : advance rxhead modulo the ring size
+
+0a68 = conout
+0a68 ; Write one character to the console, channel B of the first SIO.
+0a68 ; flags bit 1 is the XOFF hold-off: the receive interrupt sets it when
+0a68 ; the terminal sends XOFF and clears it on XON, so output simply stalls
+0a68 ; here until the terminal catches up.
+0a68 : held off by XOFF?
+0a6e : SIO channel B status
+0a72 : RR0 bit 1 = transmit buffer empty
+0a7a : returns Z set on carriage return
+
+0a80 = crlf
+0a8c = getcmdline
+0a8c ; Read an edited command line into cmdbuf, at most 0x80 characters.
+0a90 : buffer size
+0a9c : end of input -> command error
+0aa8 : Z set when the line ended with a carriage return
+
+0aae = ringnext
+0aae ; Advance a ring index, wrapping at 256.
+
+09d8 = getedit
+09d8 ; Read one character with line editing.  Lower case is folded to upper
+09d8 ; unless flags2 bit 3 says to pass it through; the backspace and delete
+09d8 ; characters from ch_backspace/ch_delete are handled here.
+09e0 : pass lower case through?
+09e6 : 'a'
+09ec : 'z'+1
+09f2 : clear bit 5 -> upper case
+
+# =====================================================================
+# Relocated diagnostics
+# =====================================================================
+2bd8 ; The power-up diagnostic does not run in place: it copies 0x66c bytes
+2bd8 ; of itself to 0xf000 and jumps there, so that it can test the memory it
+2bd8 ; was loaded from.  Everything from 0x2bf2 to 0x325e is therefore linked
+2bd8 ; for 0xf000, and the absolute addresses in it are runtime addresses,
+2bd8 ; not image offsets.  Internal calls are PC-relative and so survive the
+2bd8 ; move unchanged.
+2bd8 : non-segmented, system mode
+2bde : destination
+2be4 : source: the blob starts immediately after this routine
+2be8 : 0x66c bytes
+2bf0 : enter the copy at 0xf000
+
+# cmd_letters is scanned downwards from one past its end, so the base operand
+# is cmd_letters-1 and the resulting count in r1 is a zero-based index.
+01b2 ; 15 command letters plus a trailing NUL, so that the 16-entry scan
+01b2 ; always terminates.  Index = offset from the start of the table.
+
+00e0 ; A second, shorter pass over the same region.  The first LDIR already
+00e0 ; covered 0x4000..0x4401; this one repeats the bottom 64 bytes.
+016c : reset the monitor stack (grows down from 0x40a0)
+
+# =====================================================================
+# Command handlers, in cmd_dispatch order.  Named by letter until each is
+# analysed -- the monitor's own documentation for these is not to hand, so
+# guessing a mnemonic name would be inventing information.
+# =====================================================================
+0c3e = cmd_B
+033e = cmd_C
+03b2 = cmd_D
+02f4 = cmd_F
+0b54 = cmd_G
+06d4 = cmd_I
+06d4 : reads a port; width letter W or B, then calls through iovec_read
+0b42 = cmd_J
+0dc2 = cmd_L
+0316 = cmd_M
+0bc6 = cmd_N
+148e = cmd_T
+148e : enables off-board memory via SCR, then runs the memory test
+0bf8 = cmd_Q
+07a6 = cmd_R
+1294 = cmd_Z
+1294 : boot: sub-letter D/T/S/M selects winchester, tape, SMD or mini-winchester
+06de = cmd_P
+06de : writes a port; counterpart of cmd_I
+
+# ---- trap and interrupt handlers named by the PSA template -----------
+0f2c = trap_syscall
+12fc = trap_nmi
+0abc = int_sio0b_status
+10c0 = int_sio0b_rx
+1090 = int_sio0a_status
+10ca = int_sio0a_rx
+
+3214 ; The boot loader's path, with a label part way in so that the two
+3214 ; LDAR references in the relocated blob can name it: the whole string
+3214 ; is "stand/boot", and 0x321a points at just "boot".
+321a = str_boot

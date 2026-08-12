@@ -1,0 +1,89 @@
+.po 1i
+.TH NM 1 Zilog
+.V 08/15/84 16:59:56
+.\" @[$]nm.1	1.11	08/15/84 16:59:57 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+nm \- print name list
+.SH SYNOPSIS
+.B nm
+[\fB-gnoprsu\fR] [\fIfile\fR] ...
+.SH DESCRIPTION
+.B Nm
+prints the name list (symbol table) of each load module 
+in the argument list.
+If an argument is an archive, a listing is produced for each load module
+in the archive.
+If no \fIfile\fR is given, a load module a.out is sought in the present
+working directory. If found, its symbols are displayed. 
+.PP
+The output is sorted alphabetically by default.
+Each symbol name is preceded by its value
+in hex, or by blanks if undefined,
+and one of the letters:
+.PP
+.RS
+U 	Undefined
+.br
+A 	Absolute
+.br
+T 	Text section symbol
+.br
+D 	Data section symbol
+.br
+B 	Bss section symbol
+.br
+C 	Common symbol
+.br
+F	Filename
+.br
+S	Section name
+.RE
+.PP
+An uppercase letter means global or external.
+A lowercase letter means local.
+.SH OPTIONS
+.TP
+.B \-g
+Print only global (external) symbols.
+.TP
+.B \-n
+Sort numerically rather than alphabetically.
+.TP 
+.B \-o
+Prepend file or archive element name to each output line.
+.TP
+.B \-p
+Print in symbol-table order rather than in sorted order.
+.TP
+.B \-r
+Sort in reverse order.
+.TP
+.B \-s
+Sort according to the size of the external symbol (computed
+from the difference between the value of the symbol and
+the value of the symbol with the next highest value).
+This difference is the value printed. This flag turns
+on
+.B \-g
+and
+.BR\-n ,
+and turns off
+.B \-u
+and
+.BR \-p .
+.TP 
+.B \-u
+Print only undefined symbols.
+.SH FILES
+a.out		default-name load module
+.SH SEE ALSO
+ar(1), objdu(1), objhdr(1), a.out(5), ar(5).
+.SH LIMITATIONS
+The \fB-s\fR option does not work on segmented object files.
+.sp
+The size of an external symbol reported by \fBnm\fR when invoked with the
+.B \-s
+option may include the size of some other object unnamed in the symbol
+table, such as static symbols, jump tables, etc. 

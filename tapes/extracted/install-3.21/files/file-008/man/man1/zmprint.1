@@ -1,0 +1,39 @@
+.po 1i
+.TH ZMPRINT 1 ZILOG
+.V 08/15/84 17:11:41
+.\" @[$]zmprint.1	1.6 08/15/84 17:11:41 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+.B zmprint
+\- menu documentation utility
+.SH SYNOPSIS
+.BI zmprint " [ file ]"
+.SH DESCRIPTION
+\fBZmprint\fR writes three objects to standard output: the menu 
+as it appears on
+the screen, a menu options list, and the \fIhelpfile\fR information for
+the menu specified. Used at the head of a pipe (eg: \fBzmprint | pr | nq\fR),
+it produces documentation for an application system using \fBzmenu\fR(1) as
+the user interface. 
+.sp
+\fBZmprint\fR can be invoked with or without commandline arguments. The
+information written to standard output depends upon information
+contained in the .menu(5) format menu-specification file. If no argument 
+is specified, 
+\fBzmprint\fR searches the directory pointed to by the first existent
+search-list pointer (or the invoker's home directory, by default) for a file of 
+the name `.menu`.   
+.SH FILES
+.nf
+~/.menupath              user menu-search path 
+/etc/menupath            global menu-search path
+ .menu                   default menu file 
+.fi
+.SH SEE ALSO
+.nf
+zmenu(1), setenv(1), mkmenu(1), dotmenu(5), 
+menupath(5)
+.fi
+.SH LIMITATIONS
+Output is formatted with 56 lines per page.

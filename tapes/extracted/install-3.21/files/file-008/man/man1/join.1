@@ -1,0 +1,130 @@
+.po 1i
+.TH JOIN 1 Bell
+.V 08/15/84 16:54:56
+.\" @[$]join.1	1.9	08/15/84 16:54:56 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+join \- relational database operator
+.SH SYNOPSIS
+.B join
+[ \fIoptions\fR ] \fIfile1 file2\fR
+.SH DESCRIPTION
+.B Join
+forms, on the standard output,
+a join
+of the two relations specified by the lines of
+.I file1
+and
+.IR file2 .
+If
+.I file1
+is minus (-), the standard input is used.
+.PP
+.I File1
+and 
+.I file2
+must be sorted in increasing ASCII collating
+sequence on the fields
+on which they are to be joined,
+normally the first field in each line.
+.PP
+There is one line in the output for each pair of lines in 
+\fIfile1\fR and \fIfile2\fR that have identical join fields.
+The output line normally consists of the common field,
+then the rest of the line from \fIfile1\fR, then the rest of the line
+from \fIfile2\fR.
+.PP
+Fields are normally separated by blank, tab, or new-line.
+In this case, multiple separators count as one, and
+leading separators are discarded.
+.SH OPTIONS
+.TP
+.BI \-a n
+In addition to the normal output,
+produce a line for each unpairable line in file
+.IR n ,
+where
+.I n
+is 1 or 2.
+.TP
+.BI \-e s
+Replace empty output fields by string
+.IR s .
+.TP
+.BI \-j n\ m
+Join on the
+.IR m th
+field of file
+.IR n .
+If
+.I n
+is missing, use the
+.IR m th
+field in each file.
+.TP
+.BI \-o list
+Each output line comprises the fields specifed in
+.IR list ,
+each element of which has the form
+.IR n . m ,
+where
+.I n
+is a file number and
+.I m
+is a field number.
+.PP
+.TP
+.BI \-t c
+Use character
+.I c
+as a separator (tab character).
+Every appearance of
+.I c
+in a line is significant.
+.SH EXAMPLES
+.nf
+  %\fBcat list1\fR      %\fBcat list2\fR
+  boat             boa
+  boathouse        boar
+  boatload         board
+  boatman          boardinghouse
+  boatmen          boast
+  boatyard         boat
+                   boathouse
+                   boatload
+                   boatman
+                   boatmen
+.sp
+  %\fBjoin list1 list2   \fR %\fBjoin -a2 list1 list2\fR
+  boat                  boa
+  boathouse             boar
+  boatload              board
+  boatman               boardinghouse
+  boatmen               boast
+                        boat
+                        boathouse
+                        boatload
+                        boatman
+                        boatmen
+  %\fBjoin -a1 list1 list2\fR
+  boat
+  boathouse
+  boatload
+  boatman
+  boatmen
+  boatyard
+.sp
+.fi
+.SH SEE ALSO
+sort(1), comm(1).
+.SH LIMITATIONS
+With default field separation,
+the collating sequence is that of
+.BR sort\ \-b ;
+with
+.BR \-t ,
+the sequence is that of a plain sort.
+.PP
+The conventions of
+join(1), sort(1), comm(1), uniq(1), look(1) are incongruous.

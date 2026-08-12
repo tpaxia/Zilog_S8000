@@ -1,0 +1,45 @@
+.po 1i
+.TH WHODO 1 Bell
+.V 08/15/84 17:10:40
+.\" @[$]whodo.1	1.9	08/15/84 17:10:40 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+whodo \- print names and process status for current users
+.SH SYNOPSIS
+.B whodo
+.SH DESCRIPTION
+.B Whodo
+produces merged, reformatted, and dated output from the
+.BR who (1)
+and
+.BR ps (1)
+commands.
+.SH EXAMPLES
+.sp
+.nf
+%\fBwhodo\fR
+Tue Nov 2 14:09:38 PST 1982
+.sp
+0     karen     12:23
+  0   4259      0:04 csh
+  0   4272      0:01 /bin/sh whodo
+  0   4274      0:01 lpr
+.sp
+2     deck      11:49
+.sp
+8     carol     12:28
+.sp
+  8   3420      0:08 csh 
+  8   3876      0:00 script 
+.sp
+9     george    12:24
+.sp
+  9    248      0:06 -csh 
+  9    231      0:01 vi o.l.9t 
+  co   236      0:06 /etc/update 
+  co   238      0:06 /etc/cron 
+  co   479      0:00 - 2 
+.fi
+.SH SEE ALSO
+ps(1), who(1), whois(1), whoami(1), users(1).

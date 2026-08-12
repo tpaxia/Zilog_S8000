@@ -1,0 +1,85 @@
+.po 1i
+.TH EXP 3 Zilog
+.V 08/15/84 17:18:44
+.\" @[$]exp.3	1.10 08/15/84 17:18:44 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+exp, log, log10, pow, sqrt \- exponential functions 
+.SH SYNOPSIS
+.nf
+#include <math.h>
+.PP
+\fBdouble e\fIx\fRp\fR(x)
+.br
+\fBdouble \fIx\fR;
+.PP
+\fBdouble log\fR(\fIx\fR)
+.br
+\fBdouble \fIx\fR;
+.PP
+\fBdouble log10\fR(\fIx\fR)
+.br
+\fBdouble \fIx\fR;
+.PP
+\fBdouble pow\fR(\fIx\fR, y)
+.br
+\fBdouble \fIx\fR, y;
+.PP
+\fBdouble sqrt\fR(\fIx\fR)
+.br
+\fBdouble \fIx\fR;\fR
+.fi
+.SH DESCRIPTION
+.B Exp
+returns the exponential function of 
+.I x.
+.PP
+.B Log
+returns the natural logarithm of 
+.IR x ;
+.B log10
+returns the base 10 logarithm.
+.PP
+.B Pow
+returns
+.I x 
+raised to the power of 
+.I y.
+.PP
+.B Sqrt
+returns the square root of 
+.I x.
+.SH SEE ALSO
+hypot(3),
+sinh(3),
+intro(2).
+.SH DIAGNOSTICS
+.B Exp
+and
+.B pow
+return a huge value when the correct value would
+overflow;
+.I errno
+is set to ERANGE.
+.B Pow
+returns 0 and sets
+.I errno
+to
+EDOM when the second argument is negative and non-integral and
+when
+both arguments are 0.
+.PP
+.B Log
+returns 0 when
+.I x
+is zero or negative;
+.I errno
+is set to EDOM.
+.PP
+.B Sqrt
+returns 0 when 
+.I x
+is negative;
+.I errno
+is set to EDOM.

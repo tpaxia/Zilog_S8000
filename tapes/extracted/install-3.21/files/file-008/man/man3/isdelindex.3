@@ -1,0 +1,31 @@
+.po 1i
+.TH ISDELINDEX 3 Zilog
+.V 08/15/84 17:20:46
+.\" @[$]isdelindex.3	1.5 08/15/84 17:20:46 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+isdelindex - remove an index from a C-ISAM file
+.SH SYNOPSIS
+.nf
+\fB#include <isam.h>
+.sp
+\fBisdelindex\fI(isfd, keydesc)\fR
+\fBint \fIisfd;\fR
+\fBstruct \fIkeydesc *keydesc;\fR
+.fi
+.SH DESCRIPTION
+.B Isdelindex
+removes an existing index from an C-ISAM file.
+The index to be removed will be identified by the keydesc structure.
+All indices may be deleted except the primary index.
+This call will only execute if the C-ISAM file has been opened
+for exclusive access, both input and output.
+.SH FILES
+/usr/include/isam.h
+.br
+/usr/lib/libcisam.a
+.SH SEE ALSO
+isaddindex(3).
+.br
+C-Isam Programmer's Guide in the Zeus Languages/Programming Tools Manual

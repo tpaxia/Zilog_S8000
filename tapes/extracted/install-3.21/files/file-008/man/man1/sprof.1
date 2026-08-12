@@ -1,0 +1,56 @@
+.po 1i
+.TH SPROF 1 Zilog
+.V 08/15/84 17:06:29
+.\" @[$]sprof.1	1.7 08/15/84 17:06:29 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sprof \- display profile data
+.SH SYNOPSIS
+.B sprof
+[
+.B \-al
+[ \fIfile\fR ] ]
+.SH DESCRIPTION
+.B Sprof
+interprets the file
+.I mon.out 
+produced by the
+.I segmon
+subroutine.
+Under default modes, the symbol table in the named object file
+.I (a.out
+default) is read and correlated with the
+.BR mon.out (5)
+profile file.
+For each external symbol, the percentage of time spent executing
+between that symbol and the next is printed (in decreasing order),
+together with the number of times that routine was called
+and the number of milliseconds per call.
+.PP
+In order for the number of calls to a routine to be tallied,
+the
+.B \-p
+option of
+.B scc
+must have been given when the file containing the
+routine was compiled.
+This option also arranges for the
+.BR mon.out (5)
+file to be produced automatically.
+.SH OPTIONS
+.TP
+.B \-a
+Report all symbols rather than just external symbols.
+.TP
+.B \-l
+List output by symbol value rather than decreasing percentage.
+.SH FILES
+.ta \w'mon.out  'u
+mon.out	for profile
+.br
+a.out		for namelist
+.SH SEE ALSO
+mon.out(5), segmon(3), sprofil(2), scc(1).
+.SH LIMITATIONS
+Beware of quantization errors.

@@ -1,0 +1,47 @@
+.po 1i
+.TH BSEARCH 3 Bell
+.V 08/15/84 17:17:07
+.\" @[$]bsearch.3	1.4 08/15/84 17:17:07 - Zilog Inc
+.ad
+.fi
+.SH NAME
+bsearch \- binary search
+.SH SYNOPSIS
+.nf
+\fBchar \(**bsearch \fI(key, base, nel, width, compar)\fR
+     \fBchar \fI\(**key;\fR
+     \fBchar \fI\(**base;\fR
+     \fBint \fInel, width;\fR
+     \fBint \fI(\(**compar)();\fR
+.fi
+.SH DESCRIPTION
+.B Bsearch\^
+is a binary search routine generalized from Knuth (6.2.1) Algorithm B.
+It returns a pointer to a table indicating the location where
+a datum may be found.
+The table must have been sorted in increasing order.
+The first argument,
+.I key,
+is a pointer to the datum in the table.
+The second argument,
+.I base,
+is a pointer to the base of the table.
+The third argument,
+.I nel,
+is the number of elements in the table.
+The fourth argument,
+.I width,
+is the width of an element in bytes.
+The last argument,
+.I compar,
+is the name of the comparison routine.
+It is called with two arguments which are pointers
+to the elements being compared.
+The routine must return
+an integer less than, equal to, or greater than 0,
+according to whether the first argument considered is
+less than, equal to, or greater than the second.
+.SH DIAGNOSTICS
+Zero is returned if the key can not be found in the table.
+.SH SEE ALSO
+lsearch(3), qsort(3).

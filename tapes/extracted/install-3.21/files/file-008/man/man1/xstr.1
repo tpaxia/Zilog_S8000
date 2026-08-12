@@ -1,0 +1,119 @@
+.po 1i
+.TH XSTR 1 UCB
+.V 08/15/84 17:11:18
+.\" @[$]xstr.1	1.10 08/15/84 17:11:18 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+xstr \- extract strings from C programs to implement shared strings
+.SH SYNOPSIS
+.B xstr
+[
+.B \-c
+] [
+.B \-
+] [ \fIfile\fR ]
+.SH DESCRIPTION
+.B Xstr
+maintains a file
+.B strings
+into which strings in component parts of a large program are hashed.
+These strings are replaced with references to this common area.
+This serves to implement shared constant strings,
+most useful if they are also read-only.
+.PP
+The command
+.PP
+.DT
+	\fBxstr \-c\fR \fIfile\fR
+.PP
+extracts the strings from the C source in \fIfile\fR, replacing
+string references by expressions of the form (&xstr[number])
+for some number.
+An appropriate declaration of
+.B xstr
+is prepended to the file.
+The resulting C text is placed in the file
+x.c,
+to then be compiled.
+The strings from this file are placed in the
+.B strings
+database if they are not there already.
+Repeated strings, and strings which are suffixes of existing strings,
+do not cause changes to the database.
+.PP
+After all components of a large program have been compiled, a file
+xs.c
+declaring the common
+.B xstr
+space can be created by a command of the form
+.PP
+.DT
+	\fBxstr\fR
+.PP
+This
+xs.c
+file should then be compiled and loaded with the rest
+of the program.
+If possible, the array can be made read-only (shared) saving
+space and swap overhead.
+.PP
+.B Xstr
+can also be used on a single file.
+A command
+.PP
+.DT
+	\fBxstr\fR \fIfile\fR
+.PP
+creates files
+x.c
+and
+xs.c
+as before, without using or affecting any
+.B strings
+file in the same directory.
+.PP
+It may be useful to run
+.B xstr
+after the C preprocessor if any macro definitions yield strings
+or if there is conditional code which contains strings
+which may not, in fact, be needed.
+.B Xstr
+reads from its standard input when the argument "\fB\-\fR" is given.
+An appropriate command sequence for running
+.B xstr
+after the C preprocessor is:
+.PP
+.nf
+.DT
+	\fBcc \-E name.c | xstr \-c \-
+	cc \-c x.c
+	mv x.o name.o\fR
+.fi
+.PP
+.B Xstr
+does not touch the file
+.B strings
+unless new items are added, thus
+.BR make (1)
+can avoid remaking
+xs.o
+unless truly necessary.
+.SH FILES
+.DT
+strings	database of strings
+.br
+x.c		massaged C source
+.br
+xs.c		C source for definition of array `xstr'
+.br
+/tmp/xs*	temp file when `xstr name' doesn't touch
+.B strings
+.SH SEE ALSO
+mkstr(1).
+.SH LIMITATIONS
+If a string is a suffix of another string in the database,
+but the shorter string is seen first by
+.B xstr
+both strings will be placed in the database, when just
+placing the longer one there will do.

@@ -1,0 +1,54 @@
+.po 1i
+.TH BCHECK 1 Zilog
+.V 08/15/84 16:38:18
+.\"@[$]bcheck.1	1.2  08/15/84 16:38:18 - Zilog Inc
+.ad
+.fi
+.SH NAME
+bcheck \- b-tree checker for C-ISAM
+.SH SYNOPSIS
+.B bcheck 
+[
+.B \-ilny
+] 
+.I cisamfile ...
+.SH DESCRIPTION
+.B Bcheck
+is used to check and repair 'C-ISAM' index files.  
+.B Bcheck 
+checks the consistency of the files which have the '.dat' or '.idx' suffix,
+and should be run when the files are suspected of being corrupt.  
+.B Bcheck 
+is interactive and waits for the user to respond to each 
+error that is found
+unless invoked with the \fB-n\fR or \fB-y\fR option.  
+.PP
+Note that for each index printed by running 
+.BR bcheck , 
+a group of 
+numbers is printed.  These numbers indicate the position of the key 
+in each record.  There may be up to eight groups of numbers for
+each index.
+.SH OPTIONS
+.TP
+.B \-i
+check index file only.
+.TP
+.B \-l
+list entries in b-trees.
+.TP
+.B \-n
+answer no to all questions.  No repairs will be attempted.
+.TP
+.B \-y
+answer yes to all questions.
+.B Bcheck
+may try to repair the file.
+The
+.B -y
+option should be used with caution and
+should not be used if it is the first time the files are being
+checked.
+.SH SEE ALSO
+\fIIndexed Sequential Access Method (C-ISAM)\fR in 
+the ZEUS Languages/Programming Tools Manual

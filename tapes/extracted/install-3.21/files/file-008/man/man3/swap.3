@@ -1,0 +1,84 @@
+.po 1i
+.TH SWAP 3 Zilog
+.V 08/15/84 17:28:32
+.\" @[$]swap.3	1.4	08/15/84 17:28:33 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+swap \- swap routines - swap
+.br
+longswap \- swap routines - swap
+.br
+swapsegt \- swap routines - swap
+.SH SYNOPSIS
+.B #include <a.out.h>
+.br
+.PP
+.B int
+.I val;
+.br
+.I val
+.B =
+.B swap
+.I (val);
+.br
+.PP
+.B long
+.I val;
+.br
+.B longswap
+.I (&val);
+.br
+.PP
+.B struct
+.I segt s_segt;
+.br
+.B swapsegt
+.I (&s_segt);
+.br
+.SH DESCRIPTION
+.B Swap
+is used as a function to swap both bytes of an integer
+.I val.
+.PP
+.B Longswap
+is given the address of a long value
+.I (val)
+and swaps both of its words.
+.PP
+.B Swapsegt
+is given the address to a segment table entry
+.I (s_segt)
+and swaps its word values.
+A segment table entry has the following structure:
+
+	struct segt {
+.br
+		char sg_segno;	/* segment number */
+.br
+		char sg_coff;	/* offset/256 for code section */
+.br
+		char sg_doff;	/* offset/256 for data section */
+.br
+		char sg_boff;	/* offset/256 for bss section */
+.br
+		unsigned sg_code;	/* size of the code portion */
+.br
+		unsigned sg_data;	/* size of the data portion */
+.br
+		unsigned sg_bss;	/* size of the bss portion */
+.br
+		int sg_atr;	/* attributes */
+.br
+		long sg_unused;	/* unused */
+.br
+	}
+.br
+.PP
+These routines are generally used in conjunction with
+.I swap_flg
+in order to determine whether bytes must be swapped for the
+PDP11.
+.SH SEE ALSO
+a.out(5),
+goodmagic(3).

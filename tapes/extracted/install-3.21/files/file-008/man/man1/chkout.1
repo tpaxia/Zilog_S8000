@@ -1,0 +1,96 @@
+.po 1i
+.TH CHKOUT 1 Zilog
+.V  08/15/84 16:41:12
+.\" @[$]chkout.1	1.18 08/15/84 16:41:12 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+chkout \- check out file from Zilog Source Control (ZSC) file
+.SH SYNOPSIS
+chkout [\fB-d\fI dir\fR] [\fB-e\fR] [\fB-h\fR] [\fB-p\fR] [\fB-v\fI ver.rev\fR] \fIfile \fR...
+.SH DESCRIPTION
+.sp
+.nf
+    checked out file:    file
+    control file:        file+
+    lock file:           file-
+.fi
+.sp
+.B Chkout
+reconstructs (checks out) any version of a Zilog Source Control file
+using information contained in the  
+control file (see
+.BR zsc (5)).
+For each file checked out, the version.revision number and number
+of lines in the file are listed.
+.sp
+\fIFile\fR can be either the base name of the file
+or the name of the control file.
+If the control file is specified and the \fB-d\fR option is not used,
+the checked out file is created in the present working directory,
+even if the control file is elsewhere.
+.sp
+Used without options, \fBchkout\fR checks out the last version as a
+read-only file:  the checked out file has no write permissions
+and has keywords substituted.
+(Keywords are described in
+.BR zsc \c
+(5).)
+Use read-only files for listing, compilation, or other program input.
+A read-only source file must not be modified or checked back in to the
+control file.
+.SH OPTIONS
+.TP
+.B \-d \fIdir\fR
+Create the checked out file in the directory
+.I dir
+instead of in the present working directory.
+.TP
+.B \-e
+Check out the controlled file as editable:
+the checked out file has the usual mode, the keywords are left alone,
+and a lock file is created.
+The lock file prevents additional checkouts for this file.
+It must be present if the edited file is to be checked back in.
+See
+.BR chkin (1).
+.TP
+.B \-h
+List history for each revision in the control file; list revision number,
+date checked in, comments, and who checked in the revision.
+No file is checked out.
+.TP
+.B \-p
+List the most recent revision on the standard output.
+Keywords are substituted.
+.TP
+\fB\-v \fIver.rev\fR
+Check out version.revision \fIver.rev\fR instead of the last revision.
+.SH FILES
+file+ -- control file for
+.ul
+file
+.br
+file- -- lock file for (editable)
+.ul
+file
+.SH SEE ALSO
+chkin(1), chkdiff(1), chkwhat(1), zsc(5).
+.SH DIAGNOSTICS
+xxxxx checked out by xxxxx at xxxxx:  the file is checked out
+for editing;
+it can not be checked out again until the new version is checked back
+in or the editing copy and its lock file are removed.
+.sp
+writable xxxxx exists:  checking out the file would overwrite a file
+which is not apparently a checked out file.
+.sp
+corrupt chkfile:  the convention specified in
+.BR zsc (5)
+has been violated.
+.sp
+version xxx.xxx not found:  use \fBchkout -h\fR to find correct version
+numbers.
+.sp
+no keywords substituted: the "what" strings are corrupted. This occurs
+when a file with an expanded what string is checked in. 

@@ -1,0 +1,60 @@
+.po 1i
+.TH SCCSDIFF 1 Bell
+.V 08/15/84 17:03:25
+.\" @[$]sccsdiff.1	1.4 08/15/84 17:03:25 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+sccsdiff \- compare two versions of an SCCS file
+.SH SYNOPSIS
+\fBsccsdiff \-r\fRSID1 \fB\-r\fRSID2 [ \fB\-p\fR ] \fR[ \fB\-s\fIn\fR] file...
+.SH DESCRIPTION
+.B Sccsdiff\^
+compares two versions of an
+.SM SCCS
+file and generates the differences between the two versions.
+Any number of
+.SM SCCS
+files may be specified, but arguments apply to all files.
+.SH OPTIONS
+.RS 5
+.TP 12
+.B \-p
+pipe output for each file through
+.BR pr (1).
+.TP 12
+.BI \-r \s-1SID\s+1?\^
+.BR \s-1SID\s+11 \ and \ \s-1SID\s+12 \ specify
+the deltas of an
+.SM SCCS
+file that are to be compared.
+Versions are passed to
+.BR bdiff (1)
+in the order given.
+.TP 12
+.BI \-s n\^
+\fIn\fP is the file segment size that
+.B bdiff\^
+will pass to
+.BR diff (1).
+This is useful when
+.B diff\^
+fails due to a high system load.
+.SH FILES
+.TP "\w'/tmp/get?????\ \ 'u"
+/tmp/get?????
+Temporary files
+.SH SEE ALSO
+bdiff(1), get(1), help(1), pr(1).
+.br
+.IR "Source Code Control System User's Guide" 
+in the ZEUS Utilities Manual
+.SH DIAGNOSTICS
+.PD 0
+.TP 25
+"\fIfile\fR: No differences"
+If the two versions are the same.
+.PP
+Use
+.IR help (1)
+for explanations.

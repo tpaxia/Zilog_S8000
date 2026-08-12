@@ -1,0 +1,818 @@
+.po 1i
+.TH MAKE 1 Bell
+.V 08/15/84 16:57:59
+.\" @[$]make.1	1.10 08/15/84 16:57:59 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+make \- maintain, update, and regenerate groups of programs
+.SH SYNOPSIS
+.B make
+[
+.B -bdeikmnpqrst
+] [ \-f 
+.I makefile
+] [
+.I names
+]
+.SH DESCRIPTION
+.PP
+.B Make
+executes commands in
+.I makefile
+to update one or more target
+.IR names .
+.I Name
+is typically a program.
+If no
+.B \-f
+option is present, 
+.BR makefile , 
+.BR Makefile ,
+.\"sccs s.makefile, s.Makefile,
+.B makefile+
+and 
+.B Makefile+
+are
+tried in order.
+If
+.I makefile
+is
+.BR \- ,
+the standard input is taken.
+More than one 
+.B \-f
+makefile argument pair may appear.
+.PP
+.B Make
+updates a target only if it depends on files that are
+newer than the target.
+All prerequisite files of a target are added recursively to
+the list of targets.
+Missing files are deemed to be out of date.
+.PP
+.I Makefile
+contains a sequence of entries that specify dependencies.
+The first line of an entry is a
+blank-separated, non-null list of targets, then a
+.BR : ,
+then a (possibly null) list of prerequisite files or dependencies.
+Text following a
+.B ;
+and all following lines
+that begin with a tab are shell commands
+to be executed to update the target.
+The first line that does not begin with a tab or
+.B #
+begins
+a new dependency or macro definition.
+Shell commands may
+be continued across lines with the <backslash><new-line> sequence.
+Sharp
+.RB ( # )
+and new-line surround comments.
+.PP
+The following
+.I makefile
+says that
+.B pgm
+depends on two
+files
+.B a.o
+and
+.BR b.o ,
+and that they in turn depend on
+their corresponding source files
+.RB ( a.c
+and
+.BR b.c )
+and a common file
+.BR incl.h :
+.PP
+.ss 18
+.RS
+.PD 0
+.TP
+pgm: a.o b.o
+cc a.o b.o \-o pgm
+.TP
+a.o: incl.h a.c
+cc \-c a.c
+.TP
+b.o: incl.h b.c
+cc \-c b.c
+.PD
+.RE
+.ss 12
+.PP
+Command lines are executed one at a time, each by its
+own shell.
+A line is printed when it is executed unless the
+.B \-s
+option is present, or the entry
+.B \&.\s-1SILENT\s+1:
+is in
+.IR makefile ,
+or unless the first character of the command is 
+.BR @ .
+The
+.B \-n
+option specifies printing without execution; however, if the
+command line has the string
+.B $(\s-1MAKE\s+1)
+in it,
+the line is always executed (see discussion of the
+.SM
+.B MAKEFLAGS
+macro under
+.IR Environment ).
+The
+.B \-t
+(touch) option updates the modified date of a
+file without executing any commands.
+.PP
+Commands returning non-zero status normally terminate
+.BR make .
+If the
+.B \-i
+option is present, or the entry 
+.B \&.\s-1IGNORE\s+1:
+appears in
+.IR makefile ,
+or if the line specifying the command begins with
+<tab><hyphen>, the error is ignored.
+If the
+.B \-k
+option is present, work is abandoned on the current entry,
+but continues on other branches that do not depend on that entry.
+.PP
+The
+.B \-b
+option allows old makefiles (those written for the old version
+of 
+.B make
+) to run without errors.
+The difference between the old version
+of 
+.B make
+and this version is that this version requires
+all dependency
+lines to have a (possibly null) command associated with them.
+The previous version of
+.B make
+assumed if no command was specified explicitly
+that the command was null.
+.PP
+Interrupt and quit cause the target to be deleted
+unless the target depends on the special name 
+.BR \&.\s-1PRECIOUS\s+1 \&.
+.SH OPTIONS
+.TP
+.B \-b
+Compatibility mode for old makefiles.
+.TP
+.B \-d
+Debug mode.
+Print out detailed information on files and times examined.
+.TP
+.B \-e
+Environment variables override assignments within makefiles.
+.TP
+.BI \-f " makefile"
+Description file name.
+.I Makefile
+is assumed to be the name of a description file.
+A file name of
+.B \-
+denotes the standard input.
+The contents of
+.I makefile
+override the built-in rules if they are present.
+.TP
+.B \-i
+Ignore error codes returned by invoked commands.
+This mode is entered if the fake target name
+.B \&.\s-1IGNORE\s+1
+appears in the description file.
+.TP
+.B \-k
+Abandon work on the current entry, but continue on other branches
+that do not depend on that entry.
+.\" .TP
+.\" .B \-m
+.\" Print a memory map showing text, data, and stack.
+.\" This option
+.\" is a no-operation on systems without the getu system call.
+.TP
+.B \-n
+No execute mode.
+Print commands, but do not execute them.
+Even lines beginning with an
+.B @
+are printed.
+.TP
+.B \-p
+Print out the complete set of macro definitions and target descriptions.
+.TP
+.B \-q
+Question.
+The 
+.B make
+command returns a zero or non-zero
+status code depending on whether the target file is or
+is not up-to-date.
+.TP
+.B \-r
+Do not use the built-in rules.
+.TP
+.B \-s
+Silent mode.
+Do not print command lines before executing.
+This mode is also entered if the fake target name
+.B \&.\s-1SILENT\s+1
+appears in the description file.
+.TP
+.B \-t
+Touch the target files (causing them to be up-to-date)
+rather than issue the usual commands.
+.TP
+.B \&.\s-1DEFAULT\s+1
+If a file must be made but there are no explicit commands
+or relevant built-in rules, the commands associated
+with the name
+.B \&.\s-1DEFAULT\s+1
+are used if it exists.
+.TP
+.B \&.\s-1IGNORE\s+1
+Same effect as the 
+.B \-i
+option.
+.TP
+.B \&.\s-1PRECIOUS\s+1
+Dependents of this target will not be removed when
+quit or interrupt are hit.
+.TP
+.B \&.\s-1SILENT\s+1
+Same effect as the 
+.B \-s
+option.
+.SH ENVIRONMENT
+The environment is read by make.
+All variables are assumed to be macro
+definitions and processed as such.
+The environment variables are processed
+before any makefile and after the internal rules;
+thus, macro assignments
+in a makefile override environment variables.
+The
+.B \-e
+option causes
+the environment to override the macro assignments in a makefile.
+.PP
+The 
+.B \s-1MAKEFLAGS\s+1
+environment variable
+is processed by 
+.B make
+as containing
+any legal input option (except 
+.BR \-f , 
+.BR \-p ,
+and 
+.B \-d
+) defined
+for the command line.
+Further,
+upon invocation, 
+.B make
+"invents" the variable if it is not in the
+environment, puts the current options into it, and passes it on to
+invocations of commands.
+Thus, 
+.B \s-1MAKEFLAGS\s+1
+always contains the
+current input options.
+This proves very useful for "super-makes".
+In fact, as noted above,
+when the 
+.B \-n
+option is used, the command
+.B $(\s-1MAKE\s+1)
+is executed
+anyway; hence, one can perform a 
+.B make \-n
+recursively on a whole software
+system to see what would have been executed.
+This is because the 
+.B \-n
+is put in 
+.B \s-1MAKEFLAGS\s+1
+and passed to further invocations of
+.BR $(\s-1MAKE\s+1) \&.
+This is one way of debugging
+all of the makefiles for a 
+software project without actually doing anything.
+.PP
+.SS Macros
+Entries of the form
+.IB string1 " = " string2
+are macro definitions.
+Subsequent appearances of
+.RI $( string1 [: subst1 =[ subst2
+]])
+are replaced by
+.IR string2 \&.
+The parentheses are optional if a 
+single character macro name is used and
+there is no substitute sequence.
+The optional
+.RI : subst1 = subst2
+is a substitute sequence.
+If it is specified,
+all non-overlapping occurrences of 
+.I subst1
+in the
+named macro are replaced by 
+.IR subst2 \&.
+Strings (for the purposes of this
+type of substitution) are delimited by
+blanks, tabs, new-line characters, and beginnings of lines.
+An example of the use of the substitute sequence is shown under
+.IR Libraries \&.
+.SS Internal Macros
+There are five internally maintained macros which are useful
+for writing rules for building targets.
+.TP 5
+.B $\(**
+The macro 
+.B $\(**
+stands for
+the file name part of the current dependent with the suffix deleted.
+It is
+evaluated only for inference rules.
+.TP
+.B $@
+The 
+.B $@
+macro stands for
+the full target name of the current target.
+It is evaluated
+only for explicitly named dependencies.
+.TP
+.B $<
+The 
+.B $<
+macro is only evaluated for inference rules or
+the 
+.B \&.\s-1DEFAULT\s+1
+rule.
+It is
+the module which is out of date with respect to the 
+target (i.e., the "manufactured" dependent file name).
+Thus, in the 
+.B \&.c.o
+rule, the 
+.B $<
+macro would evaluate to
+the 
+.B \&.c
+file.
+An example for making
+optimized 
+.B \&.o
+files from 
+.B \&.c
+files is:
+.PP
+.PD 0
+.ss 18
+.RS
+.RS
+.TP
+\&.c.o:
+.br
+cc \-c \-O $\(**.c
+.RE
+.RE
+.PD
+.TP 5
+\&
+or:
+.PP
+.PD 0
+.RS
+.RS
+.TP
+\&.c.o:
+.br
+cc \-c \-O $<
+.RE
+.RE
+.ss 12
+.PD
+.TP 5
+.B $?
+The 
+.B $?
+macro is evaluated when explicit rules from the makefile
+are evaluated.
+It is
+the list of prerequisites that are out of date with respect to
+the target;
+essentially, those modules which must be rebuilt.
+.TP
+.B $%
+The 
+.B $%
+macro is only evaluated when the target is an
+archive library member of the form 
+.BR lib(file.o) \&.
+In this case,
+.B $@
+evaluates to 
+.B lib
+and 
+.B $%
+evaluates to the
+library member, 
+.BR file.o \&.
+.PP
+Four of the five macros can have alternative forms.
+When an upper case 
+.B D
+or 
+.B F
+is appended to any of the four
+macros the meaning is changed to "directory part" for 
+.B D
+and "file part" for 
+.BR F \&.
+Thus, 
+.B $(@D)
+refers to the directory
+part of the string 
+.BR $@ \&.
+If there is no directory part,
+.B \&./
+is generated.
+The only macro excluded from this
+alternative form is 
+.BR $? \&.
+The reasons for this are debatable.
+.SS Suffixes
+Certain names (for instance, those ending with 
+.B \&.o
+)
+have inferable prerequisites such as 
+.BR \&.c , 
+.BR \&.s ,
+etc.
+If no update commands for such a file appear in
+.IR makefile ,
+and if an inferable prerequisite
+exists, that prerequisite is compiled to make the target.
+In this case,
+.B make
+has inference rules
+which allow building files from other files
+by examining the suffixes and determining an
+appropriate inference rule to use.
+The current default inference rules are:
+.PP
+.RS
+.na
+.fi
+\&.c
+.\"sccs \&.c~
+\&.c+
+\&.f
+.\"sccs \&.f~
+\&.f+
+\&.sh
+.\"sccs \&.sh~
+\&.sh+
+\&.c.o
+.\"sccs \&.c~.o
+.\"sccs \&.c~.c
+\&.c+.o
+\&.c+.c
+\&.f.o
+.\"sccs \&.f~.o
+.\"sccs \&.f~.f
+\&.f+.o
+\&.f+.f
+\&.s.o
+.\"sccs \&.s~.o
+.\"sccs \&.s~.s
+\&.s+.o
+\&.s+.s
+\&.y.o
+.\"sccs \&.y~.o
+.\"sccs \&.y~.c
+\&.y+.o
+\&.y+.c
+\&.y.c
+\&.c.a
+.\"sccs \&.c~.a
+\&.c+.a
+.\"sccs \&.s~.a
+\&.s+.a
+.\"sccs \&.h~.h
+.RE
+.PP
+To print out the rules compiled into
+the 
+.B make
+on any machine, the following command is used:
+.PP
+.RS
+make \|\-fp \|\- \|2>/dev/null \|</dev/null
+.RE
+.PP
+The only peculiarity in this output is the
+.B (null)
+string which
+.BR printf (3)
+prints when handed a null string.
+.BR (Cshell (1)
+users will have to redirect the standard output to a file and ignore the
+errors printed out on the terminal.)
+.\"sccs .PP
+.\"sccs A tilde in the above rules refers to an \s-1SCCS\s+1 file
+.\"sccs (see
+.\"sccs .IR sccsfile (5)).
+.\"sccs Thus, the
+.\"sccs rule .c~.o would transform
+.\"sccs an \s-1SCCS\s+1 C source file into an
+.\"sccs object file (.o).
+.\"sccs Because the s. of the \s-1SCCS\s+1 files is a prefix
+.\"sccs it is incompatible with make's suffix point-of-view.
+.\"sccs Hence,
+.\"sccs the tilde is a way of changing any file
+.\"sccs reference into an \s-1SCCS\s+1
+.\"sccs file reference.
+.ad
+.fi
+.PP
+A rule with only one suffix (i.e. 
+.B \&.c:
+) is the definition
+of how to build 
+.I x
+from 
+.I x
+.BR \&.c \&.
+In effect, the other suffix is null.
+This is useful for building targets
+from only one source file (e.g., shell procedures, simple C programs).
+.PP
+Additional suffixes are given as the
+dependency list for 
+.BR \&.\s-1SUFFIXES\s+1 \&.
+Order is significant; the first possible name for which both
+a file and a rule exist is inferred as a prerequisite.
+.PP
+The default list is:
+.PP
+.RS
+.fi
+\&
+.BR \&.\s-1SUFFIXES\s+1 :
+\&.o
+\&.c
+.\"sccs \&.c~
+\&.c+
+\&.y
+.\"sccs \&.y~
+\&.y+
+\&.f
+.\"sccs \&.f~
+\&.f+
+\&.p
+.\"sccs \&.p~
+\&.p+
+\&.s
+.\"sccs \&.s~
+\&.s+
+\&.sh
+.\"sccs \&.sh~
+\&.sh+
+\&.h
+.\"sccs \&.h~
+\&.h+
+.RE
+.ad
+.fi
+.PP
+Here again, the above command for printing the internal rules will
+display the list of suffixes implemented on the current machine.
+Multiple suffix lists accumulate;
+.B \&.\s-1SUFFIXES\s+1:
+with no dependencies
+clears the list of suffixes.
+.SS Inference Rules
+The first example can be done more briefly:
+.PP
+.ss 18
+.RS
+.PD 0
+.TP
+pgm: a.o b.o
+.br
+cc a.o b.o \-o pgm
+.TP
+a.o b.o: incl.h
+.RE
+.ss 12
+.PD
+.PP
+This is because 
+.B make
+has a set of internal rules for building
+files.
+The user may add rules to this list by simply putting
+them in the 
+.I makefile \&.
+.PP
+Certain macros are used by the default inference rules
+to permit the inclusion of optional matter in
+any resulting commands.
+For example,
+.SM
+.B CFLAGS\*S
+and
+.SM
+.B YFLAGS
+are used for compiler options to
+.BR cc (1)
+and
+.BR yacc (1)
+respectively.
+Again, the previous method for examining
+the current rules is recommended.
+.PP
+The inference of prerequisites can be controlled.
+The rule to create a file with suffix
+.B \&.o
+from a file with suffix
+.B \&.c
+is specified as an entry with 
+.B \f&.c.o:
+as the target and no dependents.
+Shell commands associated with the target define the
+rule for making a 
+.B \f&.o
+file from a 
+.B \f&.c
+file.
+Any target that has no slashes in it and starts with a dot
+is identified as a rule and not a true target.
+.SS Libraries
+If a target or dependency name contains parenthesis, it is
+assumed to be an archive library, the string within parenthesis
+referring to a member within the library.
+Thus 
+.B lib(file.o)
+and 
+.B $(\s-1LIB\s+1)(file.o)
+both refer to
+an archive library which contains 
+.BR file.o \&.
+(This assumes
+the
+.SM
+.B LIB
+macro has been previously defined.)\ 
+The expression 
+.B $(\s-1LIB\s+1)(file1.o file2.o)
+is not legal.
+Rules pertaining to archive libraries have the form
+.BI \&. \s-1XX\s+1 \&.a
+where the
+.SM
+.I XX
+is the suffix from which the archive member
+is to be made.
+An unfortunate byproduct of the current implementation
+requires the
+.SM
+.I XX
+to be different from the suffix of the archive
+member.
+Thus, one cannot have 
+.B lib(file.o)
+depend upon 
+.B file.o
+explicitly.
+The most common use of the archive interface follows.
+Here, we assume the source files are all C type source:
+.PP
+.ss 18
+.RS
+.PD 0
+.TP
+lib:
+lib(file1.o) lib(file2.o) lib(file3.o)
+.br
+@echo lib is now up to date
+.TP
+\&.c.a:
+.br
+$(\s-1CC\s+1) \-c $(\s-1CFLAGS\s+1) $<
+.br
+ar rv $@ $*.o
+.br
+rm -f $*.o
+.RE
+.ss 12
+.PD
+.PP
+In fact, the 
+.B \&.c.a
+rule listed above is built into 
+.B make
+and
+is unnecessary in this example.
+A more interesting, but more limited example of an archive library
+maintenance construction follows:
+.PP
+.ss 18
+.RS
+.PD 0
+.TP
+lib:
+lib(file1.o) lib(file2.o) lib(file3.o)
+.br
+$(\s-1CC\s+1) \-c $(\s-1CFLAGS\s+1) $(?:.o=.c)
+.br
+ar rv lib $?
+.br
+rm $?
+.br
+@echo lib is now up to date
+.TP
+\&.c.a:;
+.RE
+.ss 12
+.PD
+.PP
+Here the substitution mode of the macro expansions is used.
+The 
+.B $?
+list is defined to be the set of object file names (inside 
+.B lib
+) whose C
+source files are out of date.
+The substitution mode
+translates the 
+.B \&.o
+to 
+.BR \&.c \f&.
+.\"sccs (Unfortunately, one cannot as yet transform
+.\"sccs to .c~; however, this may become possible in the future.)\ 
+Note also, the disabling of the
+\&
+.B \&.c.a:
+rule, which would have created each object file, one by one.
+This particular construct speeds up archive 
+library maintenance considerably.
+This type of construct becomes very cumbersome if the archive library
+contains a mix of assembly programs and C programs.
+.SH FILES
+[Mm]akefile
+.\"sccs .br
+.\"sccs s.[Mm]akefile
+.br
+[Mm]akefile+
+.SH SEE ALSO
+chkin(1),
+chkout(1),
+csh(1),
+sh(1),
+touch(1).
+.br
+.I "Make \- A Program for Maintaining Computer Programs"
+in the ZEUS Languages / Programming Tools Manual
+.\" .br
+.\" .I "An Augmented Version of Make"
+.\" by
+.\" E. G. Bradford.
+.SH LIMITATIONS
+Some commands return non-zero status inappropriately;
+use
+.B \-i
+to overcome the difficulty.
+Commands that are directly executed by the shell,
+notably
+.BR cd (1),
+are ineffectual across new-lines in
+.BR make \&.
+The syntax 
+.B lib(file1.o file2.o file3.o)
+is illegal.
+You cannot build 
+.B lib(file.o)
+from 
+.BR file.o \&.
+.\"sccs The macro $(a:.o=.c~) doesn't work.
+.bp

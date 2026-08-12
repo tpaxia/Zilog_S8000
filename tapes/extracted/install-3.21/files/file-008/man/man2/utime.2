@@ -1,0 +1,147 @@
+.po 1i
+.TH UTIME 2 Bell
+.V 08/15/84 17:16:20
+.\"@[$]utime.2	1.8	08/15/84 17:16:20 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+utime \- set file times
+.SH SYNOPSIS
+.B #include <sys/types.h>
+.br
+.B int utime
+.I (file, times)
+.br
+.B char
+.I *file;
+.br
+.B struct utimbuf
+.I *times;
+.SH DESCRIPTION
+The
+.B utime
+call uses the accessed and updated 
+times in that order from the
+structure referred to by
+.I times
+to set the corresponding recorded times for
+.I file.
+.PP
+If
+.I times
+is
+.SM
+.BR NULL ,
+the access and modification times of the 
+file are set to the current time.
+A process must be the owner of the file or have write permission to use
+.B utime
+in this manner.
+.PP
+If
+.I times
+is not
+.SM
+.B NULL,
+.I times
+is interpreted as a pointer to a
+.B utimbuf
+structure and
+the access and modification times are set to the values contained in
+the designated structure.
+.PP
+The times in the following structure are measured in seconds since
+00:00:00
+.SM GMT\*S,
+Jan. 1, 1970.
+.PP
+.RS
+.nf
+.ta .5i 1i 1.75i 2.5i
+struct	utimbuf	{
+	time_t	actime;	/\(** access time \(**/
+	time_t	modtime;	/\(** modification time \(**/
+};
+.fi
+.RE
+.PP
+The caller must be the owner of the file or the super-user.
+The inode-changed time of the file is set to the current time.
+.SH DIAGNOSTICS
+.B Utime
+will fail if one or more of the following are true:
+.IP
+The named file does not exist.
+.SM
+\%[ENOENT]
+.IP
+A component of the
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+Search permission is denied by a component of the
+path prefix.
+.SM
+\%[EACCES]
+.IP
+The effective user
+.SM ID
+is not super-user and not the owner of the file
+and
+.I times
+is not
+.SM
+.BR NULL .
+.SM
+\%[EPERM]
+.IP
+The effective user
+.SM ID
+is not super-user and not the owner of the file
+and 
+.I times
+is
+.SM
+.B NULL
+and write access is denied.
+.SM
+\%[EACCES]
+.IP
+The file system containing the file is mounted read-only.
+.SM
+\%[EROFS]
+.IP
+.I Times
+is not
+.SM
+.B NULL
+and points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.IP
+.I File
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.SH RETURN VALUE
+Upon successful completion, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH SEE ALSO
+stat (2).
+.SH ASSEMBLER
+.na
+.nf
+	CONSTANT UTIME	:= 30
+
+	...		!* file, timep in r0, r1 respectively	*!
+			!* (segmented: file, timep in rr0, rr2) *!
+	clr	r4
+	sc	#UTIME
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.ad
+.fi

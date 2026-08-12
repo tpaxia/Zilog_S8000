@@ -1,0 +1,230 @@
+.po 1i
+.TH PRS 1 Bell
+.V 08/15/84 17:01:06 
+.\" @[$]prs.1	1.9 08/15/84 17:01:06 - Zilog Inc. 
+.ad
+.fi
+.SH NAME
+prs \- print an SCCS file
+.SH SYNOPSIS
+\fBprs \fR[\fIoptions\fR] \fIfiles\fR
+.SH DESCRIPTION
+.B Prs\^
+prints on the standard output parts or all of an SCCS file (see
+.BR sccsfile (5))
+in a user supplied format.
+If a directory is named,
+.B prs\^
+behaves as though each file in the directory were specified as a
+named file, except non-SCCS files (last component of the
+pathname does not begin with s.), and unreadable files
+are silently ignored.
+If the argument \- is given, the standard input is read.
+Each line of the standard input is taken to be the name of an
+SCCS file or directory to be processed.
+Non-SCCS files and unreadable files are silently ignored.
+.SH OPTIONS
+Arguments to
+.BR prs ,
+which can appear in any order, consist of
+.I keyletter\^
+arguments and filenames.
+.PP
+All the described
+.I keyletter\^
+arguments apply independently to each named file:
+.TP
+.B \-a
+Requests printing of information for both removed
+(delta type = R, see
+.BR rmdel (1))
+and existing (delta type = D)
+deltas.
+If the
+.B \-a
+keyletter is not specified, information for existing deltas
+only is provided.
+.TP
+\fB\-d\fR[\fIdataspec\fR]
+Used to specify the output data specification.
+.I Dataspec\^
+is a string consisting of SCCS file
+.I "data keywords\^"
+(See
+.BR "DATA KEYWORDS" )
+interspersed with optional user supplied text.
+.TP
+.B \-e
+Requests information for all deltas created
+earlier than, and including, the delta designated via the
+.B \-r
+keyletter.
+.TP
+.B \-l
+Requests information for all deltas created
+later than, and including, the delta designated via the
+.B \-r
+keyletter.
+.TP
+\fB\-r\fR[\fISID\fR]
+Specifies the SCCS Identification (SID) string
+of a delta for which information is desired.
+If no \fISID\fR is specified, the \fISID\fR of the most recently created
+delta is assumed.
+.bp
+.SH DATA KEYWORDS
+Data keywords specify which parts of an SCCS file are to be
+retrieved and output.
+All parts of an SCCS file (see
+.BR sccsfile (5))
+have an associated data keyword.
+There is no limit on the number of times a data keyword
+can appear in a 
+.IR dataspec .
+.PP
+The information printed by
+.B prs\^
+consists of:
+(1) the user supplied text;
+and (2) appropriate values (extracted from the SCCS file)
+substituted for  the  recognized data keywords in the order
+of appearance in the dataspec.
+The format of a data keyword value is either
+Simple
+(S), in which keyword substitution is direct, or
+Multi-line
+(M), in which keyword substitution is followed by a carriage return.
+.PP
+User supplied text is any text other than recognized data keywords.
+A tab is specified by \fB\\t\fR and 
+carriage return/new-line is specified
+by \fB\\n\fR.
+.sp 2
+.in 0
+.nf
+.na
+                    TABLE 1. SCCS File Data Keywords
+
+Keyword  Data Item                   File Section      Value      Format
+========================================================================
+ :Dt:  Delta information              Delta Table    See below*      S
+ :DL:  Delta line statistics               "       :Li:/:Ld:/:Lu:    S
+ :Li:  Lines inserted by delta             "            nnnnn        S
+ :Ld:  Lines deleted by delta              "            nnnnn        S
+ :Lu:  Lines unchanged by delta            "            nnnnn        S
+ :DT:  Delta type                          "           D~or~R^       S
+  :I:  SCCS ID string (SID)                "       :R:.:L:.:B:.:S:   S
+  :R:  Release number                      "            nnnn         S
+  :L:  Level number                        "            nnnn         S
+  :B:  Branch number                       "            nnnn         S
+  :S:  Sequence number                     "            nnnn         S
+  :D:  Date delta created                  "       :Dy:/:Dm:/:Dd:    S
+ :Dy:  Year delta created                  "             nn          S
+ :Dm:  Month delta created                 "             nn          S
+ :Dd:  Day delta created                   "             nn          S
+  :T:  Time delta created                  "       :Th:::Tm:::Ts:    S
+ :Th:  Hour delta created                  "             nn          S
+ :Tm:  Minutes delta created               "             nn          S
+ :Ts:  Seconds delta created               "             nn          S
+  :P:  Programmer who created delta        "           logname       S
+ :DS:  Delta sequence number               "            nnnn         S
+ :DP:  Predecessor delta seq-no.           "            nnnn         S
+ :DI:  Seq-no. of deltas incl, excl, ignor "       :Dn:/:Dx:/:Dg:    S
+ :Dn:  Deltas included (seq #)             "        :DS:~:DS:...     S
+ :Dx:  Deltas excluded (seq #)             "        :DS:~:DS:...     S
+ :Dg:  Deltas ignored (seq #)              "        :DS:~:DS:...     S
+ :MR:  MR numbers for delta                "            text         M
+  :C:  Comments for delta                  "            text         M
+.bp
+Keyword  Data Item                   File Section      Value      Format
+ =====================================================================
+ :UN:  User names                      User Names       text         M
+ :FL:  Flag list                         Flags          text         M
+  :Y:  Module type flag                    "            text         S
+ :MF:  MR validation flag                  "          yes~or~no      S
+ :MP:  MR validation pgm name              "            text         S
+ :KF:  Keyword error/warning flag          "          yes~or~no      S
+ :BF:  Branch flag                         "          yes~or~no      S
+  :J:  Joint edit flag                     "          yes~or~no      S
+ :LK:  Locked releases                     "           :R:...        S
+  :Q:  User defined keyword                "            text         S
+  :M:  Module name                         "            text         S
+ :FB:  Floor boundary                      "             :R:         S
+ :CB:  Ceiling boundary                    "             :R:         S
+ :Ds:  Default SID                         "             :I:         S
+ :ND:  Null delta flag                     "          yes~or~no      S
+ =====================================================================
+ :FD:  File descriptive text            Comments        text         M
+ :BD:  Body                               Body          text         M
+ :GB:  Gotten body                         "            text         M
+  :W   A form of what(1) string           N/A        :Z::M:\t:I:     S
+  :A:  A form of what(1) string           N/A     :Z::Y:~:M:~:I::Z:  S
+  :Z:  what(1) string delimiter           N/A           @(#)         S
+  :F:  SCCS file name                     N/A           text         S
+ :PN:  SCCS file pathname                 N/A           text         S
+ =====================================================================
+       * :Dt:~=~:DT:~:I:~:D:~:T:~:P:~:DS:~:DP:
+.ad
+.fi
+.SH EXAMPLES
+.IP
+\fBprs \-d"Users and/or user IDs for :F: are: \en:UN:" s.file\fR
+.PP
+can produce on the standard output:
+.PP
+.RS
+.nf
+Users and/or user IDs for s.file are:
+xyz
+131
+abc
+.fi
+.RE
+.IP
+\fBprs \-d"Newest delta for pgm :M:: :I: Created :D: By :P:" \-r s.file\fR
+.PP
+can produce on the standard output:
+.IP
+Newest delta for pgm main.c: 3.7 Created 77/12/1 By cas
+.PP
+As a special case:\^
+.IP
+\fBprs s.file\fR
+.PP
+can produce on the standard output:
+.PP
+.RS
+.nf
+D 1.1 77/12/1 00:00:00 cas 1 000000/00000/00000
+MRs:
+bl78-12345
+bl79-54321
+COMMENTS:
+this is the comment line for s.file initial delta
+.fi
+.RE
+.PP
+for each delta table entry of the "D" type.
+The only keyletter argument allowed to be used with the
+special case is the
+.B \-a
+keyletter.
+.PP
+.SH FILES
+.RE
+.TP 10
+/tmp/pr?????
+.i0
+.SH SEE ALSO
+admin(1),
+delta(1),
+get(1),
+help(1),
+sccsfile(5).
+.br
+.I "Source Code Control System User's Guide\^"
+in the ZEUS Utilities Manual.
+.SH DIAGNOSTICS
+Use
+.BR help (1)
+for explanations.

@@ -1,0 +1,57 @@
+.po 1i
+.TH SYMSCAN 3 Zilog
+.V 08/15/84 17:28:42
+.\" @[$]symscan.3	1.5	08/15/84 17:28:42 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+symscan \- scan name list
+.SH SYNOPSIS
+.nf
+\fB#include <stdio.h>\fR
+.br
+\fB#include <nlist.h>\fR
+.PP
+\fBsymscan\fI(nl, stream)\fR
+.br
+\fB     struct \fInlist *nl;\fR
+.br
+\fB     FILE \fI*stream;\fR
+.fi
+.SH DESCRIPTION
+.B Symscan
+searches
+.I stream
+for the next occurrence of the symbol identified by
+.IR nl .
+.I Nl
+is one element of the same structure used by
+.BR nlist (3).
+One field of this structure points to a null-terminated string
+that defines the search object. If the symbol is found, the other
+fields of the structure are set appropriately. If the symbol is
+not found, the
+.I nl_type
+field is set to 0. Unlike
+.BR nlist ,
+.B symscan
+returns both external and nonexternal symbols. If the program
+finds a local symbol of the same name,
+.B symscan
+can be called again to find the next occurrence of a symbol with
+the same name.
+.I Stream
+is assumed to be positioned at a symbol boundary within the name
+list of an
+.BR a.out (5)
+format object module.
+.SH SEE ALSO
+a.out(5),
+nlist(3),
+readsym(3).
+.SH DIAGNOSTICS
+.B Symscan
+returns
+.I nl_type
+field zero if the symbol was not found, or if the input was
+invalid.

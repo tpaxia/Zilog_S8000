@@ -1,0 +1,123 @@
+.po 1i
+.TH MAN 1 Bell
+.V 08/15/84 16:58:25
+.\"@[$]man.1	1.9 08/15/84 16:58:25 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+man \- print sections of this manual
+.SH SYNOPSIS
+.B man
+[ \fIoption ... ] [ chapter ] title\fR ...
+.SH DESCRIPTION
+.B Man
+locates and prints the section of this manual named
+.I title
+in the specified
+.IR chapter .
+(In this context, the word "page" is often used as a synonym
+for "section.")
+The
+.I title,
+is entered in lowercase.
+The
+.I chapter
+number does not need a letter suffix.
+If no
+.I chapter
+is specified, the whole manual is searched for
+.I title
+and all occurrences of it are printed.
+.PP
+It is possible to move the manual entries to
+an area where enough space exists for them if /usr
+becomes too small.
+To access the new area containing the entries, create the file 'man.paths'
+in the directory /usr/lib, which should contain the name of the directory
+where the entries exist.
+This is required on a default Model 11 configuration.
+.SH OPTIONS
+.TP
+.B \-e
+Appended or prefixed to any of the above
+causes the manual section to be preprocessed by
+.BR neqn (1)
+or
+.BR eqn (1);
+.B \-e
+alone means
+.BR \-te .
+.TP
+.B \-h
+Send the manual entry to the output device using 
+.BR cat (1)
+rather than the default 
+.BR more (1).
+This is intended primarily for hardcopy terminals.
+.TP
+.B \-n
+Print the section on the standard output using
+.BR nroff (1).
+.TP 
+.B \-t
+Phototypeset the section using
+.BR troff (1).
+.TP
+.B \-v
+Send the manual entry to the output device
+using
+.BR view (1)
+rather than the default
+.BR more (1).
+.TP
+.B \-w
+Print the pathnames of the manual sections,
+but do not print the sections themselves.
+.TP
+(default)
+Copy an already formatted manual section to the terminal,
+or, if none is available, act as
+.BR \-n .
+It may be necessary to use a filter to adapt the output to
+the
+particular terminal's characteristics.
+.PP
+Further
+.I options,
+for example, to specify the kind of terminal you have,
+are passed on to
+.BR troff (1)
+or
+.BR nroff (1).
+.I Options
+and
+.I chapter
+can be changed before each
+.IR title .
+.SH EXAMPLES
+.RS
+     \fBman man\fR
+.sp
+reproduces this section, as well as any other sections named
+.B man
+that can exist in other chapters of the manual, (
+.BR man (7)).
+.sp
+     \fBman 1 man\fR
+.sp
+reproduces only this section.
+.SH FILES
+/usr/man/man?/\(**
+.br
+/usr/man/cat?/\(**
+.SH SEE ALSO
+INTRO(0),
+apropos(1), 
+help(1),
+nroff(1),
+eqn(1),
+man(7).
+.SH LIMITATIONS
+The manual is supposed to be reproducible either on
+a phototypesetter or on a terminal.
+However, on a terminal some information is lost.

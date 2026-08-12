@@ -1,0 +1,24 @@
+.po 1i
+.TH HYPHEN 1 Bell
+.V 08/15/84 16:54:37
+.\" @[$]hyphen.1	1.4	08/15/84 16:54:37 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+hyphen \- find hyphenated words
+.SH SYNOPSIS
+\fBhyphen \fIfiles\fR
+.SH DESCRIPTION
+.B Hyphen\^
+finds all the hyphenated words in
+.I files\^
+and prints them on the standard output.
+If no arguments are given, the standard input is used.
+.B Hyphen\^
+can be used as a filter.
+.SH LIMITATIONS
+.B Hyphen\^
+can't cope with hyphenated
+.I italic\^
+(i.e., underlined) words;
+it often misses them completely, or mangles them.

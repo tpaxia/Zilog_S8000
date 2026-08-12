@@ -1,0 +1,37 @@
+.po 1i
+.TH TIMEX 1 Bell
+.V 08/15/84 17:07:47
+.\" @[$]timex.1	1.4	08/15/84 17:07:47 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+timex \- time a command and generate a system activity report
+.SH SYNOPSIS
+\fBtimex \fIcommand\fR
+.SH DESCRIPTION
+The given
+.I command
+is executed;
+after its execution,
+.B timex
+prints the elapsed time, the time spent executing
+.IR command ,
+and the time spent in the system, as
+.BR time (1)
+does.
+It also reports system activity that occurred during
+.I command
+execution, including CPU utilization, I/O activity,
+system switching and swapping, and file system access.
+.I All
+system activity is reported, not just that due to
+.IR command .
+.PP
+The output of
+.B timex
+is written on standard error.
+.SH SEE ALSO
+time(1),
+time(1C),
+sar(M).
+

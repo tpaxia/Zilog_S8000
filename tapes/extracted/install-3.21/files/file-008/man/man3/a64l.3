@@ -1,0 +1,56 @@
+.po 1i
+.TH A64L 3 Bell
+.V 08/15/84 17:16:49
+.\" @[$]a64l.3	1.5 08/15/84 17:16:49 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+a64l, l64a \- convert between long and base-64 \s-1ASCII\s0
+.SH SYNOPSIS
+.nf
+\fB long a64l \fI(s)
+\fB char \fR*s ;
+.sp
+\fB char *l64a \fI(l)
+\fB long \fIl ;
+.SH DESCRIPTION
+These routines are used to maintain numbers stored in
+.I base-64\^
+.SM ASCII.
+This is a notation by which long integers can be represented
+by up to six characters; each character represents a "digit"
+in a radix-64 notation.
+.PP
+The characters used to represent "digits" are:
+.B .
+for 0,
+.B /
+for 1,
+.B 0
+through
+.B 9
+for 2\-11,
+.B A
+through
+.B Z
+for 12\-37, and
+.B a
+through
+.B z
+for 38\-63.
+.PP
+.B A64l\^
+takes a pointer to a null-terminated base-64 representation
+and returns a corresponding
+.B long
+value.
+.B L64a\^
+takes a
+.B long
+argument and returns a pointer to the corresponding base-64
+representation.
+.SH LIMITATIONS
+The value returned by
+.B l64a\^
+is a pointer into a static buffer, the contents of which are
+overwritten by each call.

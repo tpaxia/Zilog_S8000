@@ -1,0 +1,47 @@
+.po 1i
+.TH INITTAB 5 Bell
+.V 08/15/84 17:34:43
+.\" @[$]inittab.5	1.4 08/15/84 17:34:43 - Zilog Inc.
+.SH NAME
+inittab \- control information for init
+.SH DESCRIPTION
+When a state is entered,
+.B init
+reads the file
+.IR /etc/inittab .
+Lines in this file have the format:
+.PP
+.RS
+state:id:flags:command
+.RE
+.PP
+All lines in which the \fIstate\fP field match
+.BR init 's
+current state are recognized.
+If a process is active under the same two character
+.I id
+as a recognized line, it may be terminated (signal 15), killed
+(signal 9), or both by including the
+.I flags
+.B t
+and
+.B k
+in the order desired.
+The signal is sent to all processes in the process group associated
+with the
+.IR id .
+The
+.I command
+field is saved for later execution.
+The
+.I flag
+.B c
+requires the
+.I command
+to be continuously reinvoked whenever the process with that
+.I id
+dies.  Otherwise the
+.I command
+is invoked a maximum of one time in the current state.
+.SH FILES
+/etc/inittab

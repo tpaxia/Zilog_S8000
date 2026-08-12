@@ -1,0 +1,170 @@
+.po 1i
+.TH RESERV 1 Zilog
+.V 08/15/84 17:02:21
+.\" @[$]reserv.1	1.8 08/15/84 17:02:21 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+reserv, taper   \-  tape drive reserving system
+.SH SYNOPSIS
+.B reserv
+[ \fB\-fqr\fIN\fBm\fIN\fBi\fR ]
+.SH DESCRIPTION
+.B Reserv
+provides a mechanism for reserving a cartridge or magnetic
+tape drive on the system.
+Its actions are controlled by the 
+.I key
+argument.  The 
+.I key
+is a string of characters containing at most one function letter and 
+possibly one or more function modifiers.  If no 
+.I key
+is specified, 
+.B reserv
+reserves, by default, 
+the tape drive linked to
+.B /dev/resdev.
+If
+.B /dev/resdev
+does not exist, tape drive 0 (\fB/dev/rct0\fR) is used.
+The drive is automatically freed 
+5 minutes after the last read or write.  If the tape drive is
+already reserved by someone else, it prints:
+.sp
+.RS
+.I      y
+is using drive
+.I x
+.RE
+.sp
+and
+returns exit status of 1, otherwise, it returns exit status of 0
+with no message.
+.PP
+\fBTaper\fR is a link to \fBreserv\fR.
+.SH OPTIONS
+.TP 8
+.B  \-f
+Frees the tape drive.  Only the user who originally
+reserved the tape drive can free it.  The
+super user can free any drive. If it is already free and this 
+option specified, an exit code of 1 is returned.  Otherwise,
+an exit code of 0 is returned.
+.TP 8
+.B \-q
+Query drive to find out if it is busy.
+Gives one of the following messages:
+.sp
+.RS 1.5i
+Tape drive
+.I x
+is free
+.RE
+.sp
+.RS
+ returning an exit status = 0, or
+.RE
+.sp
+.RS 1.5i
+.I y
+is using tape drive 
+.I x
+.RE
+.sp
+.RS
+returning an exit status = 1.
+.RE
+.TP 8
+.B  \-r
+Request to be put on the queue of users
+waiting for the tape drive if tape drive
+is busy.  Otherwise, the tape drive will
+be reserved immediately. If you have been put on
+the queue (indicating drive is busy presently)
+the message 
+.sp
+.RS 1.5i
+.I y
+is using tape drive
+.I x.
+.RE
+.RS 1.5i
+You have been put on the queue for drive
+.I x.
+.RE
+.sp
+.RS
+is printed.  
+When your turn
+arrives, the message 
+.RE
+.sp
+.RS 1.5i
+Tape drive 
+.I x
+is now
+reserved for
+.I y.
+.RE
+.sp
+.RS
+The maximum size of the queue is 10.
+.RE
+.PP			  
+The following characters can be used as a modifier to the function
+letter or used alone.  These can be specified even if a function
+letter wasn't specified, since the default function is to reserve
+drive 0.
+.TP 10
+.B  \-0,...,7
+This modifier selects the cartridge tape drive number. 
+The default is
+.BR 0.
+.TP 10.
+.B  \-m0,...,m7
+This modifier selects the mag tape drive number. The default is
+.BR 0.
+.TP 10
+.B  \-i
+The following argument is the increment
+of time, in minutes, that 
+.B reserv 
+waits
+since last access to free tape (default
+is 
+.BR 5 
+minutes).
+.SH EXAMPLES
+.LP
+.TP 18
+.B reserv \-q1
+Queries drive 1 to see if it is reserved or
+not.  Appropriate message will be printed.
+.TP 18
+.B  reserv
+Tries to reserve tape drive 0.  No message
+is printed out unless drive is busy.
+.TP 18
+.B  reserv \-f	
+Relinquishes cartridge tape drive 0.
+.TP 18
+.B  reserv \-1ir 10	
+Try to reserve tape drive 1, if busy it will
+put user in queue and reserve tape drive 
+in his name when his turn comes up.  In
+any case, after tape drive is reserved, it
+will be freed 10 minutes after last access.
+.SH FILES
+/usr/spool/reserv/*ct*
+.br
+/etc/reservrc
+.SH SEE ALSO
+rc(M).
+.SH DIAGNOSTICS
+.B Reserv
+aborts with an error message if more than one function
+character was specified.
+.sp
+A message is printed if the user tries to put himself on the
+queue and it is full.

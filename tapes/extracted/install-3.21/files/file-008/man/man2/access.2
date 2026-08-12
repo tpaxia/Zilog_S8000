@@ -1,0 +1,108 @@
+.po 1i
+.TH ACCESS 2 Bell
+.V 08/15/84 17:12:20
+.\" @[$]access.2	1.10	08/15/84 17:12:20 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+access \- determine accessibility of file
+.SH SYNOPSIS
+.B int access(
+.I file, mode)
+.br
+.B char
+.I *name;
+.B int
+.I mode;
+.SH DESCRIPTION
+.B Access
+checks the given
+.I file
+for accessibility according to
+.I mode,
+which is 4 (read), 2 (write) or 1 (execute) or a combination thereof.
+Specifying mode 0
+tests whether the directories leading to the file can be
+searched and the file exists.
+.PP
+An appropriate error indication is returned if 
+.I file
+cannot be found or if any
+of the desired access modes is not granted.
+Access to the file is denied if one or more of the following are true:
+.IP
+A component of the
+path prefix
+is not a directory.
+.SM
+\%[ENOTDIR]
+.IP
+Read, write, or execute
+(search)
+permission is requested for a null
+path name.
+.SM
+\%[ENOENT]
+.IP
+The named file does not exist.
+.SM
+\%[ENOENT]
+.IP
+Search permission is denied on a component of the
+path prefix.
+.SM
+\%[EACCES]
+.IP
+Write access is requested for a file on a read-only file system.
+.SM
+\%[EROFS]
+.IP
+Write access is requested for a pure procedure (shared text)
+file that is being executed.
+.SM
+\%[ETXTBSY]
+.IP
+Permission bits of the file mode do not permit
+the requested access.
+.SM
+\%[EACCES]
+.IP
+.I File
+points outside the process's allocated address space.
+.SM
+\%[EFAULT]
+.PP
+This call is useful to set-UID programs, since the user and group IDs
+(with respect to which permission is checked) are the real UID and GID
+of the process.
+.PP
+Only access bits are checked.
+A directory can be announced as writable by
+.BR access ,
+but an attempt to open it for writing fails
+(although files can be created there);
+a file can look executable, but
+.BR exec (2)
+fails unless it is in proper format.
+.PP
+.SH RETURN VALUE
+.PP
+If the requested access is permitted, a value of 0 is returned.
+Otherwise, a value of \-1 is returned and
+.BI errno
+is set to indicate the error.
+.SH SEE ALSO
+stat(2).
+.SH ASSEMBLER
+.nf
+.na
+	CONSTANT ACCESS	:= 33
+
+	...		!* filename, mode in r0, r1 respectively *!
+			!* (if segmented: filename, mode in rr0, r2) *!
+	clr	r4
+	sc	#ACCESS
+	...		!* return value in r4 *!
+	   		!* carry flag set if error *!
+.fi
+.ad

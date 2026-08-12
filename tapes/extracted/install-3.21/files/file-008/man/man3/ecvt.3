@@ -1,0 +1,72 @@
+.po 1i
+.TH ECVT 3 Zilog
+.V 08/15/84 17:18:27
+.\" @[$]ecvt.3	1.7	08/15/84 17:18:27 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+ecvt, _ecvt, fcvt, _fcvt, gcvt, _gcvt \- output conversion 
+.SH SYNOPSIS
+.nf
+\fBchar *ecvt\fR(\fIvalue, ndigit, decpt, sign)
+\fBdouble \fIvalue;
+\fBint\fI ndigit, *decpt, *sign;
+.PP
+\fBchar *fcvt\fR(\fIvalue, ndigit, decpt, sign)
+\fBdouble \fIvalue;
+\fBint\fI ndigit, *decpt, *sign;
+.PP
+\fBchar *gcvt\fR(\fIvalue, ndigit, buf)
+\fBdouble \fIvalue;
+\fBint\fI ndigit;
+\fBchar *\fIbuf;\fR
+.fi
+.SH DESCRIPTION
+.B Ecvt
+converts the 
+.I value
+to a null-terminated, rounded string of
+.I ndigit
+ASCII digits (limited to 19)
+and returns a pointer to it.
+The position of the decimal point relative to the
+beginning of the string is stored indirectly
+through 
+.B decpt
+negative means to the left of the
+returned digits.
+If the sign of the result is negative,
+the word pointed to by
+.I sign
+is nonzero, otherwise it is zero.
+.PP
+.B Fcvt
+is identical to 
+.BR ecvt ,
+except that the correct digit
+has been rounded for Fortran F-format output with
+.I ndigits
+fraction digits.  No more than 19 integer and fraction
+digits can be converted.
+.PP
+.B Gcvt
+converts the
+.I value
+to a null-terminated ASCII string in
+.I buf
+and returns a pointer to 
+.I buf.
+It produces a string, ready for printing, with
+.I ndigit
+significant digits.
+Fortran F format is used, if
+reasonable; otherwise E format is used.
+.SH SEE ALSO
+printf(3).
+.SH DIAGNOSTICS
+If the total number of siginificant digits requested in fcvt
+exceeds 19 the digit string is set to ?????????.
+.SH LIMITATIONS
+The return values of ecvt and fcvt are static buffers
+whose content is overwritten by each call; thus the routines
+are not reentrant.

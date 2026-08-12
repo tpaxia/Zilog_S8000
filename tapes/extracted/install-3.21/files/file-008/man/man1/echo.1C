@@ -1,0 +1,69 @@
+.po 1i
+.TH ECHO 1C UCB
+.V 08/15/84 16:48:00
+.\" @[$]echo.1C	1.5  08/15/84 16:48:00 - Zilog Inc
+.ad
+.fi
+.SH NAME
+echo \- echo (print) arguments to the standard output (terminal) 
+.SH SYNOPSIS
+.B echo
+[ -n ] [ \fIarg\fR ] ...
+.SH DESCRIPTION
+.B Echo\^ 
+is both an internal shell command, and an external program,
+it writes its arguments separated by blanks and terminated by
+a new-line on the standard output.
+It also
+understands C-like escape conventions;
+beware of conflicts with the shell's use of \fB\e\fP:
+.PP
+.RS
+.PD 0
+.TP
+.B \eb
+backspace
+.TP
+.B \ec
+print line without new-line
+.TP
+.B \ef
+form-feed
+.TP
+.B \en
+new-line
+.TP
+.B \er
+carriage return
+.TP
+.B \et
+tab
+.TP
+.B \e\e
+backslash
+.TP
+.BI \e n\^
+the 8-bit character whose \s-1ASCII\s0 code is
+the 1-, 2- or 3-digit octal number
+.IR n ,
+which must start with a zero.
+.RE
+.PD
+.PP
+.B Echo\^
+is useful for producing diagnostics in command files
+and for sending known data into a pipe.
+.SH OPTIONS
+.TP
+.B -n 
+No newline is added to the output.
+.SH EXAMPLE
+.RS
+     % \fBecho\fR this is using the echo command
+     this is using the echo command
+.RE
+.SH SEE ALSO
+csh(1), echo(1), echo2(1).
+.br
+\fIThe C Shell\fR in the ZEUS Utilities Manual
+

@@ -1,0 +1,39 @@
+.po 1i
+.TH WHOAMI 1 UCB
+.V 08/15/84 17:10:38
+.\" @[$]whoami.1	1.9 08/15/84 17:10:38 - Zilog Inc.
+.ad
+.fi
+.SH NAME
+whoami \- print effective current user id
+.SH SYNOPSIS
+.B whoami
+.SH DESCRIPTION
+.B Whoami
+prints who you are.
+It works even if the su command has been issued to switch
+to another user name, while "who am I" does not work since
+it uses /etc/utmp.
+.SH EXAMPLES
+.sp
+.RS
+% whoami
+.br
+carolh
+.sp
+% who am i
+.br
+carolh   tty05   Oct  8 15:40
+.RE
+.SH FILES
+/etc/passwd
+.SH SEE ALSO
+who(1), whodo(1), whois(1), users(1), ps(1).
+.SH DIAGNOSTICS
+If the message "/etc/passwd file is corrupt" appears, one of the
+following may have occurred after you logged in:
+.sp
+.br
+	1) /etc/passwd file was removed
+.br
+	2) your user id was removed from the /etc/passwd file

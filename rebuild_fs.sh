@@ -8,9 +8,7 @@
 # residue.  The pristine init and relinked kernel are explicit overlays.
 #
 # /etc/init is the original Zilog binary recovered from the pristine
-# 1991-11-18 level-0 root dump.  It replaces the earlier source
-# reconstruction (systemIII/init.c), which was only needed while the sole
-# known copy of the original had a corrupt sector.
+# 1991-11-18 level-0 root dump.
 # ============================================================================
 set -euo pipefail
 
@@ -28,20 +26,19 @@ Z_STAGE=$STAGE/zfs
 IMG=$BUILD/s8000_vfs.img
 CHD=$BUILD/s8000.chd
 INSTALL=$HERE/s8000_smd.chd
-DEBUG_INSTALL=$HERE/debug/s8000.chd
 PRISTINE_INIT=$BUILD/init.pristine-911118
 PRISTINE_INIT_SHA=7a683ba63c8439398b2cd076dbc7ef08c6efc49f00ad1e55b9bc1a5749c6971a
 RELINKED_ZEUS=$CSVOL/s8000_usr/sys/conf/zeus
-PRISTINE_RC=$HERE/systemIII/rc.clean
+PRISTINE_RC=$HERE/image-config/rc
 PRISTINE_RC_SHA=763766e6725c96b302398a232a250a71c4b12327ce6aa21e18f7d3a2e8608aca
-CLEAN_PASSWD=$HERE/systemIII/passwd.clean
-PRISTINE_RC_CSH=$HERE/systemIII/rc_csh.clean
+CLEAN_PASSWD=$HERE/image-config/passwd
+PRISTINE_RC_CSH=$HERE/image-config/rc_csh
 PRISTINE_RC_CSH_SHA=6fc0837f67582b878f9151431111dd753825d5bc30bf6e8bea567872e3cc5120
-PRISTINE_MFS=$HERE/systemIII/mfs.clean
+PRISTINE_MFS=$HERE/image-config/mfs
 PRISTINE_MFS_SHA=a860102e6c41a1bd0a61d92e1d430376c355fb40b71d92aadb40f2a85d7390be
-PRISTINE_INITTAB=$HERE/systemIII/inittab.clean
+PRISTINE_INITTAB=$HERE/image-config/inittab
 PRISTINE_INITTAB_SHA=f383b6520bc1fde907d4eb050650946ca1d2fee51d6758f5ab391e91962a1cc3
-TTYTYPE=$HERE/systemIII/ttytype.h19
+TTYTYPE=$HERE/image-config/ttytype
 DATE_PATCHER=$HERE/patch_date_y2k.py
 NATIVE_PARTITIONS=$HERE/native_partitions
 NATIVE_USR=$NATIVE_PARTITIONS/usr.fs
@@ -145,6 +142,4 @@ echo "== install =="
 [ ! -e "$INSTALL" ] || chmod u+w "$INSTALL"
 cp "$CHD" "$INSTALL"
 chmod 644 "$INSTALL"
-mkdir -p "$HERE/debug"
-cp "$CHD" "$DEBUG_INSTALL"
-echo "DONE -> $INSTALL and $DEBUG_INSTALL  (documented Model 31 five-region layout)"
+echo "DONE -> $INSTALL  (documented Model 31 five-region layout)"

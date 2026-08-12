@@ -1,0 +1,52 @@
+#
+# "@[$]voldump	1.3  08/20/84 11:30:50 - Zilog Inc"
+# voldump 
+# Full voldump command file
+# Performs a full dump of /z and /usr file systems
+# It assumes that the filesystem have already been labeled
+# and their labels are: "z" for /z and "usr" for /usr.
+# This script should never be used for backing up the root
+# file system since there is no way to retrieve the information
+# with a stand-alone program if the root should get corrupted.
+# This script uses the 9-track tape (/dev/fnrmt0) by default,
+# change the "tape" variable if you want to use the cartridge tape.
+# If the /z and /usr file system won't fit on one tape, then
+# this script will have to be changed to call 'voldump.run' twice.
+# Each dump will have to be placed on a separate tape.  See
+# volcopy(M) for limitations on volcopy.
+# 
+# Invocation:
+#	voldump		  - Automatically dumps /z and /usr
+#	voldump /dev/rsmd?- Dumps /dev/rsmd? (or "zd" or "md")
+#
+# Shell variables are:
+#	devices  - list of devices to be dumped
+#	files    - corresponding filesystems to above
+#	kludge   - used because a $0:t doesn't seem to work
+
+	set kludge = $0
+	set tape = ( /dev/fnrmt0 )
+
+	echo -n  "STARTING Full voldump - " ; date
+
+	if ( "$1" != "" ) then
+		set devices = $1
+		echo -n "Enter name of filesystem (e.g. /z): "
+		set files = `gets`
+		echo -n "Enter label on filesystem: "
+		set fsname = `gets`
+	else
+		set devices = ( /dev/rsmd0 /dev/rsmd4 )
+		set files = ( /z /usr ) 
+		set fsname = ( z usr )
+	endif
+	voldump.run "$devices" "$files" "$tape" "$fsname"
+	if ( $status != 0 )  then
+		echo "Voldump error, exiting"
+		exit $status
+		dd if=/dev/frmt0 of=/dev/null bs=20b count=1 >& /dev/null
+	endif
+	echo "Rewinding tape"
+	dd if=/dev/frmt0 of=/dev/null bs=20b count=1 >& /dev/null
+
+	echo -n  "DONE Full voldump - " ; date
