@@ -20,25 +20,17 @@ older ZEUS archives, a pristine 1991-11-18 level-0 root dump, and the file
 inventories in the ZEUS System Administrator's Manual. It is not a dump of an
 untouched physical disk.
 
-## Important: official MAME is not sufficient
+## MAME version required
 
-The fixes required to run this image are **not in official
-[mamedev/mame](https://github.com/mamedev/mame) yet**. Use the System 8000 work
-in the [tpaxia MAME fork](https://github.com/tpaxia/mame), branch
-[`s8000_fixes`](https://github.com/tpaxia/mame/tree/s8000_fixes). It contains
-the CPU/MMU corrections developed on
-[`z8000_fixes`](https://github.com/tpaxia/mame/tree/z8000_fixes) together with
-the System 8000 machine-specific fixes.
+The CPU, MMU, and System 8000 corrections required to run this image were
+merged into [mamedev/mame](https://github.com/mamedev/mame) by
+[PR #15866](https://github.com/mamedev/mame/pull/15866) on 2026-08-12. Build
+upstream MAME at or after merge commit
+[`ab41620cf2d4`](https://github.com/mamedev/mame/commit/ab41620cf2d4bace0497922b03cb48e1d5169b50),
+or use an official MAME release that contains that commit. Older releases do
+not contain the complete fixes.
 
-The tested branch ends at, and includes, these System 8000 commits:
-
-- `e32a70aa7d9` — ZEUS clock, console, Z8010 MMU, interrupt, and SMD device
-  handling;
-- `c959d91dc31` — corrected RTC oscillator counting and working-system status;
-- `8d7158bbe1a` — multi-sector SMDC transfers, required for swapping and other
-  requests larger than one 512-byte sector.
-
-In particular, ZEUS requires behavior that stock MAME currently lacks:
+ZEUS depends on the merged changes for:
 
 - correct disabled-EPU trapping for the `0x4f` instruction family;
 - preservation of an indexed operand when `LDA`'s destination pair overlaps
@@ -55,8 +47,9 @@ In particular, ZEUS requires behavior that stock MAME currently lacks:
 - complete multi-sector SMD DMA rather than silently truncating a request to
   its first 512-byte sector.
 
-Using official MAME can cause boot hangs, phantom interrupts, MMU faults,
-missing console input, compiler crashes, or kernel panics.
+Using a MAME version from before the merge can cause boot hangs, phantom
+interrupts, MMU faults, missing console input, compiler crashes, or kernel
+panics.
 
 ## Sources and credits
 
@@ -249,11 +242,10 @@ identically.
 
 ## Running
 
-Build the `s8000_fixes` branch of
-[tpaxia/mame](https://github.com/tpaxia/mame) with the ZBI RETI interrupt-chain
-fix described above, and install the System 8000 ROMs. For CPU-A, enable the
-**Support Segmented OS** configuration jumper; the included `s8000.cfg` sets
-this jumper.
+Build current [mamedev/mame](https://github.com/mamedev/mame), or use an
+official release containing merge commit `ab41620cf2d4`, and install the System
+8000 ROMs. For CPU-A, enable the **Support Segmented OS** configuration jumper;
+the included `s8000.cfg` sets this jumper.
 
 The same `s8000_smd.chd` boots on both CPU boards. The repository contains
 machine-specific `s8000.cfg` and `s8000s2.cfg` files. Pass the repository to
@@ -305,8 +297,8 @@ full-screen programs such as `vi` may not redraw perfectly. Pressing Return
 normally produces a clean `ZEUS login:` prompt. For more faithful cursor,
 screen, and keyboard behavior, connect an H19/Heath-compatible terminal
 emulator to the S8000 console instead. An experimental MAME H19-console branch
-can also be maintained on top of the `s8000_fixes` branch without changing
-MAME's global terminal default.
+can also be maintained on top of current upstream MAME without changing MAME's
+global terminal default.
 
 Use `sync` before closing MAME. MAME normally stores disk writes in a
 `diff/s8000*.dif` overlay; delete that overlay when you need to return to the
