@@ -85,16 +85,10 @@ installed-machine residue. The clean image is therefore generated from the
 classified inventory in `inventory/`, not by copying every file found in the
 archive or prepared host trees.
 
-`0-dump-911118-root.backup` is a complete, checksum-clean level-0 V7/System III
-`dump` of the **root** filesystem only — it contains no `/usr` and no `/z`. All
-432 of its record headers pass checksum, and it restores to 282 paths. It is
-the same physical machine as the recovered tree used elsewhere here, about
-eleven months later: the staged `/etc/termcap` is byte-identical to the dump's
-own pre-edit backup `/etc/termcapo`. Two things are taken from it: the pristine
-`/etc/init` and the 38 additional device nodes. Its site-specific
-configuration, its 1991 netnews and mail software, and its `zd`-configured
-kernel are not used, because they belong to that installation rather than to
-the Zilog distribution this image reconstructs.
+`0-dump-911118-root.backup` is a checksum-clean level-0 V7/System III dump of
+the root filesystem from the same recovered machine. Files and device metadata
+needed by the reconstruction are taken from it; its site-specific configuration
+and software are not.
 
 ## Image contents
 
@@ -106,33 +100,9 @@ is:
 b9a02009a8b6a0699beaab8246e0488e19fbe432625276a443afd9c714057265
 ```
 
-The raw filesystems were read back and compared with the staged manifest:
-
-- root: 265 inodes reachable, with no missing or extra entries;
-- `/usr`: 868 paths, with no missing or extra entries;
-- 68 character/block device nodes, each verified on the raw image for type,
-  major and minor;
-- `/zeus` and `/zeus-3.2.1` are the same inode, with link count 2;
-- `/etc/init` and `/etc/INIT` are the same inode, with link count 2, and their
-  on-disk bytes hash to the pristine init below;
-- the installed `ls`, `libc.a`, init, and kernel hashes match their selected
-  source files.
-
-### `/etc/init` is the original Zilog binary
-
-`/etc/init` is the **original stripped ZEUS 3.21 executable**, 11,980 bytes,
-SHA-256 `7a683ba63c8439398b2cd076dbc7ef08c6efc49f00ad1e55b9bc1a5749c6971a`,
-recovered from a pristine 1991-11-18 level-0 `dump` of a real S8000 root
-filesystem. `/etc/init` and `/etc/INIT` are hard links to it.
-
-With the original restored, **every executable in the installed userland is an
-original recovered ZEUS binary**, including `/etc/init`, `/etc/fsck`, `getty`,
-`login`, the shell, and both C compilers.
-The kernel is relinked from the original ZEUS objects, and the narrowly scoped
-`date`/`datem` Y2K byte patches are documented below. The installed `rc`,
-`rc_csh`, `mfs`/`umfs`, and Model 31 `inittab` are original recovered files.
-The sanitized password file and H19 terminal mapping are reconstructed
-installation configuration rather than executable replacements.
+The rebuilt filesystems match the staged manifest. The deliberate changes are
+the relinked kernel, the documented `date`/`datem` Y2K patches, a sanitized
+password file, and the H19 console mapping.
 
 The kernel is the relinked `zeus` produced in `/usr/sys/conf`. Only the boot
 copies `/zeus` and `/zeus-3.2.1` are installed; the build artifact
@@ -184,13 +154,8 @@ normal rebuilds.
 
 ### Filesystem checks and raw devices
 
-The image contains the original 1984 ZEUS `/etc/fsck`, not the separately
-rebuilt System III checker used during diagnosis. The original checker passes
-all three pristine auxiliary filesystems and reports:
-
-- `/usr`: 869 files, 9,557 blocks, 1,961 free;
-- `/tmp`: 3 files, 11 blocks, 5,747 free;
-- `/z`: 3 files, 11 blocks, 100,534 free.
+The image contains the recovered ZEUS `/etc/fsck`, which passes all three
+auxiliary filesystems.
 
 The earlier raw-device `fsck` failures and low-memory swap corruption had the
 same emulation cause: the SMDC packet byte count (`CT`) is the size of the
@@ -206,35 +171,9 @@ configuration and avoids changing the disk image solely because the emulator
 bug was repaired. As with any historical filesystem, use `fsck -n` first when
 experimenting with a raw device or a modified image.
 
-### Device nodes
-
-`/dev` holds 68 nodes, specified by `devs.txt` and verified on the raw image.
-Thirty are the Model 31 working set: `console`, `tty0`–`tty7`, `tty`, `mem`,
-`kmem`, `null`, the SMD disks (`smd*` block major 8, `rsmd*` char major 2), and
-the partition aliases `root`, `swap`, `usr`, `tmp`, `z` and their raw forms.
-These are the only nodes the boot path opens.
-
-The remaining 38 were recovered from the same pristine 1991-11-18 root dump as
-`/etc/init`, with the major and minor numbers exactly as recorded in that
-machine's on-disk inodes: cartridge tape (`ct0*`, `nct0*`, `rct0*`, `nrct0*`,
-major 1, with `+128` minors for the no-rewind variants), six line printers
-(`lp*`, major 9), the default archive devices `tardev`, `dumpdev` and `resdev`
-that `tar`, `dump` and `restor` fall back to, and the `zd*`/`rzd*` disk names.
-
-Two caveats:
-
-- The S8000 MAME machine emulates no cartridge tape and no printer, so those
-  nodes open with an error. They are present for fidelity and so the archive
-  tools find their default paths.
-- **Do not use the `zd*`/`rzd*` nodes.** The dump machine reached its disks
-  through the `zd` driver (block major 0, raw char major 32); this image is
-  SMD. They name the same partitions but route through a controller that is not
-  emulated. Use `/dev/root`, `/dev/usr`, `/dev/tmp` and `/dev/z` instead.
-
-The dump carried `rct0`, `dumpdev` and `resdev` as hard links to `tardev`'s
-inode, and `zd1` as a link to `swap`. `mkdev` has no link support, so they are
-created as separate inodes with identical major/minor, which the kernel treats
-identically.
+Device nodes are defined by `devs.txt`. This image uses the SMD aliases
+`/dev/root`, `/dev/usr`, `/dev/tmp`, and `/dev/z`; the recovered `zd`, tape, and
+printer nodes refer to hardware not currently emulated by this machine.
 
 ## Running
 
