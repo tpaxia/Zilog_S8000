@@ -41,7 +41,7 @@ Regenerate:
 
 ```sh
 python3 tools/build_zeus_tape_manifest.py \
-  ~/Downloads/S8000-2.tar \
+  filesystem/originals/S8000-2.tar \
   --output-prefix inventory/zeus_release
 
 python3 tools/compare_zeus_archives.py

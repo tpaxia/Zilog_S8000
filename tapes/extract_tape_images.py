@@ -7,18 +7,21 @@ import sys
 import tarfile
 from pathlib import Path
 
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "filesystem" / "tools"))
+
 import read_dump
 
 
-HERE = Path(__file__).resolve().parent
 IMAGES = HERE / "images"
 EXTRACTED = HERE / "extracted"
 INSTALL_TAP = IMAGES / "zeus-3.21-install.tap"
 UPGRADE_TAP = IMAGES / "zeus-3.21-upgrade.tap"
-SADIE_TAPS = tuple(IMAGES / f"sadie-3.5-track{track}.tap" for track in range(3))
+SADIE_TAP = IMAGES / "sadie-3.5.tap"
 OUTPUT = EXTRACTED / "install-3.21"
 UPGRADE_OUTPUT = EXTRACTED / "upgrade-3.21"
 SADIE_OUTPUT = EXTRACTED / "sadie-3.5"
+PRIVATE_MARKER = 0x70000000
 
 
 def read_tap(path):
@@ -49,6 +52,56 @@ def read_tap(path):
     if records:
         raise ValueError("unterminated SIMH tape file")
     return files
+
+
+def read_sadie_tap(path):
+    data = path.read_bytes()
+    tracks = {}
+    files, records = [], []
+    current_track = None
+    offset = 0
+    while offset + 4 <= len(data):
+        marker = struct.unpack_from("<I", data, offset)[0]
+        offset += 4
+        if marker == 0xffffffff:
+            if current_track is None:
+                raise ValueError("SADIE tape has no track markers")
+            if records:
+                raise ValueError("unterminated SADIE tape file")
+            tracks[current_track] = files
+            break
+        if marker & 0xf0000000 == PRIVATE_MARKER:
+            if records:
+                raise ValueError("SADIE track marker inside a tape file")
+            if current_track is not None:
+                tracks[current_track] = files
+            current_track = marker & 0x0fffffff
+            if current_track in tracks:
+                raise ValueError(f"duplicate SADIE track {current_track}")
+            files = []
+            continue
+        if current_track is None:
+            raise ValueError(f"SADIE data before first track marker at {offset - 4:#x}")
+        if marker == 0:
+            files.append(records)
+            records = []
+            continue
+        if marker & 0xf0000000:
+            raise ValueError(f"unsupported SIMH marker {marker:08x} at {offset - 4:#x}")
+        length = marker
+        end = offset + length
+        payload = data[offset:end]
+        if len(payload) != length:
+            raise ValueError("truncated SIMH record")
+        offset = end + (length & 1)
+        if offset + 4 > len(data) or struct.unpack_from("<I", data, offset)[0] != marker:
+            raise ValueError("mismatched trailing SIMH record length")
+        offset += 4
+        records.append(payload)
+    expected = list(range(len(tracks)))
+    if sorted(tracks) != expected:
+        raise ValueError(f"non-contiguous SADIE tracks: {sorted(tracks)}")
+    return tracks
 
 
 def logical_suffix(file_no):
@@ -145,8 +198,7 @@ def decode_upgrade():
 
 
 def decode_sadie():
-    for track, path in enumerate(SADIE_TAPS):
-        files = read_tap(path)
+    for track, files in read_sadie_tap(SADIE_TAP).items():
         root = SADIE_OUTPUT / f"track-{track}"
         write_logical_files(files, root, install=False, suffix=".bin")
         records = sum(len(file_records) for file_records in files)
@@ -154,7 +206,7 @@ def decode_sadie():
 
 
 def main():
-    for path in (INSTALL_TAP, UPGRADE_TAP, *SADIE_TAPS):
+    for path in (INSTALL_TAP, UPGRADE_TAP, SADIE_TAP):
         if not path.is_file():
             sys.exit(f"authoritative tape image not found: {path}")
     for path in (OUTPUT, UPGRADE_OUTPUT, SADIE_OUTPUT):

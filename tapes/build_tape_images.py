@@ -9,24 +9,26 @@ from pathlib import Path
 
 
 HERE = Path(__file__).resolve().parent
+FILESYSTEM_ORIGINALS = HERE.parent / "filesystem" / "originals"
 ORIGINALS = HERE / "originals"
 IMAGES = HERE / "images"
-INSTALL_SOURCE = ORIGINALS / "install-3.21" / "zeus-3.21-install-recovery.tar"
+INSTALL_SOURCE = ORIGINALS / "install-3.21" / "zeus-3.21-install-download.gz"
 INSTALL_TAP = IMAGES / "zeus-3.21-install.tap"
-UPGRADE_SOURCE = ORIGINALS / "upgrade-3.21" / "zeus-3.21-upgrade.tar"
+UPGRADE_SOURCE = FILESYSTEM_ORIGINALS / "zeus-3.21-upgrade.tar"
 UPGRADE_TAP = IMAGES / "zeus-3.21-upgrade.tap"
-RECOVERED_USR = ORIGINALS / "install-3.21" / "S8000-2.tar"
+RECOVERED_USR = FILESYSTEM_ORIGINALS / "S8000-2.tar"
 SADIE_SOURCES = tuple(
     ORIGINALS / "sadie-3.5" / f"sadie-3.5-track{track}.tar.gz"
     for track in range(3)
 )
-SADIE_TAPS = tuple(IMAGES / f"sadie-3.5-track{track}.tap" for track in range(3))
+SADIE_TAP = IMAGES / "sadie-3.5.tap"
 
 NAME_RE = re.compile(r"_FILE_(\d+)_BLOCK_(\d+)_")
 MAGIC = 60011
 CHECKSUM = 84446 & 0xffff
 TS_INODE = 2
 EOM = 0xffffffff
+PRIVATE_MARKER = 0x70000000
 REPAIR_HASHES = {
     "ftBC": "549fb48c786f59672cdfb25f6cc654aabdb22655a25f9c1877fe832a6a754568",
     "ftB": "c871545e0ca31fb98d18dbe9ab46f4bb2dad52a4f4cc203e336efeedbc05cf48",
@@ -187,11 +189,16 @@ def build_upgrade():
 
 
 def build_sadie():
-    for source, destination in zip(SADIE_SOURCES, SADIE_TAPS):
-        grouped = read_sadie_records(source)
-        write_tap(destination,
-                  [[payload for _, payload in grouped[file_no]]
-                   for file_no in sorted(grouped)])
+    SADIE_TAP.parent.mkdir(parents=True, exist_ok=True)
+    with SADIE_TAP.open("wb") as output:
+        for track, source in enumerate(SADIE_SOURCES):
+            output.write(struct.pack("<I", PRIVATE_MARKER | track))
+            grouped = read_sadie_records(source)
+            for file_no in sorted(grouped):
+                for _, payload in grouped[file_no]:
+                    write_record(output, payload)
+                output.write(struct.pack("<I", 0))
+        output.write(struct.pack("<I", EOM))
 
 
 def main():
@@ -200,8 +207,7 @@ def main():
     build_sadie()
     print(f"wrote {INSTALL_TAP}")
     print(f"wrote {UPGRADE_TAP}")
-    for path in SADIE_TAPS:
-        print(f"wrote {path}")
+    print(f"wrote {SADIE_TAP}")
 
 
 if __name__ == "__main__":

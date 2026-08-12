@@ -9,7 +9,10 @@ import posixpath
 import struct
 import tarfile
 from dataclasses import dataclass
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
+
+
+ORIGINALS = Path(__file__).resolve().parents[1] / "filesystem" / "originals"
 
 
 @dataclass(frozen=True)
@@ -135,19 +138,17 @@ def z_archive_entries(tar_path: str, prefix: str) -> list[Entry]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--s8000-2", default="/Users/paxia/Downloads/S8000-2.tar"
-    )
+    parser.add_argument("--s8000-2", default=str(ORIGINALS / "S8000-2.tar"))
     parser.add_argument(
         "--root",
-        default="/Users/paxia/Projects/Zilog_S8000/build/s8000_root.tar.gz",
+        default=str(ORIGINALS / "s8000_root.tar.gz"),
     )
     parser.add_argument(
         "--usr",
-        default="/Users/paxia/Projects/Zilog_S8000/build/s8000_usr.tar.gz",
+        default=str(ORIGINALS / "s8000_usr.tar.gz"),
     )
     parser.add_argument(
-        "--z", default="/Users/paxia/Projects/Zilog_S8000/build/s8000_z.tar.gz"
+        "--z", default=str(ORIGINALS / "s8000_z.tar.gz")
     )
     parser.add_argument(
         "--output", default="inventory/missing_from_s8000-2.csv"

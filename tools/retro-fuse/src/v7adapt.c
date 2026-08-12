@@ -271,5 +271,14 @@ void v7_zerocore()
  */
 void v7_refreshclock()
 {
+    const char *source_date_epoch = getenv("SOURCE_DATE_EPOCH");
+    if (source_date_epoch != NULL && source_date_epoch[0] != '\0') {
+        char *end = NULL;
+        unsigned long epoch = strtoul(source_date_epoch, &end, 10);
+        if (end != source_date_epoch && *end == '\0') {
+            v7_time = (v7_time_t)epoch;
+            return;
+        }
+    }
     v7_time = time(NULL);
 }

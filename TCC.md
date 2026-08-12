@@ -497,8 +497,11 @@ all validated by the same length-prefixed CRC calculation. Every file-mark
 member contains only `80 05`, which is the CRC of biased length `00 01` with no
 payload.
 
-SADIE uses controller mode 1, so each physical track is represented as its own
-SIMH TAP image. File ordinals restart at logical BOT on every track.
+SADIE uses controller mode 1. Its extended SIMH image uses private markers
+`0x70000000` through `0x70000002` to identify tracks 0 through 2. This is an
+S8000-specific convention: the upper nibble selects SIMH's private-marker class
+and the lower 28-bit marker value is the track number. File ordinals restart at
+logical BOT on every track.
 
 ## Host interface registers
 

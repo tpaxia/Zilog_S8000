@@ -1,8 +1,9 @@
 # Zilog System 8000 — bootable ZEUS 3.2.1 image for MAME
 
-## Use `s8000_smd.chd`
+## Use `filesystem/generated/s8000_smd.chd`
 
-**`s8000_smd.chd` is the deliverable.** It is a clean, bootable ZEUS 3.2.1
+**`filesystem/generated/s8000_smd.chd` is the deliverable.** It is a clean,
+bootable ZEUS 3.2.1
 (Zilog's System III Unix) disk image for the Zilog System 8000 Model 31. It
 performs the normal ZEUS multi-user startup and reaches `ZEUS login:`, and it
 includes the recovered ZEUS development system with the C compilers and the
@@ -14,6 +15,10 @@ build script, staging tools, inventories, recovered binaries, partition seeds
 and configuration sources are the provenance trail and the rebuild path. You do
 not need any of them to run ZEUS, and you should not need to run
 `rebuild_fs.sh` unless you are changing what goes into the image.
+
+The original archives used for the disk reconstruction are preserved under
+`filesystem/originals/`. Generated tape images and their decoded contents are
+kept separately under `tapes/`.
 
 The image is a reconstruction from the recovered S8000-2 installed tree, the
 older ZEUS archives, a pristine 1991-11-18 level-0 root dump, and the file
@@ -93,7 +98,9 @@ the Zilog distribution this image reconstructs.
 
 ## Image contents
 
-The image was rebuilt on 2026-08-11. Its SHA-256 is:
+The authoritative uncompressed
+`filesystem/generated/s8000_smd.chd` was rebuilt on 2026-08-11. Its SHA-256
+is:
 
 ```text
 b9a02009a8b6a0699beaab8246e0488e19fbe432625276a443afd9c714057265
@@ -172,7 +179,8 @@ layout documented in Table 4-1 of the ZEUS System Administrator Manual.
 `/tmp` and `/z` are initialized as separate empty filesystems with
 preallocated `lost+found` directories. The `/usr`, `/tmp`, and `/z`
 filesystems were created by native ZEUS `mkfs`; their pristine partition
-images are retained in `native_partitions/` and reused by normal rebuilds.
+images are retained in `filesystem/generated/native_partitions/` and reused by
+normal rebuilds.
 
 ### Filesystem checks and raw devices
 
@@ -235,20 +243,20 @@ official release containing merge commit `ab41620cf2d4`, and install the System
 8000 ROMs. For CPU-A, enable the **Support Segmented OS** configuration jumper;
 the included `s8000.cfg` sets this jumper.
 
-The same `s8000_smd.chd` boots on both CPU boards. The repository contains
-machine-specific `s8000.cfg` and `s8000s2.cfg` files. Pass the repository to
-MAME with `-cfg_directory` so it loads the configuration whose filename
-matches the selected machine. In particular, `s8000.cfg` enables the CPU-A
-**Support Segmented OS** jumper required by ZEUS. MAME may update the matching
-configuration file when it exits, so review or restore that file if you change
-settings interactively.
+The same `filesystem/generated/s8000_smd.chd` boots on both CPU boards. The
+repository contains machine-specific `s8000.cfg` and `s8000s2.cfg` files. Pass
+the repository to MAME with `-cfg_directory` so it loads the configuration
+whose filename matches the selected machine. In particular, `s8000.cfg`
+enables the CPU-A **Support Segmented OS** jumper required by ZEUS. MAME may
+update the matching configuration file when it exits, so review or restore
+that file if you change settings interactively.
 
 Run CPU-A with the `s8000` machine:
 
 ```sh
 ./s8000 s8000 -rp roms \
   -cfg_directory /path/to/Zilog_S8000 \
-  -hard1 /path/to/Zilog_S8000/s8000_smd.chd
+  -hard1 /path/to/Zilog_S8000/filesystem/generated/s8000_smd.chd
 ```
 
 When the MAME window opens, press numeric-keypad `+`, which is mapped to the
@@ -260,7 +268,7 @@ machine against the same image:
 ```sh
 ./s8000 s8000s2 -rp roms \
   -cfg_directory /path/to/Zilog_S8000 \
-  -hard1 /path/to/Zilog_S8000/s8000_smd.chd
+  -hard1 /path/to/Zilog_S8000/filesystem/generated/s8000_smd.chd
 ```
 
 When the MAME window opens, press numeric-keypad `+` to press the HPCPU
@@ -304,8 +312,9 @@ The case-sensitive prepared source trees must be mounted at:
 The installed init is the pristine original `build/init.pristine-911118`; the
 build refuses to run unless it hashes to the value recorded above. The build
 also verifies and installs the recovered `rc.sav`, `rc_csh`, `mfs`
-(hard-linked as `umfs`), and Model 31 `inittab.s8000-2`. The relinked kernel is
-taken from `s8000_usr/sys/conf/zeus`.
+(hard-linked as `umfs`), and Model 31 `inittab.s8000-2`. The exact relinked
+kernel is preserved as
+`filesystem/generated/kernel/zeus-3.2.1-relinked`.
 
 Run:
 
@@ -322,15 +331,35 @@ The rebuild performs these steps:
 2. It overlays the pristine init, recovered startup/mount files, sanitized
    password and terminal configuration, and the relinked kernel.
 3. It creates `/zeus` and `/zeus-3.2.1` as hard links.
-4. `mkv7img` creates the root filesystem. The saved native ZEUS `/usr`,
-   `/tmp`, and `/z` partitions are copied into their documented offsets; the
-   swap region remains freshly zeroed.
-5. `mkdev` and `fix_dev_majors.py` create and correct all 68 device nodes.
+4. `mkv7img` creates the root filesystem with its timestamp pinned to the
+   authoritative image for byte-for-byte reproducibility. The saved native
+   ZEUS `/usr`, `/tmp`, and `/z` partitions are copied into their documented
+   offsets; the swap region remains freshly zeroed.
+5. `mkdev` uses the same pinned timestamp, and `fix_dev_majors.py` corrects the
+   major and minor numbers of all 68 device nodes.
 6. `mkblock0.py` writes the autoboot, root/swap, and VFS configuration,
    including Monitor block-size code `1` for 512-byte CPU-A/HPCPU disk
    transfers.
 7. `chdman` creates an uncompressed CHD.
-8. The result is installed as `s8000_smd.chd`.
+8. The result is installed as `filesystem/generated/s8000_smd.chd`.
+
+The pinned filesystem epoch is `1786449783` (2026-08-11 12:03:03 UTC), the
+timestamp of the authoritative reconstructed image. Both `mkv7img` and
+`mkdev` honor `SOURCE_DATE_EPOCH`; without pinning both operations, their V7
+inode and superblock timestamps would make each rebuild different.
+
+A successful full rebuild has these SHA-256 hashes:
+
+```text
+80771ec1983b0faf3c83a788ba97237e143e96ce276176f663396fa1cae782ec  build/s8000_vfs.img
+b9a02009a8b6a0699beaab8246e0488e19fbe432625276a443afd9c714057265  filesystem/generated/s8000_smd.chd
+```
+
+Verify them with:
+
+```sh
+shasum -a 256 build/s8000_vfs.img filesystem/generated/s8000_smd.chd
+```
 
 The staging trees live on `/Volumes/ZeusFS/clean-stage` because a normal
 case-insensitive macOS filesystem cannot represent both `/etc/init` and
@@ -343,4 +372,6 @@ Relevant files:
 - `inventory/` — recovered distribution classification;
 - `devs.txt` — Model 31 and console device specification;
 - `fix_dev_majors.py` — corrects the retro-fuse device-major encoding;
-- `mkblock0.py` — writes the S8000 block-zero configuration.
+- `mkblock0.py` — writes the S8000 block-zero configuration;
+- `tools/retro-fuse/src/v7adapt.c` — supplies the reproducible V7 filesystem
+  clock from `SOURCE_DATE_EPOCH` when it is set.
