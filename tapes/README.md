@@ -40,14 +40,6 @@ The source archives are the current objects linked as SADIE Track 0, Track 1
 and Track 2 in the
 [VCFed recovery thread](https://forum.vcfed.org/index.php?threads/zilog-system-8000-model-21.1255068/page-4).
 
-Generated images:
-
-| Image | SHA-256 |
-| --- | --- |
-| `images/zeus-3.21-install.tap` | `5e381640ed95c19c6d6cc4756f8e967083ac93f366f0f747b90cd64f5e27de31` |
-| `images/zeus-3.21-upgrade.tap` | `71a4a0c154d256fe793663134a427f38fadc1a26a9221012dfc5dba2a260f33d` |
-| `images/sadie-3.5.tap` | `6c90139ad60310d2b3c8c88666e197a51b4bff532ba0de19248a162672e8129e` |
-
 Preserved SADIE source hashes:
 
 | Source archive | SHA-256 |

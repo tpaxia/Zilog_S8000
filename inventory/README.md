@@ -11,10 +11,10 @@ This directory separates what is documented from what is inferred:
   `documented` and byte-identical link candidates from `S8000-2.tar` as
   `inferred`.
 - `missing_from_s8000-2.csv` compares `S8000-2.tar` with the older
-  `s8000_root.tar.gz`, `s8000_usr.tar.gz`, and `s8000_z.tar.gz` archives.
+  `s8000_root.tar.gz` and `s8000_usr.tar.gz` archives.
   Its `evidence` column distinguishes common-distribution files confirmed
-  by `.contents`, uncatalogued root or `/usr` files, and the separate `/z`
-  archive. The latter two classes are not asserted to be base-tape files.
+  by `.contents` from uncatalogued root or `/usr` files. The latter are not
+  asserted to be base-tape files.
 
 Important limitation: `S8000-2.tar` is a modern tar wrapper around an
 installed filesystem tree, not a block-for-block release tape. It contains

@@ -309,12 +309,14 @@ The case-sensitive prepared source trees must be mounted at:
 /Volumes/ZeusFS/s8000_usr
 ```
 
-The installed init is the pristine original `build/init.pristine-911118`; the
-build refuses to run unless it hashes to the value recorded above. The build
-also verifies and installs the recovered `rc.sav`, `rc_csh`, `mfs`
+The installed init and relinked kernel are fixed rebuild inputs preserved in
+`filesystem/generated/root_overlays/`. The build refuses to run unless they
+match their recorded hashes. It also verifies and installs the recovered
+`rc.sav`, `rc_csh`, `mfs`
 (hard-linked as `umfs`), and Model 31 `inittab.s8000-2`. The exact relinked
-kernel is preserved as
-`filesystem/generated/kernel/zeus-3.2.1-relinked`.
+kernel is `filesystem/generated/root_overlays/zeus-3.2.1-relinked`, and the
+pristine init is
+`filesystem/generated/root_overlays/init-pristine-1991-11-18`.
 
 Run:
 
@@ -348,17 +350,16 @@ timestamp of the authoritative reconstructed image. Both `mkv7img` and
 `mkdev` honor `SOURCE_DATE_EPOCH`; without pinning both operations, their V7
 inode and superblock timestamps would make each rebuild different.
 
-A successful full rebuild has these SHA-256 hashes:
+A successful full rebuild produces this final SHA-256 hash:
 
 ```text
-80771ec1983b0faf3c83a788ba97237e143e96ce276176f663396fa1cae782ec  build/s8000_vfs.img
 b9a02009a8b6a0699beaab8246e0488e19fbe432625276a443afd9c714057265  filesystem/generated/s8000_smd.chd
 ```
 
 Verify them with:
 
 ```sh
-shasum -a 256 build/s8000_vfs.img filesystem/generated/s8000_smd.chd
+shasum -a 256 filesystem/generated/s8000_smd.chd
 ```
 
 The staging trees live on `/Volumes/ZeusFS/clean-stage` because a normal
@@ -375,3 +376,14 @@ Relevant files:
 - `mkblock0.py` — writes the S8000 block-zero configuration;
 - `tools/retro-fuse/src/v7adapt.c` — supplies the reproducible V7 filesystem
   clock from `SOURCE_DATE_EPOCH` when it is set.
+
+## SMD model layouts
+
+| Model | CPU | ZEUS | Disk layout |
+| --- | --- | --- | --- |
+| 31 | CPU-A | Non-segmented | 68 MB |
+| 31 Plus | CPU-A | Segmented | 128 MB |
+| 32 | HPCPU | Segmented | 128 MB |
+
+The current CHD uses the 68 MB Model 31 layout with segmented ZEUS. A future
+installation-tape build should use the 128 MB layout for Models 31 Plus and 32.

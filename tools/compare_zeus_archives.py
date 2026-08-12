@@ -120,22 +120,6 @@ def root_usr_entries(tar_path: str, prefix: str) -> list[Entry]:
         return result
 
 
-def z_archive_entries(tar_path: str, prefix: str) -> list[Entry]:
-    """Select /z members without claiming they came from the base release tape."""
-    with tarfile.open(tar_path, "r:*") as archive:
-        return [
-            Entry(
-                path=normalize(member.name, prefix),
-                kind=member_kind(member),
-                size=member.size,
-                source=PurePosixPath(tar_path).name,
-                member=member.name,
-                evidence="separate-z-archive",
-            )
-            for member in archive.getmembers()
-        ]
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--s8000-2", default=str(ORIGINALS / "S8000-2.tar"))
@@ -148,21 +132,15 @@ def main() -> None:
         default=str(ORIGINALS / "s8000_usr.tar.gz"),
     )
     parser.add_argument(
-        "--z", default=str(ORIGINALS / "s8000_z.tar.gz")
-    )
-    parser.add_argument(
         "--output", default="inventory/missing_from_s8000-2.csv"
     )
     args = parser.parse_args()
 
     installed = path_set(args.s8000_2)
-    candidates = (
-        root_usr_entries(args.root, "")
-        + root_usr_entries(args.usr, "/usr")
-        + z_archive_entries(args.z, "/z")
+    candidates = root_usr_entries(args.root, "") + root_usr_entries(
+        args.usr, "/usr"
     )
 
-    # The root archive's /z mount point and the z archive's root are the same path.
     missing_by_path: dict[str, Entry] = {}
     for entry in candidates:
         if entry.path not in installed:
@@ -173,6 +151,7 @@ def main() -> None:
         writer = csv.DictWriter(
             output,
             fieldnames=["path", "type", "size", "source", "member", "evidence"],
+            lineterminator="\n",
         )
         writer.writeheader()
         for entry in missing:
@@ -199,21 +178,15 @@ def main() -> None:
         if entry.kind == "file"
         and entry.evidence == "unclassified-root-usr"
     ]
-    z_files = [
-        entry
-        for entry in missing
-        if entry.kind == "file" and entry.evidence == "separate-z-archive"
-    ]
     directories = [entry for entry in missing if entry.kind == "directory"]
     inventory_files = [
         entry for entry in missing if posixpath.basename(entry.path) == ".contents"
     ]
     print(f"confirmed common-distribution files missing: {len(confirmed_files)}")
     print(f"unclassified root+/usr files missing: {len(unclassified_files)}")
-    print(f"separate /z archive files missing: {len(z_files)}")
     print(
-        "all regular files missing from the three archives: "
-        f"{len(confirmed_files) + len(unclassified_files) + len(z_files)}"
+        "all regular files missing from the two archives: "
+        f"{len(confirmed_files) + len(unclassified_files)}"
     )
     print(f"of which .contents inventory files: {len(inventory_files)}")
     print(f"missing directories needed for those files: {len(directories)}")
