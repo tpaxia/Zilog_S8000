@@ -13,7 +13,7 @@ their SHA1s, which match MAME's `s8k_cpu` v3.0 set exactly.
 | file | role |
 |---|---|
 | `monitor30.s` | **generated** — do not hand-edit; regenerate with `make gen` |
-| `monitor30.bin` | generated 16 KB reference image (`../roms` interleaved) |
+| `monitor30.bin` | generated 16 KB reference image (`../../roms` interleaved) |
 | `regions.txt` | code/data map: instructions, pointer tables, messages, filler |
 | `seeds.txt` | code entry points the tracer cannot reach on its own |
 | `equates.txt` | names for RAM and I/O addresses, substituted into operands |

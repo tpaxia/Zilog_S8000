@@ -11,7 +11,7 @@ OBJCOPY  := z8k-coff-objcopy
 OBJDUMP  := z8k-coff-objdump
 PYTHON   := python3
 
-ROMDIR   := ../roms
+ROMDIR   := ../../roms
 REF      := monitor30.bin
 SRC      := monitor30.s
 BUILD    := build

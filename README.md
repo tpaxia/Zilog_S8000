@@ -316,13 +316,14 @@ Relevant files:
 - `tools/retro-fuse/src/v7adapt.c` — supplies the reproducible V7 filesystem
   clock from `SOURCE_DATE_EPOCH` when it is set.
 
-## SMD model layouts
+## Model disk layouts
 
-| Model | CPU | ZEUS | Disk layout |
-| --- | --- | --- | --- |
-| 31 | CPU-A | Non-segmented | 68 MB |
-| 31 Plus | CPU-A | Segmented | 128 MB |
-| 32 | HPCPU | Segmented | 128 MB |
+| Model | CPU | ZEUS | Controller | Disk layout |
+| --- | --- | --- | --- | --- |
+| 21 | CPU-A | Non-segmented | ZD | 29 MB |
+| 31 | CPU-A | Non-segmented | SMD | 68 MB |
+| 31 Plus | CPU-A | Segmented | SMD | 128 MB |
+| 32 | HPCPU | Segmented | SMD | 128 MB |
 
 The current CHD uses the 68 MB Model 31 layout with segmented ZEUS. A future
 installation-tape build should use the 128 MB layout for Models 31 Plus and 32.

@@ -11,7 +11,7 @@ software onto a bare machine. It answers three questions:
   serial line, and what it would take.
 
 Sources are cited inline. Monitor addresses are image offsets in
-`monitor/monitor30.s`. See [`MONITOR.md`](MONITOR.md) for the firmware itself.
+`re/monitor/monitor30.s`. See [`MONITOR.md`](MONITOR.md) for the firmware itself.
 
 ## The four-stage boot chain
 
@@ -253,7 +253,7 @@ be written.
   repository**.
 - `/usr/stand/boot` in the recovered ZEUS `/usr` tree — the compiled secondary
   bootstrapper; device-name table at file offset 0x5362.
-- `monitor/monitor30.s` and `monitor/monitor30.bin` — the annotated Monitor 3.0
+- `re/monitor/monitor30.s` and `re/monitor/monitor30.bin` — the annotated Monitor 3.0
   disassembly; `trap_syscall` at 0x0f2c and the service table at 0x0056.
 - *System 8000 Hardware Reference Manual*, 03-3237-04, §5.9 — monitor commands
   and Download Mode.

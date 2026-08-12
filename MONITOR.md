@@ -13,7 +13,7 @@ Two monitors are covered:
 
 Every claim below is stated from one of two places: the *System 8000 Hardware
 Reference Manual*, 03-3237-04 (Dec 82), section 5.9; or the annotated Monitor
-3.0 disassembly in `monitor/`, cited by image address. Where the two disagree,
+3.0 disassembly in `re/monitor/`, cited by image address. Where the two disagree,
 that is noted — the manual predates both ROMs.
 
 ## Command set
@@ -191,8 +191,8 @@ nothing to talk to.
 - *ZEUS System Administrator's Manual*, 03-3246-04, §2.4 — the operator-facing
   boot procedure (`ZBOOT D`, `ZBOOT S`, `ZBOOT T`) and the secondary
   bootstrapper's `:xxx(n,m)name` syntax.
-- `monitor/` — the annotated, reassemblable Monitor 3.0 disassembly. All ROM
-  addresses cited here are image offsets in `monitor/monitor30.s`.
+- `re/monitor/` — the annotated, reassemblable Monitor 3.0 disassembly. All ROM
+  addresses cited here are image offsets in `re/monitor/monitor30.s`.
 
 See also [`STANDALONE.md`](STANDALONE.md) for the layer above the monitor — the
 bootstrap chain, stand-alone device addressing, and the monitor system calls

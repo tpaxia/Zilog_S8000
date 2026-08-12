@@ -222,7 +222,7 @@ zeroed at entry; that is what the host samples afterwards.
 
 ## The monitor's sequence, resolved
 
-From `monitor30.s`, the relocated tape loader at `L_325e` (see
+From `re/monitor/monitor30.s`, the relocated tape loader at `L_325e` (see
 [`MONITOR.md`](MONITOR.md)):
 
 ```text
