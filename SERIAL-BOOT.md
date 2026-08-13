@@ -1,4 +1,9 @@
-# Plan: installing a bare System 8000 over a serial line
+# Historical plan: installing a bare System 8000 over a serial line
+
+> **Superseded:** this was written before the ZEUS 3.21 installation tape was
+> recovered. Its claims that files 3 and 4 are unavailable and that Route A is
+> blocked are no longer true. The implemented tape-faithful work is documented
+> in [`serial_installer/README.md`](serial_installer/README.md).
 
 **Status: design only. Nothing here is implemented.** This records what has been
 established from the firmware, the kernel build system and the manuals, the two
