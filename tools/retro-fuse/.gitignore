@@ -9,4 +9,5 @@ bsd2*fs
 __pycache__
 mkdev
 mkv7img
+taperestore
 *.dSYM/

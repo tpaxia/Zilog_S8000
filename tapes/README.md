@@ -1,5 +1,11 @@
 # ZEUS 3.21 and SADIE 3.5 tapes
 
+See [`INSTALL.md`](INSTALL.md) for the decoded ZEUS installation-tape layout,
+the `sawbz` disk defaults, the tape-derived 128 MiB SMD disk geometry, and the
+host-side tape-flow installer. The resulting tape-derived image logs in as
+`zeus` with password `jupiter`; this differs from the older clean image, whose
+`zeus` password is `zeus`.
+
 This directory keeps the physical tape captures, the SIMH tape images used by
 MAME, and reproducible extracted contents separate:
 

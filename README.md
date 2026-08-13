@@ -1,20 +1,38 @@
 # Zilog System 8000 — bootable ZEUS 3.2.1 image for MAME
 
-## Use `filesystem/generated/s8000_smd.chd`
+## Disk images
 
-**`filesystem/generated/s8000_smd.chd` is the deliverable.** It is a clean,
-bootable ZEUS 3.2.1
-(Zilog's System III Unix) disk image for the Zilog System 8000 Model 31. It
-performs the normal ZEUS multi-user startup and reaches `ZEUS login:`, and it
-includes the recovered ZEUS development system with the C compilers and the
-relinked kernel. Download that one file, point MAME at it (see
-[Running](#running)), and you are done.
+The repository provides two bootable ZEUS 3.2.1 (Zilog's System III Unix)
+images for the Zilog System 8000 Model 31. The new
+`build/zeus-3.21-tape-128-plzasm-games.chd` follows the recovered installation
+tape flow, uses the tape's 128 MiB SMD layout, and adds the `plzasm` and games
+packages plus the modern two-digit-year patch. The older
+`filesystem/generated/s8000_smd.chd` remains available as the clean,
+reconstructed development image.
 
-**Everything else in this repository exists only to reproduce that file.** The
-build script, staging tools, inventories, recovered binaries, partition seeds
-and configuration sources are the provenance trail and the rebuild path. You do
-not need any of them to run ZEUS, and you should not need to run
-`rebuild_fs.sh` unless you are changing what goes into the image.
+Both perform the normal ZEUS multi-user startup. Point MAME at the desired CHD
+as described in [Running](#running). Everything else in the repository is the
+provenance trail and rebuild machinery for these images.
+
+### Images and passwords
+
+There are two distinct image lines in this repository; do not interchange
+their superuser passwords:
+
+| Image | Description | Login | Password |
+| --- | --- | --- | --- |
+| `filesystem/generated/s8000_smd.chd` | Older clean/reconstructed image | `zeus` | `zeus` |
+| `build/zeus-3.21-tape-128-plzasm-games.chd` | New 128 MiB install-tape image with `plzasm`, games, and the date patch | `zeus` | `jupiter` |
+
+The new image retains the password hash restored from the ZEUS installation
+tape. It also deliberately retains the tape's `vz console` entry; it does not
+contain the temporary H19 terminal override used during diagnosis.
+
+The SHA-256 of the committed new CHD is:
+
+```text
+e5d67c36d206caa548b3579c1aa04dc4811b75687e0e4ad3ef3e9032e407132b
+```
 
 The original archives used for the disk reconstruction are preserved under
 `filesystem/originals/`. Generated tape images and their decoded contents are
@@ -236,6 +254,8 @@ pristine committed image.
 
 - [`MONITOR.md`](MONITOR.md) — CPU monitor commands and serial download mode.
 - [`TCC.md`](TCC.md) — cartridge tape controller firmware and media format.
+- [`tapes/INSTALL.md`](tapes/INSTALL.md) — decoded installation tape and the
+  tape-derived 128 MiB SMD disk layout.
 - [`STANDALONE.md`](STANDALONE.md) — stand-alone bootstrap chain.
 - [`SERIAL-BOOT.md`](SERIAL-BOOT.md) — serial installation design notes.
 

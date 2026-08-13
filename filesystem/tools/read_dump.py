@@ -129,8 +129,11 @@ def parse_header(r):
 def parse_dinode(b):
     mode, nlink, uid, gid, size = struct.unpack('>HhhhI', b[:12])
     atime, mtime, ctime = struct.unpack('>III', b[52:64])
+    # For character and block special files the first three-byte V7 address
+    # slot carries i_rdev.  ZEUS uses the low 16 bits as major/minor.
+    rdev = int.from_bytes(b[12:15], 'big')
     return dict(mode=mode, nlink=nlink, uid=uid, gid=gid, size=size,
-                atime=atime, mtime=mtime, ctime=ctime)
+                atime=atime, mtime=mtime, ctime=ctime, rdev=rdev)
 
 
 def parse(tape):
@@ -262,6 +265,34 @@ def build_paths(inodes, blocks, root='/usr'):
             paths[cino] = paths[ino].rstrip('/') + '/' + nm
             queue.append(cino)
     return paths
+
+
+def build_all_paths(inodes, blocks, root='/usr'):
+    """Return every recovered pathname, including names sharing an inode.
+
+    ``build_paths`` deliberately keeps one name per inode, which is convenient
+    for listings but loses V7 hard links.  A restore needs every directory
+    entry while still walking each directory only once to avoid ``.``/``..``
+    cycles.
+    """
+    paths = defaultdict(list)
+    paths[2].append(root)
+    queue = [(2, root)]
+    walked = set()
+    while queue:
+        ino, parent = queue.pop(0)
+        if ino in walked or (inodes.get(ino, {}).get('mode', 0) & IFMT) != IFDIR:
+            continue
+        walked.add(ino)
+        for cino, nm in dirents(ino, inodes, blocks):
+            if nm in ('.', '..'):
+                continue
+            path = parent.rstrip('/') + '/' + nm
+            if path not in paths[cino]:
+                paths[cino].append(path)
+            if (inodes.get(cino, {}).get('mode', 0) & IFMT) == IFDIR:
+                queue.append((cino, path))
+    return dict(paths)
 
 
 def ts(t):
