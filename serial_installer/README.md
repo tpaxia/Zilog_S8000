@@ -53,7 +53,7 @@ Outputs are:
   stage;
 - `build/primary-serial.bin`: patched 512-byte file-0 program (zero padded by
   the server);
-- `build/loader-serial.bin`: repaired file 1 with its 700-byte `ct.o` replaced;
+- `build/loader-serial.bin`: file 1 with its 700-byte `ct.o` replaced;
 - `build/sarestor-serial.bin`: file 4 with only its 700-byte `ct.o` replaced.
 
 The current CRC-16/XMODEM replacement is 526 bytes, leaving 174 bytes of the
@@ -77,15 +77,6 @@ operation used by `sarestor`. A generated-code check verifies that the bounded
 UART polling loop is present and that version-3 XMODEM has no artificial
 default byte delay.
 
-### File 1 recovery and its RAM probe
-
-The recovered physical-tape archive omitted one complete 512-byte record from
-file 1 at image offset `0x3200`. `tapes/build_tape_images.py` restores the exact
-record from the independent `/usr/boot` executable in `S8000-2.tar` and checks
-that the resulting 23,040-byte padded tape file matches its loadable image.
-This also restores the original nonzero RAM-probe word `0xc55c` at address
-`0x38bc`; `patch_loader.py` does not modify that word.
-
 ## Original hardware
 
 The Python server accepts a physical serial device as its second positional
@@ -94,7 +85,7 @@ programs first:
 
 ```sh
 python3 -m pip install pyserial
-cd /Users/paxia/Projects/Zilog_S8000/serial_installer
+cd Zilog_S8000/serial_installer
 make
 ```
 
@@ -107,7 +98,7 @@ protocol. Configure the connection as 9600 baud, 8 data bits, no parity, and
 Start the server, replacing `/dev/ttyUSB0` with the host's serial-device path:
 
 ```sh
-cd /Users/paxia/Projects/Zilog_S8000/serial_installer
+cd Zilog_S8000/serial_installer
 python3 serve_tape.py ../tapes/images/zeus-3.21-install.tap /dev/ttyUSB0 \
   -v
 ```
@@ -160,15 +151,15 @@ verified transport test. `make test` verifies tape parsing, input hashes,
 patch boundaries, packet encoding, and short serial writes, but is not a
 substitute for the manual hardware sequence above.
 
-## Exact visible MAME installer smoke-test launch
+## MAME test
 
-Use these commands exactly. Start the tape server first and leave it running;
-then start MAME from a second terminal. The MAME window is the operator console.
+Start the tape server first and leave it running, then start MAME from a second
+terminal. The MAME window is the operator console.
 
 Build and test the serial images:
 
 ```sh
-cd /Users/paxia/Projects/Zilog_S8000/serial_installer
+cd Zilog_S8000/serial_installer
 make test
 ```
 
@@ -184,7 +175,7 @@ chdman createhd \
 Terminal 1:
 
 ```sh
-cd /Users/paxia/Projects/Zilog_S8000/serial_installer
+cd Zilog_S8000/serial_installer
 python3 serve_tape.py ../tapes/images/zeus-3.21-install.tap \
   --listen 127.0.0.1:8148 -v
 ```
@@ -192,9 +183,9 @@ python3 serve_tape.py ../tapes/images/zeus-3.21-install.tap \
 Terminal 2:
 
 ```sh
-cd /Users/paxia/Projects/mame_latest/mame
+cd /path/to/mame
 ./s8000 s8000 -rp roms \
-  -cfg_directory /Users/paxia/Projects/Zilog_S8000/serial_installer/mame_cfg \
+  -cfg_directory /path/to/Zilog_S8000/serial_installer/mame_cfg \
   -slot_cpu:cpu_a:sio0:cha:tty0 null_modem \
   -slot_cpu:cpu_a:sio0:chb:console terminal \
   -bitb socket.127.0.0.1:8148 \
@@ -230,9 +221,7 @@ Visible MAME testing has verified all of the following:
 - patched file 1 transferred completely (23,040 bytes);
 - file 0 executed from its relocated address;
 - file 1 began executing;
-- file 1 contained its original `0xc55c` at probe address `0x38bc`;
-- the RAM probe terminated at the installed-memory boundary (`r10=0x0f00`);
-- execution continued into file 1 at `pc=0x2134` after the probe;
+- execution continued through file 1 to its `Boot:` prompt;
 - file 2 transferred completely (21,504 bytes);
 - `sawbz` executed and recognized the attached 128 MiB SMD disk;
 - file 3 ran and created the root filesystem;
@@ -255,7 +244,6 @@ The earlier automated `sawbz` smoke test ended with:
 ```text
 sawbz test: requested L SERIAL
 sawbz test: entered J F000
-sawbz test: RAM probe passed; waiting for Boot prompt
 sawbz test: entered ct(0,2)
 sawbz test: PASS, DEADBABE written; pc=2064
 ```
@@ -269,12 +257,13 @@ base-address-high byte. MAME instead left it pinned on the attribute byte, so
 `sawbz`'s third output byte replaced the segment attributes with `0xff` and
 destroyed its own mapping.
 
-Apply the repository-supplied correction to the MAME source tree and rebuild
-the `s8000` target:
+Apply the [Z8010 descriptor-wrap correction](https://github.com/tpaxia/Zilog_S8000/blob/main/serial_installer/mame-z8010-descriptor-wrap.patch)
+to the MAME source tree and rebuild the `s8000` target:
 
 ```sh
-cd /Users/paxia/Projects/mame_latest/mame
-git apply /Users/paxia/Projects/Zilog_S8000/serial_installer/mame-z8010-descriptor-wrap.patch
+cd /path/to/mame
+curl -L https://raw.githubusercontent.com/tpaxia/Zilog_S8000/main/serial_installer/mame-z8010-descriptor-wrap.patch \
+  | git apply
 make -j1 SUBTARGET=s8000 SOURCES=zilog/s8k.cpp USE_LIBSDL=1 \
   SDL_PKGCONFIG_PATH=/opt/homebrew/bin \
   LDFLAGS='-L/opt/homebrew/lib -Wl,-rpath,/opt/homebrew/lib -lSDL3'

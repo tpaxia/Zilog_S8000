@@ -14,6 +14,9 @@ Both perform the normal ZEUS multi-user startup. Point MAME at the desired CHD
 as described in [Running](#running). Everything else in the repository is the
 provenance trail and rebuild machinery for these images.
 
+To run the original ZEUS installation-tape flow over a serial connection, see
+the [serial installer guide](serial_installer/README.md).
+
 ### Images and passwords
 
 There are two distinct image lines in this repository; do not interchange
