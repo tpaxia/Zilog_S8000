@@ -284,6 +284,64 @@ def write_package_manifests(work, package, file_number, tape_records):
     return manifests
 
 
+def write_upgrade_manifest(work, tape_path):
+    """Stage the 3.21 update tape in /z so the machine can apply it itself."""
+    tape_files = extract_tape_images.read_tap(tape_path)
+    if len(tape_files) != 1:
+        raise ValueError(f"upgrade tape has {len(tape_files)} files, expected one")
+    payloads = work / "upgrade-payloads"
+    payloads.mkdir()
+    manifest = work / "upgrade-z.manifest"
+    with tarfile.open(fileobj=io.BytesIO(b"".join(tape_files[0]))) as archive:
+        members = archive.getmembers()
+        directories = set()
+        for member in members:
+            name = member.name.lstrip("./")
+            if not name or name.startswith("/") or ".." in Path(name).parts:
+                raise ValueError(f"unsafe upgrade path: {member.name}")
+            parent = Path("/" + name).parent
+            while str(parent) != "/":
+                directories.add(str(parent))
+                parent = parent.parent
+
+        with manifest.open("w", encoding="utf-8") as output:
+            output.write("# kind\tmode\tuid\tgid\tatime\tmtime\taux\tpath\n")
+            # The update tar carries no directory members of its own.
+            directory_time = min(member.mtime for member in members)
+            directory_metadata = dict(
+                mode=read_dump.IFDIR | 0o755,
+                uid=0,
+                gid=0,
+                atime=directory_time,
+                mtime=directory_time,
+            )
+            for directory in sorted(directories, key=lambda p: (p.count("/"), p)):
+                output.write(manifest_line("d", directory_metadata, "-", directory))
+
+            links = []
+            for index, member in enumerate(members):
+                path = "/" + member.name.lstrip("./")
+                metadata = dict(
+                    mode=(read_dump.IFREG | member.mode),
+                    uid=member.uid,
+                    gid=member.gid,
+                    atime=member.mtime,
+                    mtime=member.mtime,
+                )
+                if member.isfile():
+                    payload = payloads / f"{index:04d}.bin"
+                    payload.write_bytes(archive.extractfile(member).read())
+                    output.write(manifest_line("f", metadata, payload, path))
+                elif member.islnk():
+                    # /z/3.21.update/scc is a hard link to cc; INSTALL moves both.
+                    links.append((path, metadata, "/" + member.linkname.lstrip("./")))
+                else:
+                    raise ValueError(f"unsupported upgrade member type: {member.name}")
+            for path, metadata, target in links:
+                output.write(manifest_line("h", metadata, target, path))
+    return manifest, len(members)
+
+
 def write_date_patch_manifest(work, root_inodes, root_blocks):
     """Patch the tape's date tools while retaining their dump metadata."""
     paths = read_dump.build_all_paths(root_inodes, root_blocks, root="/")
@@ -353,6 +411,8 @@ def main():
                         help="install selected optional packages from tape files 9-17")
     parser.add_argument("--patch-date", action="store_true",
                         help="apply the documented date/datem Y2K compatibility patch")
+    parser.add_argument("--stage-upgrade", action="store_true",
+                        help="stage the 3.21 update tape in /z, to be applied on the machine")
     parser.add_argument("--no-chd", action="store_true", help="leave only the raw disk image")
     parser.add_argument("--force", action="store_true", help="replace the requested outputs")
     args = parser.parse_args()
@@ -362,6 +422,8 @@ def main():
         parser.error("a package may be selected only once")
     selected_packages = sorted(args.packages, key=lambda name: OPTIONAL_PACKAGES[name])
     suffix = "-" + "-".join(selected_packages) if selected_packages else ""
+    if args.stage_upgrade:
+        suffix += "-upgrade"
     if args.image is None:
         args.image = REPO / "build" / f"zeus-3.21-tape-128{suffix}.img"
     if args.chd is None:
@@ -370,6 +432,9 @@ def main():
     tape_path = HERE / "images" / "zeus-3.21-install.tap"
     if not tape_path.is_file():
         parser.error(f"missing recovered install tape: {tape_path}")
+    upgrade_tape_path = HERE / "images" / "zeus-3.21-upgrade.tap"
+    if args.stage_upgrade and not upgrade_tape_path.is_file():
+        parser.error(f"missing recovered upgrade tape: {upgrade_tape_path}")
     for output in (args.image,) if args.no_chd else (args.image, args.chd):
         if output.exists() and not args.force:
             parser.error(f"output exists (use --force): {output}")
@@ -409,6 +474,10 @@ def main():
         date_patch_manifest = (
             write_date_patch_manifest(work, root_inodes, root_blocks)
             if args.patch_date else None
+        )
+        upgrade_manifest, upgrade_count = (
+            write_upgrade_manifest(work, upgrade_tape_path)
+            if args.stage_upgrade else (None, 0)
         )
 
         with args.image.open("wb") as disk:
@@ -450,6 +519,11 @@ def main():
             print("[post-install] patching /bin/date and /etc/datem for two-digit modern years",
                   flush=True)
             run_helper(helper, args.image, 6_000, 15_200, "restore", date_patch_manifest)
+
+        if upgrade_manifest:
+            print(f"[post-install] staging the 3.21 update in /z: {upgrade_count} entries",
+                  flush=True)
+            run_helper(helper, args.image, 234_944, 27_200, "restore", upgrade_manifest)
 
     actual = args.image.stat().st_size
     if actual != DISK_BLOCKS * BLOCK_SIZE:

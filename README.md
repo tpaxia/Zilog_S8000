@@ -4,11 +4,11 @@
 
 The repository provides two bootable ZEUS 3.2.1 (Zilog's System III Unix)
 images for the Zilog System 8000 Model 31. The new
-`build/zeus-3.21-tape-128-plzasm-games.chd` follows the recovered installation
-tape flow, uses the tape's 128 MiB SMD layout, and adds the `plzasm` and games
-packages plus the modern two-digit-year patch. The older
-`filesystem/generated/s8000_smd.chd` remains available as the clean,
-reconstructed development image.
+`build/zeus-3.21-tape-128-plzasm-upgrade.chd` follows the recovered installation
+tape flow, uses the tape's 128 MiB SMD layout, adds the `plzasm` package and the
+modern two-digit-year patch, and has the ZEUS 3.21 update tape applied on the
+machine. The older `filesystem/generated/s8000_smd.chd` remains available as the
+clean, reconstructed development image.
 
 Both perform the normal ZEUS multi-user startup. Point MAME at the desired CHD
 as described in [Running](#running). Everything else in the repository is the
@@ -25,7 +25,7 @@ their superuser passwords:
 | Image | Description | Login | Password |
 | --- | --- | --- | --- |
 | `filesystem/generated/s8000_smd.chd` | Older clean/reconstructed image | `zeus` | `zeus` |
-| `build/zeus-3.21-tape-128-plzasm-games.chd` | New 128 MiB install-tape image with `plzasm`, games, and the date patch | `zeus` | `jupiter` |
+| `build/zeus-3.21-tape-128-plzasm-upgrade.chd` | New 128 MiB install-tape image with `plzasm`, the date patch, and the 3.21 update applied | `zeus` | `jupiter` |
 
 The new image retains the password hash restored from the ZEUS installation
 tape. It also deliberately retains the tape's `vz console` entry; it does not
@@ -34,8 +34,13 @@ contain the temporary H19 terminal override used during diagnosis.
 The SHA-256 of the committed new CHD is:
 
 ```text
-e5d67c36d206caa548b3579c1aa04dc4811b75687e0e4ad3ef3e9032e407132b
+d695bf43725f2911e6507cb6323c08c8604d46407463bd474fcbf8eacd3afc07
 ```
+
+Unlike the older image, this one is not produced by a single host-side script.
+`tapes/install_from_tape.py --packages plzasm --patch-date --stage-upgrade`
+builds the tape-flow disk and stages the update tape in `/z`; ZEUS then applies
+it itself. See [`tapes/INSTALL.md`](tapes/INSTALL.md) for that step.
 
 The original archives used for the disk reconstruction are preserved under
 `filesystem/originals/`. Generated tape images and their decoded contents are

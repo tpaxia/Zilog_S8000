@@ -141,33 +141,73 @@ to the base installation. Select packages explicitly to produce a separate
 image whose filename includes the packages in tape order. For example:
 
 ```sh
-python3 tapes/install_from_tape.py --packages plzasm games --patch-date
+python3 tapes/install_from_tape.py --packages plzasm --patch-date
 ```
 
-This writes `build/zeus-3.21-tape-128-plzasm-games.img` and `.chd` without
-altering the base tape-flow outputs. Package files, modes, owners, groups,
-timestamps, and hard links come from their tar records. Parent directories
-omitted by the old tar format are created root-owned with mode 0755. The
-optional `--patch-date` post-install step applies the documented, hash-guarded
-Y2K compatibility patches to the tape's `/bin/date` and `/etc/datem` binaries.
+This writes `build/zeus-3.21-tape-128-plzasm.img` and `.chd` without altering
+the base tape-flow outputs. Package files, modes, owners, groups, timestamps,
+and hard links come from their tar records. Parent directories omitted by the
+old tar format are created root-owned with mode 0755. The optional
+`--patch-date` post-install step applies the documented, hash-guarded Y2K
+compatibility patches to the tape's `/bin/date` and `/etc/datem` binaries.
+
+## Applying the 3.21 update tape
+
+`--stage-upgrade` writes the recovered upgrade tape into the new disk's `/z`
+filesystem so that ZEUS can apply it with the vendor's own script. The update
+is not applied host-side: its final steps run `ar` over `/lib/slibc.a` and
+`/usr/sys/sys/LIB1`, and it ends with a kernel sysgen.
+
+```sh
+python3 tapes/install_from_tape.py --packages plzasm --patch-date --stage-upgrade
+```
+
+The staged tree is `/z/3.21.update` plus `/z/INSTALL`, taken from
+`images/zeus-3.21-upgrade.tap`; `scc` is staged as a hard link to `cc`, as on
+the tape. Boot the resulting CHD, log in as `zeus`, and run:
+
+```text
+cd /z
+csh INSTALL
+```
+
+`INSTALL` is a csh script and performs its own `cd 3.21.update`. It moves the
+staged files into `/lib`, `/bin`, `/usr/bin`, `/usr/lib`, `/usr/lib/me`, and
+`/usr/sys`, saving the replaced originals under `/tmp/save`, then rebuilds the
+two archives. Sysgen a new kernel and reboot to complete it.
+
+The update needs roughly 470 free blocks on `/usr`, which has 12,000. The base
+tape installation leaves 725 free; the `games` package consumes 504 of those, so
+`games` and the update do not both fit in the tape's default `/usr` size. Root
+is left with 91 free blocks after `plzasm`, which is enough because the update's
+`/bin` replacements free more than its `/lib` replacements consume, and `/lib`
+is processed first. `ar` writes its temporary files to `/tmp`.
+
+Because `INSTALL` moves rather than copies, a failed run cannot be resumed:
+rebuild the image and start again.
 
 ## Image credentials and local changes
 
 The older clean image, `filesystem/generated/s8000_smd.chd`, has superuser
 login `zeus` and password `zeus`. The new tape-derived
-`build/zeus-3.21-tape-128-plzasm-games.chd` has login `zeus` and password
+`build/zeus-3.21-tape-128-plzasm-upgrade.chd` has login `zeus` and password
 `jupiter`, inherited from the password hash in tape file 5.
 
-The new image installs only the `plzasm` and `games` optional packages; it does
-not install `crash`. Its `date` and `datem` programs have the optional modern
+The new image installs only the `plzasm` optional package; it does not install
+`games` or `crash`. Its `date` and `datem` programs have the optional modern
 two-digit-year patch. `/etc/ttytype` remains byte-for-byte as restored from the
 tape, including `vz console`; the temporary `h19 console` test change is not
-part of this build.
+part of this build. The 3.21 update was applied on the machine as described
+above, followed by a sysgen, so `/zeus` is a relinked kernel rather than the
+one restored from tape.
 
-The committed CHD has SHA-256:
+The committed CHD is created from the post-update disk with the same
+`chdman createhd --chs 1024,8,32 --sectorsize 512 --compression none`
+parameters as the build script, not from the file MAME writes while running.
+Its SHA-256 is:
 
 ```text
-e5d67c36d206caa548b3579c1aa04dc4811b75687e0e4ad3ef3e9032e407132b
+d695bf43725f2911e6507cb6323c08c8604d46407463bd474fcbf8eacd3afc07
 ```
 
 Tape-device emulation would reproduce the historical interactive installation
