@@ -1,0 +1,13 @@
+diff --git a/src/devices/machine/z8010.cpp b/src/devices/machine/z8010.cpp
+index 6aeb0765c00..2fd833c32d0 100644
+--- a/src/devices/machine/z8010.cpp
++++ b/src/devices/machine/z8010.cpp
+@@ -49,6 +49,8 @@ inline void z8010_device::INC_DSC(const uint8_t max_dsc = DSC_SDR_ATTR)
+ {
+ 	if (m_dsc < max_dsc)
+ 		++m_dsc;
++	else
++		m_dsc = DSC_SDR_BAH;
+ }
+ 
+ //-------------------------------------------------

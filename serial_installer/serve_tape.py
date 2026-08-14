@@ -5,11 +5,14 @@ import argparse
 import socket
 import struct
 import sys
+import threading
 import time
 from pathlib import Path
 
 SOH, STX, ETX, EOT, ACK, NAK, CAN = 1, 2, 3, 4, 6, 0x15, 0x18
-OPEN_FIXED_XOR = SOH ^ ord("S") ^ ord("8") ^ 1
+XMODEM_VERSION = 3
+XMODEM_BLOCK_SIZE = 128
+OPEN_FIXED_XOR = SOH ^ ord("S") ^ ord("8") ^ XMODEM_VERSION
 HERE = Path(__file__).resolve().parent
 DEFAULT_BOOTSTRAP = HERE / "build/bootstrap.bin"
 DEFAULT_PRIMARY = HERE / "build/primary-serial.bin"
@@ -69,10 +72,12 @@ def write_all(port, data):
 
 def write_paced(port, data, delay=0.002):
     """Keep MAME's socket-backed bitbanger from ingesting a whole record at once."""
+    if not delay:
+        write_all(port, data)
+        return
     for byte in data:
         write_all(port, bytes((byte,)))
-        if delay:
-            time.sleep(delay)
+        time.sleep(delay)
 
 
 def packet(payload):
@@ -84,61 +89,245 @@ def packet(payload):
     return header + payload + bytes((checksum, ETX))
 
 
+def xmodem_packet(block_number, payload):
+    if len(payload) != XMODEM_BLOCK_SIZE:
+        raise ValueError("XMODEM packets require exactly 128 payload bytes")
+    crc = crc16_xmodem(payload)
+    return bytes((SOH, block_number, 0xFF ^ block_number)) + payload + crc.to_bytes(2, "big")
+
+
+def crc16_xmodem(payload):
+    crc = 0
+    for byte in payload:
+        crc ^= byte << 8
+        for _ in range(8):
+            crc = ((crc << 1) ^ 0x1021) & 0xFFFF if crc & 0x8000 else (crc << 1) & 0xFFFF
+    return crc
+
+
 class TapeServer:
-    def __init__(self, files, special_files=None, verbose=False):
+    def __init__(self, files, special_files=None, verbose=False,
+                 response_delay=0.00125, xmodem_delay=0.0):
         self.files = files
         self.special_files = special_files or {}
         self.verbose = verbose
         self.file_number = None
         self.position = 0
+        self.sequence = None
+        self.pending_payload = None
+        self.pending_count = None
+        self.response_delay = response_delay
+        self.xmodem_delay = xmodem_delay
+        self.last_activity = time.monotonic()
+        self.last_progress_time = self.last_activity
+        self.last_report_position = 0
+        self.open_time = None
+        self._watchdog_started = False
 
     def log(self, message):
         if self.verbose:
             print(message, file=sys.stderr, flush=True)
 
+    def watchdog(self):
+        reported = False
+        while True:
+            time.sleep(5)
+            idle = time.monotonic() - self.last_progress_time
+            if self.file_number is not None and idle >= 60 and not reported:
+                self.log(
+                    f"STALLED? file {self.file_number:#x} at {self.position} bytes; "
+                    f"no transfer progress for {idle:.0f}s"
+                )
+                reported = True
+            elif idle < 60:
+                reported = False
+
+    def activity(self):
+        self.last_activity = time.monotonic()
+
+    def progress(self, source):
+        if (self.position - self.last_report_position < 65536 and
+                self.position != len(source)):
+            return
+        elapsed = max(time.monotonic() - self.open_time, 0.001)
+        percent = 100.0 * self.position / len(source) if source else 100.0
+        rate = self.position / elapsed
+        self.log(
+            f"progress file {self.file_number:#x}: {self.position}/{len(source)} "
+            f"({percent:.1f}%), {rate:.0f} B/s"
+        )
+        self.last_report_position = self.position
+
     def serve(self, port):
+        if not self._watchdog_started:
+            threading.Thread(target=self.watchdog, daemon=True).start()
+            self._watchdog_started = True
+        last_response = None
         while True:
             command = read_exact(port, 1)[0]
+            self.activity()
             if command == SOH:
                 request = read_exact(port, 5)
                 requested_file = request[3]
-                if (request[:3] != b"S8\x01" or
-                        request[4] != (OPEN_FIXED_XOR ^ requested_file) or
+                version = request[2]
+                if (request[:2] != b"S8" or
+                        version not in (1, XMODEM_VERSION) or
+                        request[4] != (SOH ^ ord("S") ^ ord("8") ^ version ^ requested_file) or
                         (requested_file >= len(self.files) and requested_file not in self.special_files)):
-                    write_all(port, bytes((CAN,)))
+                    last_response = bytes((CAN,))
+                    write_all(port, last_response)
                     continue
                 self.file_number = requested_file
+                self.protocol_version = version
                 self.position = 0
+                self.sequence = None
+                self.pending_payload = None
+                self.pending_count = None
+                self.last_report_position = 0
+                self.open_time = time.monotonic()
                 source = self.source()
                 self.log(f"open file {self.file_number:#x}: {len(source)} bytes")
-                write_all(port, bytes((ACK,)))
+                last_response = bytes((ACK,))
+                write_all(port, last_response)
             elif command == ord("R"):
-                request = read_exact(port, 3)
-                requested = request[0] << 8 | request[1]
-                if request[2] != (ord("R") ^ request[0] ^ request[1]) or self.file_number is None:
-                    write_all(port, bytes((CAN,)))
+                if self.file_number is None:
+                    last_response = bytes((CAN,))
+                    write_all(port, last_response)
                     continue
                 source = self.source()
-                if self.position >= len(source):
-                    write_all(port, bytes((EOT,)))
-                    continue
-                payload = source[self.position:self.position + requested]
-                response = packet(payload)
-                while True:
-                    write_all(port, response)
-                    reply = read_exact(port, 1)[0]
-                    if reply == ACK:
-                        self.position += len(payload)
+                legacy = self.file_number < 2 or self.protocol_version == 1
+                if legacy:
+                    request = read_exact(port, 3)
+                    requested = request[0] << 8 | request[1]
+                    if request[2] != (ord("R") ^ request[0] ^ request[1]):
+                        last_response = bytes((CAN,))
+                        write_all(port, last_response)
+                        continue
+                    payload = source[self.position:self.position + requested]
+                else:
+                    request = read_exact(port, 7)
+                    sequence = int.from_bytes(request[:4], "big")
+                    requested = request[4] << 8 | request[5]
+                    checksum = ord("R")
+                    for byte in request[:6]:
+                        checksum ^= byte
+                    if request[6] != checksum:
+                        last_response = bytes((CAN,))
+                        write_all(port, last_response)
+                        continue
+                    if self.sequence is None:
+                        self.sequence = sequence
+                        self.pending_count = requested
+                        self.pending_payload = source[self.position:self.position + requested]
+                    elif sequence == self.sequence:
+                        if requested != self.pending_count:
+                            last_response = bytes((CAN,))
+                            write_all(port, last_response)
+                            continue
+                        self.log(f"duplicate request sequence {sequence:#x}: retransmitting")
+                    elif sequence == ((self.sequence + 1) & 0xffffffff):
+                        self.position += len(self.pending_payload)
+                        self.last_progress_time = time.monotonic()
+                        self.progress(source)
+                        self.sequence = sequence
+                        self.pending_count = requested
+                        self.pending_payload = source[self.position:self.position + requested]
                         if self.position == len(source):
                             self.log(f"file {self.file_number:#x} completely transferred")
+                    else:
+                        self.log(f"invalid request sequence {sequence:#x}, expected {self.sequence:#x} or next")
+                        last_response = bytes((CAN,))
+                        write_all(port, last_response)
+                        continue
+                    payload = self.pending_payload
+                if not payload and legacy and self.file_number < 5:
+                    last_response = bytes((EOT,))
+                    write_all(port, last_response)
+                    continue
+                if not legacy:
+                    if len(payload) % XMODEM_BLOCK_SIZE:
+                        raise ValueError(
+                            f"XMODEM read length {len(payload)} is not a multiple of 128"
+                        )
+                    for packet_index in range(0, len(payload), XMODEM_BLOCK_SIZE):
+                        block_number = packet_index // XMODEM_BLOCK_SIZE + 1
+                        response = xmodem_packet(
+                            block_number & 0xFF,
+                            payload[packet_index:packet_index + XMODEM_BLOCK_SIZE],
+                        )
+                        last_response = response
+                        while True:
+                            write_paced(port, response, self.xmodem_delay)
+                            reply = read_exact(port, 1)[0]
+                            if reply == ACK:
+                                break
+                            if reply != NAK:
+                                raise ValueError(f"unexpected XMODEM packet reply {reply:#x}")
+                            self.log(
+                                f"XMODEM NAK: retransmitting block {block_number & 0xff}"
+                            )
+                    last_response = bytes((EOT,))
+                    while True:
+                        write_all(port, last_response)
+                        reply = read_exact(port, 1)[0]
+                        if reply == ACK:
+                            break
+                        if reply != NAK:
+                            raise ValueError(f"unexpected XMODEM EOT reply {reply:#x}")
+                    if not payload:
+                        self.log(f"file {self.file_number:#x} EOF acknowledged")
+                    continue
+                response = packet(payload)
+                last_response = response
+                while True:
+                    write_paced(port, response, self.response_delay)
+                    reply = read_exact(port, 1)[0]
+                    if reply == ACK:
+                        if legacy:
+                            self.position += len(payload)
+                            if self.position == len(source):
+                                self.log(f"file {self.file_number:#x} completely transferred")
+                        elif not payload:
+                            self.log(f"file {self.file_number:#x} EOF acknowledged")
                         break
                     if reply != NAK:
                         raise ValueError(f"unexpected packet reply {reply:#x}")
                     self.log("NAK: retransmitting response")
+            elif command == ord("F"):
+                request = read_exact(port, 2)
+                count = request[0]
+                if (self.file_number is None or not count or
+                        request[1] != (ord("F") ^ count)):
+                    write_all(port, bytes((CAN,)))
+                    continue
+                old_file = self.file_number
+                new_file = old_file + count
+                if new_file >= len(self.files) and new_file not in self.special_files:
+                    write_all(port, bytes((CAN,)))
+                    continue
+                if self.pending_payload is not None:
+                    self.position += len(self.pending_payload)
+                    self.last_progress_time = time.monotonic()
+                    self.progress(self.source())
+                    if self.position == len(self.source()):
+                        self.log(f"file {old_file:#x} completely transferred")
+                self.file_number = new_file
+                self.position = 0
+                self.sequence = None
+                self.pending_payload = None
+                self.pending_count = None
+                self.last_report_position = 0
+                self.open_time = time.monotonic()
+                self.log(f"space forward {count}: file {old_file:#x} -> {new_file:#x}")
+                write_all(port, bytes((ACK,)))
             elif command == CAN:
                 self.log("close")
                 self.file_number = None
                 self.position = 0
+                self.sequence = None
+                self.pending_payload = None
+                self.pending_count = None
+                last_response = None
             else:
                 self.log(f"ignoring byte {command:#x} while waiting for a request")
 
@@ -238,6 +427,10 @@ def main():
     parser.add_argument("tape", type=Path, help="SIMH .tap installation tape")
     parser.add_argument("port", nargs="?", help="serial device, for example /dev/ttyUSB0")
     parser.add_argument("--baud", type=int, default=9600)
+    parser.add_argument("--byte-delay", type=float,
+                        help="legacy delay between bytes (default: 1.25 ms for MAME, none for hardware)")
+    parser.add_argument("--xmodem-byte-delay", type=float, default=0.0,
+                        help="version-3 XMODEM delay between bytes (default: none)")
     parser.add_argument("--listen", metavar="HOST:PORT", help="listen for a MAME bitbanger socket")
     parser.add_argument("--bootstrap", type=Path, default=DEFAULT_BOOTSTRAP,
                         help="monitor bootstrap override (default: build/bootstrap.bin)")
@@ -267,7 +460,11 @@ def main():
         send_monitor_image(port, args.bootstrap.read_bytes(), verbose=args.verbose)
         print("bootstrap loaded; enter J F000 (or G) at the monitor console", file=sys.stderr)
         try:
-            TapeServer(files, special_files, args.verbose).serve(port)
+            delay = args.byte_delay
+            if delay is None:
+                delay = 0.00125 if args.listen else 0.0
+            TapeServer(files, special_files, args.verbose, delay,
+                       args.xmodem_byte_delay).serve(port)
         except EOFError:
             print("serial connection closed", file=sys.stderr)
 

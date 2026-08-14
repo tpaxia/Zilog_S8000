@@ -36,8 +36,6 @@
 	.endm
 
 _start:
-	/* Preserve the jumper/configuration word across our serial receive. */
-	ld	r10,r7
 	/* This is the same FCW and RAM-overlay transition used by tape boot. */
 	ld	r0,#0x4000
 	ldctl	fcw,r0
@@ -73,7 +71,7 @@ _start:
 	/* Reproduce the measured ROM ZT handoff; J enters with different values. */
 	ldk	r4,#1
 	ld	r5,#0x10
-	ld	r7,r10
+	ldk	r7,#0
 	ldk	r2,#0
 	jp	@r2
 

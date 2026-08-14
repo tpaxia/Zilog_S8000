@@ -13,12 +13,12 @@ CT_END = 0x29B6
 CT_SIZE = CT_END - CT_START
 CT_STRATEGY = 0x2770
 CT_CLOSE = 0x275C
-DEVSW_CT = 0x5108
+DEVSW_CT = 0x5308
 NOP = b"\x8d\x07"
 RAM_PROBE_PATTERN = 0x38BC
-RAM_PROBE_VALUE = b"\xa5\xa5"
+RAM_PROBE_VALUE = b"\xc5\x5c"
 
-EXPECTED_SHA256 = "190df37c142f2b00a15eeeaa32858fae8fe435a34077115cfa60ed508a72345d"
+EXPECTED_SHA256 = "1c038e3d0f640e0fade2b842fd6b221a3742666033e43b643b837e3779cf7d2c"
 
 
 def sha256(data):
@@ -33,20 +33,17 @@ def patch(original, driver):
     name, strategy, opened, closed = struct.unpack_from(">HHHH", original, DEVSW_CT)
     if (name, strategy, opened, closed) != (0x533D, CT_STRATEGY, CT_START, CT_CLOSE):
         raise ValueError("secondary-loader ct devsw does not have the expected fixed entries")
-    if original[RAM_PROBE_PATTERN:RAM_PROBE_PATTERN + 2] != b"\0\0":
-        raise ValueError("secondary-loader RAM probe does not use the expected zero pattern")
+    if original[RAM_PROBE_PATTERN:RAM_PROBE_PATTERN + 2] != RAM_PROBE_VALUE:
+        raise ValueError("secondary-loader RAM probe does not use the expected pattern")
 
     replacement = driver + NOP * ((CT_SIZE - len(driver)) // 2)
-    result = bytearray(original[:CT_START] + replacement + original[CT_END:])
-    result[RAM_PROBE_PATTERN:RAM_PROBE_PATTERN + 2] = RAM_PROBE_VALUE
-    result = bytes(result)
+    result = original[:CT_START] + replacement + original[CT_END:]
     if len(result) != len(original):
         raise AssertionError("patch changed loader length")
     expected = bytearray(original)
     expected[CT_START:CT_END] = replacement
-    expected[RAM_PROBE_PATTERN:RAM_PROBE_PATTERN + 2] = RAM_PROBE_VALUE
     if result != bytes(expected):
-        raise AssertionError("patch changed bytes outside ct.o and the RAM probe word")
+        raise AssertionError("patch changed bytes outside ct.o")
     return result
 
 

@@ -30,7 +30,7 @@ emu.register_periodic(function()
 	local now = manager.machine.time:as_double()
 	local pc = cpu.state["PC"].value & 0xffff
 	if not jumped and now >= start_time + 9 then
-		assert(mem:read_u16(0xf000) == 0xa17a,
+		assert(mem:read_u16(0xf000) == 0x2100,
 			"bootstrap signature missing at f000")
 		keyboard:post_coded("J F000{ENTER}")
 		jumped = true
@@ -41,8 +41,8 @@ emu.register_periodic(function()
 	end
 	if saw_relocated_loader and not entered_file1 and pc < 0x1000 then
 		entered_file1 = true
-		assert(mem:read_u16(0x38bc) == 0xa5a5,
-			"patched RAM-probe pattern missing at 38bc")
+		assert(mem:read_u16(0x38bc) == 0xc55c,
+			"original RAM-probe pattern missing at 38bc")
 		print(string.format("downloader test: file 1 entered at pc=%04x", pc))
 	end
 	if entered_file1 and not passed_probe and

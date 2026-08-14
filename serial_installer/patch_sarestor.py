@@ -16,6 +16,7 @@ CT_END = 0x30A2
 CT_SIZE = CT_END - CT_START
 CT_CLOSE = 0x2E48
 CT_STRATEGY = 0x2E5C
+CT_IOCTL = 0x2E82
 NOP = b"\x8d\x07"
 
 EXPECTED_IMAGE_SHA256 = "d6feef2163246c632fd8ca815c5130aa38983965c563345d28d9a5472f90dad3"
@@ -48,11 +49,11 @@ def patch(original, driver):
     if result[:begin] != original[:begin] or result[end:] != original[end:]:
         raise AssertionError("patch changed bytes outside ct.o")
     # The devsw pointers are outside ct.o and deliberately remain unchanged.
-    # Check that they still select the three entry offsets enforced by .org in
-    # serial_ct.s: strategy, open, close.
+    # Check all four fixed ct entries enforced by .org in serial_ct.s:
+    # strategy, open, close, and the command/ioctl entry used for tape spacing.
     devsw_ct = IMAGE_FILE_OFFSET + 0x520E
-    pointers = struct.unpack_from(">HHH", result, devsw_ct + 2)
-    if pointers != (CT_STRATEGY, CT_START, CT_CLOSE):
+    pointers = struct.unpack_from(">HHHH", result, devsw_ct + 2)
+    if pointers != (CT_STRATEGY, CT_START, CT_CLOSE, CT_IOCTL):
         raise AssertionError(f"unexpected ct devsw pointers: {pointers!r}")
     return result
 
