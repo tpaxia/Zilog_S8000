@@ -81,3 +81,11 @@ extracts the UNIX dump and tar archives, and writes the SADIE logical binaries
 under `tapes/extracted/sadie-3.5/track-N/logical/`. Existing generated
 extraction directories are replaced, so the result cannot retain files from an
 older run.
+
+SADIE's track-1 diagnostics are also copied to
+`tapes/extracted/sadie-3.5/tests/` with their command names. The accompanying
+manifest records the command-to-track/file mapping, exact size, and SHA-256
+digest. These are flat standalone images rather than `s.out` executables.
+Command numbers are two greater than track-1 file numbers: command/test 24 is
+track 1/file 22, `MMUTST`. Track 1/file 35 is FPP control-store support data,
+not a menu command.

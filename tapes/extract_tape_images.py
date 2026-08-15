@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Extract the authoritative ZEUS 3.21 SIMH install and upgrade tapes."""
 
+import hashlib
 import shutil
 import struct
 import sys
@@ -22,6 +23,49 @@ OUTPUT = EXTRACTED / "install-3.21"
 UPGRADE_OUTPUT = EXTRACTED / "upgrade-3.21"
 SADIE_OUTPUT = EXTRACTED / "sadie-3.5"
 PRIVATE_MARKER = 0x70000000
+
+# SADIE command numbers are two greater than the corresponding track-1 tape
+# file number.  File 35 is not a command: FPPMON/FPPWHET load it as FPP
+# control-store data.
+SADIE_DIAGNOSTICS = {
+    0: "MDCFMT",
+    1: "MDCMEDIA",
+    2: "MDCTEST",
+    3: "MDCMON",
+    4: "MDCCRC",
+    5: "SMDFMT",
+    6: "SMDMEDIA",
+    7: "SMDTEST",
+    8: "SMDMON",
+    9: "SMDCRC",
+    10: "WDCFMT",
+    11: "WDCMEDIA",
+    12: "WDCTEST",
+    13: "WDCMON",
+    14: "WDCCRC",
+    15: "TCUMON",
+    16: "TCOM",
+    17: "TEX",
+    18: "CIOTST",
+    19: "SCCTST",
+    20: "CACHETST",
+    21: "MEMTEST",
+    22: "MMUTST",
+    23: "CENT.PRT",
+    24: "SIOTEST",
+    25: "SIOMODEM",
+    26: "ECCTEST",
+    27: "MTCMON",
+    28: "MTCOM",
+    29: "ICPTST1",
+    30: "ICPTST2",
+    31: "ICPTST3",
+    32: "ICPTST4",
+    33: "FPPTST",
+    34: "FPPMON",
+    36: "FPPWHET",
+}
+SADIE_SUPPORT_FILES = {35: "FPP-U-CODE"}
 
 
 def read_tap(path):
@@ -126,6 +170,53 @@ def write_logical_files(files, root, install=True, suffix=None):
     return paths
 
 
+def extract_sadie_diagnostics(logical):
+    """Give SADIE's track-1 flat images stable diagnostic names."""
+    root = SADIE_OUTPUT / "tests"
+    root.mkdir(parents=True, exist_ok=True)
+    manifest = ["command\ttrack\tfile\tname\tkind\tsize\tsha256"]
+
+    expected = set(SADIE_DIAGNOSTICS) | set(SADIE_SUPPORT_FILES)
+    if set(logical) != expected:
+        raise ValueError(
+            f"unexpected SADIE track-1 files: got {sorted(logical)}, "
+            f"expected {sorted(expected)}"
+        )
+
+    for file_no, source in logical.items():
+        if file_no in SADIE_DIAGNOSTICS:
+            name = SADIE_DIAGNOSTICS[file_no]
+            command = file_no + 2
+            kind = "diagnostic"
+            destination = root / f"test-{command:02d}-{name}.bin"
+            command_field = str(command)
+        else:
+            name = SADIE_SUPPORT_FILES[file_no]
+            kind = "support"
+            destination = root / f"support-{name}.bin"
+            command_field = "-"
+
+        payload = source.read_bytes()
+        destination.write_bytes(payload)
+        manifest.append(
+            f"{command_field}\t1\t{file_no}\t{name}\t{kind}\t{len(payload)}\t"
+            f"{hashlib.sha256(payload).hexdigest()}"
+        )
+
+    (root / "manifest.tsv").write_text("\n".join(manifest) + "\n")
+    (root / "README.md").write_text(
+        "# Extracted SADIE diagnostics\n\n"
+        "These are exact, named copies of the logical files on SADIE track 1. "
+        "They are flat standalone images, not `s.out` files. SADIE command "
+        "numbers are two greater than the track-1 file number; for example, "
+        "command/test 24 loads track 1 file 22, `MMUTST`.\n\n"
+        "`support-FPP-U-CODE.bin` is control-store data used by the floating-"
+        "point diagnostics and is not itself a menu command. `manifest.tsv` "
+        "records every mapping, size, and SHA-256 digest. Regenerate this "
+        "directory with `python3 tapes/extract_tape_images.py`.\n"
+    )
+
+
 def load_dump(records):
     tape = {}
     for block_no, payload in enumerate(records):
@@ -200,7 +291,9 @@ def decode_upgrade():
 def decode_sadie():
     for track, files in read_sadie_tap(SADIE_TAP).items():
         root = SADIE_OUTPUT / f"track-{track}"
-        write_logical_files(files, root, install=False, suffix=".bin")
+        logical = write_logical_files(files, root, install=False, suffix=".bin")
+        if track == 1:
+            extract_sadie_diagnostics(logical)
         records = sum(len(file_records) for file_records in files)
         print(f"SADIE track {track}: wrote {len(files)} logical files from {records} records")
 
