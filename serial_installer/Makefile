@@ -16,7 +16,7 @@ all: $(PATCHED) $(LOADER_PATCHED) $(PRIMARY_PATCHED) $(BUILD)/bootstrap.bin
 $(BUILD):
 	mkdir -p $(BUILD)
 
-$(BUILD)/serial_ct.o: serial_ct.s | $(BUILD)
+$(BUILD)/serial_ct.o: serial_ct.s xmodem_receive.inc | $(BUILD)
 	$(AS) -o $@ $<
 
 $(BUILD)/serial_ct.elf: $(BUILD)/serial_ct.o

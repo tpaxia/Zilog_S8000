@@ -44,24 +44,31 @@ retained.
 | --- | --- |
 | `originals/install-3.21/zeus-3.21-install-download.gz` | `a823cc33d49583f286a8376af30a2c30f00e6105a853d6525b20b454cfb02a92` |
 
-The SADIE cartridge was recovered as three independent tracks. The builder
-checks the CRC of every captured record and creates one extended SIMH TAP
-image. Private markers `0x70000000` through `0x70000002` identify tracks 0
-through 2, preserving the separate logical BOT and file numbering used by TCC
-mode 1. This is an S8000-specific use of SIMH private markers. All records in
-the current three source archives pass their CRC checks.
+The SADIE cartridge was recovered as three tracks in one block-level archive.
+The builder checks the CRC recorded for every captured record and creates one
+extended SIMH TAP image. Private markers `0x70000000` through `0x70000002`
+identify tracks 0 through 2, preserving the separate logical BOT and file
+numbering used by TCC mode 1. This is an S8000-specific use of SIMH private
+markers. All records in the current source archive pass their CRC checks.
 
-The source archives are the current objects linked as SADIE Track 0, Track 1
-and Track 2 in the
-[VCFed recovery thread](https://forum.vcfed.org/index.php?threads/zilog-system-8000-model-21.1255068/page-4).
+This archive supersedes the earlier three-track recovery used by the builder.
+The earlier track 0/file 1 stopped after block 25. The current recovery adds
+CRC-valid block 26, increasing the complete SADIE executive from 26,624 to
+27,648 bytes. Blocks 0 through 25 are byte-for-byte identical between the two
+recoveries; block 26 contains executable data and messages and is not padding.
 
-Preserved SADIE source hashes:
+The current all-tracks recovery is preserved unchanged from the
+[replacement source archive](https://drive.google.com/file/d/1FKTzWCZm510aVAbEW_qakUD923eLYzN9/view).
+
+Current SADIE source hash:
 
 | Source archive | SHA-256 |
 | --- | --- |
-| `originals/sadie-3.5/sadie-3.5-track0.tar.gz` | `8a7addaecbc3002fcb9cc42d4e7c073d68286a628632c7966f689317c674b62f` |
-| `originals/sadie-3.5/sadie-3.5-track1.tar.gz` | `2a480cbe2f059b8e60ddfe6c6fb58586df69f90038a07fff8ef03c573a754458` |
-| `originals/sadie-3.5/sadie-3.5-track2.tar.gz` | `4abaabc3e2c4255fd642aab0cf7c186051b414bd5402b6569d7a3823c6ff047c` |
+| `originals/sadie-3.5/sadie-3.5-all-tracks.tar.gz` | `6b18a9574e43766b72aa0ed9dd727256e8d0f0fe54fa880ba48f249591bb2155` |
+
+See the [SADIE serial diagnostic guide](../sadie_serial/README.md) for the
+read-only multi-track server, MAME and real-hardware usage, and the verified
+diagnostic-loading flow.
 
 ## Extract the tape images
 

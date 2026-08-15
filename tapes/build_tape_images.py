@@ -17,14 +17,12 @@ INSTALL_TAP = IMAGES / "zeus-3.21-install.tap"
 UPGRADE_SOURCE = FILESYSTEM_ORIGINALS / "zeus-3.21-upgrade.tar"
 UPGRADE_TAP = IMAGES / "zeus-3.21-upgrade.tap"
 RECOVERED_USR = FILESYSTEM_ORIGINALS / "S8000-2.tar"
-SADIE_SOURCES = tuple(
-    ORIGINALS / "sadie-3.5" / f"sadie-3.5-track{track}.tar.gz"
-    for track in range(3)
-)
+SADIE_SOURCE = ORIGINALS / "sadie-3.5" / "sadie-3.5-all-tracks.tar.gz"
 SADIE_TAP = IMAGES / "sadie-3.5.tap"
 
 NAME_RE = re.compile(r"_FILE_(\d+)_BLOCK_(\d+)_")
 CRC_RE = re.compile(r"_CRC_([0-9A-F]{4})_")
+TRACK_RE = re.compile(r"TRK(\d+)")
 MAGIC = 60011
 CHECKSUM = 84446 & 0xffff
 TS_INODE = 2
@@ -168,22 +166,26 @@ def read_install_records():
     return {file_no: sorted(records) for file_no, records in grouped.items()}
 
 
-def read_sadie_records(source):
+def read_sadie_records(source, track):
     grouped = {}
     crc_failures = []
     with tarfile.open(source) as archive:
         for member in archive:
+            track_match = TRACK_RE.search(member.name)
             match = NAME_RE.search(member.name)
-            if not match:
+            if not track_match or int(track_match.group(1)) != track or not match:
                 continue
             file_no, block_no = map(int, match.groups())
-            raw = archive.extractfile(member).read()
-            encoded_length = (len(raw) - 1).to_bytes(2, "big")
-            if tcc_crc(encoded_length + raw):
+            payload = archive.extractfile(member).read()
+            crc = CRC_RE.search(member.name)
+            if not crc:
+                raise ValueError(f"captured SADIE block without a CRC: {member.name}")
+            encoded_length = (len(payload) + 1).to_bytes(2, "big")
+            if tcc_crc(encoded_length + payload + bytes.fromhex(crc.group(1))):
                 crc_failures.append((file_no, block_no))
             if "FILEMARK" in member.name:
                 continue
-            grouped.setdefault(file_no, []).append((block_no, raw[:-2]))
+            grouped.setdefault(file_no, []).append((block_no, payload))
     if crc_failures:
         raise ValueError(f"SADIE CRC failures in {source}: {crc_failures}")
     file_numbers = sorted(grouped)
@@ -230,9 +232,9 @@ def build_upgrade():
 def build_sadie():
     SADIE_TAP.parent.mkdir(parents=True, exist_ok=True)
     with SADIE_TAP.open("wb") as output:
-        for track, source in enumerate(SADIE_SOURCES):
+        for track in range(3):
             output.write(struct.pack("<I", PRIVATE_MARKER | track))
-            grouped = read_sadie_records(source)
+            grouped = read_sadie_records(SADIE_SOURCE, track)
             for file_no in sorted(grouped):
                 for _, payload in grouped[file_no]:
                     write_record(output, payload)

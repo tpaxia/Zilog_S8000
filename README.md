@@ -16,6 +16,8 @@ provenance trail and rebuild machinery for these images.
 
 To run the original ZEUS installation-tape flow over a serial connection, see
 the [serial installer guide](serial_installer/README.md).
+To load the recovered SADIE 3.5 diagnostics over serial, see the
+[SADIE serial diagnostic guide](sadie_serial/README.md).
 
 ### Images and passwords
 
