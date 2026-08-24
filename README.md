@@ -131,7 +131,6 @@ patch, and stages the update on a copy. Run `csh INSTALL` and `/etc/sysgen -d
 - [Annotated monitor disassembly](re/monitor/README.md)
 - [Cartridge tape controller and media format](TCC.md)
 - [Standalone bootstrap and filesystem tools](STANDALONE.md)
-- [Serial boot engineering notes](SERIAL-BOOT.md)
 - [Z8000 reverse-engineering tools](tools/zdis/README.md)
 
 ## Sources and credits
