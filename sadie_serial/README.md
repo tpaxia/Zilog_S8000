@@ -85,6 +85,83 @@ python3 serve_sadie.py ../tapes/images/sadie-3.5.tap \
 The serial port is opened as 8 data bits, no parity, and 2 stop bits. Follow
 the same `L`, `J F000`, and SADIE menu sequence from the hardware console.
 
+## Automated diagnostic runs
+
+Loading is the only slow part of a run: the executive is 27,648 bytes and each
+diagnostic 8 to 27 KB, all at 9600 baud, which is about 45 to 70 seconds of
+emulated time before a test starts. `make snapshot` pays that once and keeps a
+MAME save state taken at `COMMAND LEVEL`; `make diagnostics` restores it and
+writes the diagnostic straight into the executive's load window.
+
+```sh
+cd sadie_serial
+make snapshot                  # once, and again after rebuilding MAME
+make diagnostics T=MMUTST      # one test; omit T to run all 36
+```
+
+Both drive MAME headless with the operator console on a second socket, so
+transcripts land in `build/logs/<NAME>.log` instead of a terminal window. Set
+`S8000_MAME` if the `s8000` binary is not at `../../mame_latest/mame/s8000`.
+
+A save state is only valid for the MAME build and slot layout it was taken
+with, so both commands use the same configuration and `make snapshot` must be
+re-run after either changes. The state itself is generated, not committed.
+
+The tape channel still runs during a diagnostic, primed at that diagnostic's own
+track and file, so a test that asks for further records is served normally. The
+same thing is available directly:
+
+```sh
+python3 serve_sadie.py ../tapes/images/sadie-3.5.tap \
+  --listen 127.0.0.1:8150 --serve-only --position 1,22,0 -v
+```
+
+A diagnostic is selected the way an operator selects it: `T` at COMMAND LEVEL
+opens the chooser, the test's own number picks it, and a bare return accepts the
+test line. The chooser's numbering is the manifest's command column, and a
+number on a later page can be typed without paging to it. A run ends with
+`EXITING <NAME>` and `Hit <CR> to return to COMMAND LEVEL`; the verdict is the
+diagnostic's own `ERRORS=` count in its lap summary, not any single message.
+MMUTST prints 252 individual `No trap on ...` lines before that total.
+
+Injection is only worth trusting once it has been shown to reproduce a real
+tape load. `--compare` runs a diagnostic both ways and diffs what it printed:
+
+```sh
+python3 run_diagnostics.py MMUTST --compare
+```
+
+`MATCH` means both runs produced the same diagnostic output. `DIFFER` writes
+`build/logs/<NAME>.diff`. `--tape` on its own runs only the slow path, which
+also works without a save state.
+
+### Verification status and remaining work
+
+The serial loader and injected diagnostic path work. The seven loader unit
+tests pass, and an injected MMUTST run reaches its lap summary, prints
+`EXITING MMUTST`, and returns to `COMMAND LEVEL`. Its current result under MAME
+is `ERRORS=252`: 126 DATA-MMU and 126 STACK-MMU read-only/limit violations do
+not trap. Those are emulator results reported by SADIE, not transport or
+injection failures.
+
+Injection has also been checked against the real tape path once: MMUTST
+matched line for line across all 537 lines of diagnostic output, including the
+same subtests, error count, and per-MMU totals. That comparison is not
+reproducibly green because the slow reference path is unreliable. Reading a
+diagnostic over the tape channel under MAME can NAK until the driver's
+ten-error retry limit aborts the load; the executive then reports a transport
+failure and skips the test, leaving a transcript that stops at
+`CHECK COMPLETE`. Raising `S8000_TURNAROUND` (default 10 ms between packets)
+reduces but does not eliminate this problem.
+
+The automated diagnostic campaign is therefore still work in progress. The
+snapshot/injection mechanism is usable, but all 36 diagnostics have not been
+run and classified, save states must be regenerated for each relevant MAME
+build, and the slow tape-reference path still needs reliable packet pacing.
+Injection sidesteps that transfer and is currently the dependable way to run
+the tests; its reported PASS/FAIL result is the diagnostic's assessment of
+MAME, not a claim that the automation itself passed or failed.
+
 ## Implementation notes
 
 The extended SIMH image uses private markers `0x70000000..0x70000002` for the
@@ -103,6 +180,38 @@ Two details are required for correct execution:
   disables and clears only channel-A interrupt state. The receiver itself
   remains enabled, so later diagnostic tape requests still work by polling;
   channel B and the operator console are untouched.
+
+### How the executive loads and enters a diagnostic
+
+Recovered by disassembling the unpatched track-0/file-1 executive; all addresses
+are logical addresses in the executive, which runs at zero.
+
+| Address | What it does |
+| --- | --- |
+| `0x14c0` | looks the selected test up in the descriptor table, by name |
+| `0x14ca`, `0x14d8` | compares the descriptor's track and file with `0x4936` and `0x4938` |
+| `0x14dc` | **skips the load entirely when they already match** |
+| `0x14ee` | `position(track, file, record 0)` |
+| `0x14f2`–`0x1500` | destination physical segment 0, offset `0x9000`; at most `0x6d60` bytes in 99 records |
+| `0x1504` | `read(...)`, then `test r2` for the transport status |
+| `0x1562` | `call 0x18f2`, which fills the parameter block at `0x852c` from the menu entry |
+| `0x033e` | `call 0x9000` — the diagnostic is called, not jumped to, and returns |
+
+Restoring the state has one MAME-specific trap. A `-state` restore runs before
+the autoboot script and discards MAME's pending timers, so the script never
+fires at all; a restore requested later from Lua discards them too, stranding
+anything parked in `emu.wait()` and cancelling `emu.register_periodic`
+callbacks, with no error printed either way. `sadie_inject.lua` therefore asks
+for the restore itself and does its work from
+`emu.add_machine_post_load_notifier`, the one hook that survives.
+
+Two consequences matter. The loaded byte count is kept only in a local and is
+never passed to the diagnostic, so a diagnostic of a different size needs no
+other adjustment. And because the serial replacement does not maintain `0x4936`
+and `0x4938` — the original tape driver's position words lived inside the region
+it replaces — those words can be primed from the host, after which the executive
+takes its own already-loaded path and runs whatever is at `0x9000`. That is what
+`sadie_inject.lua` does; nothing forces a PC or a register.
 
 The current recovery includes the CRC-valid final block missing from the older
 track-0/file-1 capture. See [the tape documentation](../tapes/README.md) for

@@ -5,7 +5,7 @@ BUILD   := build
 PYTHON  := python3
 TAPE    := ../tapes/images/sadie-3.5.tap
 
-.PHONY: all clean test
+.PHONY: all clean test snapshot diagnostics
 
 all: $(BUILD)/sadie_tape_serial.bin $(BUILD)/sadie_primary_serial.bin \
 	$(BUILD)/sadie-executive-serial.bin
@@ -39,6 +39,16 @@ $(BUILD)/sadie-executive-serial.bin: patch_executive.py serve_sadie.py \
 
 test: all
 	$(PYTHON) -m unittest -v test_sadie.py
+
+# Boot SADIE once under MAME and keep the COMMAND LEVEL state.  Regenerate it
+# after rebuilding MAME or changing the slot layout: a state is valid only for
+# the build and machine configuration it was taken with.
+snapshot: all
+	$(PYTHON) make_snapshot.py
+
+# Run every diagnostic from that state, or name them: make diagnostics T=MMUTST
+diagnostics: all
+	$(PYTHON) run_diagnostics.py $(T)
 
 clean:
 	rm -rf $(BUILD)

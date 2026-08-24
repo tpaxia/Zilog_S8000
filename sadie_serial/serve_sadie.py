@@ -184,20 +184,29 @@ class SadieServer:
         self.log(f"legacy open track 0 file {file_number}: {len(self.stream)} bytes")
         write_all(port, bytes((ACK,)))
 
+    def addressable(self, track, file_number, record):
+        return (track in self.tracks and file_number < len(self.tracks[track]) and
+                record <= len(self.tracks[track][file_number]))
+
+    def position(self, track, file_number, record):
+        """Select a track, logical file, and record without a host request."""
+        if not self.addressable(track, file_number, record):
+            raise ValueError(
+                f"no SADIE track {track} file {file_number} record {record}")
+        self.track, self.file, self.record = track, file_number, record
+        self.stream = None
+
     def serve_position(self, port, request):
         version, track, file_number, record_hi, record_lo, checksum = request
         expected = SOH ^ ord("S") ^ ord("D")
         for byte in request[:-1]:
             expected ^= byte
         record = record_hi << 8 | record_lo
-        valid = (version == 1 and track in self.tracks and
-                 file_number < len(self.tracks[track]) and
-                 record <= len(self.tracks[track][file_number]) and checksum == expected)
-        if not valid:
+        if (version != 1 or checksum != expected or
+                not self.addressable(track, file_number, record)):
             write_all(port, bytes((CAN,)))
             return
-        self.track, self.file, self.record = track, file_number, record
-        self.stream = None
+        self.position(track, file_number, record)
         self.log(f"position track {track} file {file_number} record {record}")
         write_all(port, bytes((ACK,)))
 
@@ -294,6 +303,13 @@ class SadieServer:
                 self.log(f"ignoring byte {command:#x}")
 
 
+def parse_position(text):
+    parts = text.split(",")
+    if len(parts) != 3 or not all(part.strip().isdigit() for part in parts):
+        raise ValueError("--position must be TRACK,FILE,RECORD")
+    return tuple(int(part) for part in parts)
+
+
 def open_port(name, baud):
     try:
         import serial
@@ -325,6 +341,10 @@ def main():
     parser.add_argument("--bootstrap", type=Path, default=DEFAULT_BOOTSTRAP)
     parser.add_argument("--primary", type=Path, default=DEFAULT_PRIMARY)
     parser.add_argument("--executive", type=Path, default=DEFAULT_EXECUTIVE)
+    parser.add_argument("--serve-only", action="store_true",
+                        help="skip the monitor download; serve a SADIE already in memory")
+    parser.add_argument("--position", metavar="TRACK,FILE,RECORD",
+                        help="prime the tape position, for use with --serve-only")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args()
     if bool(args.port) == bool(args.listen):
@@ -332,13 +352,21 @@ def main():
     tracks = read_sadie_tap(args.tape)
     endpoint = args.listen or f"{args.port} at {args.baud} baud"
     print(f"serving SADIE tracks {sorted(tracks)} on {endpoint}", file=sys.stderr)
+    turnaround_delay = 0.003 if args.listen else 0.0
+    server = SadieServer(tracks, args.primary.read_bytes(), args.executive.read_bytes(),
+                         args.verbose, turnaround_delay=turnaround_delay)
+    if args.position:
+        server.position(*parse_position(args.position))
+        print(f"tape primed at track {server.track} file {server.file} "
+              f"record {server.record}", file=sys.stderr)
     port = listen_socket(args.listen) if args.listen else open_port(args.port, args.baud)
     with port:
-        send_monitor_image(port, args.bootstrap.read_bytes(), args.verbose)
-        print("bootstrap loaded; enter J F000 (or G)", file=sys.stderr)
-        turnaround_delay = 0.003 if args.listen else 0.0
-        SadieServer(tracks, args.primary.read_bytes(), args.executive.read_bytes(),
-                    args.verbose, turnaround_delay=turnaround_delay).serve(port)
+        if args.serve_only:
+            print("serving records only; no monitor download", file=sys.stderr)
+        else:
+            send_monitor_image(port, args.bootstrap.read_bytes(), args.verbose)
+            print("bootstrap loaded; enter J F000 (or G)", file=sys.stderr)
+        server.serve(port)
 
 
 if __name__ == "__main__":

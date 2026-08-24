@@ -75,6 +75,19 @@ class SadieTests(unittest.TestCase):
         self.assertEqual(port.sent.getvalue(), bytes((serve_sadie.ACK,)))
         self.assertEqual((server.track, server.file, server.record), (2, 3, 1))
 
+    def test_primed_position_matches_a_host_request(self):
+        primed = serve_sadie.SadieServer(self.tracks, b"p", b"e")
+        primed.position(*serve_sadie.parse_position("1,22,0"))
+        self.assertEqual((primed.track, primed.file, primed.record), (1, 22, 0))
+        self.assertIsNone(primed.stream)
+        for bad in ("3,0,0", "1,99,0", "1,0,9999"):
+            with self.assertRaises(ValueError):
+                serve_sadie.SadieServer(self.tracks, b"p", b"e").position(
+                    *serve_sadie.parse_position(bad))
+        for malformed in ("1,22", "1,22,0,0", "1,x,0"):
+            with self.assertRaises(ValueError):
+                serve_sadie.parse_position(malformed)
+
     def test_record_response_preserves_length_and_crc(self):
         server = serve_sadie.SadieServer(self.tracks, b"p", b"e")
         server.track, server.file, server.record = 2, 1, 0
