@@ -13,6 +13,7 @@ FILESYSTEM_ORIGINALS = HERE.parent / "filesystem" / "originals"
 ORIGINALS = HERE / "originals"
 IMAGES = HERE / "images"
 INSTALL_SOURCE = ORIGINALS / "install-3.21" / "zeus-3.21-install-download.gz"
+BLOCK_169 = ORIGINALS / "install-3.21" / "zeus-3.21-install-file8-block169.bin"
 INSTALL_TAP = IMAGES / "zeus-3.21-install.tap"
 UPGRADE_SOURCE = FILESYSTEM_ORIGINALS / "zeus-3.21-upgrade.tar"
 UPGRADE_TAP = IMAGES / "zeus-3.21-upgrade.tap"
@@ -39,6 +40,19 @@ REPAIR_HASHES = {
 FILE_1_HASH = "1c038e3d0f640e0fade2b842fd6b221a3742666033e43b643b837e3779cf7d2c"
 FILE_1_RECORDS = 45
 TAPE_RECORD_SIZE = 512
+TAPE_BLOCK_SIZE = 10240
+BLOCK_169_HASH = "dbebce3cae7a171e1a925cd1ca761a83b4425eee92ab47a672044b2a37e9de5a"
+# Which 512-byte records of block 169 hold which recovered file's contents,
+# as (first record, file, first block of that file, number of blocks).  The
+# records not listed here are the four dump inode headers.
+BLOCK_169_LAYOUT = (
+    (0, "ftBC", 0, 1),
+    (2, "ftB", 0, 1),
+    (4, "man_contents", 0, 1),
+    (6, "manM_contents", 0, 4),
+    (11, "xq", 0, 9),
+)
+BLOCK_169_INODES = (1, 3, 5, 10)
 
 
 def dump_checksum(record):
@@ -52,20 +66,6 @@ def tcc_crc(data):
         for _ in range(8):
             crc = ((crc << 1) ^ 0x8005) & 0xffff if crc & 0x8000 else (crc << 1) & 0xffff
     return crc
-
-
-def inode_header(tapea, inode, size, mode, uid, gid, timestamp, blocks):
-    record = bytearray(512)
-    struct.pack_into(">hIIhIHHH", record, 0,
-                     TS_INODE, 469764657, 469763850, 1, tapea,
-                     inode, MAGIC, 0)
-    struct.pack_into(">HhhhI", record, 22, mode, 1, uid, gid, size)
-    struct.pack_into(">III", record, 74, timestamp, timestamp, timestamp)
-    struct.pack_into(">h", record, 86, 10)
-    record[88:88 + min(blocks, 10)] = bytes([1]) * min(blocks, 10)
-    struct.pack_into(">H", record, 20, (CHECKSUM - dump_checksum(record)) & 0xffff)
-    assert dump_checksum(record) == CHECKSUM
-    return bytes(record)
 
 
 def file_blocks(data):
@@ -122,20 +122,38 @@ def verify_file_1(records):
         raise ValueError("recovered file 1 does not match the independent /usr/boot")
 
 
-def reconstruct_block_169():
+def load_block_169():
+    """Return the original install tape file 8, block 169.
+
+    The block-level capture of this block is short -- 3,583 bytes of 10,240 --
+    and fails its TCC CRC, so earlier builds synthesised it from independently
+    recovered files.  This is the real block, and it is strictly better: its
+    four dump inode headers carry valid dump checksums, the recorded access
+    times, and the inode disk address arrays that a synthesised header cannot
+    know.  Its file contents are identical to the recovered files, which is
+    still checked here rather than assumed.
+    """
+    block = BLOCK_169.read_bytes()
+    if len(block) != TAPE_BLOCK_SIZE:
+        raise ValueError(f"block 169 is {len(block)} bytes, expected {TAPE_BLOCK_SIZE}")
+    actual = hashlib.sha256(block).hexdigest()
+    if actual != BLOCK_169_HASH:
+        raise ValueError(f"unexpected block 169 hash: {actual}")
+
+    records = [block[offset:offset + TAPE_RECORD_SIZE]
+               for offset in range(0, len(block), TAPE_RECORD_SIZE)]
     files = load_repair_files()
-    records = []
-    records += file_blocks(files["ftBC"])
-    records.append(inode_header(3381, 925, len(files["ftB"]), 0o100644, 3, 0, 469764374, 1))
-    records += file_blocks(files["ftB"])
-    records.append(inode_header(3383, 927, len(files["man_contents"]), 0o100664, 3, 0, 469764520, 1))
-    records += file_blocks(files["man_contents"])
-    records.append(inode_header(3385, 928, len(files["manM_contents"]), 0o100664, 3, 0, 469764583, 4))
-    records += file_blocks(files["manM_contents"])
-    records.append(inode_header(3390, 929, len(files["xq"]), 0o100644, 5, 0, 469764372, 10))
-    records += file_blocks(files["xq"])[:9]
-    assert len(records) == 20
-    return b"".join(records)
+    for first, key, start, count in BLOCK_169_LAYOUT:
+        expected = file_blocks(files[key])[start:start + count]
+        if records[first:first + count] != expected:
+            raise ValueError(f"block 169 disagrees with the recovered {key}")
+    for index in BLOCK_169_INODES:
+        record = records[index]
+        kind, = struct.unpack_from(">h", record, 0)
+        magic, = struct.unpack_from(">H", record, 18)
+        if kind != TS_INODE or magic != MAGIC or dump_checksum(record) != CHECKSUM:
+            raise ValueError(f"block 169 record {index} is not a valid inode header")
+    return block
 
 
 def read_install_records():
@@ -158,7 +176,7 @@ def read_install_records():
             if "FILEMARK" in member.name:
                 continue
             if file_no == 8 and block_no == 169:
-                payload = reconstruct_block_169()
+                payload = load_block_169()
             grouped.setdefault(file_no, []).append((block_no, payload))
     if sorted(crc_failures) != [(8, 169)]:
         raise ValueError(f"unexpected TCC CRC failures: {sorted(crc_failures)}")

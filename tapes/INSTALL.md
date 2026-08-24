@@ -186,6 +186,58 @@ is processed first. `ar` writes its temporary files to `/tmp`.
 Because `INSTALL` moves rather than copies, a failed run cannot be resumed:
 rebuild the image and start again.
 
+### Rebuilding the published upgraded image
+
+The published `-upgrade.chd` is a post-update image. Building it therefore has
+one host-side stage and one stage inside ZEUS. First rebuild the tape artifacts
+and create a deliberately named staging disk:
+
+```sh
+python3 tapes/build_tape_images.py
+python3 tapes/extract_tape_images.py
+python3 tapes/install_from_tape.py \
+  --packages plzasm --patch-date --stage-upgrade \
+  --image build/zeus-3.21-tape-128-plzasm-upgrade-staged.img \
+  --chd build/zeus-3.21-tape-128-plzasm-upgrade-staged.chd
+```
+
+Move any old `diff/s8000.dif` aside, boot the staged CHD in MAME, and log in as
+`zeus` with password `jupiter`. Apply the update and rebuild the Model 31 Plus
+kernel:
+
+```text
+cd /z
+csh INSTALL
+cd /usr/sys/conf
+/etc/sysgen -d 31P
+rm /zeus /zeus2_3.21
+mv zeus /zeus
+ln /zeus /zeus2_3.21
+sync
+```
+
+The update script changes its child shell to `/usr/sys/conf`; it cannot change
+the calling shell's directory. Change there explicitly so `sysgen` writes
+`zeus` in the expected location. Shut ZEUS down cleanly and exit MAME. MAME's
+`.dif` is a child CHD, so merge it with the staged parent by extracting the
+combined raw disk, then make the standalone final CHD:
+
+```sh
+chdman extractraw \
+  -i diff/s8000.dif \
+  -ip build/zeus-3.21-tape-128-plzasm-upgrade-staged.chd \
+  -o build/zeus-3.21-tape-128-plzasm-upgrade.img
+chdman createhd \
+  -i build/zeus-3.21-tape-128-plzasm-upgrade.img \
+  -o build/zeus-3.21-tape-128-plzasm-upgrade.chd \
+  --chs 1024,8,32 --sectorsize 512 --compression none
+shasum -a 256 build/zeus-3.21-tape-128-plzasm-upgrade.chd
+```
+
+Use `--force` with the Python installer or `chdman` only when intentionally
+replacing an existing output. Update the documented checksum after publishing
+the rebuilt CHD.
+
 ## Image credentials and local changes
 
 The older clean image, `filesystem/generated/s8000_smd.chd`, has superuser

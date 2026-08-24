@@ -481,14 +481,15 @@ confirm the controller-level format. Their recovery archives store each record
 as payload followed by its two-byte CRC; the preamble, sync byte and biased
 length have already been removed. Reconstructing the biased length from the
 stored record size makes the CRC residue zero for every complete SADIE record
-and every installation record except the one known damaged capture.
+and installation record. The historical install capture's file 8/block 169 is
+short; the tape builder uses its complete independently recovered replacement.
 
 | Media | Logical files | Data records | Payload sizes | File marks | CRC result |
 |---|---:|---:|---|---:|---|
 | SADIE track 0 | 4 | 46 | 1,024 and 8,000 bytes | 4 | all valid |
 | SADIE track 1 | 37 | 666 | 1,024 bytes | 37 | all valid |
 | SADIE track 2 | 21 | 22 | 1,000, 1,300 and 4,000 bytes | 21 | all valid |
-| ZEUS install | 18 | 1,279 | 512 and 10,240 bytes | 18 | file 8/block 169 damaged; all others valid |
+| ZEUS install | 18 | 1,279 | 512 and 10,240 bytes | 18 | one historical record short; complete replacement available |
 
 The first installation file is one 512-byte record, exactly matching the
 documented monitor bootstrap. SADIE supplies particularly clear evidence that

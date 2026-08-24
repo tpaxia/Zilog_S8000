@@ -23,12 +23,14 @@ From the repository root:
 python3 tapes/build_tape_images.py
 ```
 
-The install builder checks every recovered TCC block CRC. Tape file 1, the raw
-secondary loader, is complete; the builder verifies it against the independent
-`/usr/boot` executable in `../filesystem/originals/S8000-2.tar`. The only record
-with a bad CRC is install tape file 8, block 169. The builder reconstructs that
-block using independently recovered files from the same archive, while
-regenerating the UNIX dump headers and checksums.
+The install builder checks every recovered TCC block CRC and verifies tape file
+1 against the independent `/usr/boot` in
+`../filesystem/originals/S8000-2.tar`. The old capture contains a short copy of
+file 8, block 169; the complete recovered block is stored as
+`originals/install-3.21/zeus-3.21-install-file8-block169.bin` and is used in its
+place. Its hash, file data, and dump-header checksums are verified by the
+builder, so the generated tape contains no missing or synthesised records.
+
 The upgrade source is
 `../filesystem/originals/zeus-3.21-upgrade.tar`; it is divided into
 10,240-byte tape records. These filesystem-reconstruction sources live outside
@@ -43,6 +45,7 @@ retained.
 | Source archive | SHA-256 |
 | --- | --- |
 | `originals/install-3.21/zeus-3.21-install-download.gz` | `a823cc33d49583f286a8376af30a2c30f00e6105a853d6525b20b454cfb02a92` |
+| `originals/install-3.21/zeus-3.21-install-file8-block169.bin` | `dbebce3cae7a171e1a925cd1ca761a83b4425eee92ab47a672044b2a37e9de5a` |
 
 The SADIE cartridge was recovered as three tracks in one block-level archive.
 The builder checks the CRC recorded for every captured record and creates one
