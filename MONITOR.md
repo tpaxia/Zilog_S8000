@@ -174,11 +174,12 @@ MAME exposes the download port as `:slot_cpu:cpu_a:sio0:cha:tty0`, so the
 transport is already available; `s8000.cfg` in this repository configures its
 baud rate alongside the console's.
 
-What does not exist is the host side. The `LOAD` procedure file was a ZEUS
-program on the remote machine and is not part of any recovered tree here.
-Writing a replacement is small — the record format, checksums and three
-handshake bytes above are the whole protocol — but until one exists, `L` has
-nothing to talk to.
+The original ZEUS `LOAD` procedure is not part of any recovered tree, but this
+repository now provides two working replacements. The
+[serial tape installer](serial_installer/README.md) loads the recovered ZEUS
+installation flow, and the [SADIE loader](sadie_serial/README.md) loads the
+recovered diagnostics. Both use the monitor's `L` command over TTY0 and support
+MAME sockets as well as physical serial ports.
 
 ## Sources
 

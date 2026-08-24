@@ -118,9 +118,54 @@ chdman createhd \
 Run the tape server and MAME as documented in
 [serial_installer/README.md](serial_installer/README.md), then follow the
 original `ct(0,2)`, `ct(0,3)`, and `ct(0,4)` installation sequence. After the
-base install, `tapes/stage_existing_install.py` adds `plzasm`, applies the date
-patch, and stages the update on a copy. Run `csh INSTALL` and `/etc/sysgen -d
-31P` inside ZEUS to produce the final image.
+base install and clean shutdown, extract it and stage the post-install material
+on a copy:
+
+```sh
+chdman extractraw \
+  -i build/zeus-3.21-serial-install-128.chd \
+  -o build/zeus-3.21-serial-install-128.img
+python3 tapes/stage_existing_install.py \
+  build/zeus-3.21-serial-install-128.img \
+  build/zeus-3.21-serial-128-plzasm-upgrade-staged.img \
+  --packages plzasm --patch-date --stage-upgrade
+chdman createhd \
+  -i build/zeus-3.21-serial-128-plzasm-upgrade-staged.img \
+  -o build/zeus-3.21-serial-128-plzasm-upgrade-staged.chd \
+  --chs 1024,8,32 --sectorsize 512 --compression none
+```
+
+Move any old `diff/s8000.dif` aside and boot the staged CHD. Inside ZEUS, apply
+the vendor update, rebuild and install the Model 31 Plus kernel, remove the
+update staging files and backups, and halt cleanly:
+
+```text
+cd /z
+csh INSTALL
+cd /usr/sys/conf
+/etc/sysgen -d 31P
+rm /zeus /zeus2_3.21
+mv zeus /zeus
+ln /zeus /zeus2_3.21
+rm -rf /tmp/save /z/INSTALL /z/3.21.update
+sync
+/etc/halt
+```
+
+After MAME exits, merge its child CHD with the staged parent and create the
+standalone final image:
+
+```sh
+chdman extractraw \
+  -i diff/s8000.dif \
+  -ip build/zeus-3.21-serial-128-plzasm-upgrade-staged.chd \
+  -o build/zeus-3.21-serial-128-plzasm-upgrade.img
+chdman createhd \
+  -i build/zeus-3.21-serial-128-plzasm-upgrade.img \
+  -o build/zeus-3.21-serial-128-plzasm-upgrade.chd \
+  --chs 1024,8,32 --sectorsize 512 --compression none
+shasum -a 256 build/zeus-3.21-serial-128-plzasm-upgrade.chd
+```
 
 ## Technical documentation
 

@@ -209,6 +209,3 @@ Its SHA-256 is:
 ```text
 d695bf43725f2911e6507cb6323c08c8604d46407463bd474fcbf8eacd3afc07
 ```
-
-Tape-device emulation would reproduce the historical interactive installation
-dialogue, but it is not required to execute the same media and filesystem flow.

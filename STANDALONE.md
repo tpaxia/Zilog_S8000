@@ -7,8 +7,7 @@ software onto a bare machine. It answers three questions:
 - how an installation tape gets from a monitor with no drivers to a kernel with
   drivers, and then to files it can execute;
 - where the device nodes are in that world (there are none);
-- whether a stand-alone program can create filesystems and pull files over a
-  serial line, and what it would take.
+- how stand-alone programs address storage and receive code over a serial line.
 
 Sources are cited inline. Monitor addresses are image offsets in
 `re/monitor/monitor30.s`. See [`MONITOR.md`](MONITOR.md) for the firmware itself.
@@ -220,30 +219,6 @@ Base address **0x8000**. Monitor Download Mode rejects any record whose load
 address is below 0x8000 (`cp r4,#0x8000` at `0x0e54`). The two agree exactly,
 so a stand-alone image can be sent straight down the wire with `L` and started
 with `G` — no disk, no tape, nothing on the machine but firmware.
-
-## What a serial install would take here
-
-The pieces exist but not in one place. ZEUS's `devsw` is `zd ct smd md mt` —
-**there is no `rm`**. The serial driver is WEGA's, and WEGA is the EAW P8000
-line: same Z8000 saio heritage, different hardware, no `smd` or `ct` driver.
-Compounding it, we have WEGA stand-alone *source* but only a ZEUS stand-alone
-*binary*; no ZEUS stand-alone source has been recovered.
-
-Two routes:
-
-1. **Port.** Take `bsys.c`, `bconf.c`, `boot.c` and `brm.s`; retarget `brm.s`
-   from `sc #4`/`sc #6` to `sc #24`/`sc #26` so it uses TTY0 instead of the
-   console; add an SMD `strategy` routine. `sa.mkfs` and the rest then drop in
-   unchanged, and the result is `L`-loadable because it links at 0x8000.
-2. **Patch.** Add an `rm` entry to the existing ZEUS `boot` binary at 0x5362.
-   Less work in principle, but it means hand-assembling into a stripped image.
-
-Either way the host side is missing. `rm` expects a program on the remote
-machine that answers `ESC 'S'`; that was a GDS 6000 under UDOS and nothing
-recovered here implements it. The same is true of Download Mode's `LOAD`
-procedure file. Both protocols are fully specified — `brm.s` for one, manual
-§5.9.4 for the other — so both host ends are small programs, but they have to
-be written.
 
 ## Sources
 
