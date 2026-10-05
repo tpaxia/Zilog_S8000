@@ -13,7 +13,7 @@ CRC_REQUEST = ord("C")
 TRACE_BEFORE_STORE, TRACE_AFTER_STORE = 0x10, 0x11
 PRIVATE_MARKER = 0x70000000
 HERE = Path(__file__).resolve().parent
-DEFAULT_BOOTSTRAP = HERE.parent / "serial_installer" / "build" / "bootstrap.bin"
+DEFAULT_BOOTSTRAP = HERE / "build" / "bootstrap.bin"
 DEFAULT_PRIMARY = HERE / "build" / "sadie_primary_serial.bin"
 DEFAULT_EXECUTIVE = HERE / "build" / "sadie-executive-serial.bin"
 

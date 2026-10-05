@@ -64,6 +64,13 @@ class SadieTests(unittest.TestCase):
             primary,
         )
 
+    def test_bootstrap_preserves_monitor_cpu_identity(self):
+        bootstrap = (HERE / "build" / "bootstrap.bin").read_bytes()
+        # SADIE distinguishes CPU-A (R7=0) from HPCPU (R7=1). The ZEUS
+        # handoff clears R7; SADIE must retain the monitor's board identity.
+        self.assertIn(bytes.fromhex("bd4121050010bd201e28"), bootstrap)
+        self.assertNotIn(bytes.fromhex("bd70bd201e28"), bootstrap)
+
     def test_position_selects_track_file_record(self):
         server = serve_sadie.SadieServer(self.tracks, b"p", b"e")
         request = bytes((1, 2, 3, 0, 1))

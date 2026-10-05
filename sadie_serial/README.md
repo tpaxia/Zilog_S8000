@@ -13,6 +13,11 @@ can request additional tracks, files, and records.
 
 ## Build and test
 
+The loader binaries in `build/` are included prebuilt so the tape server can
+run with Python 3 alone. They can be regenerated from the assembly sources
+and recovered tape image with `make all`, using `z8k-coff-as`, `z8k-coff-ld`
+and `z8k-coff-objcopy`. The build also regenerates `build/SHA256SUMS`.
+
 Build the generated tape first if necessary, then build and test the loader:
 
 ```sh

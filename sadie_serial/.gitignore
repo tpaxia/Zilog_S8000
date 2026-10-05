@@ -1,2 +1,7 @@
-build/
+build/*
+!build/bootstrap.bin
+!build/sadie_primary_serial.bin
+!build/sadie_tape_serial.bin
+!build/sadie-executive-serial.bin
+!build/SHA256SUMS
 __pycache__/

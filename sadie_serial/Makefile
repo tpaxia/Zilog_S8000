@@ -7,8 +7,17 @@ TAPE    := ../tapes/images/sadie-3.5.tap
 
 .PHONY: all clean test snapshot diagnostics
 
-all: $(BUILD)/sadie_tape_serial.bin $(BUILD)/sadie_primary_serial.bin \
-	$(BUILD)/sadie-executive-serial.bin
+all: $(BUILD)/bootstrap.bin $(BUILD)/sadie_tape_serial.bin $(BUILD)/sadie_primary_serial.bin \
+	$(BUILD)/sadie-executive-serial.bin $(BUILD)/SHA256SUMS
+
+$(BUILD)/bootstrap.o: ../serial_installer/bootstrap.s | $(BUILD)
+	$(AS) --defsym PRESERVE_R7=1 -o $@ $<
+
+$(BUILD)/bootstrap.elf: $(BUILD)/bootstrap.o ../serial_installer/bootstrap.ld
+	$(LD) -T ../serial_installer/bootstrap.ld -o $@ $<
+
+$(BUILD)/bootstrap.bin: $(BUILD)/bootstrap.elf
+	$(OBJCOPY) -O binary --only-section=.text $< $@
 
 $(BUILD):
 	mkdir -p $(BUILD)
@@ -39,6 +48,11 @@ $(BUILD)/sadie-executive-serial.bin: patch_executive.py serve_sadie.py \
 
 test: all
 	$(PYTHON) -m unittest -v test_sadie.py
+
+$(BUILD)/SHA256SUMS: $(BUILD)/bootstrap.bin $(BUILD)/sadie_primary_serial.bin \
+	$(BUILD)/sadie_tape_serial.bin $(BUILD)/sadie-executive-serial.bin
+	cd $(BUILD) && shasum -a 256 bootstrap.bin sadie_primary_serial.bin \
+		sadie_tape_serial.bin sadie-executive-serial.bin > SHA256SUMS
 
 # Boot SADIE once under MAME and keep the COMMAND LEVEL state.  Regenerate it
 # after rebuilding MAME or changing the slot layout: a state is valid only for

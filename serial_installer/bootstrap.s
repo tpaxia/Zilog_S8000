@@ -71,7 +71,9 @@ _start:
 	/* Reproduce the measured ROM ZT handoff; J enters with different values. */
 	ldk	r4,#1
 	ld	r5,#0x10
+	.ifndef PRESERVE_R7
 	ldk	r7,#0
+	.endif
 	ldk	r2,#0
 	jp	@r2
 
