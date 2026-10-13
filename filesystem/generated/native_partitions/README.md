@@ -6,15 +6,8 @@ block-for-block into normal clean-image rebuilds so every build uses the exact
 native installation result without repeating the destructive creation and
 restore procedure.
 
-Earlier `fsck` failures attributed to host-created filesystem metadata were
-subsequently isolated to truncated multi-sector transfers in MAME's SMD
-controller emulation. The SMDC byte count describes the entire transfer, but
-the old implementation reduced every request above 512 bytes to one sector
-and nevertheless reported completion. The correction is commit `8d7158bbe1a`
-on the tpaxia MAME `s8000_fixes` branch. The failures therefore do not
-establish that `mkv7img` produces invalid metadata. These templates remain
-authoritative because they were created by ZEUS itself and independently
-verified through the buffered block-device path.
+These templates are authoritative because they were created by ZEUS itself
+and independently verified through the buffered block-device path.
 
 | File | Blocks | Start block | SHA-256 |
 |---|---:|---:|---|

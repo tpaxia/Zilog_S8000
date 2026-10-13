@@ -33,10 +33,7 @@ partition tables, CHD geometry, and `sawbz` selection logic are documented in
 
 ## Running an image
 
-Use current MAME containing the System 8000 fixes merged in
-[mamedev/mame PR #15866](https://github.com/mamedev/mame/pull/15866), at or
-after merge commit
-[`ab41620cf2d4`](https://github.com/mamedev/mame/commit/ab41620cf2d4bace0497922b03cb48e1d5169b50).
+Use the latest MAME.
 The included `s8000.cfg` enables CPU-A's **Support Segmented OS** jumper.
 
 ```sh

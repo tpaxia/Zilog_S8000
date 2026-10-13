@@ -248,32 +248,6 @@ sawbz test: entered ct(0,2)
 sawbz test: PASS, DEADBABE written; pc=2064
 ```
 
-### Required MAME Z8010 correction
-
-The test exposed an error in MAME's Z8010 MMU descriptor auto-increment.
-`sawbz` reads and rewrites a four-byte segment descriptor with `sinirb` and
-`sotirb`. After the attribute byte, the real descriptor pointer wraps to its
-base-address-high byte. MAME instead left it pinned on the attribute byte, so
-`sawbz`'s third output byte replaced the segment attributes with `0xff` and
-destroyed its own mapping.
-
-Apply the [Z8010 descriptor-wrap correction](https://github.com/tpaxia/Zilog_S8000/blob/main/serial_installer/mame-z8010-descriptor-wrap.patch)
-to the MAME source tree and rebuild the `s8000` target:
-
-```sh
-cd /path/to/mame
-curl -L https://raw.githubusercontent.com/tpaxia/Zilog_S8000/main/serial_installer/mame-z8010-descriptor-wrap.patch \
-  | git apply
-make -j1 SUBTARGET=s8000 SOURCES=zilog/s8k.cpp USE_LIBSDL=1 \
-  SDL_PKGCONFIG_PATH=/opt/homebrew/bin \
-  LDFLAGS='-L/opt/homebrew/lib -Wl,-rpath,/opt/homebrew/lib -lSDL3'
-```
-
-No change to file 1 or file 2 is needed for this issue. With the correction,
-the visible 2026-08-13 run reached the standard-configuration question quoted
-above. The earlier `0xbf82` in-memory checksum also matched the expected tape
-file checksum before the unmodified file-1 handoff.
-
 ## Original release-tape installation flow
 
 This is the operator flow in the *ZEUS System Administrator's Manual*, part
